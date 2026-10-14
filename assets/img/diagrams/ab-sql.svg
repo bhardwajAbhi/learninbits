@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 282" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">String building compared with query parameters in SQLite</title>
+  <desc id="d">The user types x quote OR quote 1 quote equals quote 1 into a search box. With string building, the query becomes WHERE title equals x OR 1 equals 1, so every row matches. With a parameter, written as a question mark with the input in an argument array, the input stays a value, and no row has that title. Room queries with parameters behave the same way.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<text x="20" y="30" font-size="12.5" fill="#1c2230" text-anchor="start" font-weight="700">The user types into the search box</text>
+<rect x="20" y="42" width="380" height="40" rx="8" fill="#fff" stroke="#5d6b7e" stroke-width="1.4"/>
+<text x="36" y="68" font-size="13" fill="#963f1f" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="600">x&#x27; OR &#x27;1&#x27;=&#x27;1</text>
+<rect x="20" y="104" width="400" height="162" rx="12" fill="#1f2633"/>
+<path d="M32 104 h376 a12 12 0 0 1 12 12 v22 h-400 v-22 a12 12 0 0 1 12 -12z" fill="#c2552d"/>
+<text x="36" y="127" font-size="13.5" fill="#fff" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">String building</text>
+<text x="36" y="160" font-size="11.2" fill="#e8ecf3" text-anchor="start" font-family="JetBrains Mono, monospace">db.rawQuery(&quot;SELECT * FROM notes &quot; +</text>
+<text x="36" y="178" font-size="11.2" fill="#e8ecf3" text-anchor="start" font-family="JetBrains Mono, monospace">  &quot;WHERE title = &#x27;&quot; + input + &quot;&#x27;&quot;, null)</text>
+<text x="36" y="196" font-size="11.2" fill="#e8ecf3" text-anchor="start" font-family="JetBrains Mono, monospace"></text>
+<text x="36" y="214" font-size="11.2" fill="#9aa6b8" text-anchor="start" font-family="JetBrains Mono, monospace">// becomes</text>
+<text x="36" y="232" font-size="11.2" fill="#9aa6b8" text-anchor="start" font-family="JetBrains Mono, monospace">// WHERE title = &#x27;x&#x27; OR &#x27;1&#x27;=&#x27;1&#x27;</text>
+<text x="36" y="250" font-size="11.2" fill="#9aa6b8" text-anchor="start" font-family="JetBrains Mono, monospace">// every row matches</text>
+<rect x="460" y="104" width="400" height="162" rx="12" fill="#1f2633"/>
+<path d="M472 104 h376 a12 12 0 0 1 12 12 v22 h-400 v-22 a12 12 0 0 1 12 -12z" fill="#0f8a6a"/>
+<text x="476" y="127" font-size="13.5" fill="#fff" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">Parameters</text>
+<text x="476" y="160" font-size="11.2" fill="#e8ecf3" text-anchor="start" font-family="JetBrains Mono, monospace">db.rawQuery(&quot;SELECT * FROM notes &quot; +</text>
+<text x="476" y="178" font-size="11.2" fill="#e8ecf3" text-anchor="start" font-family="JetBrains Mono, monospace">  &quot;WHERE title = ?&quot;, arrayOf(input))</text>
+<text x="476" y="196" font-size="11.2" fill="#e8ecf3" text-anchor="start" font-family="JetBrains Mono, monospace"></text>
+<text x="476" y="214" font-size="11.2" fill="#9aa6b8" text-anchor="start" font-family="JetBrains Mono, monospace">// the input stays a value</text>
+<text x="476" y="232" font-size="11.2" fill="#9aa6b8" text-anchor="start" font-family="JetBrains Mono, monospace">// no row has that title</text>
+<text x="476" y="250" font-size="11.2" fill="#9aa6b8" text-anchor="start" font-family="JetBrains Mono, monospace">// Room @Query does the same</text>
+<path d="M210 82 L 210 100" fill="none" stroke="#c2552d" stroke-width="1.6" marker-end="url(#m7)"/>
+<path d="M400 62 C 640 62, 660 70, 660 100" fill="none" stroke="#0f8a6a" stroke-width="1.6" marker-end="url(#m4)"/>
+</svg>

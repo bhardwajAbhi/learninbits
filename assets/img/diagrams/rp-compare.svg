@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 490" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">A research paper compared with blogs, books and patents</title>
+  <desc id="d">A comparison on focus, structure, validation, review and purpose. Blogs, books and patents aim at expression, education or protection, with flexible structure, opinion-based validation and editorial review or none. A research paper aims at a systematic advance of knowledge, with fixed sections, evidence-based validation and critical peer review, to fill a gap that others can build on.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="170" y="20" width="340" height="64" rx="14" fill="#eef0f3" stroke="#5d6b7e" stroke-width="1.5"/>
+<text x="340" y="49" font-size="15.5" fill="#3f4a59" text-anchor="middle" font-weight="700">Blogs, books and patents</text>
+<text x="340" y="70" font-size="12.5" fill="#4a5263" text-anchor="middle">for a broad audience</text>
+<rect x="530" y="20" width="330" height="64" rx="14" fill="#2f62c8"/>
+<text x="695" y="49" font-size="15.5" fill="#fff" text-anchor="middle" font-weight="700">Research paper</text>
+<text x="695" y="70" font-size="12.5" fill="#ffffffd9" text-anchor="middle">for experts in the field</text>
+<rect x="20" y="100" width="840" height="64" rx="12" fill="#fbfaf6" stroke="#d9d4c7" stroke-width="1"/>
+<text x="40" y="138" font-size="15.5" fill="#1c2230" text-anchor="start" font-weight="700">Focus</text>
+<text x="190" y="138" font-size="13.5" fill="#4a5263" text-anchor="start">Expression, education or protection</text>
+<rect x="530" y="108" width="322" height="48" rx="10" fill="#eef3fb"/>
+<text x="548" y="138" font-size="13.5" fill="#1f4a9e" text-anchor="start" font-weight="600">Systematic advance of knowledge</text>
+<rect x="20" y="176" width="840" height="64" rx="12" fill="#fff" stroke="#d9d4c7" stroke-width="1"/>
+<text x="40" y="214" font-size="15.5" fill="#1c2230" text-anchor="start" font-weight="700">Structure</text>
+<text x="190" y="214" font-size="13.5" fill="#4a5263" text-anchor="start">Flexible, story-driven or by chapter</text>
+<rect x="530" y="184" width="322" height="48" rx="10" fill="#eef3fb"/>
+<text x="548" y="214" font-size="13.5" fill="#1f4a9e" text-anchor="start" font-weight="600">Fixed standard sections</text>
+<rect x="20" y="252" width="840" height="64" rx="12" fill="#fbfaf6" stroke="#d9d4c7" stroke-width="1"/>
+<text x="40" y="290" font-size="15.5" fill="#1c2230" text-anchor="start" font-weight="700">Validation</text>
+<text x="190" y="290" font-size="13.5" fill="#4a5263" text-anchor="start">Opinion, experience or broad synthesis</text>
+<rect x="530" y="260" width="322" height="48" rx="10" fill="#eef3fb"/>
+<text x="548" y="290" font-size="13.5" fill="#1f4a9e" text-anchor="start" font-weight="600">Evidence from data, math or experiments</text>
+<rect x="20" y="328" width="840" height="64" rx="12" fill="#fff" stroke="#d9d4c7" stroke-width="1"/>
+<text x="40" y="366" font-size="15.5" fill="#1c2230" text-anchor="start" font-weight="700">Review</text>
+<text x="190" y="366" font-size="13.5" fill="#4a5263" text-anchor="start">Editorial review, or none for blogs</text>
+<rect x="530" y="336" width="322" height="48" rx="10" fill="#eef3fb"/>
+<text x="548" y="366" font-size="13.5" fill="#1f4a9e" text-anchor="start" font-weight="600">Critical peer review by experts</text>
+<rect x="20" y="404" width="840" height="64" rx="12" fill="#fbfaf6" stroke="#d9d4c7" stroke-width="1"/>
+<text x="40" y="442" font-size="15.5" fill="#1c2230" text-anchor="start" font-weight="700">Purpose</text>
+<text x="190" y="442" font-size="13.5" fill="#4a5263" text-anchor="start">Entertain, inform, sell or protect</text>
+<rect x="530" y="412" width="322" height="48" rx="10" fill="#eef3fb"/>
+<text x="548" y="442" font-size="13.5" fill="#1f4a9e" text-anchor="start" font-weight="600">Fill a gap so others can build on it</text>
+</svg>

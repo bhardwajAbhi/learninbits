@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 340" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">The data principal rights workflow</title>
+  <desc id="d">The Data Principal raises a ticket for one right, such as access, correction, erasure, nomination, withdrawal of consent or a grievance. The organization sees the ticket in a queue with filters and an assignee, acts within the set time and updates the status. Both sides see the same ticket. An unresolved ticket can be escalated as a grievance.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="20" y="20" width="840" height="140" rx="14" fill="#eef3fb"/>
+<text x="40" y="44" font-size="11" fill="#1f4a9e" text-anchor="start" letter-spacing="1.2" font-weight="700">THE DATA PRINCIPAL</text>
+<rect x="20" y="180" width="840" height="140" rx="14" fill="#e3f4ee"/>
+<text x="40" y="204" font-size="11" fill="#0b6650" text-anchor="start" letter-spacing="1.2" font-weight="700">THE ORGANIZATION</text>
+<rect x="40" y="56" width="250" height="92" rx="10" fill="#fff" stroke="#2f62c8" stroke-width="1.5"/>
+<text x="56" y="76" font-size="12" fill="#1c2230" text-anchor="start" font-weight="700">Raises a ticket for one right</text>
+<text x="56" y="98" font-size="10.5" fill="#4a5263" text-anchor="start">• Access information</text>
+<text x="174" y="98" font-size="10.5" fill="#4a5263" text-anchor="start">• Correct data</text>
+<text x="56" y="116" font-size="10.5" fill="#4a5263" text-anchor="start">• Erase data</text>
+<text x="174" y="116" font-size="10.5" fill="#4a5263" text-anchor="start">• Nominate a person</text>
+<text x="56" y="134" font-size="10.5" fill="#4a5263" text-anchor="start">• Withdraw consent</text>
+<text x="174" y="134" font-size="10.5" fill="#4a5263" text-anchor="start">• Raise a grievance</text>
+<rect x="560" y="56" width="280" height="92" rx="10" fill="#fff" stroke="#2f62c8" stroke-width="1.5"/>
+<text x="576" y="78" font-size="12.5" fill="#1c2230" text-anchor="start" font-weight="700">My Tickets</text>
+<text x="576" y="98" font-size="11" fill="#4a5263" text-anchor="start">ticket ID, request type, date</text>
+<rect x="576" y="110" width="80" height="24" rx="12" fill="#fdf4e3" stroke="#b7791f" stroke-width="1.2"/>
+<text x="616" y="125.96" font-size="11" fill="#8a5a12" text-anchor="middle" font-weight="600">Pending</text>
+<rect x="664" y="110" width="86" height="24" rx="12" fill="#e3f4ee" stroke="#0f8a6a" stroke-width="1.2"/>
+<text x="707" y="125.96" font-size="11" fill="#0b6650" text-anchor="middle" font-weight="600">Approved</text>
+<rect x="40" y="216" width="250" height="92" rx="10" fill="#fff" stroke="#0f8a6a" stroke-width="1.5"/>
+<text x="56" y="238" font-size="12.5" fill="#1c2230" text-anchor="start" font-weight="700">Rights ticket queue</text>
+<text x="56" y="258" font-size="11" fill="#4a5263" text-anchor="start">filters for duration, type, application</text>
+<text x="56" y="273.18" font-size="11" fill="#4a5263" text-anchor="start">an assignee for each ticket</text>
+<rect x="330" y="216" width="200" height="92" rx="10" fill="#fff" stroke="#0f8a6a" stroke-width="1.5"/>
+<text x="346" y="238" font-size="12.5" fill="#1c2230" text-anchor="start" font-weight="700">Acts within the</text>
+<text x="346" y="256" font-size="12.5" fill="#1c2230" text-anchor="start" font-weight="700">set time</text>
+<text x="346" y="278" font-size="11" fill="#4a5263" text-anchor="start">days and hours per type</text>
+<rect x="560" y="216" width="280" height="92" rx="10" fill="#fff" stroke="#0f8a6a" stroke-width="1.5"/>
+<text x="576" y="238" font-size="12.5" fill="#1c2230" text-anchor="start" font-weight="700">Same ticket, new status</text>
+<text x="576" y="258" font-size="11" fill="#4a5263" text-anchor="start">both sides see one record</text>
+<path d="M260 148 V210" fill="none" stroke="#1c2230" stroke-width="2" marker-end="url(#m0)"/>
+<path d="M290 262 H324" fill="none" stroke="#1c2230" stroke-width="2" marker-end="url(#m0)"/>
+<path d="M530 262 H554" fill="none" stroke="#1c2230" stroke-width="2" marker-end="url(#m0)"/>
+<path d="M700 216 V154" fill="none" stroke="#1c2230" stroke-width="2" marker-end="url(#m0)"/>
+<path d="M420 102 H554" fill="none" stroke="#c2552d" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#m7)" marker-start="url(#m7)"/>
+<text x="425" y="94" font-size="11" fill="#963f1f" text-anchor="start" font-weight="700">Unresolved? Escalate</text>
+</svg>

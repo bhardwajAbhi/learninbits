@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 290" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">The three states of data</title>
+  <desc id="d">Data at rest and data in transit have mature security tools. Data in use, in AI models, sharing, cross-border transfer and analytics, is where privacy risk sits.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="30" y="30" width="260" height="186" rx="12" fill="#fff" stroke="#5d6b7e" stroke-width="1.5"/>
+<text x="50" y="64" font-size="17" fill="#3f4a59" text-anchor="start" font-weight="700">Data at rest</text>
+<text x="50" y="92" font-size="12.5" fill="#4a5263" text-anchor="start">Stored in databases and files</text>
+<line x1="50" y1="128" x2="270" y2="128" stroke="#d9d4c7" stroke-width="1.5"/>
+<text x="50" y="152" font-size="12.5" fill="#1c2230" text-anchor="start">Storage encryption</text>
+<rect x="310" y="30" width="260" height="186" rx="12" fill="#fff" stroke="#5d6b7e" stroke-width="1.5"/>
+<text x="330" y="64" font-size="17" fill="#3f4a59" text-anchor="start" font-weight="700">Data in transit</text>
+<text x="330" y="92" font-size="12.5" fill="#4a5263" text-anchor="start">Moving over networks</text>
+<line x1="330" y1="128" x2="550" y2="128" stroke="#d9d4c7" stroke-width="1.5"/>
+<text x="330" y="152" font-size="12.5" fill="#1c2230" text-anchor="start">TLS and access control</text>
+<rect x="590" y="30" width="260" height="186" rx="12" fill="#fbecec" stroke="#c2552d" stroke-width="2"/>
+<text x="610" y="64" font-size="17" fill="#963f1f" text-anchor="start" font-weight="700">Data in use</text>
+<text x="610" y="92" font-size="12.5" fill="#4a5263" text-anchor="start">AI models, data sharing,</text>
+<text x="610" y="109.25" font-size="12.5" fill="#4a5263" text-anchor="start">cross-border transfer, analytics</text>
+<line x1="610" y1="128" x2="830" y2="128" stroke="#d9d4c7" stroke-width="1.5"/>
+<text x="610" y="152" font-size="12.5" fill="#1c2230" text-anchor="start" font-weight="600">The data must be open to be</text>
+<text x="610" y="169.25" font-size="12.5" fill="#1c2230" text-anchor="start" font-weight="600">used. Encryption at rest does</text>
+<text x="610" y="186.5" font-size="12.5" fill="#1c2230" text-anchor="start" font-weight="600">not help here.</text>
+<path d="M40 236 v10 h520 v-10" fill="none" stroke="#5d6b7e" stroke-width="2"/>
+<text x="300" y="270" font-size="13" fill="#3f4a59" text-anchor="middle" font-weight="700">Security covers these two well</text>
+<path d="M320 262 v0" fill="none" stroke="#5d6b7e" stroke-width="1.5"/>
+<path d="M600 236 v10 h260 v-10" fill="none" stroke="#c2552d" stroke-width="2"/>
+<text x="730" y="270" font-size="13" fill="#963f1f" text-anchor="middle" font-weight="700">Privacy is needed here</text>
+</svg>

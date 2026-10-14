@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 390" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">PC DPO 360 next to the IAPP certifications</title>
+  <desc id="d">A chart with two axes. The horizontal axis goes from technology and concepts to hands-on mitigation. The vertical axis goes from policy and concepts to governance, planning and rollout. CIPP, CIPM and CIPT are in the lower half. PC DPO 360 is at the top right.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="150" y="30" width="690" height="300" rx="10" fill="#fff" stroke="#d9d4c7" stroke-width="1.5"/>
+<rect x="495" y="30" width="345" height="150" rx="0" fill="#e3f4ee"/>
+<line x1="495" y1="30" x2="495" y2="330" stroke="#d9d4c7" stroke-width="1.2" stroke-dasharray="4 6"/>
+<line x1="150" y1="180" x2="840" y2="180" stroke="#d9d4c7" stroke-width="1.2" stroke-dasharray="4 6"/>
+<path d="M150 352 H840" fill="none" stroke="#4a5263" stroke-width="1.6" marker-end="url(#m1)"/>
+<text x="150" y="374" font-size="12" fill="#4a5263" text-anchor="start" font-weight="600">Technology and concepts</text>
+<text x="840" y="374" font-size="12" fill="#4a5263" text-anchor="end" font-weight="600">Hands-on mitigation, integration and automation</text>
+<path d="M128 330 V30" fill="none" stroke="#4a5263" stroke-width="1.6" marker-end="url(#m1)"/>
+<text x="120" y="310" font-size="11.5" fill="#4a5263" text-anchor="end" font-weight="600">Policy and</text>
+<text x="120" y="325.87" font-size="11.5" fill="#4a5263" text-anchor="end" font-weight="600">concepts</text>
+<text x="120" y="42" font-size="11.5" fill="#4a5263" text-anchor="end" font-weight="600">Governance,</text>
+<text x="120" y="57.87" font-size="11.5" fill="#4a5263" text-anchor="end" font-weight="600">planning</text>
+<text x="120" y="73.74" font-size="11.5" fill="#4a5263" text-anchor="end" font-weight="600">and rollout</text>
+<circle cx="250" cy="270" r="9" fill="#5d6b7e"/>
+<text x="266" y="268" font-size="13" fill="#1c2230" text-anchor="start" font-weight="700">CIPP</text>
+<text x="266" y="284" font-size="11" fill="#4a5263" text-anchor="start">privacy laws</text>
+<circle cx="390" cy="238" r="9" fill="#5d6b7e"/>
+<text x="406" y="236" font-size="13" fill="#1c2230" text-anchor="start" font-weight="700">CIPM</text>
+<text x="406" y="252" font-size="11" fill="#4a5263" text-anchor="start">running a program</text>
+<circle cx="450" cy="196" r="9" fill="#5d6b7e"/>
+<text x="466" y="194" font-size="13" fill="#1c2230" text-anchor="start" font-weight="700">CIPT</text>
+<text x="466" y="210" font-size="11" fill="#4a5263" text-anchor="start">privacy in technology</text>
+<circle cx="700" cy="92" r="14" fill="#0f8a6a"/>
+<circle cx="700" cy="92" r="24" fill="none" stroke="#0f8a6a" stroke-width="1.5"/>
+<text x="690" y="140" font-size="14" fill="#0b6650" text-anchor="middle" font-weight="700">PC DPO 360</text>
+<text x="690" y="158" font-size="11" fill="#4a5263" text-anchor="middle">law + technical safeguards + rollout</text>
+</svg>

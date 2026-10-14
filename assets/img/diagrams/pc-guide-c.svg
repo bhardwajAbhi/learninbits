@@ -1,0 +1,91 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 910" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">Lane C, compute or prove with other parties</title>
+  <desc id="d">If you must prove a fact and not show the data, use a zero knowledge proof or a verifiable credential. If two parties only need the items that they share, use private set intersection. If several parties need one joint result, use federated learning for model training or secure multi-party computation for other results. If an outside service must compute on your data, use fully homomorphic encryption for the strongest guarantee or confidential computing for speed. If no single person may hold the full key, use threshold cryptography.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="85" y="34" width="330" height="54" rx="27" fill="#7a4fc2"/>
+<text x="250" y="55" font-size="12.5" fill="#fff" text-anchor="middle" font-weight="700">Lane C</text>
+<text x="250" y="71" font-size="12.5" fill="#fff" text-anchor="middle" font-weight="700">compute or prove with others</text>
+<path d="M250 122 L415 168 L250 214 L85 168 Z" fill="#fff" stroke="#7a4fc2" stroke-width="2"/>
+<text x="250" y="165" font-size="12.3" fill="#58378f" text-anchor="middle" font-weight="700">Must you prove a fact and</text>
+<text x="250" y="181" font-size="12.3" fill="#58378f" text-anchor="middle" font-weight="700">not show the data itself?</text>
+<rect x="470" y="121" width="390" height="94" rx="12" fill="#fff" stroke="#7a4fc2" stroke-width="1.8"/>
+<rect x="470" y="121" width="6" height="94" rx="3" fill="#7a4fc2"/>
+<text x="488" y="145" font-size="13" fill="#58378f" text-anchor="start" font-weight="700">Zero knowledge proof (ZKP)</text>
+<text x="488" y="165" font-size="11.5" fill="#1c2230" text-anchor="start">Prove age 18 or more, a balance above a limit</text>
+<text x="488" y="181" font-size="11.5" fill="#1c2230" text-anchor="start">or a valid consent. The verifier learns</text>
+<text x="488" y="197" font-size="11.5" fill="#1c2230" text-anchor="start">only yes or no. Or use verifiable credentials.</text>
+<rect x="786" y="131" width="62" height="20" rx="10" fill="#f3f0fa" stroke="#7a4fc2" stroke-width="1.2"/>
+<text x="817" y="144.78" font-size="10.5" fill="#58378f" text-anchor="middle" font-weight="600">Part 4</text>
+<path d="M415 168 H464" fill="none" stroke="#7a4fc2" stroke-width="1.8" marker-end="url(#m5)"/>
+<text x="442.5" y="161" font-size="11" fill="#58378f" text-anchor="middle" font-weight="800">Yes</text>
+<path d="M250 249 L415 295 L250 341 L85 295 Z" fill="#fff" stroke="#7a4fc2" stroke-width="2"/>
+<text x="250" y="292" font-size="12.3" fill="#58378f" text-anchor="middle" font-weight="700">Do two parties need only the</text>
+<text x="250" y="308" font-size="12.3" fill="#58378f" text-anchor="middle" font-weight="700">items that they have in common?</text>
+<rect x="470" y="248" width="390" height="94" rx="12" fill="#fff" stroke="#2f62c8" stroke-width="1.8"/>
+<rect x="470" y="248" width="6" height="94" rx="3" fill="#2f62c8"/>
+<text x="488" y="272" font-size="13" fill="#1f4a9e" text-anchor="start" font-weight="700">Private set intersection (PSI)</text>
+<text x="488" y="292" font-size="11.5" fill="#1c2230" text-anchor="start">Common customers, breached passwords,</text>
+<text x="488" y="308" font-size="11.5" fill="#1c2230" text-anchor="start">contact tracing. Each side learns</text>
+<text x="488" y="324" font-size="11.5" fill="#1c2230" text-anchor="start">only the overlap.</text>
+<rect x="786" y="258" width="62" height="20" rx="10" fill="#eef3fb" stroke="#2f62c8" stroke-width="1.2"/>
+<text x="817" y="271.78" font-size="10.5" fill="#1f4a9e" text-anchor="middle" font-weight="600">Part 4</text>
+<path d="M415 295 H464" fill="none" stroke="#2f62c8" stroke-width="1.8" marker-end="url(#m3)"/>
+<text x="442.5" y="288" font-size="11" fill="#1f4a9e" text-anchor="middle" font-weight="800">Yes</text>
+<path d="M250 376 L415 422 L250 468 L85 422 Z" fill="#fff" stroke="#7a4fc2" stroke-width="2"/>
+<text x="250" y="419" font-size="12.3" fill="#58378f" text-anchor="middle" font-weight="700">Do several parties need one</text>
+<text x="250" y="435" font-size="12.3" fill="#58378f" text-anchor="middle" font-weight="700">joint result from private inputs?</text>
+<rect x="470" y="367" width="390" height="110" rx="12" fill="#fff" stroke="#0f8a6a" stroke-width="1.8"/>
+<rect x="470" y="367" width="6" height="110" rx="3" fill="#0f8a6a"/>
+<text x="488" y="391" font-size="13" fill="#0b6650" text-anchor="start" font-weight="700">SMPC or federated learning</text>
+<text x="488" y="411" font-size="11.5" fill="#1c2230" text-anchor="start">For model training across sites, federated</text>
+<text x="488" y="427" font-size="11.5" fill="#1c2230" text-anchor="start">learning (add DP to the updates).</text>
+<text x="488" y="443" font-size="11.5" fill="#1c2230" text-anchor="start">For statistics or auctions, secure multi-party</text>
+<text x="488" y="459" font-size="11.5" fill="#1c2230" text-anchor="start">computation with secret shares.</text>
+<rect x="786" y="377" width="62" height="20" rx="10" fill="#e3f4ee" stroke="#0f8a6a" stroke-width="1.2"/>
+<text x="817" y="390.78" font-size="10.5" fill="#0b6650" text-anchor="middle" font-weight="600">Part 4</text>
+<path d="M415 422 H464" fill="none" stroke="#0f8a6a" stroke-width="1.8" marker-end="url(#m4)"/>
+<text x="442.5" y="415" font-size="11" fill="#0b6650" text-anchor="middle" font-weight="800">Yes</text>
+<path d="M250 511 L415 557 L250 603 L85 557 Z" fill="#fff" stroke="#7a4fc2" stroke-width="2"/>
+<text x="250" y="554" font-size="12.3" fill="#58378f" text-anchor="middle" font-weight="700">Must an outside service, such</text>
+<text x="250" y="570" font-size="12.3" fill="#58378f" text-anchor="middle" font-weight="700">as a cloud, compute on the data?</text>
+<rect x="470" y="502" width="390" height="110" rx="12" fill="#fff" stroke="#b7791f" stroke-width="1.8"/>
+<rect x="470" y="502" width="6" height="110" rx="3" fill="#b7791f"/>
+<text x="488" y="526" font-size="13" fill="#8a5a12" text-anchor="start" font-weight="700">FHE or confidential computing</text>
+<text x="488" y="546" font-size="11.5" fill="#1c2230" text-anchor="start">For the strongest guarantee (slower), fully</text>
+<text x="488" y="562" font-size="11.5" fill="#1c2230" text-anchor="start">homomorphic encryption (FHE).</text>
+<text x="488" y="578" font-size="11.5" fill="#1c2230" text-anchor="start">For speed, with trust in the hardware,</text>
+<text x="488" y="594" font-size="11.5" fill="#1c2230" text-anchor="start">a trusted execution environment (TEE).</text>
+<rect x="786" y="512" width="62" height="20" rx="10" fill="#fdf4e3" stroke="#b7791f" stroke-width="1.2"/>
+<text x="817" y="525.78" font-size="10.5" fill="#8a5a12" text-anchor="middle" font-weight="600">Part 4</text>
+<path d="M415 557 H464" fill="none" stroke="#b7791f" stroke-width="1.8" marker-end="url(#m6)"/>
+<text x="442.5" y="550" font-size="11" fill="#8a5a12" text-anchor="middle" font-weight="800">Yes</text>
+<path d="M250 646 L415 692 L250 738 L85 692 Z" fill="#fff" stroke="#7a4fc2" stroke-width="2"/>
+<text x="250" y="689" font-size="12.3" fill="#58378f" text-anchor="middle" font-weight="700">Must no single person hold</text>
+<text x="250" y="705" font-size="12.3" fill="#58378f" text-anchor="middle" font-weight="700">the full key?</text>
+<rect x="470" y="653" width="390" height="78" rx="12" fill="#fff" stroke="#c2552d" stroke-width="1.8"/>
+<rect x="470" y="653" width="6" height="78" rx="3" fill="#c2552d"/>
+<text x="488" y="677" font-size="13" fill="#963f1f" text-anchor="start" font-weight="700">Threshold cryptography</text>
+<text x="488" y="697" font-size="11.5" fill="#1c2230" text-anchor="start">Split the key into n shares. Any t of them</text>
+<text x="488" y="713" font-size="11.5" fill="#1c2230" text-anchor="start">rebuild it (for example 2-of-3).</text>
+<rect x="786" y="663" width="62" height="20" rx="10" fill="#fbecec" stroke="#c2552d" stroke-width="1.2"/>
+<text x="817" y="676.78" font-size="10.5" fill="#963f1f" text-anchor="middle" font-weight="600">Part 4</text>
+<path d="M415 692 H464" fill="none" stroke="#c2552d" stroke-width="1.8" marker-end="url(#m7)"/>
+<text x="442.5" y="685" font-size="11" fill="#963f1f" text-anchor="middle" font-weight="800">Yes</text>
+<rect x="85" y="782" width="390" height="94" rx="12" fill="#fff" stroke="#5d6b7e" stroke-width="1.8"/>
+<rect x="85" y="782" width="6" height="94" rx="3" fill="#5d6b7e"/>
+<text x="103" y="806" font-size="13" fill="#3f4a59" text-anchor="start" font-weight="700">Combine where needed</text>
+<text x="103" y="826" font-size="11.5" fill="#1c2230" text-anchor="start">These methods work together. For example,</text>
+<text x="103" y="842" font-size="11.5" fill="#1c2230" text-anchor="start">SMPC with DP on the result, or PSI before</text>
+<text x="103" y="858" font-size="11.5" fill="#1c2230" text-anchor="start">a joint analysis.</text>
+<path d="M250 88 V118" fill="none" stroke="#1c2230" stroke-width="1.8" marker-end="url(#m0)"/>
+<path d="M250 214 V245" fill="none" stroke="#1c2230" stroke-width="1.8" marker-end="url(#m0)"/>
+<text x="268" y="230" font-size="11" fill="#1c2230" text-anchor="middle" font-weight="800">No</text>
+<path d="M250 341 V372" fill="none" stroke="#1c2230" stroke-width="1.8" marker-end="url(#m0)"/>
+<text x="268" y="357" font-size="11" fill="#1c2230" text-anchor="middle" font-weight="800">No</text>
+<path d="M250 468 V507" fill="none" stroke="#1c2230" stroke-width="1.8" marker-end="url(#m0)"/>
+<text x="268" y="484" font-size="11" fill="#1c2230" text-anchor="middle" font-weight="800">No</text>
+<path d="M250 603 V642" fill="none" stroke="#1c2230" stroke-width="1.8" marker-end="url(#m0)"/>
+<text x="268" y="619" font-size="11" fill="#1c2230" text-anchor="middle" font-weight="800">No</text>
+<path d="M250 738 V778" fill="none" stroke="#1c2230" stroke-width="1.8" marker-end="url(#m0)"/>
+<text x="268" y="754" font-size="11" fill="#1c2230" text-anchor="middle" font-weight="800">No</text>
+</svg>

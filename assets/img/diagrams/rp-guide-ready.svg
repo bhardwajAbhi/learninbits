@@ -1,0 +1,111 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 1220" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">Readiness check before submission</title>
+  <desc id="d">A draft is ready when the problem is precise, the related work shows a clear gap, another engineer can reproduce the method, claims are measured against fair baselines, limitations and failed attempts are reported, all sources are cited without reused text and the paper follows the template of the venue. Each failed check names the part that helps.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="70" y="34" width="360" height="46" rx="23" fill="#1c2230"/>
+<text x="250" y="59" font-size="13.6" fill="#fff" text-anchor="middle" font-weight="700">Your draft is complete</text>
+<path d="M250 114 L430 166 L250 218 L70 166 Z" fill="#fff" stroke="#2f62c8" stroke-width="2"/>
+<text x="250" y="162" font-size="13.6" fill="#1f4a9e" text-anchor="middle" font-weight="700">Is the problem precise,</text>
+<text x="250" y="180" font-size="13.6" fill="#1f4a9e" text-anchor="middle" font-weight="700">scoped and measurable?</text>
+<rect x="462" y="118" width="398" height="96" rx="12" fill="#fff" stroke="#c2552d" stroke-width="1.8"/>
+<rect x="462" y="118" width="6" height="96" rx="3" fill="#c2552d"/>
+<text x="482" y="146" font-size="14.2" fill="#963f1f" text-anchor="start" font-weight="700">Rewrite the problem statement</text>
+<text x="482" y="170" font-size="12.8" fill="#1c2230" text-anchor="start">State what current methods cannot do,</text>
+<text x="482" y="189" font-size="12.8" fill="#1c2230" text-anchor="start">and a target that you can measure.</text>
+<rect x="780" y="130" width="66" height="22" rx="11" fill="#fbecec" stroke="#c2552d" stroke-width="1.2"/>
+<text x="813" y="144.96" font-size="11" fill="#963f1f" text-anchor="middle" font-weight="600">Part 10</text>
+<path d="M430 166 H456" fill="none" stroke="#c2552d" stroke-width="1.8" marker-end="url(#m7)"/>
+<text x="446" y="159" font-size="12" fill="#963f1f" text-anchor="middle" font-weight="800">No</text>
+<path d="M250 252 L430 304 L250 356 L70 304 Z" fill="#fff" stroke="#2f62c8" stroke-width="2"/>
+<text x="250" y="300" font-size="13.6" fill="#1f4a9e" text-anchor="middle" font-weight="700">Does the related work show</text>
+<text x="250" y="318" font-size="13.6" fill="#1f4a9e" text-anchor="middle" font-weight="700">a clear gap?</text>
+<rect x="462" y="256" width="398" height="96" rx="12" fill="#fff" stroke="#c2552d" stroke-width="1.8"/>
+<rect x="462" y="256" width="6" height="96" rx="3" fill="#c2552d"/>
+<text x="482" y="284" font-size="14.2" fill="#963f1f" text-anchor="start" font-weight="700">Rework the literature review</text>
+<text x="482" y="308" font-size="12.8" fill="#1c2230" text-anchor="start">Group the papers by method or theme,</text>
+<text x="482" y="327" font-size="12.8" fill="#1c2230" text-anchor="start">and name the gap that you fill.</text>
+<rect x="780" y="268" width="66" height="22" rx="11" fill="#fbecec" stroke="#c2552d" stroke-width="1.2"/>
+<text x="813" y="282.96" font-size="11" fill="#963f1f" text-anchor="middle" font-weight="600">Part 9</text>
+<path d="M430 304 H456" fill="none" stroke="#c2552d" stroke-width="1.8" marker-end="url(#m7)"/>
+<text x="446" y="297" font-size="12" fill="#963f1f" text-anchor="middle" font-weight="800">No</text>
+<path d="M250 390 L430 442 L250 494 L70 442 Z" fill="#fff" stroke="#2f62c8" stroke-width="2"/>
+<text x="250" y="438" font-size="13.6" fill="#1f4a9e" text-anchor="middle" font-weight="700">Can another engineer reproduce</text>
+<text x="250" y="456" font-size="13.6" fill="#1f4a9e" text-anchor="middle" font-weight="700">the method from the text?</text>
+<rect x="462" y="394" width="398" height="96" rx="12" fill="#fff" stroke="#c2552d" stroke-width="1.8"/>
+<rect x="462" y="394" width="6" height="96" rx="3" fill="#c2552d"/>
+<text x="482" y="422" font-size="14.2" fill="#963f1f" text-anchor="start" font-weight="700">Add the missing detail</text>
+<text x="482" y="446" font-size="12.8" fill="#1c2230" text-anchor="start">Setup, software versions, parameters,</text>
+<text x="482" y="465" font-size="12.8" fill="#1c2230" text-anchor="start">data and the steps of the method.</text>
+<rect x="780" y="406" width="66" height="22" rx="11" fill="#fbecec" stroke="#c2552d" stroke-width="1.2"/>
+<text x="813" y="420.96" font-size="11" fill="#963f1f" text-anchor="middle" font-weight="600">Part 11</text>
+<path d="M430 442 H456" fill="none" stroke="#c2552d" stroke-width="1.8" marker-end="url(#m7)"/>
+<text x="446" y="435" font-size="12" fill="#963f1f" text-anchor="middle" font-weight="800">No</text>
+<path d="M250 528 L430 580 L250 632 L70 580 Z" fill="#fff" stroke="#2f62c8" stroke-width="2"/>
+<text x="250" y="576" font-size="13.6" fill="#1f4a9e" text-anchor="middle" font-weight="700">Are claims measured against</text>
+<text x="250" y="594" font-size="13.6" fill="#1f4a9e" text-anchor="middle" font-weight="700">fair baselines?</text>
+<rect x="462" y="532" width="398" height="96" rx="12" fill="#fff" stroke="#c2552d" stroke-width="1.8"/>
+<rect x="462" y="532" width="6" height="96" rx="3" fill="#c2552d"/>
+<text x="482" y="560" font-size="14.2" fill="#963f1f" text-anchor="start" font-weight="700">Quantify the results</text>
+<text x="482" y="584" font-size="12.8" fill="#1c2230" text-anchor="start">Numbers, tables and graphs against</text>
+<text x="482" y="603" font-size="12.8" fill="#1c2230" text-anchor="start">state-of-the-art baselines.</text>
+<rect x="780" y="544" width="66" height="22" rx="11" fill="#fbecec" stroke="#c2552d" stroke-width="1.2"/>
+<text x="813" y="558.96" font-size="11" fill="#963f1f" text-anchor="middle" font-weight="600">Part 11</text>
+<path d="M430 580 H456" fill="none" stroke="#c2552d" stroke-width="1.8" marker-end="url(#m7)"/>
+<text x="446" y="573" font-size="12" fill="#963f1f" text-anchor="middle" font-weight="800">No</text>
+<path d="M250 666 L430 718 L250 770 L70 718 Z" fill="#fff" stroke="#2f62c8" stroke-width="2"/>
+<text x="250" y="714" font-size="13.6" fill="#1f4a9e" text-anchor="middle" font-weight="700">Do you report limitations and</text>
+<text x="250" y="732" font-size="13.6" fill="#1f4a9e" text-anchor="middle" font-weight="700">the attempts that failed?</text>
+<rect x="462" y="670" width="398" height="96" rx="12" fill="#fff" stroke="#c2552d" stroke-width="1.8"/>
+<rect x="462" y="670" width="6" height="96" rx="3" fill="#c2552d"/>
+<text x="482" y="698" font-size="14.2" fill="#963f1f" text-anchor="start" font-weight="700">Add an honest discussion</text>
+<text x="482" y="722" font-size="12.8" fill="#1c2230" text-anchor="start">Limitations, validity threats</text>
+<text x="482" y="741" font-size="12.8" fill="#1c2230" text-anchor="start">and concrete future work.</text>
+<rect x="780" y="682" width="66" height="22" rx="11" fill="#fbecec" stroke="#c2552d" stroke-width="1.2"/>
+<text x="813" y="696.96" font-size="11" fill="#963f1f" text-anchor="middle" font-weight="600">Part 12</text>
+<path d="M430 718 H456" fill="none" stroke="#c2552d" stroke-width="1.8" marker-end="url(#m7)"/>
+<text x="446" y="711" font-size="12" fill="#963f1f" text-anchor="middle" font-weight="800">No</text>
+<path d="M250 804 L430 856 L250 908 L70 856 Z" fill="#fff" stroke="#2f62c8" stroke-width="2"/>
+<text x="250" y="852" font-size="13.6" fill="#1f4a9e" text-anchor="middle" font-weight="700">Are all sources cited, with no</text>
+<text x="250" y="870" font-size="13.6" fill="#1f4a9e" text-anchor="middle" font-weight="700">reused text or data?</text>
+<rect x="462" y="808" width="398" height="96" rx="12" fill="#fff" stroke="#c2552d" stroke-width="1.8"/>
+<rect x="462" y="808" width="6" height="96" rx="3" fill="#c2552d"/>
+<text x="482" y="836" font-size="14.2" fill="#963f1f" text-anchor="start" font-weight="700">Fix the citations and the text</text>
+<text x="482" y="860" font-size="12.8" fill="#1c2230" text-anchor="start">Use a reference manager, and check</text>
+<text x="482" y="879" font-size="12.8" fill="#1c2230" text-anchor="start">for plagiarism and self-plagiarism.</text>
+<rect x="780" y="820" width="66" height="22" rx="11" fill="#fbecec" stroke="#c2552d" stroke-width="1.2"/>
+<text x="813" y="834.96" font-size="11" fill="#963f1f" text-anchor="middle" font-weight="600">Part 14</text>
+<path d="M430 856 H456" fill="none" stroke="#c2552d" stroke-width="1.8" marker-end="url(#m7)"/>
+<text x="446" y="849" font-size="12" fill="#963f1f" text-anchor="middle" font-weight="800">No</text>
+<path d="M250 942 L430 994 L250 1046 L70 994 Z" fill="#fff" stroke="#2f62c8" stroke-width="2"/>
+<text x="250" y="990" font-size="13.6" fill="#1f4a9e" text-anchor="middle" font-weight="700">Does the paper follow the venue</text>
+<text x="250" y="1008" font-size="13.6" fill="#1f4a9e" text-anchor="middle" font-weight="700">template and page limit?</text>
+<rect x="462" y="946" width="398" height="96" rx="12" fill="#fff" stroke="#c2552d" stroke-width="1.8"/>
+<rect x="462" y="946" width="6" height="96" rx="3" fill="#c2552d"/>
+<text x="482" y="974" font-size="14.2" fill="#963f1f" text-anchor="start" font-weight="700">Move it into the template</text>
+<text x="482" y="998" font-size="12.8" fill="#1c2230" text-anchor="start">Use the official template of the venue</text>
+<text x="482" y="1017" font-size="12.8" fill="#1c2230" text-anchor="start">and respect its page limit.</text>
+<rect x="780" y="958" width="66" height="22" rx="11" fill="#fbecec" stroke="#c2552d" stroke-width="1.2"/>
+<text x="813" y="972.96" font-size="11" fill="#963f1f" text-anchor="middle" font-weight="600">Part 13</text>
+<path d="M430 994 H456" fill="none" stroke="#c2552d" stroke-width="1.8" marker-end="url(#m7)"/>
+<text x="446" y="987" font-size="12" fill="#963f1f" text-anchor="middle" font-weight="800">No</text>
+<rect x="70" y="1090" width="398" height="96" rx="12" fill="#fff" stroke="#0f8a6a" stroke-width="1.8"/>
+<rect x="70" y="1090" width="6" height="96" rx="3" fill="#0f8a6a"/>
+<text x="90" y="1118" font-size="14.2" fill="#0b6650" text-anchor="start" font-weight="700">Submit</text>
+<text x="90" y="1142" font-size="12.8" fill="#1c2230" text-anchor="start">Then answer every reviewer comment,</text>
+<text x="90" y="1161" font-size="12.8" fill="#1c2230" text-anchor="start">point by point, with the changes made.</text>
+<path d="M250 80 V110" fill="none" stroke="#1c2230" stroke-width="1.8" marker-end="url(#m0)"/>
+<path d="M250 218 V248" fill="none" stroke="#1c2230" stroke-width="1.8" marker-end="url(#m0)"/>
+<text x="268" y="234" font-size="12" fill="#1c2230" text-anchor="middle" font-weight="800">Yes</text>
+<path d="M250 356 V386" fill="none" stroke="#1c2230" stroke-width="1.8" marker-end="url(#m0)"/>
+<text x="268" y="372" font-size="12" fill="#1c2230" text-anchor="middle" font-weight="800">Yes</text>
+<path d="M250 494 V524" fill="none" stroke="#1c2230" stroke-width="1.8" marker-end="url(#m0)"/>
+<text x="268" y="510" font-size="12" fill="#1c2230" text-anchor="middle" font-weight="800">Yes</text>
+<path d="M250 632 V662" fill="none" stroke="#1c2230" stroke-width="1.8" marker-end="url(#m0)"/>
+<text x="268" y="648" font-size="12" fill="#1c2230" text-anchor="middle" font-weight="800">Yes</text>
+<path d="M250 770 V800" fill="none" stroke="#1c2230" stroke-width="1.8" marker-end="url(#m0)"/>
+<text x="268" y="786" font-size="12" fill="#1c2230" text-anchor="middle" font-weight="800">Yes</text>
+<path d="M250 908 V938" fill="none" stroke="#1c2230" stroke-width="1.8" marker-end="url(#m0)"/>
+<text x="268" y="924" font-size="12" fill="#1c2230" text-anchor="middle" font-weight="800">Yes</text>
+<path d="M250 1046 V1086" fill="none" stroke="#1c2230" stroke-width="1.8" marker-end="url(#m0)"/>
+<text x="268" y="1062" font-size="12" fill="#1c2230" text-anchor="middle" font-weight="800">Yes</text>
+</svg>

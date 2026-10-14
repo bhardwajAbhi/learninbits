@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 520" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">Which one fits your device?</title>
+  <desc id="d">Answer four questions about the device. Count the yes answers. Three or four yes answers point to Android. Zero or one yes answer points to embedded Linux. Two yes answers mean that you test both on your hardware.</desc>
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker>
+  </defs>
+
+  <!-- start -->
+  <rect x="330" y="16" width="200" height="44" rx="22" fill="#1c2230"/>
+  <text x="430" y="44" font-size="15" font-weight="700" text-anchor="middle" fill="#fff">Your new device</text>
+  <line x1="430" y1="62" x2="430" y2="84" stroke="#4a5263" stroke-width="2" marker-end="url(#a)"/>
+
+  <!-- questions -->
+  <g font-size="14" fill="#1c2230">
+    <rect x="150" y="90" width="560" height="50" rx="10" fill="#ffffff" stroke="#cfc9bb"/>
+    <circle cx="180" cy="115" r="14" fill="#0f8a6a"/><text x="180" y="120" text-anchor="middle" font-weight="700" fill="#fff" font-size="13">1</text>
+    <text x="206" y="120">Does it need a rich touch screen?</text>
+    <rect x="620" y="103" width="72" height="24" rx="12" fill="#e3f4ee"/><text x="656" y="120" text-anchor="middle" font-size="12" font-weight="700" fill="#0b5e48">Yes / No</text>
+
+    <rect x="150" y="150" width="560" height="50" rx="10" fill="#ffffff" stroke="#cfc9bb"/>
+    <circle cx="180" cy="175" r="14" fill="#2f62c8"/><text x="180" y="180" text-anchor="middle" font-weight="700" fill="#fff" font-size="13">2</text>
+    <text x="206" y="180">Does it need Wi-Fi, Bluetooth or mobile data?</text>
+    <rect x="620" y="163" width="72" height="24" rx="12" fill="#e5ecfb"/><text x="656" y="180" text-anchor="middle" font-size="12" font-weight="700" fill="#1f448f">Yes / No</text>
+
+    <rect x="150" y="210" width="560" height="50" rx="10" fill="#ffffff" stroke="#cfc9bb"/>
+    <circle cx="180" cy="235" r="14" fill="#7a4fc2"/><text x="180" y="240" text-anchor="middle" font-weight="700" fill="#fff" font-size="13">3</text>
+    <text x="206" y="240">Must it run apps from other developers?</text>
+    <rect x="620" y="223" width="72" height="24" rx="12" fill="#efe8fb"/><text x="656" y="240" text-anchor="middle" font-size="12" font-weight="700" fill="#58378f">Yes / No</text>
+
+    <rect x="150" y="270" width="560" height="50" rx="10" fill="#ffffff" stroke="#cfc9bb"/>
+    <circle cx="180" cy="295" r="14" fill="#b7791f"/><text x="180" y="300" text-anchor="middle" font-weight="700" fill="#fff" font-size="13">4</text>
+    <text x="206" y="300">Must it get new features after you sell it?</text>
+    <rect x="620" y="283" width="72" height="24" rx="12" fill="#fdf4e3"/><text x="656" y="300" text-anchor="middle" font-size="12" font-weight="700" fill="#7a4f10">Yes / No</text>
+  </g>
+
+  <!-- count -->
+  <line x1="430" y1="322" x2="430" y2="344" stroke="#4a5263" stroke-width="2" marker-end="url(#a)"/>
+  <rect x="320" y="350" width="220" height="40" rx="20" fill="#f2efe8" stroke="#9aa0ab"/>
+  <text x="430" y="375" font-size="14" font-weight="700" text-anchor="middle" fill="#1c2230">Count the yes answers</text>
+
+  <!-- branches -->
+  <path d="M370 392 C300 420 190 420 150 440" fill="none" stroke="#4a5263" stroke-width="2" marker-end="url(#a)"/>
+  <line x1="430" y1="392" x2="430" y2="436" stroke="#4a5263" stroke-width="2" marker-end="url(#a)"/>
+  <path d="M490 392 C560 420 670 420 710 440" fill="none" stroke="#4a5263" stroke-width="2" marker-end="url(#a)"/>
+
+  <rect x="40" y="444" width="230" height="64" rx="12" fill="#c2552d"/>
+  <text x="155" y="470" font-size="13" text-anchor="middle" fill="#fbe0d6">0 or 1 yes</text>
+  <text x="155" y="492" font-size="15.5" font-weight="700" text-anchor="middle" fill="#fff">Embedded Linux</text>
+
+  <rect x="315" y="444" width="230" height="64" rx="12" fill="#ffffff" stroke="#5d6b7e" stroke-width="2" stroke-dasharray="6 5"/>
+  <text x="430" y="470" font-size="13" text-anchor="middle" fill="#4a5263">2 yes</text>
+  <text x="430" y="492" font-size="15" font-weight="700" text-anchor="middle" fill="#1c2230">Test both on your board</text>
+
+  <rect x="590" y="444" width="230" height="64" rx="12" fill="#0f8a6a"/>
+  <text x="705" y="470" font-size="13" text-anchor="middle" fill="#d8f2ea">3 or 4 yes</text>
+  <text x="705" y="492" font-size="15.5" font-weight="700" text-anchor="middle" fill="#fff">Android</text>
+</svg>

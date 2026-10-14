@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 380" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">Your workspace and the three model services</title>
+  <desc id="d">On your computer, the project folder ai-engineering holds the programs in src, the secret keys in the .env file and the environment that uv makes. The programs talk to three model services. Gemini and OpenRouter are on the internet and need an API key. Ollama runs on your own computer and needs no key.</desc>
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker>
+  </defs>
+
+  <!-- computer -->
+  <rect x="16" y="20" width="520" height="340" rx="18" fill="#f2efe8" stroke="#9aa0ab" stroke-width="1.5"/>
+  <text x="36" y="48" font-size="12" font-weight="700" letter-spacing="1.2" fill="#7b8292">YOUR COMPUTER</text>
+
+  <!-- project -->
+  <rect x="36" y="64" width="290" height="276" rx="14" fill="#ffffff" stroke="#7a4fc2" stroke-width="2"/>
+  <text x="56" y="92" font-size="15" font-weight="700" fill="#58378f">ai-engineering/</text>
+  <rect x="56" y="106" width="250" height="62" rx="10" fill="#f3f0fa"/>
+  <text x="70" y="128" font-size="13" font-weight="700" fill="#1c2230">src/  your programs</text>
+  <text x="70" y="148" font-size="11" font-family="JetBrains Mono, monospace" fill="#4a5263">04_zero_shot_google.py ...</text>
+  <rect x="56" y="178" width="250" height="62" rx="10" fill="#fbecec"/>
+  <text x="70" y="200" font-size="13" font-weight="700" fill="#1c2230">.env  your secret keys</text>
+  <text x="70" y="220" font-size="11" fill="#a3322d">never share, never upload</text>
+  <rect x="56" y="250" width="250" height="72" rx="10" fill="#f2efe8"/>
+  <text x="70" y="272" font-size="13" font-weight="700" fill="#1c2230">.venv/ and pyproject.toml</text>
+  <text x="70" y="292" font-size="11" fill="#4a5263">Python 3.11 and the libraries,</text>
+  <text x="70" y="308" font-size="11" fill="#4a5263">made by uv</text>
+
+  <!-- ollama -->
+  <rect x="360" y="226" width="160" height="114" rx="14" fill="#0f8a6a"/>
+  <text x="440" y="262" font-size="16" font-weight="700" text-anchor="middle" fill="#fff">Ollama</text>
+  <text x="440" y="284" font-size="11.5" text-anchor="middle" fill="#d8f2ea">llama3.2:3b</text>
+  <text x="440" y="306" font-size="11.5" text-anchor="middle" fill="#d8f2ea">no key, data stays here</text>
+  <text x="440" y="326" font-size="11.5" text-anchor="middle" fill="#d8f2ea">used in Your turn</text>
+
+  <!-- internet -->
+  <rect x="566" y="20" width="298" height="340" rx="18" fill="#f3f0fa" stroke="#7a4fc2" stroke-width="1.5" stroke-dasharray="7 5"/>
+  <text x="586" y="48" font-size="12" font-weight="700" letter-spacing="1.2" fill="#7a4fc2">THE INTERNET</text>
+  <rect x="596" y="70" width="240" height="110" rx="14" fill="#2f62c8"/>
+  <text x="716" y="104" font-size="16" font-weight="700" text-anchor="middle" fill="#fff">Gemini (Google)</text>
+  <text x="716" y="126" font-size="11.5" text-anchor="middle" fill="#dbe5fb">key: GOOGLE_API_KEY</text>
+  <text x="716" y="146" font-size="11.5" text-anchor="middle" fill="#dbe5fb">used in Example 1</text>
+  <rect x="596" y="200" width="240" height="140" rx="14" fill="#7a4fc2"/>
+  <text x="716" y="234" font-size="16" font-weight="700" text-anchor="middle" fill="#fff">OpenRouter</text>
+  <text x="716" y="256" font-size="11.5" text-anchor="middle" fill="#e9defa">key: OPENROUTER_API_KEY</text>
+  <text x="716" y="276" font-size="11.5" text-anchor="middle" fill="#e9defa">one key, models of many companies</text>
+  <text x="716" y="296" font-size="11.5" text-anchor="middle" fill="#e9defa">used in Example 2</text>
+
+  <!-- arrows -->
+  <path d="M326 118 H590" fill="none" stroke="#4a5263" stroke-width="2" marker-end="url(#a)"/>
+  <path d="M326 142 H540 Q551 142 551 153 V259 Q551 270 562 270 H590" fill="none" stroke="#4a5263" stroke-width="2" marker-end="url(#a)"/>
+  <path d="M326 283 H354" fill="none" stroke="#4a5263" stroke-width="2" marker-end="url(#a)"/>
+</svg>

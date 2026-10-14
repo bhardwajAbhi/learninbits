@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 765" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">Lane D, use data with AI and LLMs</title>
+  <desc id="d">If you train or fine-tune a model on personal data, make the data non-personal first with synthetic data and DP or with anonymization, and a Significant Data Fiduciary must check its algorithms. If prompts or RAG documents with personal data go to an external LLM, use private RAG with detection, format-preserving tokens and local decryption, and measure recall. If users or untrusted text reach the model, add prompt-level and model-level defenses. Before release, run AI red teaming and an AI impact assessment. In production, monitor with guardian agents.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="85" y="34" width="330" height="54" rx="27" fill="#c2552d"/>
+<text x="250" y="55" font-size="12.5" fill="#fff" text-anchor="middle" font-weight="700">Lane D</text>
+<text x="250" y="71" font-size="12.5" fill="#fff" text-anchor="middle" font-weight="700">AI and LLMs</text>
+<path d="M250 122 L415 168 L250 214 L85 168 Z" fill="#fff" stroke="#c2552d" stroke-width="2"/>
+<text x="250" y="165" font-size="12.3" fill="#963f1f" text-anchor="middle" font-weight="700">Will you train or fine-tune a</text>
+<text x="250" y="181" font-size="12.3" fill="#963f1f" text-anchor="middle" font-weight="700">model on personal data?</text>
+<rect x="470" y="121" width="390" height="94" rx="12" fill="#fff" stroke="#c2552d" stroke-width="1.8"/>
+<rect x="470" y="121" width="6" height="94" rx="3" fill="#c2552d"/>
+<text x="488" y="145" font-size="13" fill="#963f1f" text-anchor="start" font-weight="700">Make the data non-personal first</text>
+<text x="488" y="165" font-size="11.5" fill="#1c2230" text-anchor="start">Use synthetic data with DP, or anonymize</text>
+<text x="488" y="181" font-size="11.5" fill="#1c2230" text-anchor="start">(lane B). Without PETs the risk is high.</text>
+<text x="488" y="197" font-size="11.5" fill="#1c2230" text-anchor="start">SDFs check their algorithms (Rule 13(3)).</text>
+<rect x="786" y="131" width="62" height="20" rx="10" fill="#fbecec" stroke="#c2552d" stroke-width="1.2"/>
+<text x="817" y="144.78" font-size="10.5" fill="#963f1f" text-anchor="middle" font-weight="600">Part 6</text>
+<path d="M415 168 H464" fill="none" stroke="#c2552d" stroke-width="1.8" marker-end="url(#m7)"/>
+<text x="442.5" y="161" font-size="11" fill="#963f1f" text-anchor="middle" font-weight="800">Yes</text>
+<path d="M250 249 L415 295 L250 341 L85 295 Z" fill="#fff" stroke="#c2552d" stroke-width="2"/>
+<text x="250" y="292" font-size="12.3" fill="#963f1f" text-anchor="middle" font-weight="700">Will personal data in prompts or</text>
+<text x="250" y="308" font-size="12.3" fill="#963f1f" text-anchor="middle" font-weight="700">RAG reach an external LLM?</text>
+<rect x="470" y="240" width="390" height="110" rx="12" fill="#fff" stroke="#7a4fc2" stroke-width="1.8"/>
+<rect x="470" y="240" width="6" height="110" rx="3" fill="#7a4fc2"/>
+<text x="488" y="264" font-size="13" fill="#58378f" text-anchor="start" font-weight="700">Private RAG, pseudonymous inference</text>
+<text x="488" y="284" font-size="11.5" fill="#1c2230" text-anchor="start">Detect 30+ attributes (NER and rules).</text>
+<text x="488" y="300" font-size="11.5" fill="#1c2230" text-anchor="start">Replace them with FPE tokens.</text>
+<text x="488" y="316" font-size="11.5" fill="#1c2230" text-anchor="start">Decrypt only on the side of the user.</text>
+<text x="488" y="332" font-size="11.5" fill="#1c2230" text-anchor="start">Measure recall = TP x 100 / (TP + FN).</text>
+<rect x="786" y="250" width="62" height="20" rx="10" fill="#f3f0fa" stroke="#7a4fc2" stroke-width="1.2"/>
+<text x="817" y="263.78" font-size="10.5" fill="#58378f" text-anchor="middle" font-weight="600">Part 6</text>
+<path d="M415 295 H464" fill="none" stroke="#7a4fc2" stroke-width="1.8" marker-end="url(#m5)"/>
+<text x="442.5" y="288" font-size="11" fill="#58378f" text-anchor="middle" font-weight="800">Yes</text>
+<path d="M250 384 L415 430 L250 476 L85 430 Z" fill="#fff" stroke="#c2552d" stroke-width="2"/>
+<text x="250" y="427" font-size="12.3" fill="#963f1f" text-anchor="middle" font-weight="700">Can users or untrusted text</text>
+<text x="250" y="443" font-size="12.3" fill="#963f1f" text-anchor="middle" font-weight="700">(emails, web) reach the model?</text>
+<rect x="470" y="375" width="390" height="110" rx="12" fill="#fff" stroke="#2f62c8" stroke-width="1.8"/>
+<rect x="470" y="375" width="6" height="110" rx="3" fill="#2f62c8"/>
+<text x="488" y="399" font-size="13" fill="#1f4a9e" text-anchor="start" font-weight="700">Defenses at two levels</text>
+<text x="488" y="419" font-size="11.5" fill="#1c2230" text-anchor="start">At the prompt, detection, perturbation</text>
+<text x="488" y="435" font-size="11.5" fill="#1c2230" text-anchor="start">and safer system prompts.</text>
+<text x="488" y="451" font-size="11.5" fill="#1c2230" text-anchor="start">In the model, safety fine-tuning and a</text>
+<text x="488" y="467" font-size="11.5" fill="#1c2230" text-anchor="start">guard SLM that checks the output.</text>
+<rect x="786" y="385" width="62" height="20" rx="10" fill="#eef3fb" stroke="#2f62c8" stroke-width="1.2"/>
+<text x="817" y="398.78" font-size="10.5" fill="#1f4a9e" text-anchor="middle" font-weight="600">Part 6</text>
+<path d="M415 430 H464" fill="none" stroke="#2f62c8" stroke-width="1.8" marker-end="url(#m3)"/>
+<text x="442.5" y="423" font-size="11" fill="#1f4a9e" text-anchor="middle" font-weight="800">Yes</text>
+<rect x="85" y="519" width="330" height="54" rx="10" fill="#fdf4e3" stroke="#b7791f" stroke-width="1.5"/>
+<text x="250" y="543" font-size="12" fill="#8a5a12" text-anchor="middle" font-weight="600">Before each release, run AI</text>
+<text x="250" y="559" font-size="12" fill="#8a5a12" text-anchor="middle" font-weight="600">red teaming (fairness, safety, privacy)</text>
+<rect x="470" y="499" width="390" height="94" rx="12" fill="#fff" stroke="#b7791f" stroke-width="1.8"/>
+<rect x="470" y="499" width="6" height="94" rx="3" fill="#b7791f"/>
+<text x="488" y="523" font-size="13" fill="#8a5a12" text-anchor="start" font-weight="700">Test and assess</text>
+<text x="488" y="543" font-size="11.5" fill="#1c2230" text-anchor="start">Attacker agents, jailbreak templates, judges.</text>
+<text x="488" y="559" font-size="11.5" fill="#1c2230" text-anchor="start">Add an AI impact assessment on the eight</text>
+<text x="488" y="575" font-size="11.5" fill="#1c2230" text-anchor="start">PASSFERS principles.</text>
+<rect x="786" y="509" width="62" height="20" rx="10" fill="#fdf4e3" stroke="#b7791f" stroke-width="1.2"/>
+<text x="817" y="522.78" font-size="10.5" fill="#8a5a12" text-anchor="middle" font-weight="600">Part 6</text>
+<path d="M415 546 H464" fill="none" stroke="#b7791f" stroke-width="1.6" marker-end="url(#m6)"/>
+<rect x="85" y="637" width="390" height="94" rx="12" fill="#fff" stroke="#0f8a6a" stroke-width="1.8"/>
+<rect x="85" y="637" width="6" height="94" rx="3" fill="#0f8a6a"/>
+<text x="103" y="661" font-size="13" fill="#0b6650" text-anchor="start" font-weight="700">Monitor in production</text>
+<text x="103" y="681" font-size="11.5" fill="#1c2230" text-anchor="start">Guardian agents watch and act. Sentinels</text>
+<text x="103" y="697" font-size="11.5" fill="#1c2230" text-anchor="start">build a baseline, and operatives respond.</text>
+<text x="103" y="713" font-size="11.5" fill="#1c2230" text-anchor="start">Feed the findings back into training.</text>
+<rect x="401" y="647" width="62" height="20" rx="10" fill="#e3f4ee" stroke="#0f8a6a" stroke-width="1.2"/>
+<text x="432" y="660.78" font-size="10.5" fill="#0b6650" text-anchor="middle" font-weight="600">Part 8</text>
+<path d="M250 88 V118" fill="none" stroke="#1c2230" stroke-width="1.8" marker-end="url(#m0)"/>
+<path d="M250 214 V245" fill="none" stroke="#1c2230" stroke-width="1.8" marker-end="url(#m0)"/>
+<text x="268" y="230" font-size="11" fill="#1c2230" text-anchor="middle" font-weight="800">No</text>
+<path d="M250 341 V380" fill="none" stroke="#1c2230" stroke-width="1.8" marker-end="url(#m0)"/>
+<text x="268" y="357" font-size="11" fill="#1c2230" text-anchor="middle" font-weight="800">No</text>
+<path d="M250 476 V515" fill="none" stroke="#1c2230" stroke-width="1.8" marker-end="url(#m0)"/>
+<text x="268" y="492" font-size="11" fill="#1c2230" text-anchor="middle" font-weight="800">No</text>
+<path d="M250 573 V633" fill="none" stroke="#1c2230" stroke-width="1.8" marker-end="url(#m0)"/>
+</svg>

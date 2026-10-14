@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 458" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">The parts of the Zygote service definition</title>
+  <desc id="d">The shortened init.zygote64.rc file on the left, with notes on the right. The first lines name the program app_process64 with arguments that start ART in Zygote mode and fork system_server. class main, priority -20 and task_profiles control scheduling. user root and group root give the identity that Zygote needs to change the user of each child. Two socket lines make init create /dev/socket/zygote and the socket for the USAP pool. onrestart lines restart the media, camera and network daemons with Zygote. critical with a window and the target zygote-fatal reboots the device after too many crashes.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="20" y="24" width="470" height="386" rx="12" fill="#1f2633"/>
+<text x="36" y="48" font-size="12" fill="#9aa6b8" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">init.zygote64.rc (shortened)</text>
+<rect x="26" y="62" width="4" height="18" rx="2" fill="#2f62c8"/>
+<text x="38" y="76" font-size="11.2" fill="#e8ecf3" text-anchor="start" font-family="JetBrains Mono, monospace">service zygote /system/bin/app_process64</text>
+<rect x="26" y="83" width="4" height="18" rx="2" fill="#2f62c8"/>
+<text x="38" y="97" font-size="11.2" fill="#e8ecf3" text-anchor="start" font-family="JetBrains Mono, monospace">    -Xzygote /system/bin --zygote</text>
+<rect x="26" y="104" width="4" height="18" rx="2" fill="#2f62c8"/>
+<text x="38" y="118" font-size="11.2" fill="#e8ecf3" text-anchor="start" font-family="JetBrains Mono, monospace">    --start-system-server --socket-name=zygote</text>
+<rect x="26" y="125" width="4" height="18" rx="2" fill="#5d6b7e"/>
+<text x="38" y="139" font-size="11.2" fill="#e8ecf3" text-anchor="start" font-family="JetBrains Mono, monospace">    class main</text>
+<rect x="26" y="146" width="4" height="18" rx="2" fill="#5d6b7e"/>
+<text x="38" y="160" font-size="11.2" fill="#e8ecf3" text-anchor="start" font-family="JetBrains Mono, monospace">    priority -20</text>
+<rect x="26" y="167" width="4" height="18" rx="2" fill="#7a4fc2"/>
+<text x="38" y="181" font-size="11.2" fill="#e8ecf3" text-anchor="start" font-family="JetBrains Mono, monospace">    user root</text>
+<rect x="26" y="188" width="4" height="18" rx="2" fill="#7a4fc2"/>
+<text x="38" y="202" font-size="11.2" fill="#e8ecf3" text-anchor="start" font-family="JetBrains Mono, monospace">    group root readproc reserved_disk</text>
+<rect x="26" y="209" width="4" height="18" rx="2" fill="#b7791f"/>
+<text x="38" y="223" font-size="11.2" fill="#e8ecf3" text-anchor="start" font-family="JetBrains Mono, monospace">    socket zygote stream 660 root system</text>
+<rect x="26" y="230" width="4" height="18" rx="2" fill="#b7791f"/>
+<text x="38" y="244" font-size="11.2" fill="#e8ecf3" text-anchor="start" font-family="JetBrains Mono, monospace">    socket usap_pool_primary stream 660 root system</text>
+<rect x="26" y="251" width="4" height="18" rx="2" fill="#c2552d"/>
+<text x="38" y="265" font-size="11.2" fill="#e8ecf3" text-anchor="start" font-family="JetBrains Mono, monospace">    onrestart write /sys/power/state on</text>
+<rect x="26" y="272" width="4" height="18" rx="2" fill="#c2552d"/>
+<text x="38" y="286" font-size="11.2" fill="#e8ecf3" text-anchor="start" font-family="JetBrains Mono, monospace">    onrestart restart audioserver</text>
+<rect x="26" y="293" width="4" height="18" rx="2" fill="#c2552d"/>
+<text x="38" y="307" font-size="11.2" fill="#e8ecf3" text-anchor="start" font-family="JetBrains Mono, monospace">    onrestart restart cameraserver</text>
+<rect x="26" y="314" width="4" height="18" rx="2" fill="#c2552d"/>
+<text x="38" y="328" font-size="11.2" fill="#e8ecf3" text-anchor="start" font-family="JetBrains Mono, monospace">    onrestart restart netd</text>
+<rect x="26" y="335" width="4" height="18" rx="2" fill="#5d6b7e"/>
+<text x="38" y="349" font-size="11.2" fill="#e8ecf3" text-anchor="start" font-family="JetBrains Mono, monospace">    task_profiles ProcessCapacityHigh MaxPerformance</text>
+<rect x="26" y="356" width="4" height="18" rx="2" fill="#0f8a6a"/>
+<text x="38" y="370" font-size="11.2" fill="#e8ecf3" text-anchor="start" font-family="JetBrains Mono, monospace">    critical window=${zygote.critical_window.minute:-off}</text>
+<rect x="26" y="377" width="4" height="18" rx="2" fill="#0f8a6a"/>
+<text x="38" y="391" font-size="11.2" fill="#e8ecf3" text-anchor="start" font-family="JetBrains Mono, monospace">             target=zygote-fatal</text>
+<rect x="520" y="24" width="340" height="62" rx="10" fill="#fff" stroke="#2f62c8" stroke-width="1.4"/>
+<text x="534" y="44" font-size="12.4" fill="#1f4a9e" text-anchor="start" font-weight="700">Program and arguments</text>
+<text x="534" y="62" font-size="11.2" fill="#4a5263" text-anchor="start">app_process64 starts ART in Zygote mode</text>
+<text x="534" y="77" font-size="11.2" fill="#4a5263" text-anchor="start">and asks it to fork system_server.</text>
+<path d="M490 93 C 505 93, 505 55, 518 55" fill="none" stroke="#2f62c8" stroke-width="1.3"/>
+<rect x="520" y="94" width="340" height="62" rx="10" fill="#fff" stroke="#5d6b7e" stroke-width="1.4"/>
+<text x="534" y="114" font-size="12.4" fill="#3f4a59" text-anchor="start" font-weight="700">Scheduling</text>
+<text x="534" y="132" font-size="11.2" fill="#4a5263" text-anchor="start">Class main, top priority and</text>
+<text x="534" y="147" font-size="11.2" fill="#4a5263" text-anchor="start">task profiles for a fast start.</text>
+<path d="M490 240 C 505 240, 505 125, 518 125" fill="none" stroke="#5d6b7e" stroke-width="1.3"/>
+<rect x="520" y="164" width="340" height="62" rx="10" fill="#fff" stroke="#7a4fc2" stroke-width="1.4"/>
+<text x="534" y="184" font-size="12.4" fill="#58378f" text-anchor="start" font-weight="700">Identity</text>
+<text x="534" y="202" font-size="11.2" fill="#4a5263" text-anchor="start">Root, because Zygote must change</text>
+<text x="534" y="217" font-size="11.2" fill="#4a5263" text-anchor="start">the user of each child.</text>
+<path d="M490 187.5 C 505 187.5, 505 195, 518 195" fill="none" stroke="#7a4fc2" stroke-width="1.3"/>
+<rect x="520" y="234" width="340" height="62" rx="10" fill="#fff" stroke="#b7791f" stroke-width="1.4"/>
+<text x="534" y="254" font-size="12.4" fill="#8a5a12" text-anchor="start" font-weight="700">Sockets</text>
+<text x="534" y="272" font-size="11.2" fill="#4a5263" text-anchor="start">init creates /dev/socket/zygote and</text>
+<text x="534" y="287" font-size="11.2" fill="#4a5263" text-anchor="start">the socket for the USAP pool.</text>
+<path d="M490 229.5 C 505 229.5, 505 265, 518 265" fill="none" stroke="#b7791f" stroke-width="1.3"/>
+<rect x="520" y="304" width="340" height="62" rx="10" fill="#fff" stroke="#c2552d" stroke-width="1.4"/>
+<text x="534" y="324" font-size="12.4" fill="#963f1f" text-anchor="start" font-weight="700">On restart</text>
+<text x="534" y="342" font-size="11.2" fill="#4a5263" text-anchor="start">A Zygote restart also restarts</text>
+<text x="534" y="357" font-size="11.2" fill="#4a5263" text-anchor="start">the media, camera and net daemons.</text>
+<path d="M490 292.5 C 505 292.5, 505 335, 518 335" fill="none" stroke="#c2552d" stroke-width="1.3"/>
+<rect x="520" y="374" width="340" height="62" rx="10" fill="#fff" stroke="#0f8a6a" stroke-width="1.4"/>
+<text x="534" y="394" font-size="12.4" fill="#0b6650" text-anchor="start" font-weight="700">Crash limit</text>
+<text x="534" y="412" font-size="11.2" fill="#4a5263" text-anchor="start">Too many crashes in the window</text>
+<text x="534" y="427" font-size="11.2" fill="#4a5263" text-anchor="start">reboot into the given target.</text>
+<path d="M490 376.5 C 505 376.5, 505 405, 518 405" fill="none" stroke="#0f8a6a" stroke-width="1.3"/>
+</svg>

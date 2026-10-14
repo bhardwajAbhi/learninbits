@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 560" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">The anatomy of a research paper</title>
+  <desc id="d">A paper page with six blocks. Front matter has the title, authors, affiliations, abstract and keywords. Context and motivation has the introduction, literature review and problem statement. Methodology has the approach, architecture and assumptions. Experiments and data has the setup, data and metrics. Results and discussion has the results, analysis and discussion. Conclusion and references has limitations, future work, the conclusion and references.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="40" y="20" width="300" height="520" rx="10" fill="#fff" stroke="#d9d4c7" stroke-width="1.5"/>
+<rect x="56" y="34" width="268" height="60" rx="8" fill="#eef3fb" stroke="#2f62c8" stroke-width="1.3"/>
+<line x1="72" y1="56" x2="300" y2="56" stroke="#2f62c8" stroke-width="2.2"/>
+<line x1="72" y1="68" x2="260" y2="68" stroke="#2f62c8" stroke-width="2.2"/>
+<line x1="72" y1="80" x2="300" y2="80" stroke="#2f62c8" stroke-width="2.2"/>
+<line x1="326" y1="64" x2="384" y2="64" stroke="#2f62c8" stroke-width="1.6" stroke-dasharray="4 4"/>
+<circle cx="384" cy="64" r="4" fill="#2f62c8"/>
+<text x="400" y="60" font-size="15.5" fill="#1f4a9e" text-anchor="start" font-weight="700">1  Front matter</text>
+<text x="400" y="82" font-size="13.5" fill="#4a5263" text-anchor="start">Title, authors, affiliations, abstract, keywords</text>
+<rect x="56" y="112" width="268" height="90" rx="8" fill="#f3f0fa" stroke="#7a4fc2" stroke-width="1.3"/>
+<line x1="72" y1="134" x2="300" y2="134" stroke="#7a4fc2" stroke-width="2.2"/>
+<line x1="72" y1="146" x2="260" y2="146" stroke="#7a4fc2" stroke-width="2.2"/>
+<line x1="72" y1="158" x2="300" y2="158" stroke="#7a4fc2" stroke-width="2.2"/>
+<line x1="72" y1="170" x2="260" y2="170" stroke="#7a4fc2" stroke-width="2.2"/>
+<line x1="72" y1="182" x2="300" y2="182" stroke="#7a4fc2" stroke-width="2.2"/>
+<line x1="326" y1="157" x2="384" y2="157" stroke="#7a4fc2" stroke-width="1.6" stroke-dasharray="4 4"/>
+<circle cx="384" cy="157" r="4" fill="#7a4fc2"/>
+<text x="400" y="153" font-size="15.5" fill="#58378f" text-anchor="start" font-weight="700">2  Context and motivation</text>
+<text x="400" y="175" font-size="13.5" fill="#4a5263" text-anchor="start">Introduction, literature review, problem statement</text>
+<rect x="56" y="220" width="268" height="70" rx="8" fill="#e3f4ee" stroke="#0f8a6a" stroke-width="1.3"/>
+<line x1="72" y1="242" x2="300" y2="242" stroke="#0f8a6a" stroke-width="2.2"/>
+<line x1="72" y1="254" x2="260" y2="254" stroke="#0f8a6a" stroke-width="2.2"/>
+<line x1="72" y1="266" x2="300" y2="266" stroke="#0f8a6a" stroke-width="2.2"/>
+<line x1="72" y1="278" x2="260" y2="278" stroke="#0f8a6a" stroke-width="2.2"/>
+<line x1="326" y1="255" x2="384" y2="255" stroke="#0f8a6a" stroke-width="1.6" stroke-dasharray="4 4"/>
+<circle cx="384" cy="255" r="4" fill="#0f8a6a"/>
+<text x="400" y="251" font-size="15.5" fill="#0b6650" text-anchor="start" font-weight="700">3  Methodology</text>
+<text x="400" y="273" font-size="13.5" fill="#4a5263" text-anchor="start">Approach, architecture, assumptions</text>
+<rect x="56" y="308" width="268" height="70" rx="8" fill="#fdf4e3" stroke="#b7791f" stroke-width="1.3"/>
+<line x1="72" y1="330" x2="300" y2="330" stroke="#b7791f" stroke-width="2.2"/>
+<line x1="72" y1="342" x2="260" y2="342" stroke="#b7791f" stroke-width="2.2"/>
+<line x1="72" y1="354" x2="300" y2="354" stroke="#b7791f" stroke-width="2.2"/>
+<line x1="72" y1="366" x2="260" y2="366" stroke="#b7791f" stroke-width="2.2"/>
+<line x1="326" y1="343" x2="384" y2="343" stroke="#b7791f" stroke-width="1.6" stroke-dasharray="4 4"/>
+<circle cx="384" cy="343" r="4" fill="#b7791f"/>
+<text x="400" y="339" font-size="15.5" fill="#8a5a12" text-anchor="start" font-weight="700">4  Experiments and data</text>
+<text x="400" y="361" font-size="13.5" fill="#4a5263" text-anchor="start">Experimental setup, data, metrics</text>
+<rect x="56" y="396" width="268" height="70" rx="8" fill="#fbecec" stroke="#c2552d" stroke-width="1.3"/>
+<line x1="72" y1="418" x2="300" y2="418" stroke="#c2552d" stroke-width="2.2"/>
+<line x1="72" y1="430" x2="260" y2="430" stroke="#c2552d" stroke-width="2.2"/>
+<line x1="72" y1="442" x2="300" y2="442" stroke="#c2552d" stroke-width="2.2"/>
+<line x1="72" y1="454" x2="260" y2="454" stroke="#c2552d" stroke-width="2.2"/>
+<line x1="326" y1="431" x2="384" y2="431" stroke="#c2552d" stroke-width="1.6" stroke-dasharray="4 4"/>
+<circle cx="384" cy="431" r="4" fill="#c2552d"/>
+<text x="400" y="427" font-size="15.5" fill="#963f1f" text-anchor="start" font-weight="700">5  Results and discussion</text>
+<text x="400" y="449" font-size="13.5" fill="#4a5263" text-anchor="start">Results, analysis, discussion</text>
+<rect x="56" y="484" width="268" height="60" rx="8" fill="#eef0f3" stroke="#5d6b7e" stroke-width="1.3"/>
+<line x1="72" y1="506" x2="300" y2="506" stroke="#5d6b7e" stroke-width="2.2"/>
+<line x1="72" y1="518" x2="260" y2="518" stroke="#5d6b7e" stroke-width="2.2"/>
+<line x1="72" y1="530" x2="300" y2="530" stroke="#5d6b7e" stroke-width="2.2"/>
+<line x1="326" y1="514" x2="384" y2="514" stroke="#5d6b7e" stroke-width="1.6" stroke-dasharray="4 4"/>
+<circle cx="384" cy="514" r="4" fill="#5d6b7e"/>
+<text x="400" y="510" font-size="15.5" fill="#3f4a59" text-anchor="start" font-weight="700">6  Conclusion and references</text>
+<text x="400" y="532" font-size="13.5" fill="#4a5263" text-anchor="start">Limitations, future work, conclusion, references</text>
+</svg>

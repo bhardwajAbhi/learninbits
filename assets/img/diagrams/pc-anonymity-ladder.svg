@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 346" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">From removing names to differential privacy</title>
+  <desc id="d">Five steps. Removing names leaves singling out and linkage. k-anonymity stops singling out, but inference stays. l-diversity stops homogeneity, but similar values leak. t-closeness stops skewed groups, but outliers stay. Differential privacy adds calibrated noise and gives each person plausible deniability.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="20" y="190" width="162" height="140" rx="10" fill="#eef0f3" stroke="#5d6b7e" stroke-width="1.5"/>
+<text x="32" y="214" font-size="13" fill="#3f4a59" text-anchor="start" font-weight="700">Remove names</text>
+<text x="32" y="236" font-size="11" fill="#1c2230" text-anchor="start">direct identifiers</text>
+<text x="32" y="251" font-size="11" fill="#1c2230" text-anchor="start">are gone</text>
+<text x="32" y="272" font-size="11" fill="#963f1f" text-anchor="start" font-weight="700">singling out and</text>
+<text x="32" y="287" font-size="11" fill="#963f1f" text-anchor="start" font-weight="700">linkage stay</text>
+<rect x="190" y="154" width="162" height="176" rx="10" fill="#eef3fb" stroke="#2f62c8" stroke-width="1.5"/>
+<text x="202" y="178" font-size="13" fill="#1f4a9e" text-anchor="start" font-weight="700">k-anonymity</text>
+<text x="202" y="200" font-size="11" fill="#1c2230" text-anchor="start">each group has</text>
+<text x="202" y="215" font-size="11" fill="#1c2230" text-anchor="start">k look-alikes</text>
+<text x="202" y="236" font-size="11" fill="#0b6650" text-anchor="start" font-weight="700">stops singling out</text>
+<text x="202" y="251" font-size="11" fill="#963f1f" text-anchor="start" font-weight="700">inference stays</text>
+<rect x="360" y="118" width="162" height="212" rx="10" fill="#f3f0fa" stroke="#7a4fc2" stroke-width="1.5"/>
+<text x="372" y="142" font-size="13" fill="#58378f" text-anchor="start" font-weight="700">l-diversity</text>
+<text x="372" y="164" font-size="11" fill="#1c2230" text-anchor="start">l different secrets</text>
+<text x="372" y="179" font-size="11" fill="#1c2230" text-anchor="start">in each group</text>
+<text x="372" y="200" font-size="11" fill="#0b6650" text-anchor="start" font-weight="700">stops homogeneity</text>
+<text x="372" y="215" font-size="11" fill="#963f1f" text-anchor="start" font-weight="700">similar values leak</text>
+<rect x="530" y="82" width="162" height="248" rx="10" fill="#e3f4ee" stroke="#0f8a6a" stroke-width="1.5"/>
+<text x="542" y="106" font-size="13" fill="#0b6650" text-anchor="start" font-weight="700">t-closeness</text>
+<text x="542" y="128" font-size="11" fill="#1c2230" text-anchor="start">each group looks</text>
+<text x="542" y="143" font-size="11" fill="#1c2230" text-anchor="start">like the whole table</text>
+<text x="542" y="164" font-size="11" fill="#0b6650" text-anchor="start" font-weight="700">stops skewed groups</text>
+<text x="542" y="179" font-size="11" fill="#963f1f" text-anchor="start" font-weight="700">outliers stay</text>
+<rect x="700" y="46" width="162" height="284" rx="10" fill="#fdf4e3" stroke="#b7791f" stroke-width="1.5"/>
+<text x="712" y="70" font-size="13" fill="#8a5a12" text-anchor="start" font-weight="700">Differential privacy</text>
+<text x="712" y="92" font-size="11" fill="#1c2230" text-anchor="start">calibrated noise</text>
+<text x="712" y="107" font-size="11" fill="#1c2230" text-anchor="start">on the results</text>
+<text x="712" y="128" font-size="11" fill="#0b6650" text-anchor="start" font-weight="700">plausible deniability</text>
+<text x="712" y="143" font-size="11" fill="#0b6650" text-anchor="start" font-weight="700">for each person</text>
+<path d="M40 30 H840" fill="none" stroke="#1c2230" stroke-width="1.6" marker-end="url(#m0)"/>
+<text x="40" y="22" font-size="11.5" fill="#4a5263" text-anchor="start" font-weight="600">More protection, and more care for utility</text>
+</svg>

@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 552" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">The eight stages of an Android boot across four layers</title>
+  <desc id="d">Four columns show the layers of the system. Time flows from top to bottom. In the firmware, the Boot ROM runs fixed code in the chip, and the bootloader verifies and loads the images. The Linux kernel starts the drivers and then runs /init. In native user space, the first stage of init mounts the partitions, and the second stage starts services and properties. In the Java framework, Zygote preloads and forks, system_server starts more than 100 services, and the home screen appears when sys.boot_completed is 1.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="96" y="20" width="186" height="40" rx="10" fill="#5d6b7e"/>
+<text x="189" y="45" font-size="13.5" fill="#fff" text-anchor="middle" font-weight="700">Firmware</text>
+<rect x="96" y="66" width="186" height="472" rx="12" fill="#eef0f3" fill-opacity="0.6"/>
+<rect x="292" y="20" width="186" height="40" rx="10" fill="#7a4fc2"/>
+<text x="385" y="45" font-size="13.5" fill="#fff" text-anchor="middle" font-weight="700">Linux kernel</text>
+<rect x="292" y="66" width="186" height="472" rx="12" fill="#f3f0fa" fill-opacity="0.6"/>
+<rect x="488" y="20" width="186" height="40" rx="10" fill="#2f62c8"/>
+<text x="581" y="45" font-size="13.5" fill="#fff" text-anchor="middle" font-weight="700">Native user space</text>
+<rect x="488" y="66" width="186" height="472" rx="12" fill="#eef3fb" fill-opacity="0.6"/>
+<rect x="684" y="20" width="186" height="40" rx="10" fill="#0f8a6a"/>
+<text x="777" y="45" font-size="13.5" fill="#fff" text-anchor="middle" font-weight="700">Java framework</text>
+<rect x="684" y="66" width="186" height="472" rx="12" fill="#e3f4ee" fill-opacity="0.6"/>
+<rect x="104" y="78" width="170" height="46" rx="10" fill="#fff" stroke="#5d6b7e" stroke-width="1.5"/>
+<circle cx="122" cy="101" r="11" fill="#5d6b7e"/>
+<text x="122" y="105.14" font-size="11.5" fill="#fff" text-anchor="middle" font-weight="700">1</text>
+<text x="140" y="97" font-size="12.6" fill="#3f4a59" text-anchor="start" font-weight="700">Boot ROM</text>
+<text x="140" y="114" font-size="11.4" fill="#4a5263" text-anchor="start">Fixed code in the chip</text>
+<rect x="104" y="136" width="170" height="46" rx="10" fill="#fff" stroke="#5d6b7e" stroke-width="1.5"/>
+<circle cx="122" cy="159" r="11" fill="#5d6b7e"/>
+<text x="122" y="163.14" font-size="11.5" fill="#fff" text-anchor="middle" font-weight="700">2</text>
+<text x="140" y="155" font-size="12.6" fill="#3f4a59" text-anchor="start" font-weight="700">Bootloader</text>
+<text x="140" y="172" font-size="11.4" fill="#4a5263" text-anchor="start">Verifies the images</text>
+<path d="M122 124 L 122 134" fill="none" stroke="#1c2230" stroke-width="1.4" marker-end="url(#m0)"/>
+<rect x="300" y="194" width="170" height="46" rx="10" fill="#fff" stroke="#7a4fc2" stroke-width="1.5"/>
+<circle cx="318" cy="217" r="11" fill="#7a4fc2"/>
+<text x="318" y="221.14" font-size="11.5" fill="#fff" text-anchor="middle" font-weight="700">3</text>
+<text x="336" y="213" font-size="12.6" fill="#58378f" text-anchor="start" font-weight="700">Kernel</text>
+<text x="336" y="230" font-size="11.4" fill="#4a5263" text-anchor="start">Drivers, then /init</text>
+<path d="M274 159 L 318 159 L 318 192" fill="none" stroke="#1c2230" stroke-width="1.4" marker-end="url(#m0)"/>
+<rect x="496" y="252" width="170" height="46" rx="10" fill="#fff" stroke="#2f62c8" stroke-width="1.5"/>
+<circle cx="514" cy="275" r="11" fill="#2f62c8"/>
+<text x="514" y="279.14" font-size="11.5" fill="#fff" text-anchor="middle" font-weight="700">4</text>
+<text x="532" y="271" font-size="12.6" fill="#1f4a9e" text-anchor="start" font-weight="700">init, first stage</text>
+<text x="532" y="288" font-size="11.4" fill="#4a5263" text-anchor="start">Mounts the partitions</text>
+<path d="M470 217 L 514 217 L 514 250" fill="none" stroke="#1c2230" stroke-width="1.4" marker-end="url(#m0)"/>
+<rect x="496" y="310" width="170" height="46" rx="10" fill="#fff" stroke="#2f62c8" stroke-width="1.5"/>
+<circle cx="514" cy="333" r="11" fill="#2f62c8"/>
+<text x="514" y="337.14" font-size="11.5" fill="#fff" text-anchor="middle" font-weight="700">5</text>
+<text x="532" y="329" font-size="12.6" fill="#1f4a9e" text-anchor="start" font-weight="700">init, second stage</text>
+<text x="532" y="346" font-size="11.4" fill="#4a5263" text-anchor="start">Services and properties</text>
+<path d="M514 298 L 514 308" fill="none" stroke="#1c2230" stroke-width="1.4" marker-end="url(#m0)"/>
+<rect x="692" y="368" width="170" height="46" rx="10" fill="#fff" stroke="#0f8a6a" stroke-width="1.5"/>
+<circle cx="710" cy="391" r="11" fill="#0f8a6a"/>
+<text x="710" y="395.14" font-size="11.5" fill="#fff" text-anchor="middle" font-weight="700">6</text>
+<text x="728" y="387" font-size="12.6" fill="#0b6650" text-anchor="start" font-weight="700">Zygote</text>
+<text x="728" y="404" font-size="11.4" fill="#4a5263" text-anchor="start">Preloads, then forks</text>
+<path d="M666 333 L 710 333 L 710 366" fill="none" stroke="#1c2230" stroke-width="1.4" marker-end="url(#m0)"/>
+<rect x="692" y="426" width="170" height="46" rx="10" fill="#fff" stroke="#0f8a6a" stroke-width="1.5"/>
+<circle cx="710" cy="449" r="11" fill="#0f8a6a"/>
+<text x="710" y="453.14" font-size="11.5" fill="#fff" text-anchor="middle" font-weight="700">7</text>
+<text x="728" y="445" font-size="12.6" fill="#0b6650" text-anchor="start" font-weight="700">system_server</text>
+<text x="728" y="462" font-size="11.4" fill="#4a5263" text-anchor="start">Starts 100+ services</text>
+<path d="M710 414 L 710 424" fill="none" stroke="#1c2230" stroke-width="1.4" marker-end="url(#m0)"/>
+<rect x="692" y="484" width="170" height="46" rx="10" fill="#fff" stroke="#0f8a6a" stroke-width="1.5"/>
+<circle cx="710" cy="507" r="11" fill="#0f8a6a"/>
+<text x="710" y="511.14" font-size="11.5" fill="#fff" text-anchor="middle" font-weight="700">8</text>
+<text x="728" y="503" font-size="12.6" fill="#0b6650" text-anchor="start" font-weight="700">Home screen</text>
+<text x="728" y="520" font-size="11.4" fill="#4a5263" text-anchor="start">sys.boot_completed=1</text>
+<path d="M710 472 L 710 482" fill="none" stroke="#1c2230" stroke-width="1.4" marker-end="url(#m0)"/>
+<path d="M40 80 L 40 528" fill="none" stroke="#7b8292" stroke-width="1.6" marker-end="url(#m2)"/>
+<text x="48" y="302" font-size="12.5" fill="#7b8292" text-anchor="start" font-weight="700">Time</text>
+</svg>

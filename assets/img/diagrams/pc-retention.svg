@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 326" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">Retention and erasure under the DPDP Rules</title>
+  <desc id="d">A timeline. Consent is given, then the last contact with the user. After the Third Schedule period, for example three years for large platforms, the data is erased. Forty-eight hours before, the user gets a notice. Withdrawal or the end of the purpose also starts erasure. Logs stay for at least one year.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<line x1="60" y1="150" x2="820" y2="150" stroke="#1c2230" stroke-width="3"/>
+<circle cx="70" cy="150" r="10" fill="#2f62c8"/>
+<text x="70" y="92" font-size="13.5" fill="#1f4a9e" text-anchor="middle" font-weight="700">Consent given</text>
+<text x="70" y="109" font-size="11" fill="#4a5263" text-anchor="middle">purpose starts</text>
+<circle cx="260" cy="150" r="10" fill="#2f62c8"/>
+<text x="260" y="200" font-size="13.5" fill="#1f4a9e" text-anchor="middle" font-weight="700">Last contact</text>
+<text x="260" y="217" font-size="11" fill="#4a5263" text-anchor="middle">with the user</text>
+<circle cx="610" cy="150" r="10" fill="#b7791f"/>
+<text x="610" y="200" font-size="13.5" fill="#8a5a12" text-anchor="middle" font-weight="700">48 hours before</text>
+<text x="610" y="217" font-size="11" fill="#4a5263" text-anchor="middle">notice to log in or lose data</text>
+<circle cx="760" cy="150" r="10" fill="#c2552d"/>
+<text x="760" y="200" font-size="13.5" fill="#963f1f" text-anchor="middle" font-weight="700">Erase</text>
+<text x="760" y="217" font-size="11" fill="#4a5263" text-anchor="middle">unless a law needs it</text>
+<path d="M260 120 V112 H760 V120" fill="none" stroke="#7a4fc2" stroke-width="1.8"/>
+<text x="510" y="70" font-size="11.5" fill="#58378f" text-anchor="middle" font-weight="600">Third Schedule period, for example three years for large</text>
+<text x="510" y="86" font-size="11.5" fill="#58378f" text-anchor="middle" font-weight="600">e-commerce, gaming and social media platforms (Rule 8)</text>
+<rect x="60" y="252" width="360" height="56" rx="10" fill="#fbecec" stroke="#c2552d" stroke-width="1.5"/>
+<text x="76" y="274" font-size="12.5" fill="#963f1f" text-anchor="start" font-weight="700">Withdrawal or end of purpose</text>
+<text x="76" y="292" font-size="11" fill="#4a5263" text-anchor="start">erase at the earlier one, and tell processors (Act 8(7))</text>
+<rect x="460" y="252" width="360" height="56" rx="10" fill="#eef0f3" stroke="#5d6b7e" stroke-width="1.5"/>
+<text x="476" y="274" font-size="12.5" fill="#3f4a59" text-anchor="start" font-weight="700">Logs stay for at least one year</text>
+<text x="476" y="292" font-size="11" fill="#4a5263" text-anchor="start">to detect and investigate misuse (Rules 6 and 8)</text>
+</svg>

@@ -1,0 +1,91 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 402" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">Service groups, boot phases and the end of boot in system_server</title>
+  <desc id="d">Four service groups start in order. startBootstrapServices starts the Watchdog, the activity managers, power, display, the package manager, the user manager and sensors. startCoreServices starts battery, usage stats and WebView updates. startOtherServices starts input, the window manager, storage, network services and Bluetooth and Wi-Fi from APEX jars. startApexServices runs last for services from APEX manifests. A ruler shows the boot phases 100 default display, 480 lock settings, 500 system services ready, 520 device services, 550 activity manager ready, 600 third-party apps and 1000 boot completed. Below, five steps end the boot. SurfaceFlinger sets ctl.start to bootanim when the display is ready. bootanimation plays the animation in a loop. The activity manager starts the launcher. The window manager sets service.bootanim.exit to 1 in performEnableScreen. The activity manager then reaches phase 1000 and sets sys.boot_completed and dev.bootcomplete to 1.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="40" y="24" width="234" height="92" rx="10" fill="#eef3fb" stroke="#2f62c8" stroke-width="1.4"/>
+<text x="50" y="44" font-size="11.4" fill="#1f4a9e" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">startBootstrapServices()</text>
+<text x="50" y="66" font-size="11" fill="#4a5263" text-anchor="start">Watchdog, ATMS and AMS, Power,</text>
+<text x="50" y="82" font-size="11" fill="#4a5263" text-anchor="start">Display, PMS, UserManager, Sensors</text>
+<rect x="280" y="24" width="164" height="92" rx="10" fill="#e3f4ee" stroke="#0f8a6a" stroke-width="1.4"/>
+<text x="290" y="44" font-size="11.4" fill="#0b6650" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">startCoreServices()</text>
+<text x="290" y="66" font-size="11" fill="#4a5263" text-anchor="start">Battery, UsageStats,</text>
+<text x="290" y="82" font-size="11" fill="#4a5263" text-anchor="start">WebView updates</text>
+<rect x="450" y="24" width="244" height="92" rx="10" fill="#fdf4e3" stroke="#b7791f" stroke-width="1.4"/>
+<text x="460" y="44" font-size="11.4" fill="#8a5a12" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">startOtherServices()</text>
+<text x="460" y="66" font-size="11" fill="#4a5263" text-anchor="start">Input, WMS, Storage, network,</text>
+<text x="460" y="82" font-size="11" fill="#4a5263" text-anchor="start">Bluetooth and Wi-Fi from APEX jars</text>
+<rect x="700" y="24" width="160" height="92" rx="10" fill="#f3f0fa" stroke="#7a4fc2" stroke-width="1.4"/>
+<text x="710" y="44" font-size="11.4" fill="#58378f" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">startApexServices()</text>
+<text x="710" y="66" font-size="11" fill="#4a5263" text-anchor="start">Last group,</text>
+<text x="710" y="82" font-size="11" fill="#4a5263" text-anchor="start">from APEX manifests</text>
+<line x1="40" y1="160" x2="860" y2="160" stroke="#1c2230" stroke-width="3"/>
+<line x1="110" y1="150" x2="110" y2="170" stroke="#2f62c8" stroke-width="3"/>
+<rect x="88" y="176" width="44" height="22" rx="11" fill="#eef3fb" stroke="#2f62c8" stroke-width="1.2"/>
+<text x="110" y="191.032" font-size="11.2" fill="#1f4a9e" text-anchor="middle" font-weight="700">100</text>
+<text x="110" y="216" font-size="10.8" fill="#1f4a9e" text-anchor="middle" font-weight="600">Default display</text>
+<line x1="430" y1="150" x2="430" y2="170" stroke="#b7791f" stroke-width="3"/>
+<rect x="408" y="176" width="44" height="22" rx="11" fill="#fdf4e3" stroke="#b7791f" stroke-width="1.2"/>
+<text x="430" y="191.032" font-size="11.2" fill="#8a5a12" text-anchor="middle" font-weight="700">480</text>
+<text x="430" y="234" font-size="10.8" fill="#8a5a12" text-anchor="middle" font-weight="600">Lock settings</text>
+<line x1="480" y1="150" x2="480" y2="170" stroke="#b7791f" stroke-width="3"/>
+<rect x="458" y="176" width="44" height="22" rx="11" fill="#fdf4e3" stroke="#b7791f" stroke-width="1.2"/>
+<text x="480" y="191.032" font-size="11.2" fill="#8a5a12" text-anchor="middle" font-weight="700">500</text>
+<text x="480" y="216" font-size="10.8" fill="#8a5a12" text-anchor="middle" font-weight="600">System services ready</text>
+<line x1="540" y1="150" x2="540" y2="170" stroke="#b7791f" stroke-width="3"/>
+<rect x="518" y="176" width="44" height="22" rx="11" fill="#fdf4e3" stroke="#b7791f" stroke-width="1.2"/>
+<text x="540" y="191.032" font-size="11.2" fill="#8a5a12" text-anchor="middle" font-weight="700">520</text>
+<text x="540" y="234" font-size="10.8" fill="#8a5a12" text-anchor="middle" font-weight="600">Device services</text>
+<line x1="600" y1="150" x2="600" y2="170" stroke="#b7791f" stroke-width="3"/>
+<rect x="578" y="176" width="44" height="22" rx="11" fill="#fdf4e3" stroke="#b7791f" stroke-width="1.2"/>
+<text x="600" y="191.032" font-size="11.2" fill="#8a5a12" text-anchor="middle" font-weight="700">550</text>
+<text x="600" y="216" font-size="10.8" fill="#8a5a12" text-anchor="middle" font-weight="600">AMS ready</text>
+<line x1="660" y1="150" x2="660" y2="170" stroke="#b7791f" stroke-width="3"/>
+<rect x="638" y="176" width="44" height="22" rx="11" fill="#fdf4e3" stroke="#b7791f" stroke-width="1.2"/>
+<text x="660" y="191.032" font-size="11.2" fill="#8a5a12" text-anchor="middle" font-weight="700">600</text>
+<text x="660" y="234" font-size="10.8" fill="#8a5a12" text-anchor="middle" font-weight="600">Third-party apps</text>
+<line x1="820" y1="150" x2="820" y2="170" stroke="#c2552d" stroke-width="3"/>
+<rect x="798" y="176" width="44" height="22" rx="11" fill="#fbecec" stroke="#c2552d" stroke-width="1.2"/>
+<text x="820" y="191.032" font-size="11.2" fill="#963f1f" text-anchor="middle" font-weight="700">1000</text>
+<text x="820" y="216" font-size="10.8" fill="#963f1f" text-anchor="middle" font-weight="600">Boot completed</text>
+<text x="40" y="146" font-size="12" fill="#4a5263" text-anchor="start" font-weight="700">Boot phases</text>
+<text x="40" y="278" font-size="12.5" fill="#1c2230" text-anchor="start" font-weight="700">Boot animation and the end of boot</text>
+<rect x="40" y="290" width="154" height="96" rx="10" fill="#fff" stroke="#2f62c8" stroke-width="1.5"/>
+<circle cx="56" cy="308" r="10" fill="#2f62c8"/>
+<text x="56" y="311.96" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">1</text>
+<text x="72" y="312" font-size="11.6" fill="#1f4a9e" text-anchor="start" font-weight="700">SurfaceFlinger</text>
+<text x="52" y="336" font-size="11" fill="#4a5263" text-anchor="start">Display is ready.</text>
+<text x="52" y="352" font-size="11" fill="#4a5263" text-anchor="start">Sets ctl.start to</text>
+<text x="52" y="368" font-size="11" fill="#4a5263" text-anchor="start">bootanim.</text>
+<path d="M195 338 L 204 338" fill="none" stroke="#1c2230" stroke-width="1.4" marker-end="url(#m0)"/>
+<rect x="206" y="290" width="154" height="96" rx="10" fill="#fff" stroke="#7a4fc2" stroke-width="1.5"/>
+<circle cx="222" cy="308" r="10" fill="#7a4fc2"/>
+<text x="222" y="311.96" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">2</text>
+<text x="238" y="312" font-size="11.6" fill="#58378f" text-anchor="start" font-weight="700">bootanimation</text>
+<text x="218" y="336" font-size="11" fill="#4a5263" text-anchor="start">Plays the logo or</text>
+<text x="218" y="352" font-size="11" fill="#4a5263" text-anchor="start">the vendor animation</text>
+<text x="218" y="368" font-size="11" fill="#4a5263" text-anchor="start">in a loop.</text>
+<path d="M361 338 L 370 338" fill="none" stroke="#1c2230" stroke-width="1.4" marker-end="url(#m0)"/>
+<rect x="372" y="290" width="154" height="96" rx="10" fill="#fff" stroke="#0f8a6a" stroke-width="1.5"/>
+<circle cx="388" cy="308" r="10" fill="#0f8a6a"/>
+<text x="388" y="311.96" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">3</text>
+<text x="404" y="312" font-size="11.6" fill="#0b6650" text-anchor="start" font-weight="700">Home activity</text>
+<text x="384" y="336" font-size="11" fill="#4a5263" text-anchor="start">AMS starts the</text>
+<text x="384" y="352" font-size="11" fill="#4a5263" text-anchor="start">launcher, which draws</text>
+<text x="384" y="368" font-size="11" fill="#4a5263" text-anchor="start">its windows.</text>
+<path d="M527 338 L 536 338" fill="none" stroke="#1c2230" stroke-width="1.4" marker-end="url(#m0)"/>
+<rect x="538" y="290" width="154" height="96" rx="10" fill="#fff" stroke="#b7791f" stroke-width="1.5"/>
+<circle cx="554" cy="308" r="10" fill="#b7791f"/>
+<text x="554" y="311.96" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">4</text>
+<text x="570" y="312" font-size="11.6" fill="#8a5a12" text-anchor="start" font-weight="700">WindowManager</text>
+<text x="550" y="336" font-size="11" fill="#4a5263" text-anchor="start">performEnableScreen()</text>
+<text x="550" y="352" font-size="11" fill="#4a5263" text-anchor="start">sets service.bootanim</text>
+<text x="550" y="368" font-size="11" fill="#4a5263" text-anchor="start">.exit to 1.</text>
+<path d="M693 338 L 702 338" fill="none" stroke="#1c2230" stroke-width="1.4" marker-end="url(#m0)"/>
+<rect x="704" y="290" width="154" height="96" rx="10" fill="#fff" stroke="#c2552d" stroke-width="1.5"/>
+<circle cx="720" cy="308" r="10" fill="#c2552d"/>
+<text x="720" y="311.96" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">5</text>
+<text x="736" y="312" font-size="11.6" fill="#963f1f" text-anchor="start" font-weight="700">AMS finishBooting()</text>
+<text x="716" y="336" font-size="11" fill="#4a5263" text-anchor="start">Phase 1000, then</text>
+<text x="716" y="352" font-size="11" fill="#4a5263" text-anchor="start">sys.boot_completed=1</text>
+<text x="716" y="368" font-size="11" fill="#4a5263" text-anchor="start">and dev.bootcomplete=1</text>
+</svg>
