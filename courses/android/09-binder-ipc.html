@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Binder: how apps talk to the system · Inside Android · LearnInBits</title>
+  <meta name="description" content="Binder is the post office of Android. Learn how one process calls a method in a different process, in simple words.">
+  <link rel="icon" href="../../assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,500;0,8..60,600;1,8..60,500&display=swap">
+  <link rel="stylesheet" href="../../assets/css/style.css">
+  <script>try{var t=localStorage.getItem("lib-theme");t=t?JSON.parse(t):(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+</head>
+<body data-root="../../" data-page="chapter" data-course="android" data-id="09-binder-ipc">
+
+<main id="main">
+<article>
+
+  <div class="block oneline">
+    <div class="label">In one line</div>
+    <p>Binder lets one process call a method in a different process, as if the method was in its own code.</p>
+  </div>
+
+  <p>Binder is the most important part of Android that most people never hear about. Each time an app shows a notification, gets your location or opens a new screen, Binder carries the message. If you understand Binder, many other chapters become easy.</p>
+
+  <h2>The problem: each app lives alone</h2>
+  <p>Each app runs in its own process. Each process has its own memory. The kernel makes sure that one process cannot read or write the memory of a different process. This wall keeps your apps safe from each other.</p>
+  <p>But apps need help from the system. Most system features are not in the app. They are in different processes:</p>
+  <ul>
+    <li>The clipboard, the window manager and the package manager are in <code>system_server</code>.</li>
+    <li>The camera and the audio have their own processes.</li>
+    <li>The HALs for the hardware are in vendor processes.</li>
+  </ul>
+  <p>Thus, the app must send a request across the wall and get a reply. This is <strong>IPC</strong> (inter-process communication). Binder is the IPC system of Android.</p>
+
+  <div class="block analogy">
+    <div class="label">Real-life analogy</div>
+    <p>Think of each process as a house with a locked door. People in one house cannot go into a different house. To ask for something, they send a parcel through the <strong>post office</strong>.</p>
+    <p>In Android, the post office is the <strong>Binder driver</strong> in the kernel. It takes the parcel from your house and gives it to the correct house. It also puts a stamp with your true name on the parcel. You cannot change this stamp. The receiver always knows who sent the parcel.</p>
+    <p>There is also a <strong>phone book</strong>. It gives the address of each service by its name. In Android, the phone book is <code>servicemanager</code>.</p>
+  </div>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../../assets/img/diagrams/binder-post-office.svg" alt="An app process and the system_server process have a wall between them. The Binder driver in the kernel carries a parcel from the app to the service, stamps the sender ID on it and carries the reply back."></div>
+    <figcaption>The app cannot touch system_server directly. The Binder driver carries the parcel and the reply.</figcaption>
+  </figure>
+
+  <h2>The parts of Binder</h2>
+  <p>Binder has five parts. Each part has one job.</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Part</th><th>Where it is</th><th>Its job</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Binder driver</strong></td><td>Linux kernel, <code>/dev/binder</code></td><td>Carries the data between processes. Adds the identity of the caller.</td></tr>
+        <tr><td><strong>servicemanager</strong></td><td>A small native program</td><td>The phone book. Services register their names. Clients find services by name.</td></tr>
+        <tr><td><strong>Parcel</strong></td><td>In both processes</td><td>The box. It holds the method arguments or the reply in a flat form.</td></tr>
+        <tr><td><strong>Proxy</strong></td><td>In the client process</td><td>Looks like the real service. It packs the arguments into a Parcel and sends it.</td></tr>
+        <tr><td><strong>Stub</strong></td><td>In the service process</td><td>Unpacks the Parcel and calls the real method. Then it packs the reply.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>You do not write the proxy and the stub yourself. You write the interface in a small language with the name <strong>AIDL</strong> (Android Interface Definition Language). The build tools make the proxy and the stub from it.</p>
+
+  <h2>One call, step by step</h2>
+  <p>We use a simple example. An app copies text to the clipboard. In the app, the code is one line:</p>
+<pre><code>clipboardManager.setPrimaryClip(ClipData.newPlainText("note", "Hello"));</code></pre>
+  <p>But the clipboard is in <code>system_server</code>, not in the app. This is what happens:</p>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../../assets/img/diagrams/binder-call-flow.svg" alt="A sequence diagram with three columns: app thread, Binder driver and service thread. The call goes from the app to the driver to the service, and the reply comes back the same way."></div>
+    <figcaption>One Binder call. Solid lines carry the request. Dashed lines carry the reply.</figcaption>
+  </figure>
+
+  <ol class="steps">
+    <li><strong>The app calls the proxy.</strong> <code>ClipboardManager</code> holds a proxy for the clipboard service. To the app, the proxy looks like a normal object.</li>
+    <li><strong>The proxy packs a Parcel.</strong> It writes a code for the method and each argument into a Parcel. Then it gives the Parcel to the Binder driver with a system call, <code>ioctl()</code>.</li>
+    <li><strong>The driver adds the identity.</strong> The kernel writes the user ID (UID) and the process ID (PID) of the caller. The app cannot change these values. Then the driver copies the data one time, directly into the memory of the service process.</li>
+    <li><strong>The driver wakes a service thread.</strong> Each service process keeps a small group of threads that wait for Binder calls. This group is the <em>Binder thread pool</em>.</li>
+    <li><strong>The stub does the work.</strong> It reads the method code and unpacks the arguments. The service checks if the caller has permission. Then it runs the real method and packs the reply into a new Parcel.</li>
+    <li><strong>The reply goes back.</strong> The service gives the reply Parcel to the driver.</li>
+    <li><strong>The driver wakes the app thread.</strong> During steps 2 to 6, the app thread waits.</li>
+    <li><strong>The call returns.</strong> The proxy unpacks the reply. For the app, it was a normal method call.</li>
+  </ol>
+
+  <p>All of this takes a fraction of a millisecond on a modern phone. A phone does thousands of Binder calls each second.</p>
+
+  <h2>Four more things to know</h2>
+  <h3>One-way calls</h3>
+  <p>Sometimes the app does not need a reply. AIDL lets you mark a method as <code>oneway</code>. The app sends the Parcel and continues at once. It does not wait for the service.</p>
+
+  <h3>Death notices</h3>
+  <p>A process can stop at any time. A client can ask the driver: "Tell me if this service stops." The method for this is <code>linkToDeath()</code>. The framework uses it to clean up when an app stops.</p>
+
+  <h3>The size limit</h3>
+  <p>Each process has a buffer for Binder data of about 1 MB. All the calls in progress share this buffer. If you send a very large Parcel, for example a large image in an intent, you get a <code>TransactionTooLargeException</code>. To send large data, send a file descriptor or a shared memory object, not the data.</p>
+
+  <h3>Three Binder domains</h3>
+  <p>Android has three Binder devices. Each device is a separate world, with its own phone book:</p>
+  <ul>
+    <li><code>/dev/binder</code> for the framework and apps.</li>
+    <li><code>/dev/hwbinder</code> for older HALs that use HIDL.</li>
+    <li><code>/dev/vndbinder</code> for vendor processes that talk to each other.</li>
+  </ul>
+  <p>This split keeps the vendor code separate from the framework code. Thus, Google can update the framework without a change to the vendor code.</p>
+
+  <div class="block security">
+    <div class="label">Security lens</div>
+    <p>Binder is a main security boundary of Android. Attackers study it closely. Here are the important points:</p>
+    <ul>
+      <li><strong>The caller identity is true.</strong> The kernel adds the UID and PID. A service reads them with <code>Binder.getCallingUid()</code>. This is the base of all permission checks in Android.</li>
+      <li><strong>The service must do the check.</strong> Binder does not check permissions by itself. Each service must call a method like <code>enforceCallingPermission()</code>. If a developer forgets this check, any app can use the service. This bug has the name <em>confused deputy</em>: a strong process does a job for a weak process without a check.</li>
+      <li><strong>Parcels come from untrusted apps.</strong> The stub reads data that an attacker can control. A mistake in the unpack code can cause a crash or a memory bug in a system process. Security researchers often use fuzzing tools on Binder interfaces for this reason.</li>
+      <li><strong>The driver is kernel code.</strong> A bug in the Binder driver gives an attacker a path into the kernel. For example, CVE-2019-2215 was a use-after-free bug in the Binder driver. Attackers used it in real attacks before the repair.</li>
+      <li><strong>SELinux controls who can call whom.</strong> SELinux rules decide which processes can make Binder calls to which processes. Rules also decide which services each process can find in <code>servicemanager</code>.</li>
+    </ul>
+  </div>
+
+  <details class="deep">
+    <summary>For the curious: inside the code <small>Optional</small></summary>
+    <div class="inner">
+      <p><strong>The driver.</strong> The Binder driver is in the kernel source at <code>drivers/android/binder.c</code>. User space talks to it with the <code>ioctl</code> command <code>BINDER_WRITE_READ</code>. The client writes a <code>BC_TRANSACTION</code> command. The service receives a <code>BR_TRANSACTION</code> command. The reply uses <code>BC_REPLY</code> and <code>BR_REPLY</code>.</p>
+      <p><strong>The one copy.</strong> Each process maps a part of its memory to the driver with <code>mmap()</code>. The driver copies the data from the sender one time, into this mapped area of the receiver. Thus, the receiver reads the data with no second copy.</p>
+      <p><strong>Handle 0.</strong> Each process knows remote objects by a number, the <em>handle</em>. Handle 0 is special. It always points to the context manager, which is <code>servicemanager</code>. Thus, each process can find the phone book with no lookup.</p>
+      <p><strong>The native library.</strong> The C++ code is in <code>frameworks/native/libs/binder/</code>:</p>
+      <ul>
+        <li><code>BpBinder</code> is the native proxy ("Binder proxy").</li>
+        <li><code>BBinder</code> is the native object on the service side.</li>
+        <li><code>IPCThreadState</code> talks to the driver for each thread.</li>
+        <li><code>Parcel</code> packs and unpacks the data.</li>
+      </ul>
+      <p><strong>The Java side.</strong> <code>android.os.Binder</code> and <code>android.os.BinderProxy</code> are in <code>frameworks/base/core/java/android/os/</code>. They connect to the C++ code through JNI, in <code>android_util_Binder.cpp</code>.</p>
+      <p><strong>A small AIDL file.</strong> From this file, the build makes a Java class <code>IGreeter.Stub</code> and a proxy class inside it:</p>
+<pre><code>// IGreeter.aidl
+package com.example;
+
+interface IGreeter {
+    String greet(String name);
+    oneway void ping();
+}</code></pre>
+    </div>
+  </details>
+
+  <div class="block try">
+    <div class="label">Try it yourself</div>
+    <p>These commands are safe. They only read information.</p>
+<pre><code># List all services in the phone book (servicemanager)
+adb shell service list | head -20
+
+# Is the clipboard service there?
+adb shell service check clipboard
+
+# Count the services that dumpsys can read
+adb shell dumpsys -l | wc -l</code></pre>
+    <p>On an emulator, you can also see the Binder devices. First, get root with <code>adb root</code>. This works only on emulator images without Google Play.</p>
+<pre><code>adb root
+adb shell ls /dev/binderfs</code></pre>
+  </div>
+
+  <h2>Key terms</h2>
+  <dl class="terms">
+    <dt>IPC</dt><dd>Inter-process communication. A way for processes to send data to each other.</dd>
+    <dt>Binder driver</dt><dd>The part of the kernel that carries Binder data.</dd>
+    <dt>servicemanager</dt><dd>The phone book of services.</dd>
+    <dt>Parcel</dt><dd>The container for the data of one call.</dd>
+    <dt>Proxy</dt><dd>The object in the client that looks like the service.</dd>
+    <dt>Stub</dt><dd>The object in the service that receives the calls.</dd>
+    <dt>AIDL</dt><dd>The language that describes a Binder interface.</dd>
+    <dt>oneway</dt><dd>A call that does not wait for a reply.</dd>
+    <dt>UID</dt><dd>User ID. Each app has its own UID.</dd>
+  </dl>
+
+</article>
+</main>
+
+<script src="../../assets/js/site.js"></script>
+</body>
+</html>

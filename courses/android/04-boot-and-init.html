@@ -1,0 +1,1833 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Boot and init · Inside Android · LearnInBits</title>
+  <meta name="description" content="How an Android device starts, from the boot ROM and verified boot through init, Zygote and system_server to the home screen.">
+  <link rel="icon" href="../../assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,500;0,8..60,600;1,8..60,500&display=swap">
+  <link rel="stylesheet" href="../../assets/css/style.css">
+  <script>try{var t=localStorage.getItem("lib-theme");t=t?JSON.parse(t):(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+</head>
+<body data-root="../../" data-page="chapter" data-course="android" data-id="04-boot-and-init">
+
+<main id="main">
+<article>
+
+  <div class="block oneline">
+    <div class="label">In one line</div>
+    <p>A chain of trusted programs starts the device, and each program prepares the ground for the next one, up to the home screen.</p>
+  </div>
+
+  <p>You press the power button, and some seconds later the home screen appears. In that short time, the device runs code from at least eight different programs. Each program checks or prepares something, then gives control to the next one. If one link of this chain fails, the device does not start or starts in a safe state.</p>
+  <p>In this chapter, you follow the whole chain in the Android Open Source Project (AOSP). You start with the code in the chip and the bootloader, which verifies every image before it runs. You then study <code>init</code>, the first process of user space, in detail. It mounts the partitions, loads the security policy, reads its configuration files and starts every native service. Finally, you see how Zygote prepares the Java framework and how <code>system_server</code> starts more than 100 system services.</p>
+  <p>The chapter also covers the property system, the shutdown sequence, the tools that measure boot time and the changes in Android 17. Most code in this chapter lives in <code>system/core/init/</code>, <code>external/avb/</code> and <code>frameworks/base/</code>.</p>
+
+  <h2>The boot path at a glance</h2>
+  <p>The boot crosses four layers. The firmware runs first, then the Linux kernel, then native programs in user space and last the Java framework. Time moves down the next diagram, and each stage sits in the layer where its code runs.</p>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../../assets/img/diagrams/bi-boot-journey.svg" alt="Four columns show the layers of the system. Time flows from top to bottom. In the firmware, the Boot ROM runs fixed code in the chip, and the bootloader verifies and loads the images. The Linux kernel starts the drivers and then runs /init. In native user space, the first stage of init mounts the partitions, and the second stage starts services and properties. In the Java framework, Zygote preloads and forks, system_server starts more than 100 services, and the home screen appears when sys.boot_completed is 1." loading="lazy"></div>
+    <figcaption>Eight stages carry the device from the power button to the home screen.</figcaption>
+  </figure>
+
+  <ol class="steps">
+    <li><strong>Boot ROM.</strong> The System on a Chip (SoC) runs a small program from read-only memory in the chip. This code sets up clocks and the memory controller, then loads the first bootloader from a fixed place in storage. This stage belongs to the chip vendor and is not part of AOSP.</li>
+    <li><strong>Bootloader.</strong> The bootloader starts the main memory and important devices. It runs Android Verified Boot (AVB), selects the A or B slot and loads the kernel, the ramdisk and the Device Tree Blob (DTB). Qualcomm devices use the Android Bootloader (ABL), and many other chips use U-Boot.</li>
+    <li><strong>Linux kernel.</strong> The kernel starts its subsystems, probes the drivers and unpacks the initial file system in memory. It then starts the program <code>/init</code> as process 1 (PID 1).</li>
+    <li><strong>First stage of init.</strong> This stage runs from the ramdisk. It loads kernel modules, mounts <code>/system</code> and <code>/vendor</code> and then starts the full <code>init</code> from <code>/system</code>.</li>
+    <li><strong>Second stage of init.</strong> After a short step that loads the SELinux policy, the second stage reads the <code>.rc</code> files, starts the property service and starts the native daemons. Examples are <code>servicemanager</code>, <code>logd</code> and <code>surfaceflinger</code>.</li>
+    <li><strong>Zygote.</strong> Zygote starts the Android Runtime (ART), preloads the framework classes and resources and waits for requests to fork new processes.</li>
+    <li><strong>system_server.</strong> The first child of Zygote hosts the system services, for example the activity manager, the package manager and the window manager. They start in a fixed order of boot phases.</li>
+    <li><strong>Home screen.</strong> The launcher starts, the boot animation stops and the property <code>sys.boot_completed</code> becomes 1. All apps and services now know that the device is ready.</li>
+  </ol>
+
+  <div class="block analogy">
+    <div class="label">Real-life analogy</div>
+    <p>Think of a restaurant on a busy morning. The owner arrives first and checks the seals on the doors and the delivery boxes. Only then does the owner give the keys to the manager. The manager follows a printed checklist. Power on, then fridges, then ovens and then the staff.</p>
+    <p>The head chef prepares all sauces and cut vegetables once, in one large kitchen station. Each new cook gets an exact copy of that station and starts to cook at once. The front-of-house manager opens the tables for guests area by area. Last, somebody turns the sign on the door to Open.</p>
+    <p>The owner is the bootloader with verified boot. The manager is <code>init</code>, and the checklist is <code>init.rc</code>. The head chef is Zygote, and the copied station is the shared memory of each new app. The front-of-house manager is <code>system_server</code>, and the Open sign is <code>sys.boot_completed</code>.</p>
+  </div>
+
+  <h2>The bootloader and the boot images</h2>
+  <p>The bootloader is the first program that a device maker can change. Its work is the same on all Android devices, although its code is different for each chip.</p>
+  <ul>
+    <li>It starts the main memory and the devices that the boot needs.</li>
+    <li>It runs AVB, so only trusted code starts.</li>
+    <li>On a device with A/B partitions, it selects the slot for this boot.</li>
+    <li>It loads the kernel, the ramdisk and the DTB into memory.</li>
+    <li>It writes the kernel command line and the bootconfig, which carry values such as <code>androidboot.force_normal_boot</code>.</li>
+    <li>It jumps to the entry point of the kernel.</li>
+  </ul>
+
+  <h3>Three boot partitions</h3>
+  <p>Modern devices split the boot material across three partitions. This split lets Google update the generic parts and lets the vendor update the parts for its hardware, each on its own schedule.</p>
+  <ul>
+    <li><strong><code>boot</code></strong> holds the Generic Kernel Image (GKI). Up to Android 12, it also holds the generic ramdisk. The header format lives in <code>system/tools/mkbootimg/include/bootimg/bootimg.h</code> and records sizes, the page size, the operating system (OS) version and the header version.</li>
+    <li><strong><code>vendor_boot</code></strong> arrived with Android 11 and header version 3. It holds the vendor ramdisk with the files for the device, the vendor kernel modules and the DTB.</li>
+    <li><strong><code>init_boot</code></strong> arrived with Android 13 and header version 4. It takes the generic ramdisk out of <code>boot</code>. This ramdisk contains first-stage <code>init</code>, so Google can now update <code>init</code> apart from the kernel.</li>
+  </ul>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../../assets/img/diagrams/bi-boot-images.svg" alt="Three partitions on the left. boot holds the generic kernel and, up to Android 12, the generic ramdisk. vendor_boot holds the vendor ramdisk, vendor kernel modules and the device tree blob. init_boot holds the generic ramdisk with first-stage init. The bootloader loads, verifies and joins them. The result is the Linux kernel, a combined ramdisk with a generic layer and a vendor layer, the device tree blob and the kernel command line with bootconfig. Then /init runs as process 1. A timeline shows header version 2 up to Android 10, version 3 in Android 11 with vendor_boot and version 4 in Android 13 with init_boot." loading="lazy"></div>
+    <figcaption>The bootloader joins three partitions into one kernel, one ramdisk and one device tree.</figcaption>
+  </figure>
+
+  <h2>Android Verified Boot</h2>
+  <p>AVB makes sure that every byte of code and data that the device runs comes from a trusted source. The library lives in <code>external/avb/libavb/</code>, and its main header <code>libavb.h</code> includes all other headers. Each bootloader links this library and supplies a small set of operations, for example to read a partition or to read a rollback index.</p>
+  <p>The trust starts in hardware. The chip holds a hash of a key in fuses, and the Boot ROM uses it to check the bootloader. The bootloader holds the public key for the next step. That step is the <strong>vbmeta</strong> image, a small signed structure that describes all other partitions.</p>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../../assets/img/diagrams/bi-avb-chain.svg" alt="The Boot ROM holds a key hash fused into the chip and checks the bootloader. The bootloader runs libavb with avb_slot_verify. The vbmeta partition has a 256-byte header with the magic AVB0, flags and a rollback index, then authentication data with the signature, then auxiliary data with descriptors and the public key. A hash descriptor covers boot, vendor_boot and dtbo, checked as a whole at load. A hashtree descriptor covers system, vendor and product, checked block by block at read. A chain descriptor hands over to vbmeta_system with its own key. The rollback index is compared with a minimum in RPMB storage. A lower index gives ERROR_ROLLBACK_INDEX. If the result is OK, the device boots with dm-verity parameters. An error on a locked device stops the boot or shows a red warning. An error on an unlocked device boots with an orange warning." loading="lazy"></div>
+    <figcaption>Each link checks the next one. The signed vbmeta image describes every other partition.</figcaption>
+  </figure>
+
+  <h3>The vbmeta image</h3>
+  <p>The vbmeta image has three blocks. A header with a fixed size of 256 bytes comes first. The authentication data follows with the hash and the signature. The auxiliary data comes last with the descriptors and the public key.</p>
+<pre class="code" data-lang="cpp" data-file="external/avb/libavb/avb_vbmeta_image.h"><code>#define AVB_VBMETA_IMAGE_HEADER_SIZE 256
+#define AVB_MAGIC "AVB0"
+#define AVB_MAGIC_LEN 4
+#define AVB_RELEASE_STRING_SIZE 48
+
+typedef enum {
+  AVB_VBMETA_IMAGE_FLAGS_HASHTREE_DISABLED = (1 &lt;&lt; 0),
+  AVB_VBMETA_IMAGE_FLAGS_VERIFICATION_DISABLED = (1 &lt;&lt; 1)
+} AvbVBMetaImageFlags;</code></pre>
+  <p>The first flag turns off dm-verity while the device runs. The second flag turns off all checks, also the parse of the descriptors. A device accepts these flags only when its bootloader is unlocked.</p>
+  <p>The descriptors in the auxiliary data tell the bootloader what to check.</p>
+  <ul>
+    <li>A <strong>hash descriptor</strong> holds the hash of a whole image, for example <code>boot</code>, <code>vendor_boot</code> or <code>dtbo</code>. The bootloader reads the image and compares the hash before it uses the image.</li>
+    <li>A <strong>hashtree descriptor</strong> holds the root hash of a large partition, for example <code>system</code>. The kernel checks this partition block by block while the device runs.</li>
+    <li>A <strong>chain descriptor</strong> passes trust to another vbmeta image with its own key, for example <code>vbmeta_system</code>. A partner can then sign its partitions without the key of the device maker.</li>
+  </ul>
+
+  <h3>The verification process</h3>
+  <p>The bootloader calls <code>avb_slot_verify()</code> for the selected slot. The function reads the vbmeta partition, checks its signature against the trusted key and compares the rollback index. It then reads each partition with a hash descriptor and compares the hashes. The result is one value of an enumeration.</p>
+<pre class="code" data-lang="cpp" data-file="external/avb/libavb/avb_slot_verify.h"><code>typedef enum {
+  AVB_SLOT_VERIFY_RESULT_OK,
+  AVB_SLOT_VERIFY_RESULT_ERROR_OOM,
+  AVB_SLOT_VERIFY_RESULT_ERROR_IO,
+  AVB_SLOT_VERIFY_RESULT_ERROR_VERIFICATION,
+  AVB_SLOT_VERIFY_RESULT_ERROR_ROLLBACK_INDEX,
+  AVB_SLOT_VERIFY_RESULT_ERROR_PUBLIC_KEY_REJECTED,
+  AVB_SLOT_VERIFY_RESULT_ERROR_INVALID_METADATA,
+  AVB_SLOT_VERIFY_RESULT_ERROR_UNSUPPORTED_VERSION,
+  AVB_SLOT_VERIFY_RESULT_ERROR_INVALID_ARGUMENT
+} AvbSlotVerifyResult;</code></pre>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Result</th><th>Meaning</th></tr></thead>
+      <tbody>
+        <tr><td><code>ERROR_VERIFICATION</code></td><td>A hash does not match, so somebody changed the content of a partition.</td></tr>
+        <tr><td><code>ERROR_ROLLBACK_INDEX</code></td><td>The image is older than the minimum that the device accepts.</td></tr>
+        <tr><td><code>ERROR_PUBLIC_KEY_REJECTED</code></td><td>The key that signed the image is not a trusted key of the device.</td></tr>
+        <tr><td><code>ERROR_UNSUPPORTED_VERSION</code></td><td>The image needs a newer version of <code>libavb</code>.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>On a locked device, an error stops the boot. On an unlocked device, the bootloader shows a warning screen and continues. If the result is <code>OK</code>, the bootloader adds the dm-verity parameters to the kernel command line and starts the kernel.</p>
+
+  <h3>dm-verity checks large partitions while they run</h3>
+  <p>A hash of the full <code>system</code> partition at every boot takes too much time. AVB therefore uses <strong>dm-verity</strong>, a target of the Linux device mapper. It checks each block when a program reads it. The check uses a Merkle tree, which is a tree of hashes. Each leaf is the hash of one data block, and each higher node is the hash of the nodes below it. Only the root hash needs protection, and the signed vbmeta holds it.</p>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../../assets/img/diagrams/bi-verity-tree.svg" alt="On the left, a hash tree. The root hash sits at the top, then two level-1 hashes, four level-2 hashes and eight data blocks. A read of block B5 hashes the block and walks up through its parents to the root. The root hash comes from the signed vbmeta. On the right, the mode MANAGED_RESTART_AND_EIO, the usual mode on production devices. In restart mode, corruption causes a reboot. After a reboot for hashtree corruption, the device enters EIO mode, where apps get I/O errors and the device does not reboot again. A new OS version returns the device to restart mode. The state lives in avb.managed_verity_mode. Other modes are RESTART, EIO, LOGGING and PANIC." loading="lazy"></div>
+    <figcaption>One read checks only the path from its block to the root. The managed mode stops a loop of reboots.</figcaption>
+  </figure>
+
+  <p>When a hash does not match, the kernel acts according to the error mode.</p>
+<pre class="code" data-lang="cpp" data-file="external/avb/libavb/avb_slot_verify.h"><code>typedef enum {
+  AVB_HASHTREE_ERROR_MODE_RESTART_AND_INVALIDATE,
+  AVB_HASHTREE_ERROR_MODE_RESTART,
+  AVB_HASHTREE_ERROR_MODE_EIO,
+  AVB_HASHTREE_ERROR_MODE_LOGGING,
+  AVB_HASHTREE_ERROR_MODE_MANAGED_RESTART_AND_EIO,
+  AVB_HASHTREE_ERROR_MODE_PANIC
+} AvbHashtreeErrorMode;</code></pre>
+  <p>Production devices use <code>MANAGED_RESTART_AND_EIO</code>. At first, corruption causes a reboot. If the reason for the last reboot was corruption, the device changes to the EIO mode. In this mode, the read returns an input and output error to the app, and the device does not reboot again. The value <code>avb.managed_verity_mode</code> keeps this state. A new OS version resets the device to the restart mode.</p>
+  <p>Two other modes have special uses. The mode <code>RESTART_AND_INVALIDATE</code> marks the slot as bad and needs <code>CONFIG_DM_VERITY_AVB</code> in the kernel. Only old Android Things devices use it. The <code>LOGGING</code> mode is for development on unlocked devices.</p>
+
+  <h3>Rollback protection</h3>
+  <p>An attacker can try to install an old, signed version of Android with a known weakness. Rollback indexes stop this attack.</p>
+  <ol class="steps">
+    <li><strong>Each image carries a number.</strong> Every vbmeta image holds a rollback index that only goes up from release to release.</li>
+    <li><strong>The device stores a minimum.</strong> A storage area that resists tampering keeps the lowest index that the device accepts. On embedded MultiMediaCard (eMMC) and Universal Flash Storage (UFS), this area is usually the Replay Protected Memory Block (RPMB).</li>
+    <li><strong>The check compares both values.</strong> If the index in the image is lower than the stored minimum, <code>avb_slot_verify()</code> returns <code>ERROR_ROLLBACK_INDEX</code>.</li>
+    <li><strong>A good boot raises the minimum.</strong> After a successful boot, the device writes the current index as the new minimum.</li>
+  </ol>
+
+  <h3>Boot modes and recovery</h3>
+  <p>The recovery system installs updates and erases user data. Its code lives in <code>bootable/recovery/</code>. Both stages of <code>init</code> share one enumeration of boot modes.</p>
+<pre class="code" data-lang="cpp" data-file="system/core/init/util.h"><code>enum class BootMode {
+    NORMAL_MODE,
+    RECOVERY_MODE,
+    CHARGER_MODE,
+};</code></pre>
+  <p>A/B devices have no separate recovery partition. The recovery ramdisk comes from the normal boot image. The bootloader tells <code>init</code> which path to take through one value.</p>
+<pre class="code" data-lang="cpp" data-file="system/core/init/first_stage_init.cpp"><code>bool ForceNormalBoot(const std::string&amp; cmdline, const std::string&amp; bootconfig) {
+    return bootconfig.find("androidboot.force_normal_boot = \"1\"") != std::string::npos ||
+           cmdline.find("androidboot.force_normal_boot=1") != std::string::npos;
+}</code></pre>
+  <p>If the value is 1, <code>init</code> boots Android. Else it boots recovery, and first-stage <code>init</code> skips the normal mount of the partitions. In charger mode, the device shows only a battery animation, so <code>init</code> loads fewer modules and starts fewer services.</p>
+
+  <h2>init, the first process</h2>
+  <p><code>init</code> is the most important process in user space. It has the process ID 1, and every other process descends from it. If <code>init</code> stops, the kernel panics. These are its main tasks.</p>
+  <ul>
+    <li>Mount the file systems.</li>
+    <li>Load the SELinux policy.</li>
+    <li>Start and watch all native daemons, and restart them after a crash.</li>
+    <li>Own the property system.</li>
+    <li>Carry out requests to reboot or to shut down.</li>
+  </ul>
+
+  <h3>Why init has two stages</h3>
+  <p>The design of <code>init</code> solves a problem of order. The SELinux policy lives on <code>/system</code>. But some process must mount <code>/system</code> first, and that process is <code>init</code> itself. Therefore <code>init</code> runs in stages. The first stage runs from the ramdisk without a policy. It mounts the partitions and then starts the full binary from <code>/system</code>, which loads the policy and continues under it.</p>
+  <p>All stages use the same source file as their entry point, <code>system/core/init/main.cpp</code>. The arguments decide which role the binary plays.</p>
+<pre class="code" data-lang="cpp" data-file="system/core/init/main.cpp"><code>int main(int argc, char** argv) {
+#if __has_feature(address_sanitizer)
+    __asan_set_error_report_callback(AsanReportCallback);
+#elif __has_feature(hwaddress_sanitizer)
+    __hwasan_set_error_report_callback(AsanReportCallback);
+#endif
+    // Boost prio which will be restored later
+    setpriority(PRIO_PROCESS, 0, -20);
+    if (!strcmp(basename(argv[0]), "ueventd")) {
+        return ueventd_main(argc, argv);
+    }
+
+    if (argc &gt; 1) {
+        if (!strcmp(argv[1], "subcontext")) {
+            android::base::InitLogging(argv, &amp;android::base::KernelLogger);
+            const BuiltinFunctionMap&amp; function_map = GetBuiltinFunctionMap();
+            return SubcontextMain(argc, argv, &amp;function_map);
+        }
+        if (!strcmp(argv[1], "selinux_setup")) {
+            return SetupSelinux(argv);
+        }
+        if (!strcmp(argv[1], "second_stage")) {
+            return SecondStageMain(argc, argv);
+        }
+    }
+
+#if defined(FIRST_STAGE_INIT) || defined(RECOVERY)
+    return FirstStageMain(argc, argv);
+#else
+    LOG(FATAL) &lt;&lt; "Second-stage init requires an argument to main()";
+#endif
+}</code></pre>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../../assets/img/diagrams/bi-init-modes.svg" alt="The main function of init in system/core/init/main.cpp first raises its priority to minus 20 and restores it before the main loop. It then checks its arguments from top to bottom. If the program name is ueventd, ueventd_main creates device nodes. If the first argument is subcontext, SubcontextMain runs vendor commands in the vendor context. If it is selinux_setup, SetupSelinux loads the policy. If it is second_stage, SecondStageMain sets up properties, rc files and the main loop. With no argument, FirstStageMain runs, but only in the ramdisk build. The /system/bin/init binary aborts in that case." loading="lazy"></div>
+    <figcaption>The program name and the first argument select one of five roles.</figcaption>
+  </figure>
+
+  <p>Two details in this function are important. First, <code>init</code> raises its own priority to -20, the highest value, at once. The second stage sets it back to 0 just before its main loop. Second, the call of <code>FirstStageMain()</code> without an argument exists only in a build with <code>FIRST_STAGE_INIT</code> or <code>RECOVERY</code>. The ramdisk holds this small build, and its entry point <code>first_stage_main.cpp</code> calls <code>FirstStageMain()</code> directly. The full binary <code>/system/bin/init</code> stops with a fatal error if it starts without an argument.</p>
+
+  <h2>First-stage init</h2>
+  <p>The function <code>FirstStageMain()</code> in <code>system/core/init/first_stage_init.cpp</code> runs in an almost empty world. No <code>/dev</code>, no <code>/proc</code> and no log exist yet. If this function fails, the device does not boot. Its work falls into four phases.</p>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../../assets/img/diagrams/bi-first-stage.svg" alt="Four phases from left to right. Phase one creates basic file systems, namely tmpfs on /dev, devpts, proc with hidepid=2, sysfs, selinuxfs and the nodes /dev/kmsg with mode 0600 and /dev/null. Phase two loads kernel modules from the list for the boot mode, serially or in parallel, and respects page-size folders. Phase three resumes from hibernation if asked, creates block devices, installs reboot handlers and mounts /system and /vendor with dm-verity. Phase four frees the ramdisk, points output to /dev/kmsg and runs execv for selinux_setup. Below, the CHECKCALL macro collects errors in a list until /dev/kmsg is ready. The parallel mode comes from androidboot.load_modules_parallel. Not set means NONE, and the values true, performance and conservative select NORMAL, PERFORMANCE and CONSERVATIVE." loading="lazy"></div>
+    <figcaption>First-stage init builds a minimal system, loads drivers, mounts partitions and hands over.</figcaption>
+  </figure>
+
+  <h3>Phase 1, the basic file systems</h3>
+  <p>The function first records the start time. It then mounts the file systems that every later step needs.</p>
+<pre class="code" data-lang="cpp" data-file="system/core/init/first_stage_init.cpp (shortened)"><code>int FirstStageMain(int argc, char** argv) {
+    boot_clock::time_point start_time = boot_clock::now();
+
+    std::vector&lt;std::pair&lt;std::string, int&gt;&gt; errors;
+#define CHECKCALL(x) \
+    if ((x) != 0) errors.emplace_back(#x " failed", errno);
+
+    // Clear the umask.
+    umask(0);
+
+    CHECKCALL(clearenv());
+    CHECKCALL(setenv("PATH", _PATH_DEFPATH, 1));
+    CHECKCALL(mount("tmpfs", "/dev", "tmpfs", MS_NOSUID, "mode=0755"));
+    CHECKCALL(mkdir("/dev/pts", 0755));
+    CHECKCALL(mkdir("/dev/socket", 0755));
+    CHECKCALL(mkdir("/dev/dm-user", 0755));
+    CHECKCALL(mount("devpts", "/dev/pts", "devpts", 0, NULL));
+    CHECKCALL(mount("proc", "/proc", "proc", 0,
+        "hidepid=2,gid=" MAKE_STR(AID_READPROC)));
+    CHECKCALL(mount("sysfs", "/sys", "sysfs", 0, NULL));
+    CHECKCALL(mount("selinuxfs", "/sys/fs/selinux", "selinuxfs", 0, NULL));
+
+    CHECKCALL(mknod("/dev/kmsg", S_IFCHR | 0600, makedev(1, 11)));
+    CHECKCALL(mknod("/dev/random", S_IFCHR | 0666, makedev(1, 8)));
+    CHECKCALL(mknod("/dev/urandom", S_IFCHR | 0666, makedev(1, 9)));
+    CHECKCALL(mknod("/dev/ptmx", S_IFCHR | 0666, makedev(5, 2)));
+    CHECKCALL(mknod("/dev/null", S_IFCHR | 0666, makedev(1, 3)));
+    // ...</code></pre>
+  <p>The macro <code>CHECKCALL</code> does not stop at the first error. It adds each failure to a list, because no log exists yet. Without <code>/dev/kmsg</code>, <code>init</code> has no place to write a message. The code also makes three choices for security.</p>
+  <ul>
+    <li>The option <code>hidepid=2</code> on <code>/proc</code> hides the details of other processes from users without root.</li>
+    <li>The mode 0600 on <code>/dev/kmsg</code> gives only root access to the kernel log.</li>
+    <li>The mount of <code>selinuxfs</code> on <code>/sys/fs/selinux</code> prepares the later load of the policy.</li>
+  </ul>
+  <p>After these mounts, <code>init</code> can finally write to the kernel log. It now reports the errors from the list. If the list has an error, the boot stops.</p>
+<pre class="code" data-lang="cpp" data-file="system/core/init/first_stage_init.cpp"><code>SetStdioToDevNull(argv);
+// Now that tmpfs is mounted on /dev and we have /dev/kmsg, we can actually
+// talk to the outside world...
+InitKernelLogging(argv);
+
+if (!errors.empty()) {
+    for (const auto&amp; [error_string, error_errno] : errors) {
+        LOG(ERROR) &lt;&lt; error_string &lt;&lt; " " &lt;&lt; strerror(error_errno);
+    }
+    LOG(FATAL) &lt;&lt; "Init encountered errors starting first stage, aborting";
+}
+
+LOG(INFO) &lt;&lt; "init first stage started!";</code></pre>
+
+  <h3>Phase 2, the kernel modules</h3>
+  <p>A GKI kernel keeps many drivers in modules. The driver for the storage controller can be one of them. Therefore <code>init</code> must load modules before it can mount any partition.</p>
+<pre class="code" data-lang="cpp" data-file="system/core/init/first_stage_init.cpp"><code>boot_clock::time_point module_start_time = boot_clock::now();
+int module_count = 0;
+BootMode boot_mode = GetBootMode(cmdline, bootconfig);
+if (!LoadKernelModules(boot_mode, want_console, want_parallel_mode, want_parallel_test,
+                       module_count)) {
+    if (want_console != FirstStageConsoleParam::DISABLED) {
+        LOG(ERROR) &lt;&lt; "Failed to load kernel modules, starting console";
+    } else {
+        LOG(FATAL) &lt;&lt; "Failed to load kernel modules";
+    }
+}
+if (module_count &gt; 0) {
+    auto module_elapse_time = std::chrono::duration_cast&lt;std::chrono::milliseconds&gt;(
+            boot_clock::now() - module_start_time);
+    setenv(kEnvInitModuleDurationMs,
+           std::to_string(module_elapse_time.count()).c_str(), 1);
+}</code></pre>
+  <p>The function <code>LoadKernelModules()</code> looks for a folder under <code>/lib/modules/</code> that matches the version of the running kernel. The boot mode selects the list of modules. Normal boots use <code>modules.load</code>, recovery uses <code>modules.load.recovery</code> and charger mode uses <code>modules.load.charger</code>. The library <code>libmodprobe</code> then loads the modules one by one or in parallel.</p>
+<pre class="code" data-lang="cpp" data-file="system/core/init/first_stage_init.cpp"><code>bool retval = (want_parallel_mode != Modprobe::LoadParallelMode::NONE)
+                      ? m.LoadModulesParallel(std::thread::hardware_concurrency(),
+                                              want_parallel_mode, want_parallel_test)
+                      : m.LoadListedModules(!want_console);</code></pre>
+
+  <div class="block changed">
+    <div class="label">What changed in Android 17</div>
+    <p>The parallel load of modules is no longer a simple switch. The value <code>androidboot.load_modules_parallel</code> in the bootconfig accepts <code>true</code> for the NORMAL mode, <code>performance</code> and <code>conservative</code>. Each mode sets how hard <code>libmodprobe</code> works through the graph of dependencies in parallel. Without the value, the mode is NONE. A separate value <code>androidboot.load_modules_parallel_test=true</code> turns on a test mode.</p>
+    <p>The search for module folders now also knows the page size. It skips folders with the suffix <code>_16k</code> or <code>_64k</code> unless the suffix matches the page size of the running kernel. One <code>/lib/modules</code> tree can thus ship modules for 4 KB, 16 KB and 64 KB pages side by side.</p>
+  </div>
+
+  <h3>Phase 3, the partitions</h3>
+  <p>With the storage driver in place, <code>init</code> can mount the important partitions. In Android 17, a short step runs first. <code>MaybeResumeFromHibernation()</code> reads <code>androidboot.hibernation_resume_device</code>. If the value exists, the function writes it to <code>/sys/power/resume</code>, and the kernel restores a saved memory image instead of a cold boot. Then the first-stage mount runs.</p>
+<pre class="code" data-lang="cpp" data-file="system/core/init/first_stage_init.cpp"><code>if (!fsm) {
+    fsm = CreateFirstStageMount(cmdline);
+}
+if (!fsm) {
+    LOG(FATAL) &lt;&lt; "FirstStageMount not available";
+}
+
+if (!created_devices &amp;&amp; !fsm-&gt;DoCreateDevices()) {
+    LOG(FATAL) &lt;&lt; "Failed to create devices required for first stage mount";
+} else if (REBOOT_BOOTLOADER_ON_PANIC &amp;&amp; !AttemptingToBootNewSlot()) {
+    InstallRebootSignalHandlers();
+}
+
+if (!fsm-&gt;DoFirstStageMount()) {
+    LOG(FATAL) &lt;&lt; "Failed to mount required partitions early ...";
+}</code></pre>
+  <p><code>DoCreateDevices()</code> creates the block devices that the mount needs. <code>DoFirstStageMount()</code> reads the first-stage entries of the fstab, sets up dm-verity with the root hashes from vbmeta and mounts <code>/system</code>, <code>/vendor</code>, <code>/product</code> and the other early partitions. On devices with dynamic partitions, it also maps the logical partitions inside the <code>super</code> partition.</p>
+  <p>Look at the place of <code>InstallRebootSignalHandlers()</code>. These handlers reboot the device to the bootloader if <code>init</code> crashes. Up to Android 16, <code>init</code> installed them at the very start. In Android 17, the code installs them only after the block devices exist and only when the device does not try a new A/B slot. An early handler can otherwise reboot the device again and again into a slot that is known to be bad.</p>
+
+  <h3>Phase 4, the handover</h3>
+  <p>First-stage <code>init</code> now frees the ramdisk, because nothing needs it any more. It then replaces itself with the full binary from <code>/system</code>.</p>
+<pre class="code" data-lang="cpp" data-file="system/core/init/first_stage_init.cpp"><code>if (old_root_dir &amp;&amp; old_root_info.st_dev != new_root_info.st_dev) {
+    FreeRamdisk(old_root_dir.get(), old_root_info.st_dev);
+}
+// ...
+const char* path = "/system/bin/init";
+const char* args[] = {path, "selinux_setup", nullptr};
+auto fd = open("/dev/kmsg", O_WRONLY | O_CLOEXEC);
+dup2(fd, STDOUT_FILENO);
+dup2(fd, STDERR_FILENO);
+close(fd);
+execv(path, const_cast&lt;char**&gt;(args));
+
+// execv() only returns if an error happened, in which case we
+// panic and never fall through this conditional.
+PLOG(FATAL) &lt;&lt; "execv(\"" &lt;&lt; path &lt;&lt; "\") failed";</code></pre>
+  <p>The call <code>execv()</code> keeps the process but loads a new program into it. The process ID stays 1. Before the call, the code also puts its start time into the environment through <code>kEnvFirstStageStartedAt</code>. The second stage reads this value later and records how long each stage took.</p>
+
+  <h2>SELinux setup</h2>
+  <p>The second program image of process 1 runs <code>SetupSelinux()</code> in <code>system/core/init/selinux.cpp</code>. A long comment at the top of this file explains the strategy. Old devices use one <strong>monolithic</strong> policy file, <code>/sepolicy</code>. Devices with Project Treble use a <strong>split</strong> policy. The final policy combines parts from <code>/system</code>, <code>/system_ext</code>, <code>/vendor</code>, <code>/product</code> and <code>/odm</code>, and each partition can update its part. A device usually ships a precompiled form of the combined policy, so the boot does not need to compile it.</p>
+<pre class="code" data-lang="cpp" data-file="system/core/init/selinux.cpp (shortened)"><code>int SetupSelinux(char** argv) {
+    SetStdioToDevNull(argv);
+    InitKernelLogging(argv);
+    // ...
+    SelinuxSetupKernelLogging();
+
+    bool use_overlays = EarlySetupOverlays();
+
+    if (IsMicrodroid()) {
+        LoadSelinuxPolicyMicrodroid();
+    } else {
+        LoadSelinuxPolicyAndroid();
+    }
+
+    SelinuxSetEnforcement();
+    // ...
+    if (selinux_android_restorecon("/system/bin/init", 0) == -1) {
+        PLOG(FATAL) &lt;&lt; "restorecon failed of /system/bin/init failed";
+    }
+    // ...
+    const char* path = "/system/bin/init";
+    const char* args[] = {path, "second_stage", nullptr};
+    execv(path, const_cast&lt;char**&gt;(args));</code></pre>
+  <p>The step <code>restorecon</code> on <code>/system/bin/init</code> is the key to the next transition. It gives the file its correct label from the policy. When the next <code>execv()</code> starts the same file again, the policy moves the process from the kernel domain into the <code>init</code> domain.</p>
+
+  <h3>The policy load during a Virtual A/B update</h3>
+  <p>A device in the middle of a Virtual A/B update reads <code>/system</code> through snapshots. A daemon in user space, <code>snapuserd</code>, serves these snapshots through <code>dm-user</code> devices. This daemon started before any policy existed, so the new policy can stop it. If a read from <code>/system</code> then waits on the stopped daemon, the boot hangs. The code avoids this problem in five steps.</p>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../../assets/img/diagrams/bi-snapuserd.svg" alt="Three lanes for init, the device mapper and snapuserd. Step one, init reads the policy while snapuserd runs. Step two, the device mapper tables are rewritten to new dm-user devices. Step three, the old snapuserd stops because it has no devices left. Step four, init loads the policy and runs restorecon only in /dev. Step five, snapuserd starts again and attaches to the new devices. The goal is to load the policy while no read from /system waits on a daemon that the new policy can stop." loading="lazy"></div>
+    <figcaption>init moves the snapshot devices to a new daemon around the policy load.</figcaption>
+  </figure>
+
+<pre class="code" data-lang="cpp" data-file="system/core/init/selinux.cpp"><code>// We use a five-step process to address this:
+//  (1) Read the policy into a string, with snapuserd running.
+//  (2) Rewrite the snapshot device-mapper tables, to generate new dm-user
+//      devices and to flush I/O.
+//  (3) Kill snapuserd, which no longer has any dm-user devices to attach to.
+//  (4) Load the sepolicy and issue critical restorecons in /dev, carefully
+//      avoiding anything that would read from /system.
+//  (5) Re-launch snapuserd and attach it to the dm-user devices from step (2).
+void LoadSelinuxPolicyAndroid() {
+    MountMissingSystemPartitions();
+
+    LOG(INFO) &lt;&lt; "Opening SELinux policy";
+    std::string policy;
+    ReadPolicy(&amp;policy);
+
+    auto snapuserd_helper = SnapuserdSelinuxHelper::CreateIfNeeded();
+    if (snapuserd_helper) {
+        snapuserd_helper-&gt;StartTransition();
+    }
+
+    LoadSelinuxPolicy(policy);
+
+    if (snapuserd_helper) {
+        snapuserd_helper-&gt;FinishTransition();
+        snapuserd_helper = nullptr;
+    }
+}</code></pre>
+  <p>After the policy load, <code>SelinuxSetEnforcement()</code> sets the enforcing mode. The next diagram shows the three program images of process 1 side by side.</p>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../../assets/img/diagrams/bi-exec-chain.svg" alt="Three frames from left to right, all with process ID 1. The first stage runs /init from the ramdisk in the kernel domain. It mounts /dev, /proc and /sys, loads kernel modules, mounts /system and /vendor and frees the ramdisk. An execv starts /system/bin/init selinux_setup, still in the kernel domain. It reads and loads the policy, sets enforcing mode and runs restorecon on /system/bin/init. A second execv starts /system/bin/init second_stage in the init domain. It starts the property service, parses the rc files and runs the main loop forever. The environment carries data forward, for example the start time that becomes ro.boottime.init." loading="lazy"></div>
+    <figcaption>One process, three programs. Each execv keeps PID 1 and loads the next image.</figcaption>
+  </figure>
+
+  <h2>Second-stage init</h2>
+  <p>The third program image of process 1 runs <code>SecondStageMain()</code> in <code>system/core/init/init.cpp</code>. This function is the real conductor of user space. It never returns.</p>
+<pre class="code" data-lang="cpp" data-file="system/core/init/init.cpp"><code>int SecondStageMain(int argc, char** argv) {
+    if (REBOOT_BOOTLOADER_ON_PANIC &amp;&amp; !AttemptingToBootNewSlot()) {
+        InstallRebootSignalHandlers();
+    }
+
+    boot_clock::time_point start_time = boot_clock::now();
+
+    trigger_shutdown = [](const std::string&amp; command) {
+        shutdown_state.TriggerShutdown(command);
+    };
+
+    SetStdioToDevNull(argv);
+    InitKernelLogging(argv);
+    LOG(INFO) &lt;&lt; "init second stage started!";</code></pre>
+  <p>A fast series of steps for setup follows. The next code shows the most important calls in their order.</p>
+<pre class="code" data-lang="cpp" data-file="system/core/init/init.cpp (shortened)"><code>PropertyInit();
+
+// Umount second stage resources after property service has read the .prop files.
+UmountSecondStageRes();
+// ...
+MountExtraFilesystems();
+
+// Now set up SELinux for second stage.
+SelabelInitialize();
+SelinuxRestoreContext();
+
+Epoll epoll;
+if (auto result = epoll.Open(); !result.ok()) {
+    PLOG(FATAL) &lt;&lt; result.error();
+}
+// ...
+InstallSignalFdHandler(&amp;epoll);
+InstallInitNotifier(&amp;epoll);
+StartPropertyService(&amp;property_fd);
+// ...
+ActionManager&amp; am = ActionManager::GetInstance();
+ServiceList&amp; sm = ServiceList::GetInstance();
+
+LoadBootScripts(am, sm);</code></pre>
+  <ol class="steps">
+    <li><strong>Properties.</strong> <code>PropertyInit()</code> creates the property areas in shared memory and loads the values from the <code>build.prop</code> files.</li>
+    <li><strong>Labels.</strong> <code>SelinuxRestoreContext()</code> gives the correct SELinux labels to the nodes in <code>/dev</code> that the first stage created without a policy.</li>
+    <li><strong>Event loop.</strong> <code>Epoll</code> opens the event loop of <code>init</code>. Two calls register the sources of events. The first one handles signals, and the second one handles a wake request from other threads.</li>
+    <li><strong>Property service.</strong> <code>StartPropertyService()</code> starts a separate thread that accepts property requests from other processes.</li>
+    <li><strong>Scripts.</strong> <code>LoadBootScripts()</code> reads all <code>.rc</code> files into a list of actions and a list of services.</li>
+  </ol>
+  <p>The function also calls <code>SetupMountNamespaces()</code>, records the boot times of the earlier stages and writes the properties for a Generic System Image (GSI). These steps come back later in this chapter.</p>
+
+  <h3>Read the boot scripts</h3>
+<pre class="code" data-lang="cpp" data-file="system/core/init/init.cpp"><code>static void LoadBootScripts(ActionManager&amp; action_manager, ServiceList&amp; service_list) {
+    Parser parser = CreateParser(action_manager, service_list);
+
+    std::string bootscript = GetProperty("ro.boot.init_rc", "");
+    if (bootscript.empty()) {
+        parser.ParseConfig("/system/etc/init/hw/init.rc");
+        if (!parser.ParseConfig("/system/etc/init")) {
+            late_import_paths.emplace_back("/system/etc/init");
+        }
+        parser.ParseConfig("/system_ext/etc/init");
+        if (!parser.ParseConfig("/vendor/etc/init")) {
+            late_import_paths.emplace_back("/vendor/etc/init");
+        }
+        if (!parser.ParseConfig("/odm/etc/init")) {
+            late_import_paths.emplace_back("/odm/etc/init");
+        }
+        if (!parser.ParseConfig("/product/etc/init")) {
+            late_import_paths.emplace_back("/product/etc/init");
+        }
+    } else {
+        parser.ParseConfig(bootscript);
+    }
+}</code></pre>
+  <p>The main file <code>/system/etc/init/hw/init.rc</code> comes first. Its <code>import</code> lines take effect at the end of that file. The folders follow in a fixed order, namely <code>/system</code>, <code>/system_ext</code>, <code>/vendor</code>, <code>/odm</code> and <code>/product</code>. Inside each folder, the parser reads the files in alphabetical order. If a folder is not readable yet, its path goes to <code>late_import_paths</code>, and <code>init</code> reads it again during <code>mount_all</code>. A test build can replace the whole set with one file through <code>ro.boot.init_rc</code>.</p>
+  <p>Each partition installs its own <code>.rc</code> files next to its binaries. A module in <code>Android.bp</code> lists its file in the field <code>init_rc</code>, and the build copies it to <code>etc/init</code> of its partition. Thus a vendor adds services without a change to the main file.</p>
+  <p>The parser knows three kinds of sections.</p>
+<pre class="code" data-lang="cpp" data-file="system/core/init/init.cpp"><code>Parser CreateParser(ActionManager&amp; action_manager, ServiceList&amp; service_list) {
+    Parser parser;
+
+    parser.AddSectionParser("service",
+                            std::make_unique&lt;ServiceParser&gt;(&amp;service_list, GetSubcontext()));
+    parser.AddSectionParser("on",
+                            std::make_unique&lt;ActionParser&gt;(&amp;action_manager, GetSubcontext()));
+    parser.AddSectionParser("import", std::make_unique&lt;ImportParser&gt;(&amp;parser));
+
+    return parser;
+}</code></pre>
+
+  <h3>Queue the first triggers</h3>
+  <p>After the parse, <code>init</code> puts the first events into its queue. These events start the whole chain of the boot.</p>
+<pre class="code" data-lang="cpp" data-file="system/core/init/init.cpp (shortened)"><code>am.QueueBuiltinAction(SetupCgroupsAction, "SetupCgroups");
+am.QueueEventTrigger("early-init");
+am.QueueBuiltinAction(ConnectEarlyStageSnapuserdAction, "ConnectEarlyStageSnapuserd");
+
+// Queue an action that waits for coldboot done so we know ueventd has set up
+// all of /dev...
+am.QueueBuiltinAction(wait_for_coldboot_done_action, "wait_for_coldboot_done");
+// ...
+am.QueueBuiltinAction(SetMmapRndBitsAction, "SetMmapRndBits");
+
+// Trigger all the boot actions to get us started.
+am.QueueEventTrigger("init");
+
+// Don't mount filesystems or start core system services in charger mode.
+if (bootmode == BootMode::CHARGER_MODE) {
+    am.QueueEventTrigger("charger");
+} else {
+    am.QueueEventTrigger("late-init");
+}
+
+// Run all property triggers based on current state of the properties.
+am.QueueBuiltinAction(queue_property_triggers_action, "queue_property_triggers");</code></pre>
+  <p>The action <code>wait_for_coldboot_done</code> waits until <code>ueventd</code> finishes all device nodes in <code>/dev</code>. Only then can later actions use those nodes. The last action checks all property triggers against the current values once. After this point, each change of a property can fire its trigger.</p>
+
+  <h3>The main loop</h3>
+  <p>Now <code>init</code> enters its loop for the rest of the life of the device.</p>
+<pre class="code" data-lang="cpp" data-file="system/core/init/init.cpp"><code>// Restore prio before main loop
+setpriority(PRIO_PROCESS, 0, 0);
+while (true) {
+    const boot_clock::time_point far_future = boot_clock::time_point::max();
+    boot_clock::time_point next_action_time = far_future;
+
+    auto shutdown_command = shutdown_state.CheckShutdown();
+    if (shutdown_command) {
+        HandlePowerctlMessage(*shutdown_command);
+    }
+
+    if (!(prop_waiter_state.MightBeWaiting() || Service::is_exec_service_running())) {
+        am.ExecuteOneCommand();
+        if (am.HasMoreCommands()) {
+            next_action_time = boot_clock::now();
+        }
+    }
+
+    if (!IsShuttingDown()) {
+        auto next_process_action_time = HandleProcessActions();
+        if (next_process_action_time) {
+            next_action_time = std::min(next_action_time, *next_process_action_time);
+        }
+    }
+
+    std::optional&lt;std::chrono::milliseconds&gt; epoll_timeout;
+    if (next_action_time != far_future) {
+        epoll_timeout = std::chrono::ceil&lt;std::chrono::milliseconds&gt;(
+                std::max(next_action_time - boot_clock::now(), 0ns));
+    }
+    auto epoll_result = epoll.Wait(epoll_timeout);
+    if (!epoll_result.ok()) {
+        LOG(ERROR) &lt;&lt; epoll_result.error();
+    }
+    if (!IsShuttingDown()) {
+        HandleControlMessages();
+        SetUsbController(false);
+    }
+}</code></pre>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../../assets/img/diagrams/bi-main-loop.svg" alt="A ring of six steps that repeat forever on one thread. CheckShutdown looks for a pending reboot. ExecuteOneCommand runs one command of one action. HandleProcessActions handles restarts and timeouts. The loop then computes the timeout, which is now, later or never. epoll.Wait sleeps until an event. HandleControlMessages processes ctl.start and ctl.stop. On the left, four event sources wake epoll. A signalfd for SIGCHLD reports that a child process ended. An eventfd wakes the loop when the property thread has new work. A signalfd for SIGTERM exists only without CAP_SYS_BOOT. Mount events update mount properties. ReapAnyOutstandingChildren always runs as the first callback." loading="lazy"></div>
+    <figcaption>One thread does all the work of init. Four kinds of events wake it.</figcaption>
+  </figure>
+
+  <p>The loop has a strict rule. Each turn runs <strong>one</strong> command of one action and no more. If more commands wait, the timeout becomes zero, and <code>epoll</code> returns at once. A long list of actions thus cannot block the handling of signals or of property changes. The loop also stops the execution of actions while a <code>wait_for_prop</code> command waits or while an <code>exec</code> service runs. In those cases, only the events move the boot forward.</p>
+  <p>The design uses one thread on purpose. Actions run in a fixed order, and no locks protect the lists of actions and services. The only other thread is the property service. It talks to the main thread through an <code>eventfd</code>. When the device has nothing to do, <code>init</code> calls <code>mallopt(M_PURGE_ALL, 0)</code> and gives its free heap pages back to the kernel.</p>
+  <p>Four kinds of file descriptors wake <code>epoll</code>.</p>
+  <ul>
+    <li><strong>A <code>signalfd</code> for SIGCHLD.</strong> A child process ended, so <code>init</code> must collect it and maybe restart a service.</li>
+    <li><strong>A <code>signalfd</code> for SIGTERM.</strong> This descriptor exists only when <code>init</code> lacks <code>CAP_SYS_BOOT</code>, for example in a container.</li>
+    <li><strong>The wake <code>eventfd</code>.</strong> The property thread writes to it when a property changed or a control message arrived. The counter value has no meaning. Only the wake is important.</li>
+    <li><strong>Mount events.</strong> A handler watches mounts and unmounts and updates the matching properties.</li>
+  </ul>
+  <p>One more rule protects the order of events. The call <code>epoll.SetFirstCallback(ReapAnyOutstandingChildren)</code> makes <code>init</code> collect dead children before it handles any other event. Without this rule, a service can see <code>init.svc.&lt;name&gt;</code> change and ask for a restart before <code>init</code> collected the old process.</p>
+
+  <h3>Signals in process 1</h3>
+  <p>Signals need special care in PID 1, because the death of PID 1 is fatal. The function <code>InstallSignalFdHandler()</code> sets up signals in three ways.</p>
+<pre class="code" data-lang="cpp" data-file="system/core/init/init.cpp"><code>static void InstallSignalFdHandler(Epoll* epoll) {
+    // Applying SA_NOCLDSTOP to a defaulted SIGCHLD handler prevents the
+    // signalfd from receiving SIGCHLD when a child process stops or
+    // continues (b/77867680#comment9).
+    const struct sigaction act {
+        .sa_flags = SA_NOCLDSTOP, .sa_handler = SIG_DFL
+    };
+    sigaction(SIGCHLD, &amp;act, nullptr);
+
+    // Register a handler to unblock signals in the child processes.
+    const int result = pthread_atfork(nullptr, nullptr, &amp;UnblockSignals);
+    if (result != 0) {
+        LOG(FATAL) &lt;&lt; "Failed to register a fork handler: " &lt;&lt; strerror(result);
+    }
+
+    Result&lt;void&gt; cs_result = RegisterSignalFd(epoll, SIGCHLD, Service::GetSigchldFd());
+    if (!cs_result.ok()) {
+        PLOG(FATAL) &lt;&lt; cs_result.error();
+    }
+
+    if (!IsRebootCapable()) {
+        Result&lt;int&gt; cs_result = CreateAndRegisterSignalFd(epoll, SIGTERM);
+        if (!cs_result.ok()) {
+            PLOG(FATAL) &lt;&lt; cs_result.error();
+        }
+        sigterm_fd = cs_result.value();
+    }
+}</code></pre>
+  <ul>
+    <li><strong><code>SA_NOCLDSTOP</code></strong> sends SIGCHLD only when a child ends, not when a debugger stops or continues it. This flag removes wake-ups without a reason.</li>
+    <li><strong><code>pthread_atfork</code></strong> registers <code>UnblockSignals()</code> for every child. A service then starts with normal signal handling and does not inherit the blocked mask of <code>init</code>. Without it, a service does not learn when its own children end.</li>
+    <li><strong><code>signalfd</code></strong> turns signals into events on a file descriptor. Classic signal handlers interrupt code at random points and cause race conditions. A file descriptor fits into the <code>epoll</code> loop like any other event.</li>
+  </ul>
+  <p>In a container, SIGTERM asks for a clean shutdown. The handler accepts the signal only from the kernel, which has the sender ID 0. It ignores a SIGTERM from any process in user space.</p>
+<pre class="code" data-lang="cpp" data-file="system/core/init/init.cpp"><code>static void HandleSigtermSignal(const signalfd_siginfo&amp; siginfo) {
+    if (siginfo.ssi_pid != 0) {
+        // Drop any userspace SIGTERM requests.
+        LOG(DEBUG) &lt;&lt; "Ignoring SIGTERM from pid " &lt;&lt; siginfo.ssi_pid;
+        return;
+    }
+
+    HandlePowerctlMessage("shutdown,container");
+}</code></pre>
+  <p><code>init</code> has no signal for a dump of its state. A SIGQUIT to PID 1 does nothing. The state of each service is visible only through the properties <code>init.svc.&lt;name&gt;</code> and the log of <code>init</code>.</p>
+
+  <h2>The init.rc language</h2>
+  <p>The <code>.rc</code> files tell <code>init</code> what to do. They use a small language with three kinds of sections. The main file is <code>system/core/rootdir/init.rc</code>, and the build installs it as <code>/system/etc/init/hw/init.rc</code>.</p>
+<pre class="code" data-lang="text" data-file="The three kinds of sections"><code>on &lt;trigger&gt; [&amp;&amp; &lt;trigger&gt;]*
+    &lt;command&gt;
+    &lt;command&gt;
+
+service &lt;name&gt; &lt;pathname&gt; [ &lt;argument&gt; ]*
+    &lt;option&gt;
+    &lt;option&gt;
+
+import &lt;path&gt;</code></pre>
+  <p>An <strong>action</strong> starts with <code>on</code> and lists commands that run when its trigger fires. A <strong>service</strong> declares a program that <code>init</code> starts and watches. An <strong>import</strong> reads one more file. The main file starts with imports, and the paths can contain properties.</p>
+<pre class="code" data-lang="text" data-file="system/core/rootdir/init.rc"><code>import /init.environ.rc
+import /system/etc/init/hw/init.usb.rc
+import /init.${ro.hardware}.rc
+import /vendor/etc/init/hw/init.${ro.hardware}.rc
+import /system/etc/init/hw/init.usb.configfs.rc
+import /system/etc/init/hw/init.${ro.zygote}.rc</code></pre>
+  <p>The value of <code>ro.hardware</code> selects the file of the device. The value of <code>ro.zygote</code> selects the Zygote setup, for example <code>zygote64</code> or <code>zygote64_32</code>.</p>
+  <p><code>import</code> looks like a command, but it is a section keyword. The table of builtin commands in <code>builtins.cpp</code> does not contain it. The class <code>ImportParser</code> handles it while <code>init</code> reads the file. An <code>import</code> can therefore appear only at the top level of a file, never inside an action or a service.</p>
+
+  <h3>Triggers</h3>
+  <p>A trigger is the condition that starts an action. Three kinds exist.</p>
+  <ul>
+    <li>An <strong>event trigger</strong> fires once when <code>init</code> or another action queues its name, for example <code>early-init</code>, <code>late-init</code> or <code>boot</code>.</li>
+    <li>A <strong>property trigger</strong> fires when a property gets a given value, for example <code>on property:sys.boot_completed=1</code>.</li>
+    <li>A <strong>compound trigger</strong> joins conditions with <code>&amp;&amp;</code>. All conditions must be true at the same time. An action can contain at most one event trigger.</li>
+  </ul>
+<pre class="code" data-lang="text" data-file="Examples of triggers"><code>on property:ro.debuggable=1
+    start adbd
+
+on property:sys.boot_completed=1
+    bootchart stop
+
+on boot &amp;&amp; property:ro.config.low_ram=true
+    write /proc/sys/vm/dirty_expire_centisecs 200
+    write /proc/sys/vm/dirty_background_ratio 5</code></pre>
+  <p>The action <code>early-init</code> sets up the kernel before anything else.</p>
+<pre class="code" data-lang="text" data-file="system/core/rootdir/init.rc (shortened)"><code>on early-init
+    # Disable sysrq from keyboard
+    write /proc/sys/kernel/sysrq 0
+
+    # Android doesn't need kernel module autoloading, and it causes SELinux
+    # denials.  So disable it by setting modprobe to the empty string.
+    write /proc/sys/kernel/modprobe \n
+
+    # memory.pressure_level used by lmkd
+    chown root system /dev/memcg/memory.pressure_level
+    chmod 0040 /dev/memcg/memory.pressure_level
+    # app mem cgroups, used by activity manager, lmkd and zygote
+    mkdir /dev/memcg/apps/ 0755 system system
+    # cgroup for system_server and surfaceflinger
+    mkdir /dev/memcg/system 0550 system system</code></pre>
+  <p>The action <code>init</code> follows. It sets the time zone of the kernel clock to 0 and mixes <code>/proc/cmdline</code> and <code>/proc/bootconfig</code> into <code>/dev/urandom</code>. This step makes early random numbers less predictable. The action also creates links for standard input and output and the control groups under <code>/dev/cpuctl</code>, for example <code>foreground</code>, <code>background</code> and <code>top-app</code>. Later, the activity manager moves each process into one of these groups according to its importance.</p>
+
+  <h3>The late-init chain</h3>
+  <p>The action <code>late-init</code> drives the main part of the boot. It queues a long chain of event triggers in a fixed order.</p>
+<pre class="code" data-lang="text" data-file="system/core/rootdir/init.rc (shortened)"><code>on late-init
+    trigger early-fs
+
+    # Mount fstab in init.{$device}.rc by mount_all command. Optional parameter
+    # '--early' can be specified to skip entries with 'latemount'.
+    # /system and /vendor must be mounted by the end of the fs stage,
+    # while /data is optional.
+    trigger fs
+    trigger post-fs
+
+    # Mount fstab in init.{$device}.rc by mount_all with '--late' parameter
+    # to only mount entries with 'latemount'.
+    trigger late-fs
+
+    # Now we can mount /data. File encryption requires keymaster to decrypt
+    # /data, which in turn can only be loaded when system properties are present.
+    trigger post-fs-data
+
+    # Should be before netd, but after apex, properties and logging is available.
+    trigger load-bpf-programs
+
+    # Now we can start zygote.
+    trigger zygote-start
+
+    # Remove a file to wake up anything waiting for firmware.
+    trigger firmware_mounts_complete
+
+    trigger early-boot
+    trigger boot</code></pre>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../../assets/img/diagrams/bi-trigger-chain.svg" alt="A line of stations. early-init sets kernel settings, cgroups and bootchart. init mixes entropy, makes symlinks and creates cpuctl groups. late-init starts a chain. In charger mode, the charger trigger runs instead of late-init. The chain is early-fs, fs with mount_all --early, post-fs when /system and /vendor are ready, late-fs with mount_all --late, post-fs-data for /data and keys, load-bpf-programs for network programs, zygote-start which waits for odsign, firmware_mounts_complete, early-boot and boot, where the service classes start. Every action of a trigger runs before the next trigger." loading="lazy"></div>
+    <figcaption>Each station is an event trigger. All actions of one station run before the next station.</figcaption>
+  </figure>
+
+  <div class="block changed">
+    <div class="label">What changed in Android 17</div>
+    <p>The chain has one single <code>trigger load-bpf-programs</code>. Earlier releases also queued a separate trigger <code>bpf-progs-loaded</code> and waited for the property <code>bpf.progs_loaded</code>. Do not expect them in the current <code>init.rc</code>.</p>
+  </div>
+
+  <p>The action <code>post-fs-data</code> prepares <code>/data</code>. It starts a checkpoint for safe updates, sets the owner and the mode of <code>/data</code> and installs the encryption key.</p>
+<pre class="code" data-lang="text" data-file="system/core/rootdir/init.rc (shortened)"><code>on post-fs-data
+
+    # Start checkpoint before we touch data
+    exec - system system -- /system/bin/vdc checkpoint prepareCheckpoint
+
+    # We chown/chmod /data again so because mount is run as root + defaults
+    chown system system /data
+    chmod 0771 /data
+    # We restorecon /data in case the userdata partition has been reset.
+    restorecon /data
+
+    # Make sure we have the device encryption key.
+    installkey /data
+
+    # Start bootcharting as soon as possible after the data partition is
+    # mounted to collect more data.
+    mkdir /data/bootchart 0755 shell shell encryption=Require
+    bootchart start</code></pre>
+  <p>The action <code>zygote-start</code> finally starts the Java world.</p>
+<pre class="code" data-lang="text" data-file="system/core/rootdir/init.rc"><code>on zygote-start
+    wait_for_prop odsign.verification.done 1
+    start statsd
+    start zygote
+    start zygote_secondary</code></pre>
+  <p>The command <code>wait_for_prop</code> holds the boot until <code>odsign</code> finishes its check of the compiled ART files on the device. Zygote loads these files, so the check must finish first.</p>
+
+  <h3>Service definitions</h3>
+  <p>The definition of Zygote in <code>system/core/rootdir/init.zygote64.rc</code> uses many options of the language.</p>
+<pre class="code" data-lang="text" data-file="system/core/rootdir/init.zygote64.rc"><code>service zygote /system/bin/app_process64 -Xzygote /system/bin --zygote --start-system-server --socket-name=zygote
+    class main
+    priority -20
+    user root
+    group root readproc reserved_disk
+    socket zygote stream 660 root system
+    socket usap_pool_primary stream 660 root system
+    onrestart exec_background - system system -- /system/bin/vdc volume abort_fuse
+    onrestart write /sys/power/state on
+    onrestart write /sys/power/wake_lock zygote_kwl
+    onrestart restart audioserver
+    onrestart restart cameraserver
+    onrestart restart media
+    onrestart restart --only-if-running media.tuner
+    onrestart restart netd
+    onrestart restart wificond
+    task_profiles ProcessCapacityHigh MaxPerformance
+    critical window=${zygote.critical_window.minute:-off} target=zygote-fatal</code></pre>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../../assets/img/diagrams/bi-zygote-rc.svg" alt="The shortened init.zygote64.rc file on the left, with notes on the right. The first lines name the program app_process64 with arguments that start ART in Zygote mode and fork system_server. class main, priority -20 and task_profiles control scheduling. user root and group root give the identity that Zygote needs to change the user of each child. Two socket lines make init create /dev/socket/zygote and the socket for the USAP pool. onrestart lines restart the media, camera and network daemons with Zygote. critical with a window and the target zygote-fatal reboots the device after too many crashes." loading="lazy"></div>
+    <figcaption>Six groups of options describe the most important service of the device.</figcaption>
+  </figure>
+
+  <p>The option <code>critical</code> protects the device from a loop of crashes. If Zygote crashes too often within the window, <code>init</code> reboots the device into the target <code>zygote-fatal</code>. Without a target, the default is the bootloader. The code lives in <code>Service::Reap()</code> in <code>service.cpp</code> and <code>SetFatalRebootTarget()</code> in <code>reboot_utils.cpp</code>.</p>
+  <p>A device that also runs 32-bit apps uses <code>init.zygote64_32.rc</code>. This file imports the 64-bit definition and adds a second service.</p>
+<pre class="code" data-lang="text" data-file="system/core/rootdir/init.zygote64_32.rc"><code>import /system/etc/init/hw/init.zygote64.rc
+
+service zygote_secondary /system/bin/app_process32 -Xzygote /system/bin --zygote --socket-name=zygote_secondary --enable-lazy-preload
+    class main
+    priority -20
+    user root
+    group root readproc reserved_disk
+    socket zygote_secondary stream 660 root system
+    socket usap_pool_secondary stream 660 root system
+    onrestart restart zygote
+    task_profiles ProcessCapacityHigh MaxPerformance</code></pre>
+  <p>The flag <code>--enable-lazy-preload</code> delays the preload until the first request for a 32-bit app. Few modern devices run such apps, so this choice saves boot time.</p>
+  <p>The next table lists the options that you meet most often. The parser in <code>service_parser.cpp</code> knows more, for example <code>ioprio</code>, <code>rlimit</code>, <code>setenv</code> and the <code>memcg.*</code> options.</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Option</th><th>Effect</th></tr></thead>
+      <tbody>
+        <tr><td><code>class &lt;name&gt;</code></td><td>Puts the service into a class that starts and stops as a group.</td></tr>
+        <tr><td><code>user</code>, <code>group</code></td><td>Sets the user, the primary group and supplementary groups.</td></tr>
+        <tr><td><code>capabilities</code></td><td>Keeps only the listed Linux capabilities.</td></tr>
+        <tr><td><code>seclabel</code></td><td>Sets the SELinux label of the process.</td></tr>
+        <tr><td><code>socket</code>, <code>file</code></td><td>Creates a socket or opens a file and passes it to the service.</td></tr>
+        <tr><td><code>oneshot</code></td><td>Does not restart the service after it ends.</td></tr>
+        <tr><td><code>disabled</code></td><td>Does not start the service with its class. Only an explicit start runs it.</td></tr>
+        <tr><td><code>onrestart</code></td><td>Runs a command each time the service restarts.</td></tr>
+        <tr><td><code>critical</code></td><td>Reboots the device if the service crashes too often.</td></tr>
+        <tr><td><code>restart_period</code>, <code>timeout_period</code></td><td>Sets the delay before a restart and the maximum run time.</td></tr>
+        <tr><td><code>shutdown critical</code></td><td>Stops the service last during a shutdown.</td></tr>
+        <tr><td><code>interface</code></td><td>Registers a HAL or Android Interface Definition Language (AIDL) interface that the service provides.</td></tr>
+        <tr><td><code>task_profiles</code></td><td>Applies cgroup and scheduling profiles.</td></tr>
+        <tr><td><code>updatable</code></td><td>Lets an APEX replace the service.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Classes group services so that one command starts or stops many of them. The class <code>core</code> holds services that must run before Zygote. The classes <code>hal</code> and <code>early_hal</code> hold Hardware Abstraction Layer (HAL) services. <code>main</code> and <code>late_start</code> hold the rest. Zygote belongs to <code>main</code>, but <code>zygote-start</code> already starts it by name. The later <code>class_start main</code> has no effect on it.</p>
+
+  <h3>Commands</h3>
+  <p>Actions use builtin commands. The next table shows a selection.</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Command</th><th>Example</th><th>Effect</th></tr></thead>
+      <tbody>
+        <tr><td><code>mkdir</code></td><td><code>mkdir /data/system 0775 system system</code></td><td>Creates a folder with a mode and owners</td></tr>
+        <tr><td><code>write</code></td><td><code>write /proc/sys/kernel/sysrq 0</code></td><td>Writes a string to a file</td></tr>
+        <tr><td><code>mount_all</code></td><td><code>mount_all /vendor/etc/fstab.device</code></td><td>Mounts all entries of an fstab</td></tr>
+        <tr><td><code>start</code>, <code>stop</code>, <code>restart</code></td><td><code>start servicemanager</code></td><td>Controls one service</td></tr>
+        <tr><td><code>class_start</code></td><td><code>class_start core</code></td><td>Starts all services of a class</td></tr>
+        <tr><td><code>setprop</code></td><td><code>setprop sys.usb.config adb</code></td><td>Sets a property</td></tr>
+        <tr><td><code>trigger</code></td><td><code>trigger late-init</code></td><td>Queues an event trigger</td></tr>
+        <tr><td><code>exec</code></td><td><code>exec -- /system/bin/vdc ...</code></td><td>Runs a program and waits for it</td></tr>
+        <tr><td><code>wait_for_prop</code></td><td><code>wait_for_prop odsign.verification.done 1</code></td><td>Waits for a property value</td></tr>
+        <tr><td><code>restorecon</code></td><td><code>restorecon /data</code></td><td>Restores SELinux labels</td></tr>
+        <tr><td><code>installkey</code></td><td><code>installkey /data</code></td><td>Installs the encryption key</td></tr>
+        <tr><td><code>enable</code></td><td><code>enable some_service</code></td><td>Lets a disabled service start with its class</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>The life of a service</h3>
+  <p><code>init</code> follows each service through four states. It publishes the state in the property <code>init.svc.&lt;name&gt;</code>. No state with the name starting exists. <code>Service::Start()</code> forks at once, so the state goes directly from <code>stopped</code> or <code>restarting</code> to <code>running</code>. A failed fork keeps the old value.</p>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../../assets/img/diagrams/bi-service-states.svg" alt="Four states. From stopped, start moves a service to running when the fork succeeds. From running, an exit of a oneshot service returns to stopped. A stop command or SIGTERM moves it to stopping, and the exit then gives stopped. An exit of a service that is not oneshot moves it to restarting, and after restart_period it returns to running. Each state is visible as the property init.svc.&lt;name&gt;, and no starting state exists. On the right, HandleProcessActions loops over the services. It calls Timeout for a running service whose timeout passed and Start for a restarting service whose restart period passed, and it returns the next due time. A critical service that crashes more than four times in four minutes reboots the device." loading="lazy"></div>
+    <figcaption>Four states and the transitions between them. The restart period limits a crash loop.</figcaption>
+  </figure>
+
+<pre class="code" data-lang="cpp" data-file="system/core/init/init.cpp"><code>static std::optional&lt;boot_clock::time_point&gt; HandleProcessActions() {
+    std::optional&lt;boot_clock::time_point&gt; next_process_action_time;
+    for (const auto&amp; s : ServiceList::GetInstance()) {
+        if ((s-&gt;flags() &amp; SVC_RUNNING) &amp;&amp; s-&gt;timeout_period()) {
+            auto timeout_time = s-&gt;time_started() + *s-&gt;timeout_period();
+            if (boot_clock::now() &gt; timeout_time) {
+                s-&gt;Timeout();
+            } else {
+                if (!next_process_action_time ||
+                    timeout_time &lt; *next_process_action_time) {
+                    next_process_action_time = timeout_time;
+                }
+            }
+        }
+
+        if (!(s-&gt;flags() &amp; SVC_RESTARTING)) continue;
+
+        auto restart_time = s-&gt;time_started() + s-&gt;restart_period();
+        if (boot_clock::now() &gt; restart_time) {
+            if (auto result = s-&gt;Start(); !result.ok()) {
+                LOG(ERROR) &lt;&lt; "Could not restart process '" &lt;&lt; s-&gt;name()
+                           &lt;&lt; "': " &lt;&lt; result.error();
+            }
+        } else {
+            if (!next_process_action_time ||
+                restart_time &lt; *next_process_action_time) {
+                next_process_action_time = restart_time;
+            }
+        }
+    }
+    return next_process_action_time;
+}</code></pre>
+  <p>The function returns the next time when it has work. The main loop uses that time as the timeout of <code>epoll</code>, so <code>init</code> sleeps exactly until the next restart or timeout. The default restart period is five seconds, and the option <code>restart_period</code> changes it.</p>
+
+  <h3>ueventd</h3>
+  <p>When the <code>init</code> binary starts under the name <code>ueventd</code>, it manages device nodes. It listens for uevents from the kernel and creates nodes in <code>/dev</code> with the owners and modes from <code>ueventd.rc</code> files.</p>
+<pre class="code" data-lang="text" data-file="Example rules in ueventd.rc"><code>/dev/null                 0666   root       root
+/dev/random               0666   root       root
+/dev/urandom              0666   root       root
+/dev/binder               0666   root       root
+/dev/hwbinder             0666   root       root
+/dev/vndbinder            0666   root       root</code></pre>
+  <p>At boot, <code>ueventd</code> also replays the events of all devices that the kernel found before user space existed. This replay is the cold boot that <code>wait_for_coldboot_done</code> waits for. A newer Rust library, <code>system/libueventd-rs/</code>, watches devices for other services such as <code>serialservice</code>. It does not replace <code>ueventd</code>, and <code>init</code> does not use it.</p>
+
+  <h2>The property system</h2>
+  <p>Properties are the global key-value store of Android. During boot, they serve as configuration and as a simple form of Inter-Process Communication (IPC). The service lives in <code>system/core/init/property_service.cpp</code>. The prefix of a name sets its behavior.</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Prefix</th><th>Behavior</th></tr></thead>
+      <tbody>
+        <tr><td><code>ro.</code></td><td>Read-only. The first set fixes the value until the next boot.</td></tr>
+        <tr><td><code>persist.</code></td><td><code>init</code> stores the value under <code>/data/property</code>, so it survives a reboot.</td></tr>
+        <tr><td><code>next_boot.</code></td><td><code>init</code> stores the value and applies it at the next boot.</td></tr>
+        <tr><td><code>sys.</code></td><td>General system values, for example <code>sys.boot_completed</code>.</td></tr>
+        <tr><td><code>init.svc.</code></td><td><code>init</code> writes the state of each service here.</td></tr>
+        <tr><td><code>ctl.</code></td><td>Control messages that start or stop services.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Storage and reads</h3>
+  <p>The values live in shared memory under <code>/dev/__properties__/</code>. Each area is a trie, which is a tree of name prefixes. Every process maps these files read-only, so a read is a lookup in memory without any IPC. The file <code>/dev/__properties__/property_info</code> maps each name to an SELinux context. For example, <code>ro.build.*</code> maps to <code>build_prop</code>. Each context has its own file, so the policy controls who can read which group of properties.</p>
+
+  <h3>The path of a set request</h3>
+  <p>A write is different. Only <code>init</code> can change the shared memory. A process that calls <code>SystemProperties.set()</code> in Java or <code>__system_property_set()</code> in native code sends the request to the socket <code>/dev/socket/property_service</code>.</p>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../../assets/img/diagrams/bi-property-path.svg" alt="Four lanes, the client process, the property thread in init, shared memory and the main thread of init. The client sends a name and a value on /dev/socket/property_service. The property thread reads the caller credentials, namely pid, uid and gid, and calls CheckMacPerms for the property_service set permission. If the name starts with ctl., the thread queues a control message and wakes the main thread, which starts or stops a service. Else, the thread updates shared memory, so readers see the value at once. It then calls NotifyPropertyChange and writes the eventfd, so property triggers run on the main thread. A persist. property is also written to /data." loading="lazy"></div>
+    <figcaption>The property thread checks the caller, writes the value and wakes the main thread.</figcaption>
+  </figure>
+
+  <p>The property thread reads the credentials of the caller from the socket. They contain the PID, the user ID and the group ID. It then asks SELinux whether the context of the caller can set the context of the property.</p>
+<pre class="code" data-lang="cpp" data-file="system/core/init/property_service.cpp"><code>static bool CheckMacPerms(const std::string&amp; name, const char* target_context,
+                          const char* source_context, const ucred&amp; cr) {
+    if (!target_context || !source_context) {
+        return false;
+    }
+
+    PropertyAuditData audit_data;
+    audit_data.name = name.c_str();
+    audit_data.cr = &amp;cr;
+
+    auto lock = std::lock_guard{selinux_check_access_lock};
+    return selinux_check_access(source_context, target_context,
+                                "property_service", "set",
+                                &amp;audit_data) == 0;
+}</code></pre>
+  <p>If SELinux denies the request, an audit callback writes a log record. It holds the name of the property and the PID, user ID and group ID of the caller. This record helps you to write the missing policy rule.</p>
+  <p>A <code>persist.</code> value also goes to disk. A separate writer thread does this work, so the caller does not wait for the storage.</p>
+<pre class="code" data-lang="cpp" data-file="system/core/init/property_service.cpp"><code>bool need_persist = StartsWith(name, "persist.") || StartsWith(name, "next_boot.");
+if (socket &amp;&amp; persistent_properties_loaded &amp;&amp; need_persist) {
+    if (persist_write_thread) {
+        persist_write_thread-&gt;Write(name, value, std::move(*socket));
+        return {};
+    }
+    WritePersistentProperty(name, value);
+}</code></pre>
+  <p>After the write, the thread informs the main thread. <code>NotifyPropertyChange()</code> calls <code>PropertyChanged()</code> in <code>init.cpp</code>.</p>
+<pre class="code" data-lang="cpp" data-file="system/core/init/init.cpp"><code>void PropertyChanged(const std::string&amp; name, const std::string&amp; value) {
+    if (name == "sys.powerctl") {
+        trigger_shutdown(value);
+    } else if (name == "sys.shutdown.requested") {
+        HandleShutdownRequestedMessage(value);
+    }
+
+    if (property_triggers_enabled) {
+        ActionManager::GetInstance().QueuePropertyChange(name, value);
+        WakeMainInitThread();
+    }
+
+    prop_waiter_state.CheckAndResetWait(name, value);
+}</code></pre>
+  <p>The property <code>sys.powerctl</code> skips the queue and starts a shutdown at once. Every other change goes into the queue for property triggers. <code>WakeMainInitThread()</code> writes to the <code>eventfd</code> that <code>InstallInitNotifier()</code> created.</p>
+<pre class="code" data-lang="cpp" data-file="system/core/init/init.cpp"><code>static void InstallInitNotifier(Epoll* epoll) {
+    wake_main_thread_fd = eventfd(0, EFD_CLOEXEC);
+    if (wake_main_thread_fd == -1) {
+        PLOG(FATAL) &lt;&lt; "Failed to create eventfd for waking init";
+    }
+    auto clear_eventfd = [] {
+        uint64_t counter;
+        TEMP_FAILURE_RETRY(read(wake_main_thread_fd, &amp;counter, sizeof(counter)));
+    };
+
+    if (auto result = epoll-&gt;RegisterHandler(wake_main_thread_fd, clear_eventfd);
+        !result.ok()) {
+        LOG(FATAL) &lt;&lt; result.error();
+    }
+}</code></pre>
+
+  <h3>Control messages</h3>
+  <p>A set of <code>ctl.start</code>, <code>ctl.stop</code> or <code>ctl.restart</code> does not change a stored value. The property thread turns it into a control message for the main thread. After a shutdown starts, the thread refuses all control messages except <code>stop</code>. The main thread then looks up the function in a fixed map.</p>
+<pre class="code" data-lang="cpp" data-file="system/core/init/init.cpp"><code>static const std::map&lt;std::string, ControlMessageFunction, std::less&lt;&gt;&gt;&amp;
+    GetControlMessageMap() {
+    [[clang::no_destroy]]
+    static const std::map&lt;std::string, ControlMessageFunction, std::less&lt;&gt;&gt;
+        control_message_functions = {
+        {"sigstop_on",   [](auto* service) { service-&gt;set_sigstop(true);
+                                              return Result&lt;void&gt;{}; }},
+        {"sigstop_off",  [](auto* service) { service-&gt;set_sigstop(false);
+                                              return Result&lt;void&gt;{}; }},
+        {"oneshot_on",   [](auto* service) { service-&gt;set_oneshot(true);
+                                              return Result&lt;void&gt;{}; }},
+        {"oneshot_off",  [](auto* service) { service-&gt;set_oneshot(false);
+                                              return Result&lt;void&gt;{}; }},
+        {"start",        DoControlStart},
+        {"stop",         DoControlStop},
+        {"restart",      DoControlRestart},
+    };
+    return control_message_functions;
+}</code></pre>
+  <p>With <code>sigstop_on</code>, <code>init</code> stops a service with SIGSTOP right after the fork. You can then attach a debugger before the service runs any code. Variants with the prefix <code>interface_</code> address a service through the name of its interface instead of the name of the service. The messages <code>apex_load</code> and <code>apex_unload</code> load and remove the <code>.rc</code> files of an APEX while the device runs.</p>
+
+  <h2>Zygote</h2>
+  <p>Zygote gives Android its fast start of apps. A new app does not load the framework from the start. Zygote loads the framework once and then forks itself. Each child gets all preloaded code and data through the copy-on-write memory of Linux. The child shares the pages of Zygote until it writes to one of them.</p>
+
+  <h3>From app_process to Java</h3>
+  <p>The service <code>zygote</code> runs the native program <code>app_process64</code>. Its source is <code>frameworks/base/cmds/app_process/app_main.cpp</code>. The program creates an <code>AppRuntime</code>, a subclass of <code>AndroidRuntime</code>, and reads its arguments.</p>
+<pre class="code" data-lang="cpp" data-file="frameworks/base/cmds/app_process/app_main.cpp"><code>bool zygote = false;
+bool startSystemServer = false;
+bool application = false;
+String8 niceName;
+String8 className;
+
+++i;  // Skip unused "parent dir" argument.
+while (i &lt; argc) {
+    const char* arg = argv[i++];
+    if (strcmp(arg, "--zygote") == 0) {
+        zygote = true;
+        niceName = ZYGOTE_NICE_NAME;
+    } else if (strcmp(arg, "--start-system-server") == 0) {
+        startSystemServer = true;
+    } else if (strcmp(arg, "--application") == 0) {
+        application = true;
+    } else if (strncmp(arg, "--nice-name=", 12) == 0) {
+        niceName = (arg + 12);
+    } else if (strncmp(arg, "--", 2) != 0) {
+        className = arg;
+        break;
+    } else {
+        --i;
+        break;
+    }
+}</code></pre>
+  <p>In Zygote mode, the program prepares the Dalvik cache, reads the list of Application Binary Interfaces (ABIs) and starts the runtime with the class <code>ZygoteInit</code>.</p>
+<pre class="code" data-lang="cpp" data-file="frameworks/base/cmds/app_process/app_main.cpp (shortened)"><code>} else {
+    // We're in zygote mode.
+    maybeCreateDalvikCache();
+
+    if (startSystemServer) {
+        args.add(String8("start-system-server"));
+    }
+
+    char prop[PROP_VALUE_MAX];
+    if (property_get(ABI_LIST_PROPERTY, prop, NULL) == 0) {
+        LOG_ALWAYS_FATAL("app_process: Unable to determine ABI list...");
+        return 11;
+    }
+
+    String8 abiFlag("--abi-list=");
+    abiFlag.append(prop);
+    args.add(abiFlag);
+}
+
+if (zygote) {
+    runtime.start("com.android.internal.os.ZygoteInit", args, zygote);
+} else if (!className.empty()) {
+    runtime.start("com.android.internal.os.RuntimeInit", args, zygote);
+}</code></pre>
+  <p><code>runtime.start()</code> creates the ART virtual machine, loads the class and calls its <code>main()</code> method. Here the boot crosses from C++ to Java. <code>AppRuntime</code> also has a callback for each new child.</p>
+<pre class="code" data-lang="cpp" data-file="frameworks/base/cmds/app_process/app_main.cpp"><code>virtual void onZygoteInit()
+{
+    sp&lt;ProcessState&gt; proc = ProcessState::self();
+    ALOGV("App process: starting thread pool.\n");
+    proc-&gt;startThreadPool();
+}</code></pre>
+  <p>Zygote itself has no thread pool for Binder. Each child starts one right after the fork, and this pool lets every app talk to the system services. <a href="09-binder-ipc.html">Chapter 9</a> explains Binder in detail.</p>
+
+  <h3>ZygoteInit.main()</h3>
+<pre class="code" data-lang="java" data-file="frameworks/base/core/java/com/android/internal/os/ZygoteInit.java (shortened)"><code>public static void main(String[] argv) {
+    ZygoteServer zygoteServer = null;
+
+    // Mark zygote start. This ensures that thread creation will throw
+    // an error.
+    ZygoteHooks.startZygoteNoThreadCreation();
+
+    // Zygote goes into its own process group.
+    try {
+        Os.setpgid(0, 0);
+    } catch (ErrnoException ex) {
+        throw new RuntimeException("Failed to setpgid(0,0)", ex);
+    }
+
+    boolean startSystemServer = false;
+    String zygoteSocketName = "zygote";
+    String abiList = null;
+    boolean enableLazyPreload = false;
+    for (int i = 1; i &lt; argv.length; i++) {
+        if ("start-system-server".equals(argv[i])) {
+            startSystemServer = true;
+        } else if ("--enable-lazy-preload".equals(argv[i])) {
+            enableLazyPreload = true;
+        } else if (argv[i].startsWith(ABI_LIST_ARG)) {
+            abiList = argv[i].substring(ABI_LIST_ARG.length());
+        } else if (argv[i].startsWith(SOCKET_NAME_ARG)) {
+            zygoteSocketName = argv[i].substring(SOCKET_NAME_ARG.length());
+        }
+    }
+    // ...</code></pre>
+  <p>The first call <code>startZygoteNoThreadCreation()</code> is a safety rule. From now on, an attempt to create a thread throws an exception. A <code>fork()</code> copies only the calling thread. If other threads exist, their locks stay in an unknown state in the child, and the child can hang.</p>
+
+  <h3>Preload</h3>
+  <p>The method <code>preload()</code> pays the cost of the framework once.</p>
+<pre class="code" data-lang="java" data-file="frameworks/base/core/java/com/android/internal/os/ZygoteInit.java (shortened)"><code>static void preload(TimingsTraceLog bootTimingsTraceLog) {
+    beginPreload();
+    preloadClasses();
+    cacheNonBootClasspathClassLoaders();
+    Resources.preloadResources();
+    nativePreloadAppProcessHALs();
+    maybePreloadGraphicsDriver();
+    preloadSharedLibraries();
+    preloadTextResources();
+    // ...
+    WebViewFactory.prepareWebViewInZygote();
+    endPreload();
+    warmUpJcaProviders();
+
+    sPreloadComplete = true;
+}</code></pre>
+  <ul>
+    <li><strong><code>preloadClasses()</code></strong> loads about 19,000 classes. The names come from <code>/system/etc/preloaded-classes</code>, one name for each line.</li>
+    <li><strong><code>cacheNonBootClasspathClassLoaders()</code></strong> creates class loaders for old libraries that some apps still use, for example <code>org.apache.http.legacy.jar</code> and <code>android.test.base.jar</code>.</li>
+    <li><strong><code>Resources.preloadResources()</code></strong> loads the default drawables, layouts and themes of the system.</li>
+    <li><strong><code>nativePreloadAppProcessHALs()</code></strong> and <strong><code>maybePreloadGraphicsDriver()</code></strong> load HAL libraries and the OpenGL or Vulkan driver.</li>
+    <li><strong><code>preloadSharedLibraries()</code></strong> loads native libraries such as <code>libandroid</code> and <code>libjnigraphics</code>.</li>
+    <li><strong><code>warmUpJcaProviders()</code></strong> prepares the providers of the Java Cryptography Architecture (JCA), so the first crypto call in an app is fast.</li>
+  </ul>
+  <p>The class preload takes the most time. A class can run static code when it loads. Therefore Zygote drops root during this step, so such code does not get root access.</p>
+<pre class="code" data-lang="java" data-file="frameworks/base/core/java/com/android/internal/os/ZygoteInit.java"><code>boolean droppedPriviliges = false;
+if (reuid == ROOT_UID &amp;&amp; regid == ROOT_GID) {
+    try {
+        Os.setregid(ROOT_GID, UNPRIVILEGED_GID);
+        Os.setreuid(ROOT_UID, UNPRIVILEGED_UID);
+    } catch (ErrnoException ex) {
+        throw new RuntimeException("Failed to drop root", ex);
+    }
+    droppedPriviliges = true;
+}</code></pre>
+  <p>After the preload, Zygote runs a garbage collection, allows threads again and opens its server socket.</p>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../../assets/img/diagrams/bi-zygote-fork.svg" alt="On the left, the memory of Zygote after preload. It holds the ART runtime and boot class path, about 19,000 preloaded classes, class loaders for old libraries, system resources, app HALs and the graphics driver, libandroid and libjnigraphics, WebView and crypto providers. Zygote then waits in runSelectLoop on /dev/socket/zygote. On the right, three children. system_server is the first child, with uid 1000, and closes the Zygote socket. App processes start on request of the activity manager, each with its own uid, and start a binder thread pool in onZygoteInit. All children share the preloaded pages with copy-on-write until they write to them. fork copies only the page tables. A USAP pool lets Zygote fork spare children in advance and specialize one on request." loading="lazy"></div>
+    <figcaption>Zygote prepares the framework once. Every child shares those pages until it writes to them.</figcaption>
+  </figure>
+
+  <h3>The fork of system_server</h3>
+  <p>The first child of Zygote is <code>system_server</code>. The method <code>forkSystemServer()</code> builds a fixed command line for it.</p>
+<pre class="code" data-lang="java" data-file="frameworks/base/core/java/com/android/internal/os/ZygoteInit.java"><code>/* Hardcoded command line to start the system server */
+String[] args = {
+        "--setuid=1000",
+        "--setgid=1000",
+        "--setgroups=1001,1002,1003,1004,1005,1006,1007,1008,1009,1010,1018,1021,1023,"
+                + "1024,1032,1065,3001,3002,3003,3005,3006,3007,3009,3010,3011,3012",
+        "--capabilities=" + capabilities + "," + capabilities,
+        "--nice-name=system_server",
+        "--runtime-args",
+        "--target-sdk-version=" + VMRuntime.SDK_VERSION_CUR_DEVELOPMENT,
+        "com.android.server.SystemServer",
+};</code></pre>
+  <p>The user ID 1000 is the user <code>system</code>, not root. The supplementary groups give access to the network, Bluetooth, logs and other resources. The capabilities are Linux capabilities, for example <code>CAP_KILL</code>, <code>CAP_NET_ADMIN</code> and <code>CAP_SYS_NICE</code>. They are not Android permissions. The fork itself follows.</p>
+<pre class="code" data-lang="java" data-file="frameworks/base/core/java/com/android/internal/os/ZygoteInit.java"><code>/* Request to fork the system server process */
+pid = Zygote.forkSystemServer(
+        parsedArgs.mUid, parsedArgs.mGid,
+        parsedArgs.mGids,
+        parsedArgs.mRuntimeFlags,
+        null,
+        parsedArgs.mPermittedCapabilities,
+        parsedArgs.mEffectiveCapabilities);
+
+/* For child process */
+if (pid == 0) {
+    if (hasSecondZygote(abiList)) {
+        waitForSecondaryZygote(socketName);
+    }
+    zygoteServer.closeServerSocket();
+    return handleSystemServerProcess(parsedArgs);
+}</code></pre>
+  <p>The child closes the server socket, because only Zygote accepts fork requests. It then continues in <code>handleSystemServerProcess()</code> and finally calls <code>SystemServer.main()</code>. The parent enters its endless loop.</p>
+<pre class="code" data-lang="java" data-file="frameworks/base/core/java/com/android/internal/os/ZygoteInit.java"><code>if (startSystemServer) {
+    Runnable r = forkSystemServer(abiList, zygoteSocketName, zygoteServer);
+    if (r != null) {
+        r.run();
+        return;
+    }
+}
+
+Log.i(TAG, "Accepting command socket connections");
+
+// The select loop returns early in the child process after a fork and
+// loops forever in the zygote.
+caller = zygoteServer.runSelectLoop(abiList);</code></pre>
+  <p>When the activity manager needs a new app process, it sends a command to <code>/dev/socket/zygote</code>. The command holds the user ID, the group IDs, the SELinux context and more. Zygote forks, applies these values to the child and returns. The child becomes the new app.</p>
+  <p>The Unspecialized App Process (USAP) pool makes this even faster. Zygote forks some children in advance. They wait without an identity. A request then only needs to specialize one of them, and the fork is no longer on the critical path. The socket <code>usap_pool_primary</code> in the service definition serves this pool.</p>
+
+  <h2>system_server</h2>
+  <p><code>system_server</code> is the center of the Java framework. It hosts more than 100 system services, and apps reach them through Binder. Its entry point is <code>frameworks/base/services/java/com/android/server/SystemServer.java</code>.</p>
+<pre class="code" data-lang="java" data-file="frameworks/base/services/java/com/android/server/SystemServer.java"><code>public static void main(String[] args) {
+    new SystemServer().run();
+}
+
+public SystemServer() {
+    // Check for factory test mode.
+    mFactoryTestMode = FactoryTest.getMode();
+
+    // Record process start information.
+    mStartCount = SystemProperties.getInt(SYSPROP_START_COUNT, 0) + 1;
+    mRuntimeStartElapsedTime = SystemClock.elapsedRealtime();
+    mRuntimeStartUptime = SystemClock.uptimeMillis();
+
+    // Remember if it's runtime restart or reboot.
+    mRuntimeRestart = mStartCount &gt; 1;
+}</code></pre>
+  <p>The counter <code>mStartCount</code> tells a reboot from a runtime restart. A value above 1 means that <code>system_server</code> crashed and started again without a reboot of the kernel.</p>
+
+  <h3>The preparation in run()</h3>
+<pre class="code" data-lang="java" data-file="frameworks/base/services/java/com/android/server/SystemServer.java (shortened)"><code>private void run() {
+    // ...
+    SystemProperties.set(SYSPROP_START_COUNT, String.valueOf(mStartCount));
+    // ...
+    // Here we go!
+    Slog.i(TAG, "Entered the Android system server!");
+
+    // Mmmmmm... more memory!
+    VMRuntime.getRuntime().clearGrowthLimit();
+
+    // Ensure binder calls into the system always run at foreground priority.
+    BinderInternal.disableBackgroundScheduling(true);
+
+    // Increase the number of binder threads in system_server
+    BinderInternal.setMaxThreads(sMaxBinderThreads);
+
+    // Prepare the main looper thread (this thread).
+    android.os.Process.setThreadPriority(
+            android.os.Process.THREAD_PRIORITY_FOREGROUND);
+    Looper.prepareMainLooper();
+
+    // Initialize native services.
+    System.loadLibrary("android_servers");
+
+    // Initialize the system context.
+    createSystemContext();
+
+    // Create the system service manager.
+    mSystemServiceManager = new SystemServiceManager(mSystemContext);
+    // ...</code></pre>
+  <ul>
+    <li><code>clearGrowthLimit()</code> removes the normal limit of the heap, so <code>system_server</code> can use all available heap memory.</li>
+    <li><code>setMaxThreads()</code> allows 31 Binder threads, many more than an app gets.</li>
+    <li><code>Looper.prepareMainLooper()</code> prepares the message queue of the main thread.</li>
+    <li><code>android_servers</code> is the native library with the Java Native Interface (JNI) code of the services.</li>
+    <li><code>createSystemContext()</code> creates the <code>Context</code> that all services use.</li>
+  </ul>
+
+  <h3>Four groups of services</h3>
+<pre class="code" data-lang="java" data-file="frameworks/base/services/java/com/android/server/SystemServer.java"><code>// Start services.
+try {
+    t.traceBegin("StartServices");
+    startBootstrapServices(t);
+    startCoreServices(t);
+    startOtherServices(t);
+    startApexServices(t);
+    CriticalEventLog.getInstance().logSystemServerStarted();
+} catch (Throwable ex) {
+    Slog.e("System", "************ Failure starting system services", ex);
+    throw ex;
+}
+
+// Loop forever.
+Looper.loop();
+throw new RuntimeException("Main thread loop unexpectedly exited");</code></pre>
+  <p><strong>Bootstrap services</strong> depend on each other in complex ways, so they start together in one method. The order in the source is deliberate.</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Order</th><th>Service</th><th>Purpose</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td><code>Watchdog</code></td><td>Finds deadlocks from the earliest point</td></tr>
+        <tr><td>2</td><td><code>PlatformCompat</code>, <code>FileIntegrityService</code>, <code>Installer</code></td><td>Compatibility, file integrity and the link to <code>installd</code></td></tr>
+        <tr><td>3</td><td><code>FeatureFlagsService</code>, <code>UriGrantsManagerService</code>, <code>PowerStatsService</code></td><td>Flags, grants for content addresses and power data</td></tr>
+        <tr><td>4</td><td><code>ActivityTaskManagerService</code>, <code>ActivityManagerService</code></td><td>Activities, tasks and processes</td></tr>
+        <tr><td>5</td><td><code>PowerManagerService</code>, <code>ThermalManagerService</code></td><td>Power states and temperature</td></tr>
+        <tr><td>6</td><td><code>RecoverySystemService</code>, <code>LightsService</code>, <code>DisplayManagerService</code></td><td>Updates, lights and displays</td></tr>
+        <tr><td>7</td><td>Phase <code>PHASE_WAIT_FOR_DEFAULT_DISPLAY</code></td><td>Waits for the default display</td></tr>
+        <tr><td>8</td><td><code>PackageManagerService</code></td><td>Packages and app links</td></tr>
+        <tr><td>9</td><td><code>UserManagerService</code>, <code>OverlayManagerService</code></td><td>Users and resource overlays</td></tr>
+        <tr><td>10</td><td><code>SensorPrivacyService</code>, <code>SensorService</code></td><td>Sensors and their privacy</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>The package manager needs the metrics of the display to select resources. Therefore the first boot phase waits for the default display before the package manager starts.</p>
+<pre class="code" data-lang="java" data-file="frameworks/base/services/java/com/android/server/SystemServer.java"><code>// We need the default display before we can initialize the package manager.
+t.traceBegin("WaitForDisplay");
+mSystemServiceManager.startBootPhase(t, SystemService.PHASE_WAIT_FOR_DEFAULT_DISPLAY);
+t.traceEnd();</code></pre>
+  <p><strong>Core services</strong> have fewer dependencies. Examples are <code>BatteryService</code>, <code>UsageStatsService</code>, <code>WebViewUpdateService</code>, <code>BugreportManagerService</code> and <code>GpuService</code>.</p>
+  <p><strong>Other services</strong> form the largest group, with more than 70 services. Examples are input, windows, storage, the network, notifications, location and audio. The window manager needs the sensor service for rotation, so a phase gate waits for it.</p>
+<pre class="code" data-lang="java" data-file="frameworks/base/services/java/com/android/server/SystemServer.java"><code>t.traceBegin("StartInputManagerService");
+inputManager = mSystemServiceManager.startService(
+        InputManagerService.Lifecycle.class).getService();
+t.traceEnd();
+
+t.traceBegin("StartWindowManagerService");
+mSystemServiceManager.startBootPhase(t, SystemService.PHASE_WAIT_FOR_SENSOR_SERVICE);
+wm = WindowManagerService.main(context, inputManager, !mFirstBoot,
+        new PhoneWindowManager(), mActivityManagerService.mActivityTaskManager);
+ServiceManager.addService(Context.WINDOW_SERVICE, wm, /* allowIsolated= */ false,
+        DUMP_FLAG_PRIORITY_CRITICAL | DUMP_FLAG_PRIORITY_HIGH | DUMP_FLAG_PROTO);
+t.traceEnd();</code></pre>
+  <p>Many services now come from APEX modules. <code>startServiceFromJar()</code> loads the class from a JAR file inside the module, for example <code>/apex/com.android.wifi/javalib/service-wifi.jar</code> for Wi-Fi. Bluetooth, tethering, Ultra-wideband (UWB) and statsd work the same way. The last method, <code>startApexServices()</code>, starts only services that an APEX declares with the tag <code>&lt;apex-system-service&gt;</code> in its manifest. Examples are <code>RebootReadinessManagerService</code> in <code>com.android.scheduling</code> and <code>VirtualizationSystemService</code> in <code>com.android.virt</code>. No service can start after this method.</p>
+  <p>Before most of the other services start, the window manager checks for safe mode. The user can ask for safe mode with a key at boot.</p>
+<pre class="code" data-lang="java" data-file="frameworks/base/services/java/com/android/server/SystemServer.java"><code>final boolean safeMode = wm.detectSafeMode();
+if (safeMode) {
+    Settings.Global.putInt(context.getContentResolver(),
+            Settings.Global.AIRPLANE_MODE_ON, 1);
+}</code></pre>
+  <p>In safe mode, the device turns off third-party apps and turns on airplane mode. To save time, <code>system_server</code> also runs some independent work on <code>SystemServerInitThreadPool</code>, for example the start of the HAL Interface Definition Language (HIDL) services. The Watchdog limits this approach, because a thread that holds a lock for too long causes a restart of <code>system_server</code>.</p>
+
+  <h3>Boot phases</h3>
+  <p>Each service gets a call to <code>onBootPhase()</code> for every phase. A service can do basic setup in its constructor. It can then wait for <code>PHASE_SYSTEM_SERVICES_READY</code> before it calls other services and for <code>PHASE_BOOT_COMPLETED</code> before it expects a ready system. This design removes timing errors between services.</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Phase</th><th>Value</th><th>Meaning</th></tr></thead>
+      <tbody>
+        <tr><td><code>PHASE_WAIT_FOR_DEFAULT_DISPLAY</code></td><td>100</td><td>The default display exists.</td></tr>
+        <tr><td><code>PHASE_LOCK_SETTINGS_READY</code></td><td>480</td><td>The lock screen settings are available.</td></tr>
+        <tr><td><code>PHASE_SYSTEM_SERVICES_READY</code></td><td>500</td><td>Services can call the core services.</td></tr>
+        <tr><td><code>PHASE_DEVICE_SPECIFIC_SERVICES_READY</code></td><td>520</td><td>The services of the device maker are ready.</td></tr>
+        <tr><td><code>PHASE_ACTIVITY_MANAGER_READY</code></td><td>550</td><td>The activity manager can start activities.</td></tr>
+        <tr><td><code>PHASE_THIRD_PARTY_APPS_CAN_START</code></td><td>600</td><td>Third-party apps can start.</td></tr>
+        <tr><td><code>PHASE_BOOT_COMPLETED</code></td><td>1000</td><td>The boot is complete.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../../assets/img/diagrams/bi-server-phases.svg" alt="Four service groups start in order. startBootstrapServices starts the Watchdog, the activity managers, power, display, the package manager, the user manager and sensors. startCoreServices starts battery, usage stats and WebView updates. startOtherServices starts input, the window manager, storage, network services and Bluetooth and Wi-Fi from APEX jars. startApexServices runs last for services from APEX manifests. A ruler shows the boot phases 100 default display, 480 lock settings, 500 system services ready, 520 device services, 550 activity manager ready, 600 third-party apps and 1000 boot completed. Below, five steps end the boot. SurfaceFlinger sets ctl.start to bootanim when the display is ready. bootanimation plays the animation in a loop. The activity manager starts the launcher. The window manager sets service.bootanim.exit to 1 in performEnableScreen. The activity manager then reaches phase 1000 and sets sys.boot_completed and dev.bootcomplete to 1." loading="lazy"></div>
+    <figcaption>The service groups move the phases forward. The boot animation stops before phase 1000.</figcaption>
+  </figure>
+
+  <h3>The boot animation and the end of the boot</h3>
+  <p>The boot animation is a native service, but <code>init.rc</code> does not define it. Its definition is in <code>frameworks/base/cmds/bootanimation/bootanim.rc</code>.</p>
+<pre class="code" data-lang="text" data-file="frameworks/base/cmds/bootanimation/bootanim.rc"><code>service bootanim /system/bin/bootanimation
+    class core animation
+    user graphics
+    group graphics audio
+    disabled
+    oneshot
+    ioprio rt 0
+    task_profiles MaxPerformance</code></pre>
+  <p>The option <code>disabled</code> keeps <code>class_start core</code> from starting it. SurfaceFlinger starts it when the display is ready.</p>
+<pre class="code" data-lang="cpp" data-file="frameworks/native/services/surfaceflinger/SurfaceFlinger.cpp"><code>property_set("service.bootanim.exit", "0");
+property_set("service.bootanim.progress", "0");
+property_set("ctl.start", "bootanim");</code></pre>
+  <p>The animation plays in a loop. When all system windows have drawn, <code>WindowManagerService.performEnableScreen()</code> sets <code>service.bootanim.exit</code> to 1, and the animation ends. This step happens before phase 1000, not as a part of it. Last, <code>ActivityManagerService.finishBooting()</code> starts <code>PHASE_BOOT_COMPLETED</code> and then sets <code>sys.boot_completed=1</code> and <code>dev.bootcomplete=1</code>. Many <code>on property:sys.boot_completed=1</code> actions in <code>.rc</code> files now run.</p>
+  <p>After all of this, <code>system_server</code> enters <code>Looper.loop()</code> on its main thread. This call never returns. If it does, the exception crashes <code>system_server</code>. Zygote then ends too. The process <code>init</code> starts Zygote again, and the whole Java framework starts again.</p>
+
+  <h2>Measure the boot</h2>
+  <p>Boot time matters to users, so Android records it at several levels. <code>init</code> writes the duration of its own stages to read-only properties.</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Property</th><th>Content</th></tr></thead>
+      <tbody>
+        <tr><td><code>ro.boottime.init</code></td><td>The time when first-stage <code>init</code> started</td></tr>
+        <tr><td><code>ro.boottime.init.first_stage</code></td><td>The duration of the first stage</td></tr>
+        <tr><td><code>ro.boottime.init.selinux</code></td><td>The duration of the SELinux setup</td></tr>
+        <tr><td><code>ro.boottime.init.modules</code></td><td>The duration of the module load</td></tr>
+        <tr><td><code>ro.boottime.init.cold_boot_wait</code></td><td>The time that <code>init</code> waited for <code>ueventd</code></td></tr>
+        <tr><td><code>ro.boottime.&lt;service&gt;</code></td><td>The time when <code>init</code> started a service</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>The values travel through the environment from stage to stage. The second stage reads them and sets the properties.</p>
+<pre class="code" data-lang="cpp" data-file="system/core/init/init.cpp (shortened)"><code>static void RecordStageBoottimes(const boot_clock::time_point&amp; second_stage_start_time) {
+    int64_t first_stage_start_time_ns = -1;
+    if (auto first_stage_start_time_str = getenv(kEnvFirstStageStartedAt);
+        first_stage_start_time_str) {
+        SetProperty("ro.boottime.init", first_stage_start_time_str);
+        android::base::ParseInt(first_stage_start_time_str, &amp;first_stage_start_time_ns);
+    }
+    // ...
+    SetProperty("ro.boottime.init.first_stage",
+                std::to_string(selinux_start_time_ns - first_stage_start_time_ns));
+    SetProperty("ro.boottime.init.selinux",
+                std::to_string(second_stage_start_time.time_since_epoch().count() -
+                               selinux_start_time_ns));
+    if (auto init_module_time_str = getenv(kEnvInitModuleDurationMs);
+        init_module_time_str) {
+        SetProperty("ro.boottime.init.modules", init_module_time_str);
+        unsetenv(kEnvInitModuleDurationMs);
+    }
+}</code></pre>
+  <p>For a full picture, use one of three tools.</p>
+  <ul>
+    <li><strong>Bootchart</strong> records the load of the central processing unit (CPU), the disk activity and the processes during boot. In Android 17, <code>on early-init</code> starts it on a temporary folder <code>/dev/bootchart</code>. <code>on post-fs-data</code> starts it again on <code>/data/bootchart</code>, so the result survives. A value <code>ro.boot.bootchart.enabled</code> in the bootconfig can now start it even earlier.</li>
+    <li><strong>Perfetto and atrace</strong> record trace events. <code>system_server</code> wraps the start of each service in <code>TimingsTraceAndSlog</code>, so each service appears as one slice with its duration.</li>
+    <li><strong>The boot monitor</strong> protects development builds. If <code>ro.boot.boot_timeout</code> is set on a debuggable build, a thread waits for <code>sys.boot_completed</code>. If the boot does not finish in time, the thread causes a kernel panic.</li>
+  </ul>
+<pre class="code" data-lang="cpp" data-file="system/core/init/init.cpp"><code>static void SecondStageBootMonitor(int timeout_sec) {
+    auto cur_time = boot_clock::now().time_since_epoch();
+    int cur_sec = std::chrono::duration_cast&lt;std::chrono::seconds&gt;(cur_time).count();
+    int extra_sec = timeout_sec &lt;= cur_sec ? 0 : timeout_sec - cur_sec;
+    auto boot_timeout = std::chrono::seconds(extra_sec);
+
+    // since boot_completed isn't updated in the recovery boot, let's skip the monitor
+    if (IsRecoveryMode()) {
+        return;
+    }
+
+    LOG(INFO) &lt;&lt; "Started BootMonitorThread, expiring in " &lt;&lt; timeout_sec
+              &lt;&lt; " seconds from boot-up";
+
+    if (!WaitForProperty("sys.boot_completed", "1", boot_timeout)) {
+        LOG(ERROR) &lt;&lt; "BootMonitorThread: boot didn't complete in " &lt;&lt; timeout_sec
+                   &lt;&lt; " seconds. Trigger a panic!";
+        std::this_thread::sleep_for(200ms);
+        // trigger a kernel panic
+        WriteStringToFile("c", PROC_SYSRQ);
+    }
+}</code></pre>
+  <p>The panic stops a loop of failed boots, so the developer can flash a fixed image. In Android 17, the monitor runs on its own thread and skips recovery boots. A recovery boot never sets <code>sys.boot_completed</code>, so the old monitor always fired there.</p>
+  <p>These techniques shorten the boot.</p>
+  <ul>
+    <li>Load kernel modules in parallel with <code>androidboot.load_modules_parallel</code>.</li>
+    <li>Delay the preload of the 32-bit Zygote with <code>--enable-lazy-preload</code>.</li>
+    <li>Run independent work in <code>system_server</code> on <code>SystemServerInitThreadPool</code>.</li>
+    <li>Activate APEX modules before <code>/data</code> exists with the Android 17 path for mount before data.</li>
+    <li>Find the longest steps with bootchart, and work on them first.</li>
+  </ul>
+
+  <h2>Debug a boot that fails</h2>
+  <p>Start with the logs. These commands show the kernel log, the log of the last boot, the messages of <code>init</code> and the state of every service.</p>
+<pre class="code" data-lang="bash" data-file="Terminal"><code># Kernel log of this boot
+adb shell dmesg &gt; dmesg.log
+
+# Kernel log of the previous boot, if the device booted once
+adb shell cat /sys/fs/pstore/console-ramoops-0
+
+# Messages of init
+adb shell logcat -b all -d | grep "init: "
+
+# State of every service
+adb shell getprop | grep "init.svc."</code></pre>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Message or symptom</th><th>Usual causes</th></tr></thead>
+      <tbody>
+        <tr><td><code>Failed to mount required partitions early</code></td><td>A broken fstab, a dm-verity error in a damaged image or a missing storage driver</td></tr>
+        <tr><td><code>SELinux: Could not load policy</code></td><td>Policy versions of system and vendor that do not match, a damaged precompiled policy or missing policy files</td></tr>
+        <tr><td><code>Unable to determine ABI list</code></td><td><code>app_process</code> cannot read <code>ro.product.cpu.abilist64</code>, usually because of a missing <code>build.prop</code></td></tr>
+        <tr><td>A service crashes in a loop</td><td>A <code>critical</code> service reboots the device. Read the crash in logcat and watch <code>init.svc.&lt;name&gt;</code>.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>For a failure in the first stage, add <code>androidboot.first_stage_console=1</code> to the kernel command line or the bootconfig. <code>init</code> then opens a shell before the first-stage mount, and you can look at the early environment.</p>
+
+  <h2>The shutdown sequence</h2>
+  <p>A shutdown is the boot in reverse, and <code>init</code> controls it just as closely. Any allowed process starts it through one property.</p>
+<pre class="code" data-lang="bash" data-file="Terminal"><code>setprop sys.powerctl reboot
+setprop sys.powerctl shutdown
+setprop sys.powerctl reboot,bootloader
+setprop sys.powerctl reboot,recovery</code></pre>
+  <p>The property thread sees the change in <code>PropertyChanged()</code> and calls <code>trigger_shutdown()</code>. This function stores the command in a small class with a lock, because two threads use it.</p>
+<pre class="code" data-lang="cpp" data-file="system/core/init/init.cpp"><code>static class ShutdownState {
+  public:
+    void TriggerShutdown(const std::string&amp; command) {
+        auto lock = std::lock_guard{shutdown_command_lock_};
+        shutdown_command_ = command;
+        do_shutdown_ = true;
+        WakeMainInitThread();
+    }
+
+    std::optional&lt;std::string&gt; CheckShutdown() {
+        auto lock = std::lock_guard{shutdown_command_lock_};
+        if (do_shutdown_ &amp;&amp; !IsShuttingDown()) {
+            do_shutdown_ = false;
+            return shutdown_command_;
+        }
+        return {};
+    }
+  private:
+    std::mutex shutdown_command_lock_;
+    std::string shutdown_command_;
+    bool do_shutdown_ = false;
+} shutdown_state;</code></pre>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../../assets/img/diagrams/bi-shutdown.svg" alt="Two threads at the top. On the property thread, setprop sys.powerctl reboot,recovery makes PropertyChanged call TriggerShutdown, which stores the command under a lock and wakes init. On the main thread, CheckShutdown at the top of the loop takes the command once, and HandlePowerctlMessage runs the shutdown sequence. The steps descend from left to right. The shutdown trigger runs actions in rc files. SIGTERM goes to services, critical ones last. init waits with a time limit, sends SIGKILL to the rest, unmounts file systems, calls sync to flush buffers and finally calls reboot. Services with shutdown critical stop last, so their final writes can finish." loading="lazy"></div>
+    <figcaption>The property thread hands the command over. The main thread then stops everything step by step.</figcaption>
+  </figure>
+
+  <ol class="steps">
+    <li><strong>The main thread takes the command.</strong> <code>CheckShutdown()</code> at the top of the main loop returns the command once. <code>HandlePowerctlMessage()</code> parses it.</li>
+    <li><strong>The rc files react.</strong> <code>init</code> fires the trigger <code>shutdown</code>, so actions in <code>.rc</code> files can save their state.</li>
+    <li><strong>Services get SIGTERM.</strong> <code>init</code> asks all services to end. Services with <code>shutdown critical</code> come last, so their final writes can finish.</li>
+    <li><strong>init waits.</strong> A time limit protects the device from a service that does not end.</li>
+    <li><strong>The rest get SIGKILL.</strong> Every process that still runs ends at once.</li>
+    <li><strong>The file systems close.</strong> <code>init</code> unmounts the partitions and calls <code>sync()</code>, so all buffers reach the storage.</li>
+    <li><strong>The kernel takes over.</strong> The system call <code>reboot()</code> restarts or powers off the device with the reason from the command.</li>
+  </ol>
+
+  <h2>More features of init</h2>
+  <h3>Mount namespaces</h3>
+  <p><code>SecondStageMain()</code> calls <code>SetupMountNamespaces()</code>. Different groups of processes then see different views of the file system. APEX modules mount differently in the bootstrap namespace and in the default namespace. Vendor processes can see another <code>/apex</code> than system processes, and <code>linkerconfig</code> can give each namespace its own linker setup.</p>
+
+  <h3>Subcontext</h3>
+  <p>Vendor <code>.rc</code> files run some commands with vendor permissions. <code>init</code> does not get those permissions itself. It starts a helper process, <code>init subcontext</code>, in the vendor SELinux context. The two processes talk through a socket. The helper receives commands, runs them and returns the results.</p>
+
+  <h3>The rc files of APEX modules</h3>
+  <p>An APEX can bring its own <code>.rc</code> files. When the module activates, <code>init</code> reads them with a parser from <code>CreateApexConfigParser()</code>. This parser accepts only <code>service</code> and <code>on</code> sections, and the SELinux policy limits what they can do. In Android 17, the parser also reads <code>/apex/apex-info-list.xml</code> and accepts for each subcontext only the modules from the matching partition.</p>
+
+  <h3>The check for a GSI</h3>
+<pre class="code" data-lang="cpp" data-file="system/core/init/init.cpp"><code>auto is_running = android::gsi::IsGsiRunning() ? "1" : "0";
+SetProperty(gsi::kGsiBootedProp, is_running);
+auto is_installed = android::gsi::IsGsiInstalled() ? "1" : "0";
+SetProperty(gsi::kGsiInstalledProp, is_installed);
+if (android::gsi::IsGsiRunning()) {
+    std::string dsu_slot;
+    if (android::gsi::GetActiveDsu(&amp;dsu_slot)) {
+        SetProperty(gsi::kDsuSlotProp, dsu_slot);
+    }
+}</code></pre>
+  <p>Scripts and services read these properties and adapt when the device runs a GSI, for example during the Vendor Test Suite (VTS).</p>
+
+  <h2>What changed in Android 17</h2>
+  <p>Android 17 changed the boot path in four areas. The largest change splits the first-stage mount into a class hierarchy.</p>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../../assets/img/diagrams/bi-mount-split.svg" alt="At the top, the base class FirstStageMount with Create, DoCreateDevices and DoFirstStageMount. It reads the fstab, creates block devices and mounts the partitions, and it offers virtual hooks such as MountOverlays, UseDsuIfPresent and GetExtraBlockDevices. The subclass FirstStageMountAndroid in first_stage_mount_android.cpp adds logical super partitions, DSU, snapuserd, overlays and dm-verity, and it adds the userdata device for apexd. The Microdroid build uses first_stage_mount_microdroid.cpp, where Create returns the plain base class over a small fstab. Below, a timeline. Before, apexd activated APEX packages after the mount of /data. In Android 17, with the build flag mount_before_data, apexd activates them before /data is mounted. This path is not used on DSU or GSI boots." loading="lazy"></div>
+    <figcaption>Android-only mount logic moves into a subclass, and APEX modules can activate before /data.</figcaption>
+  </figure>
+
+  <p>The base class <code>FirstStageMount</code> keeps the generic steps. The subclass <code>FirstStageMountAndroid</code> holds the logical partitions, Dynamic System Updates (DSU), <code>snapuserd</code>, overlays and dm-verity. Two files define the factory <code>Create()</code>, and each build links only one of them. The Microdroid virtual machine thus no longer carries the Android-only code. The hook <code>GetExtraBlockDevices()</code> enables the optimization for mount before data.</p>
+<pre class="code" data-lang="cpp" data-file="system/core/init/first_stage_mount_android.cpp"><code>void FirstStageMountAndroid::GetExtraBlockDevices(std::set&lt;std::string&gt;* devices) {
+    if constexpr (com::android::apex::flags::mount_before_data()) {
+        // Even before /data is mounted, apexd needs to access the block device
+        // backing /data. Let's initialize "userdata" so that apexd can avoid
+        // waiting for the symlink (/dev/block/by-name/userdata).
+        if (data_on_userdata_) {
+            devices-&gt;insert("userdata");
+        }
+    }
+}</code></pre>
+  <p>Older releases created a pool of loop devices for <code>apexd</code> in <code>init</code>. Android 17 removed that approach. The new path uses this hook and the bootstrap namespace in <code>mount_namespace.cpp</code>.</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Area</th><th>Change</th></tr></thead>
+      <tbody>
+        <tr><td>First-stage mount</td><td>Split into <code>first_stage_mount.cpp</code>, <code>first_stage_mount_android.cpp</code> and <code>first_stage_mount_microdroid.cpp</code>. APEX activation before <code>/data</code> behind the build flag <code>mount_before_data</code>, but not on DSU or GSI boots.</td></tr>
+        <tr><td>Hibernation</td><td><code>MaybeResumeFromHibernation()</code> writes <code>androidboot.hibernation_resume_device</code> to <code>/sys/power/resume</code>.</td></tr>
+        <tr><td>Kernel modules</td><td>Parallel modes NORMAL, PERFORMANCE and CONSERVATIVE. Module folders for each page size.</td></tr>
+        <tr><td>Reboot handlers</td><td>Installed after the creation of the devices and not during the trial of a new slot.</td></tr>
+        <tr><td>Update snapshots</td><td>A new backend, UBLK, serves the copy-on-write snapshots through the kernel driver <code>ublk</code> instead of <code>dm-user</code>. The field <code>disable_ublk</code> in the update payload forces <code>dm-user</code>.</td></tr>
+        <tr><td>Firmware crashes</td><td>The new one-shot service <code>bert_collector</code> reads the Boot Error Record Table (BERT) of the Advanced Configuration and Power Interface (ACPI) and files it in DropBox with the tag <code>DesktopFirmwareCrash</code>.</td></tr>
+        <tr><td>Instrumentation</td><td>Early bootchart through the bootconfig and the init flag <code>enable_init_event_timestamp</code>, which records the time of each event trigger.</td></tr>
+        <tr><td>Triggers</td><td>One single <code>load-bpf-programs</code> trigger. The boot monitor skips recovery boots.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>The UBLK change does not change the five steps of the snapshot transition during the policy load. It only changes which kernel mechanism backs the snapshot devices. After an update, <code>update_engine</code> reports whether the device used UBLK in its metrics.</p>
+  <p>The BERT collector is for desktop and x86 devices with Unified Extensible Firmware Interface (UEFI) and ACPI firmware. The firmware records a fatal boot error in the table. On the next boot, the service finds the table under <code>/sys/firmware/acpi/tables/BERT</code> and checks it. It adds the build fingerprint and the kernel version and encodes the data in Base64. A healthy boot has no table, so the service ends at once. Its code lives in the new repository <code>system/acpi/bert_collector</code>.</p>
+<pre class="code" data-lang="text" data-file="system/acpi/bert_collector/bert_collector.rc"><code>service bert_collector /system/bin/bert_collector
+    user system
+    group system
+    class late_start
+    oneshot</code></pre>
+  <p>The new init flags live in <code>system/core/init/init.aconfig</code> in the package <code>com.android.init.flags</code>. Both are fixed read-only flags, so the system image fixes their values. Besides <code>enable_init_event_timestamp</code>, the flag <code>ignore_bionic_signal_profiler_before_exec</code> keeps profiler signals away from children of <code>init</code> between the fork and the exec.</p>
+
+  <div class="block remember">
+    <div class="label">Worth remembering</div>
+    <ul>
+      <li>The same <code>init</code> binary runs three times as PID 1, and each <code>execv</code> moves it one stage further.</li>
+      <li>The main loop runs one command for each turn, so signals and properties never wait long.</li>
+      <li>Properties are both configuration and a signal. Triggers on <code>sys.boot_completed</code> are the safe place to start late work.</li>
+      <li>Zygote forks every app. A crash of <code>system_server</code> restarts the whole Java framework, but not the kernel.</li>
+      <li>The boot animation ends before phase 1000. Do not use it as a sign that the boot is complete.</li>
+    </ul>
+  </div>
+
+  <div class="block security">
+    <div class="label">Security lens</div>
+    <p>The boot builds the security of the whole device in layers. Each layer protects the next one, and an attacker must break all of them.</p>
+    <ul>
+      <li><strong>Verified code only.</strong> AVB checks every image against a key that starts in hardware. A changed partition stops a locked device, and the user sees a warning on an unlocked one.</li>
+      <li><strong>Integrity while the device runs.</strong> dm-verity checks each block of <code>system</code> and <code>vendor</code> at every read. An attacker who writes to the storage later still cannot change the code that runs.</li>
+      <li><strong>No old images.</strong> Rollback indexes in RPMB stop the install of an older signed version with a known weakness.</li>
+      <li><strong>A short time without a policy.</strong> Only first-stage <code>init</code> and the SELinux setup run without a policy. The second stage and every service run under full enforcement.</li>
+      <li><strong>Least privilege for services.</strong> Each <code>.rc</code> file sets the user, the groups, the capabilities and the SELinux label of a service. <code>system_server</code> runs as the user <code>system</code>, not as root. Zygote even drops root while it preloads classes.</li>
+      <li><strong>Mandatory access control on properties.</strong> Every set request passes an SELinux check with the real credentials of the caller. A typo in a policy can therefore block a feature, but it cannot open a value to every app.</li>
+      <li><strong>Careful signals in PID 1.</strong> <code>init</code> accepts SIGTERM only from the kernel, so no process in user space can shut down a container through a signal.</li>
+      <li><strong>Small details count.</strong> <code>hidepid=2</code> hides other processes, <code>/dev/kmsg</code> belongs to root only and the kernel does not load modules on demand.</li>
+    </ul>
+  </div>
+
+  <details class="deep">
+    <summary>For the curious, source files and inner details <small>Optional</small></summary>
+    <div class="inner">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Path</th><th>What it holds</th></tr></thead>
+          <tbody>
+            <tr><td><code>external/avb/libavb/avb_vbmeta_image.h</code></td><td>The format of the vbmeta image</td></tr>
+            <tr><td><code>external/avb/libavb/avb_slot_verify.h</code></td><td>The verification API, its result codes and the hashtree error modes</td></tr>
+            <tr><td><code>external/avb/libavb/avb_hashtree_descriptor.h</code></td><td>The descriptor for dm-verity</td></tr>
+            <tr><td><code>system/tools/mkbootimg/include/bootimg/bootimg.h</code></td><td>The headers of the boot images</td></tr>
+            <tr><td><code>system/core/init/main.cpp</code></td><td>The entry point for all roles of <code>init</code></td></tr>
+            <tr><td><code>system/core/init/first_stage_init.cpp</code></td><td>First-stage <code>init</code></td></tr>
+            <tr><td><code>system/core/init/first_stage_mount*.cpp</code></td><td>The first-stage mount and its Android and Microdroid variants</td></tr>
+            <tr><td><code>system/core/init/selinux.cpp</code></td><td>The load of the SELinux policy</td></tr>
+            <tr><td><code>system/core/init/init.cpp</code></td><td>Second-stage <code>init</code>, the main loop and the shutdown state</td></tr>
+            <tr><td><code>system/core/init/property_service.cpp</code></td><td>The property service</td></tr>
+            <tr><td><code>system/core/init/builtins.cpp</code>, <code>service_parser.cpp</code></td><td>The builtin commands and the service options</td></tr>
+            <tr><td><code>system/core/rootdir/init.rc</code>, <code>init.zygote64*.rc</code></td><td>The main script and the Zygote services</td></tr>
+            <tr><td><code>frameworks/base/cmds/app_process/app_main.cpp</code></td><td>The native entry of Zygote</td></tr>
+            <tr><td><code>frameworks/base/core/java/com/android/internal/os/ZygoteInit.java</code></td><td>The Java entry of Zygote</td></tr>
+            <tr><td><code>frameworks/base/services/java/com/android/server/SystemServer.java</code></td><td>The start of <code>system_server</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>When the property service sends a control message, it first checks that <code>init</code> still accepts messages. After a shutdown starts, only <code>stop</code> passes, because a new start makes no sense then.</p>
+<pre class="code" data-lang="cpp" data-file="system/core/init/property_service.cpp (shortened)"><code>static uint32_t SendControlMessage(const std::string&amp; msg, const std::string&amp; name,
+                                   pid_t pid, SocketConnection* socket,
+                                   std::string* error) {
+    auto lock = std::lock_guard{accept_messages_lock};
+    if (!accept_messages) {
+        if (msg == "stop") return PROP_SUCCESS;
+        *error = "Received control message after shutdown, ignoring";
+        return PROP_ERROR_HANDLE_CONTROL_MESSAGE;
+    }
+    // ...
+    bool queue_success = QueueControlMessage(msg, name, pid, fd);</code></pre>
+      <p>Each child of <code>init</code> runs <code>UnblockSignals()</code> right after the fork. The function restores the default handler of SIGCHLD and unblocks SIGCHLD and SIGTERM.</p>
+<pre class="code" data-lang="cpp" data-file="system/core/init/init.cpp"><code>static void UnblockSignals() {
+    const struct sigaction act {
+        .sa_handler = SIG_DFL
+    };
+    sigaction(SIGCHLD, &amp;act, nullptr);
+
+    sigset_t mask;
+    sigemptyset(&amp;mask);
+    sigaddset(&amp;mask, SIGCHLD);
+    sigaddset(&amp;mask, SIGTERM);
+
+    if (sigprocmask(SIG_UNBLOCK, &amp;mask, nullptr) == -1) {
+        PLOG(FATAL) &lt;&lt; "failed to unblock signals for PID " &lt;&lt; getpid();
+    }
+}</code></pre>
+      <p>The audit callback of the property service adds the name of the property and the credentials of the caller to every SELinux denial.</p>
+<pre class="code" data-lang="cpp" data-file="system/core/init/property_service.cpp"><code>static int PropertyAuditCallback(void* data, security_class_t /*cls*/,
+                                  char* buf, size_t len) {
+    auto* d = reinterpret_cast&lt;PropertyAuditData*&gt;(data);
+
+    if (!d || !d-&gt;name || !d-&gt;cr) {
+        LOG(ERROR) &lt;&lt; "AuditCallback invoked with null data arguments!";
+        return 0;
+    }
+
+    snprintf(buf, len, "property=%s pid=%d uid=%d gid=%d",
+             d-&gt;name, d-&gt;cr-&gt;pid, d-&gt;cr-&gt;uid, d-&gt;cr-&gt;gid);
+    return 0;
+}</code></pre>
+      <p>The update payload of a Virtual A/B update can switch off UBLK for one update.</p>
+<pre class="code" data-lang="text" data-file="system/update_engine/update_metadata.proto"><code>// Whether to disable UBLK for OTA. This will force dm-user as OTA backend
+// choice even if device was configured for UBLK based snapshots.
+optional bool disable_ublk = 8;</code></pre>
+      <p>The BERT collector hands its report to DropBox through Binder, the same path that tombstones and reports of Application Not Responding (ANR) errors use.</p>
+<pre class="code" data-lang="cpp" data-file="system/acpi/bert_collector/bert_collector.cpp (shortened)"><code>bool DumpReport(const std::string &amp;report, const android::String16 tag) {
+  android::sp&lt;android::os::DropBoxManager&gt; dropbox(
+      new android::os::DropBoxManager());
+  android::binder::Status status = dropbox-&gt;addText(tag, report);
+  // ... log and return status.isOk()
+}</code></pre>
+    </div>
+  </details>
+
+  <div class="block try">
+    <div class="label">Try it yourself</div>
+    <p><strong>On an emulator or a phone.</strong> Read the boot times and the state of the services. These commands work without root.</p>
+<pre class="code" data-lang="bash" data-file="Terminal"><code># Boot times of init, in nanoseconds or milliseconds
+adb shell getprop | grep ro.boottime
+
+# Is the boot complete?
+adb shell getprop sys.boot_completed
+
+# State of every service
+adb shell getprop | grep init.svc.
+
+# The Zygote processes and system_server
+adb shell ps -A | grep -E "zygote|system_server"
+
+# Messages of init in the kernel log
+adb shell dmesg | grep "init:"</code></pre>
+    <p><strong>In an AOSP source tree.</strong> Add your own native daemon that starts after the boot. First write the program.</p>
+<pre class="code" data-lang="cpp" data-file="device/generic/car/mybootdaemon/mybootdaemon.cpp"><code>#include &lt;android-base/logging.h&gt;
+#include &lt;unistd.h&gt;
+
+int main(int /* argc */, char** argv) {
+    android::base::InitLogging(argv, &amp;android::base::KernelLogger);
+    LOG(INFO) &lt;&lt; "mybootdaemon: Starting up!";
+
+    int counter = 0;
+    while (true) {
+        LOG(INFO) &lt;&lt; "mybootdaemon: heartbeat #" &lt;&lt; counter++;
+        sleep(10);
+    }
+    return 0;
+}</code></pre>
+    <p>Then write the build file and the <code>.rc</code> file. The field <code>init_rc</code> installs the script to <code>/system/etc/init/</code>, which <code>LoadBootScripts()</code> reads.</p>
+<pre class="code" data-lang="text" data-file="device/generic/car/mybootdaemon/Android.bp"><code>cc_binary {
+    name: "mybootdaemon",
+    srcs: ["mybootdaemon.cpp"],
+    shared_libs: [
+        "libbase",
+        "liblog",
+    ],
+    init_rc: ["mybootdaemon.rc"],
+}</code></pre>
+<pre class="code" data-lang="text" data-file="device/generic/car/mybootdaemon/mybootdaemon.rc"><code>service mybootdaemon /system/bin/mybootdaemon
+    class late_start
+    user system
+    group system log
+    disabled
+    oneshot
+
+on property:sys.boot_completed=1
+    start mybootdaemon</code></pre>
+    <p>A real device also needs an SELinux domain for the daemon. Without it, the daemon cannot do any work.</p>
+<pre class="code" data-lang="text" data-file="device/generic/car/sepolicy/private/mybootdaemon.te"><code>type mybootdaemon, domain;
+type mybootdaemon_exec, exec_type, file_type, system_file_type;
+
+init_daemon_domain(mybootdaemon)
+allow mybootdaemon kmsg_device:chr_file { open write };
+get_prop(mybootdaemon, default_prop)
+
+# And in file_contexts
+# /system/bin/mybootdaemon      u:object_r:mybootdaemon_exec:s0</code></pre>
+    <p>Add <code>PRODUCT_PACKAGES += mybootdaemon</code> to the makefile of the device, build and boot. Then check the result.</p>
+<pre class="code" data-lang="bash" data-file="Terminal"><code>m mybootdaemon
+
+adb shell getprop init.svc.mybootdaemon     # running
+adb shell dmesg | grep mybootdaemon         # Starting up! and heartbeats
+adb shell ps -eZ | grep mybootdaemon        # u:r:mybootdaemon:s0
+
+adb shell setprop ctl.stop mybootdaemon
+adb shell getprop init.svc.mybootdaemon     # stopped
+adb shell setprop ctl.start mybootdaemon</code></pre>
+    <p>Remove <code>oneshot</code> and kill the process with <code>adb shell kill</code>. Watch <code>init.svc.mybootdaemon</code> change to <code>restarting</code> and back to <code>running</code> after five seconds. If the start fails with a denial, run <code>adb shell dmesg | grep "avc: denied"</code> and add the missing rule.</p>
+  </div>
+
+  <h2>Key terms</h2>
+  <dl class="terms">
+    <dt>Boot ROM</dt><dd>Fixed code in the chip that runs first and loads the bootloader.</dd>
+    <dt>Bootloader</dt><dd>The program that verifies and loads the kernel, the ramdisk and the device tree.</dd>
+    <dt>Ramdisk</dt><dd>A small file system in memory that holds first-stage <code>init</code>.</dd>
+    <dt>vbmeta</dt><dd>The signed image that describes how to verify all other partitions.</dd>
+    <dt>Rollback index</dt><dd>A version number in vbmeta that stops the install of older images.</dd>
+    <dt>dm-verity</dt><dd>A kernel feature that checks each block of a partition against a hash tree at every read.</dd>
+    <dt>Merkle tree</dt><dd>A tree of hashes where each node is the hash of its children.</dd>
+    <dt>PID 1</dt><dd>The first process in user space. On Android it is <code>init</code>.</dd>
+    <dt>First-stage init</dt><dd>The part of <code>init</code> that runs from the ramdisk and mounts the partitions.</dd>
+    <dt>Second-stage init</dt><dd>The part of <code>init</code> that runs the scripts, the properties and the services.</dd>
+    <dt>execv</dt><dd>A system call that loads a new program into the current process.</dd>
+    <dt>Monolithic and split policy</dt><dd>One SELinux policy file, or a policy that combines parts from several partitions.</dd>
+    <dt>snapuserd</dt><dd>The daemon that serves snapshot devices during a Virtual A/B update.</dd>
+    <dt>Action</dt><dd>A list of commands in an <code>.rc</code> file that runs when its trigger fires.</dd>
+    <dt>Trigger</dt><dd>An event or a property value that starts an action.</dd>
+    <dt>Service</dt><dd>A program that <code>init</code> starts, watches and restarts.</dd>
+    <dt>Service class</dt><dd>A group of services that starts and stops together.</dd>
+    <dt>epoll</dt><dd>A Linux facility that waits for events on many file descriptors.</dd>
+    <dt>signalfd and eventfd</dt><dd>File descriptors that deliver signals and wake requests as events.</dd>
+    <dt>Property</dt><dd>A named value in the global key-value store of Android.</dd>
+    <dt>Control message</dt><dd>A property under <code>ctl.</code> that starts or stops a service.</dd>
+    <dt>ueventd</dt><dd>The role of <code>init</code> that creates device nodes in <code>/dev</code>.</dd>
+    <dt>Subcontext</dt><dd>A helper process of <code>init</code> that runs vendor commands with vendor permissions.</dd>
+    <dt>Zygote</dt><dd>The process that preloads the framework and forks every app.</dd>
+    <dt>Copy-on-write</dt><dd>Memory that parent and child share until one of them writes to it.</dd>
+    <dt>Preload</dt><dd>The load of classes, resources and libraries into Zygote before any fork.</dd>
+    <dt>system_server</dt><dd>The process that hosts the system services of the framework.</dd>
+    <dt>Boot phase</dt><dd>A numbered step in <code>system_server</code> that tells services what is ready.</dd>
+    <dt>Watchdog</dt><dd>A monitor in <code>system_server</code> that restarts it after a deadlock.</dd>
+    <dt>Safe mode</dt><dd>A boot without third-party apps.</dd>
+    <dt>Mount before data</dt><dd>An Android 17 path that activates APEX modules before <code>/data</code> exists.</dd>
+    <dt>ABI</dt><dd>Application Binary Interface.</dd>
+    <dt>ABL</dt><dd>Android Bootloader.</dd>
+    <dt>ACPI</dt><dd>Advanced Configuration and Power Interface.</dd>
+    <dt>ANR</dt><dd>Application Not Responding.</dd>
+    <dt>AIDL</dt><dd>Android Interface Definition Language.</dd>
+    <dt>AOSP</dt><dd>Android Open Source Project.</dd>
+    <dt>APEX</dt><dd>Android Pony EXpress, the format of updatable system modules.</dd>
+    <dt>ART</dt><dd>Android Runtime.</dd>
+    <dt>AVB</dt><dd>Android Verified Boot.</dd>
+    <dt>BERT</dt><dd>Boot Error Record Table.</dd>
+    <dt>CPU</dt><dd>Central processing unit.</dd>
+    <dt>DSU</dt><dd>Dynamic System Updates.</dd>
+    <dt>DTB</dt><dd>Device Tree Blob.</dd>
+    <dt>eMMC</dt><dd>Embedded MultiMediaCard.</dd>
+    <dt>GKI</dt><dd>Generic Kernel Image.</dd>
+    <dt>GSI</dt><dd>Generic System Image.</dd>
+    <dt>HAL</dt><dd>Hardware Abstraction Layer.</dd>
+    <dt>HIDL</dt><dd>HAL Interface Definition Language.</dd>
+    <dt>IPC</dt><dd>Inter-Process Communication.</dd>
+    <dt>JCA</dt><dd>Java Cryptography Architecture.</dd>
+    <dt>JNI</dt><dd>Java Native Interface.</dd>
+    <dt>OS</dt><dd>Operating system.</dd>
+    <dt>RPMB</dt><dd>Replay Protected Memory Block.</dd>
+    <dt>SELinux</dt><dd>Security-Enhanced Linux.</dd>
+    <dt>SoC</dt><dd>System on a Chip.</dd>
+    <dt>UEFI</dt><dd>Unified Extensible Firmware Interface.</dd>
+    <dt>UFS</dt><dd>Universal Flash Storage.</dd>
+    <dt>UBLK</dt><dd>Userspace block device, a Linux driver.</dd>
+    <dt>USAP</dt><dd>Unspecialized App Process.</dd>
+    <dt>UWB</dt><dd>Ultra-wideband.</dd>
+    <dt>VTS</dt><dd>Vendor Test Suite.</dd>
+  </dl>
+
+</article>
+</main>
+
+<script src="../../assets/js/site.js"></script>
+</body>
+</html>

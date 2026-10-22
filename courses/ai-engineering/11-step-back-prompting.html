@@ -1,0 +1,1116 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Step-back prompting · AI Engineering · LearnInBits</title>
+  <meta name="description" content="Ask for the general principles first, then apply them to the case. Two guided builds with two chains each.">
+  <link rel="icon" href="../../assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,500;0,8..60,600;1,8..60,500&display=swap">
+  <link rel="stylesheet" href="../../assets/css/style.css">
+  <script>try{var t=localStorage.getItem("lib-theme");t=t?JSON.parse(t):(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+</head>
+<body data-root="../../" data-page="chapter" data-course="ai-engineering" data-id="11-step-back-prompting">
+
+<main id="main">
+<article>
+
+  <div class="block oneline">
+    <div class="label">In one line</div>
+    <p>Step-back prompting first asks the model for the general principles behind a question, then uses those principles to answer the specific case.</p>
+  </div>
+
+  <section class="learn">
+    <h2>What you will learn</h2>
+    <ul>
+      <li>Why a general view first helps a model with a specific question</li>
+      <li>How to build two chains and pass the output of the first chain into the second</li>
+      <li>How a prompt with two placeholders combines the question and the principles</li>
+      <li>Why a correct principle does not always give a correct answer</li>
+    </ul>
+    <p class="needs">Read <a href="05-zero-shot-prompts.html">chapter 5</a> first for chains with a parser. <a href="08-chain-of-thought.html">Chapter 8</a> helps with reasoning in steps.</p>
+  </section>
+
+  <h2>The idea</h2>
+  <p>A specific question often hides a general topic. "This login allows unlimited password attempts" is a case of a general topic, the protection against automated attacks. When the model names the general principles first, it remembers the relevant knowledge. Then it applies that knowledge to the case.</p>
+  <p>This is <strong>step-back prompting</strong>. You take one step back from the details, look at the bigger picture and then come back to the details.</p>
+  <p>This chapter is also a new step in the code. The program uses <strong>two chains</strong> and <strong>two calls</strong>. The first chain asks for the principles. The second chain receives the question and the principles, and writes the answer. The output of one call becomes an input of the next call. This pattern appears in almost every larger AI application.</p>
+
+  <div class="block analogy">
+    <div class="label">Real-life analogy</div>
+    <p>A patient tells a doctor about a strong headache and a stiff neck. A good doctor does not jump to one cause. First, the doctor thinks about the general medical facts. Which conditions cause these signs, and which ones are dangerous? Then the doctor applies these facts to this patient. The step back to the general facts protects against a quick but wrong answer.</p>
+  </div>
+
+  <h2>What we build in this chapter</h2>
+  <p>Both programs answer three security questions with the step-back method. The first one uses questions about web applications and passwords. The second one uses questions about Android apps.</p>
+
+  <div class="build-cards">
+    <div class="build-card" style="--ex:#2f62c8">
+      <span class="ex-tag"><b>1</b>Example 1</span>
+      <h3>Web security with Gemini</h3>
+      <dl>
+        <dt>Aim</dt><dd>Answer security questions from first principles.</dd>
+        <dt>Problem</dt><dd>A login with no rate limits, unsalted MD5 passwords and an unchecked user ID.</dd>
+        <dt>Input</dt><dd>Three questions.</dd>
+        <dt>Expected output</dt><dd>Principles, then an answer, for example<code class="expect">STEP-BACK PRINCIPLES:<br><b>1. Defense in Depth</b></code></dd>
+        <dt>Model</dt><dd><span class="model-chip">Gemini 3.1 Flash Lite</span></dd>
+      </dl>
+    </div>
+    <div class="build-card" style="--ex:#0f8a6a">
+      <span class="ex-tag"><b>2</b>Example 2</span>
+      <h3>Android security with Qwen</h3>
+      <dl>
+        <dt>Aim</dt><dd>Use the same method for mobile app security.</dd>
+        <dt>Problem</dt><dd>A token in SharedPreferences, an unsafe WebView and no certificate checks.</dd>
+        <dt>Input</dt><dd>Three questions.</dd>
+        <dt>Expected output</dt><dd>Principles, then an answer, for example<code class="expect">STEP-BACK PRINCIPLES:<br><b>1. Data Encryption</b></code></dd>
+        <dt>Model</dt><dd><span class="model-chip">Qwen 2.5 7B, through OpenRouter</span></dd>
+      </dl>
+    </div>
+  </div>
+
+  <!-- ================= EXAMPLE 1 ================= -->
+  <section class="example" style="--ex:#2f62c8">
+
+    <div class="example-banner">
+      <div class="eb-tag">Example 1 · Guided build</div>
+      <h2 data-toc="Example 1, web security with Gemini">Web security with Gemini</h2>
+      <p>Build two chains that find the principles and then apply them, with a Gemini model.</p>
+      <div class="eb-row">
+        <span class="eb-chip">Gemini 3.1 Flash Lite</span>
+        <span class="eb-chip">src/10_step_back_google.py</span>
+        <a class="gh-btn" href="https://github.com/bhardwajAbhi/ai-engineering/blob/main/src/10_step_back_google.py"><svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M12 .5a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2.1c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1.1-.8.1-.8.1-.8 1.2.1 1.9 1.3 1.9 1.3 1.1 1.9 2.9 1.3 3.6 1 .1-.8.4-1.3.8-1.6-2.7-.3-5.5-1.3-5.5-6a4.7 4.7 0 0 1 1.3-3.2c-.1-.3-.6-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.7 1.7.2 2.9.1 3.2a4.7 4.7 0 0 1 1.3 3.2c0 4.6-2.8 5.6-5.5 6 .4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .5z"/></svg>View on GitHub</a>
+      </div>
+    </div>
+
+    <figure class="diagram">
+      <div class="frame"><img src="../../assets/img/diagrams/ai-11-ex1-flow.svg" alt="Data, for i, question in enumerate(questions, 1), 3 web security questions, one at a time. Chain 1, step_back_chain = step_back_prompt | llm | parser, Which 2 or 3 principles answer the question?, {question}. Output, principles, for example defense in depth, fail-safe defaults, threat modeling. Chain 2, apply_chain = apply_prompt | llm | parser, Apply the principles step by step, {principles} and {question}. Output, FINAL ANSWER, risks and fixes, for example rate limits and MFA. A loop goes back from stage 5 to stage 1, next question." loading="lazy"></div>
+      <figcaption>The program of Example 1, from the input to the printed result.</figcaption>
+    </figure>
+
+    <h3 class="step"><span class="sn">Step 1</span>Create the file</h3>
+    <p>In your project folder, create the file <code>src/10_step_back_google.py</code>. The docstring at the top of the file explains the method in two sentences.</p>
+
+    <h3 class="step"><span class="sn">Step 2</span>Import what you need</h3>
+<pre class="code" data-lang="python" data-file="src/10_step_back_google.py"><code>from dotenv import load_dotenv
+from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.output_parsers import StrOutputParser</code></pre>
+    <p>The same four imports as in the chapters before.</p>
+
+    <h3 class="step"><span class="sn">Step 3</span>Create the model and the parser</h3>
+<pre class="code" data-lang="python"><code>def main():
+    load_dotenv()
+
+    # Initialize the model
+    llm = ChatGoogleGenerativeAI(
+        model="gemini-3.1-flash-lite",
+        temperature=0,
+    )
+
+    # Parser to extract the text from the model response
+    parser = StrOutputParser()</code></pre>
+    <p><code>temperature=0</code> keeps both calls stable. Both chains use the same model object and the same parser.</p>
+
+    <h3 class="step"><span class="sn">Step 4</span>Write the step-back prompt</h3>
+<pre class="code" data-lang="python"><code>    # Step 1: Extract high-level security principles
+    step_back_prompt = ChatPromptTemplate.from_template("""
+        You are an experienced cybersecurity engineer skilled at
+        identifying underlying security principles.
+
+        Given this specific question:
+
+        {question}
+
+        What are the key security principles, concepts, or frameworks
+        needed to answer this correctly? List 2-3 fundamental principles,
+        then briefly explain each.
+
+        PRINCIPLES:
+    """)</code></pre>
+    <ul class="explain">
+      <li>The role is "skilled at identifying underlying security principles". It points the model to the general level.</li>
+      <li>The prompt asks for two or three principles, concepts or frameworks, with a short explanation each. It does not ask for the answer.</li>
+      <li>The prompt ends with the cue <code>PRINCIPLES:</code>, so the model starts with the list.</li>
+    </ul>
+
+    <h3 class="step"><span class="sn">Step 5</span>Write the apply prompt</h3>
+<pre class="code" data-lang="python"><code>    # Step 2: Apply the principles to the specific question
+    apply_prompt = ChatPromptTemplate.from_template("""
+        Use the following principles to answer the specific question.
+
+        PRINCIPLES:
+        {principles}
+
+        SPECIFIC QUESTION:
+        {question}
+
+        Apply the principles step-by-step to arrive at the answer.
+
+        ANSWER:
+    """)</code></pre>
+    <ul class="explain">
+      <li>This template has <strong>two placeholders</strong>, <code>{principles}</code> and <code>{question}</code>.</li>
+      <li>The principles come first and the question second. The model reads the general knowledge before the case.</li>
+      <li>"Apply the principles step-by-step" combines this method with the chain of thought from chapter 8.</li>
+    </ul>
+
+    <h3 class="step"><span class="sn">Step 6</span>Build the two chains</h3>
+<pre class="code" data-lang="python"><code>    # The two chains that make up the step-back pipeline
+    step_back_chain = step_back_prompt | llm | parser
+    apply_chain = apply_prompt | llm | parser</code></pre>
+    <p>Two chains share one model and one parser. Each chain has its own prompt. Both chains return a plain string, because both end with the parser.</p>
+
+    <h3 class="step"><span class="sn">Step 7</span>Add the questions</h3>
+<pre class="code" data-lang="python"><code>    # Sample security questions
+    questions = [
+        """
+        A web application's login endpoint accepts unlimited password
+        attempts with no rate limiting or account lockout. What security
+        risks does this expose, and how should it be fixed?
+        """,
+
+        """
+        A company stores user passwords using unsalted MD5 hashes. Why is
+        this insecure, and what should be used instead?
+        """,
+
+        """
+        An internal API endpoint trusts a client-supplied user_id
+        parameter to decide which records to return, without checking
+        that it belongs to the authenticated user. What vulnerability
+        class is this, and how should it be fixed?
+        """,
+    ]</code></pre>
+    <ul class="explain">
+      <li>The first question is about brute force on a login. The second is about weak password storage with MD5, a fast hash with no salt. A <strong>salt</strong> is a random value per password that makes identical passwords look different after hashing.</li>
+      <li>The third question describes an insecure direct object reference (IDOR), a missing check that the record belongs to the user. The question does not name the class. The model must find it.</li>
+    </ul>
+
+    <h3 class="step"><span class="sn">Step 8</span>Run both chains for each question</h3>
+<pre class="code" data-lang="python"><code>    # Invoke the step-back pipeline for each question, one at a time
+    for i, question in enumerate(questions, 1):
+        print(f"\n{'=' * 60}")
+        print(f"QUESTION {i}")
+        print("=" * 60)
+        print(f"\n{question.strip()}\n")
+        print("-" * 60)
+
+        # Show the step-back process
+        principles = step_back_chain.invoke({"question": question})
+        print("STEP-BACK PRINCIPLES:")
+        print(principles)
+        print("\n" + "-" * 60)
+
+        # Apply the principles to reach the final answer
+        answer = apply_chain.invoke({"question": question, "principles": principles})
+        print("FINAL ANSWER:")
+        print(answer)</code></pre>
+    <ul class="explain">
+      <li><code>principles = step_back_chain.invoke({"question": question})</code> is call 1. <code>principles</code> holds the text of the principles.</li>
+      <li><code>apply_chain.invoke({"question": question, "principles": principles})</code> is call 2. The dictionary has two keys, one for each placeholder. The value of <code>principles</code> is the output of call 1.</li>
+      <li>The program prints both results. You see the step back and the final answer.</li>
+    </ul>
+
+    <h3 class="step"><span class="sn">Step 9</span>Make the file start main() and run it</h3>
+<pre class="code" data-lang="python"><code>if __name__ == "__main__":
+    main()</code></pre>
+<pre class="code" data-lang="bash"><code>uv run python src/10_step_back_google.py</code></pre>
+    <p>The program makes six calls, two for each question, so it takes a little longer.</p>
+<details class="fold">
+      <summary><span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m16 18 6-6-6-6M8 6l-6 6 6 6"/></svg></span><span class="ft">Show the full output<small>133 lines</small></span></summary>
+      <div class="fold-body">
+<pre class="code" data-lang="output"><code>============================================================
+QUESTION 1
+============================================================
+
+A web application's login endpoint accepts unlimited password
+        attempts with no rate limiting or account lockout. What security
+        risks does this expose, and how should it be fixed?
+
+------------------------------------------------------------
+STEP-BACK PRINCIPLES:
+To address the security risks of an unprotected login endpoint, you must apply the following fundamental cybersecurity principles:
+
+### PRINCIPLES:
+
+**1. Defense in Depth**
+This principle dictates that security should not rely on a single control. In this scenario, relying solely on a password is a single point of failure. By implementing rate limiting, account lockouts, or multi-factor authentication (MFA), you create multiple layers of defense. If an attacker bypasses one control (e.g., by using a proxy to rotate IPs), the next layer (e.g., account lockout or CAPTCHA) prevents the successful exploitation of the vulnerability.
+
+**2. Least Privilege / Fail-Safe Defaults**
+This principle suggests that systems should be designed to be secure by default. An endpoint that allows unlimited attempts is "failing open" rather than "failing closed." A secure design should default to the most restrictive state—denying access after a threshold of failed attempts—to ensure that the system is protected even if the user or administrator fails to configure additional security settings.
+
+**3. Threat Modeling (specifically regarding Bruteforce/Credential Stuffing)**
+This concept involves identifying potential threats to an application's assets. By modeling the threat of automated attacks, an engineer recognizes that an exposed login endpoint is a high-value target for credential stuffing (using leaked passwords) and brute-force attacks. Applying this principle leads to the implementation of proactive controls like rate limiting, which specifically mitigates the "unlimited attempts" vector identified in the threat model.
+
+------------------------------------------------------------
+FINAL ANSWER:
+To address the security risks of an unprotected login endpoint, we apply the provided principles as follows:
+
+### 1. Threat Modeling (Identifying the Risks)
+By applying **Threat Modeling**, we identify that an exposed login endpoint with no restrictions is a high-value target for automated attacks. Specifically, this configuration exposes the application to:
+*   **Brute-Force Attacks:** Attackers can systematically guess passwords for a specific account without fear of being blocked.
+*   **Credential Stuffing:** Attackers can use lists of leaked credentials from other breaches to gain unauthorized access to user accounts, as the system does not distinguish between a legitimate user and a bot.
+*   **Account Enumeration:** Without rate limiting, attackers can rapidly test usernames to determine which ones exist in the system.
+
+### 2. Least Privilege / Fail-Safe Defaults (The Design Philosophy)
+The current state of the application is "failing open," as it allows unlimited attempts by default. To adhere to **Fail-Safe Defaults**, the system must be redesigned to be secure from the start. The default state should be restrictive:
+*   The system must be configured to automatically deny access after a predefined threshold of failed attempts.
+*   This ensures that even if an administrator forgets to add advanced security features, the system remains protected against high-volume automated traffic.
+
+### 3. Defense in Depth (The Remediation Strategy)
+To move beyond a single point of failure (the password), we must implement **Defense in Depth** by layering multiple security controls. Relying on one mechanism is insufficient; therefore, the following layers should be implemented:
+*   **Rate Limiting:** Implement per-IP or per-account rate limiting to throttle the speed at which login attempts can be made, effectively neutralizing high-speed brute-force tools.
+*   **Account Lockout Policies:** Temporarily lock accounts after a specific number of failed attempts to prevent persistent guessing.
+*   **Multi-Factor Authentication (MFA):** Introduce a second factor (e.g., TOTP, SMS, or hardware keys). Even if an attacker successfully guesses a password, they cannot bypass the second layer of authentication.
+*   **CAPTCHA/Bot Detection:** Integrate challenges to distinguish between human users and automated scripts, adding a layer that is difficult for simple bots to bypass.
+
+**Conclusion:**
+By applying these principles, the application shifts from an insecure, "fail-open" state to a robust, multi-layered architecture. The combination of **Threat Modeling** (identifying the attack vector), **Fail-Safe Defaults** (restricting access by default), and **Defense in Depth** (layering controls like MFA and rate limiting) ensures the login endpoint is resilient against automated credential-based attacks.
+
+============================================================
+QUESTION 2
+============================================================
+
+A company stores user passwords using unsalted MD5 hashes. Why is
+        this insecure, and what should be used instead?
+
+------------------------------------------------------------
+STEP-BACK PRINCIPLES:
+To answer this question effectively, you must apply the following fundamental cybersecurity principles:
+
+### PRINCIPLES:
+
+**1. Defense in Depth (Layered Security)**
+This principle dictates that security should not rely on a single control. Using unsalted MD5 hashes creates a "single point of failure" where the compromise of the database leads to the immediate exposure of all passwords. Adding a unique "salt" to each password ensures that even if two users have the same password, their stored hashes will be different, preventing attackers from using precomputed tables to crack multiple accounts simultaneously.
+
+**2. Cryptographic Agility and Strength (Algorithm Obsolescence)**
+This principle emphasizes that cryptographic algorithms must be evaluated for their resistance to modern computational power. MD5 is cryptographically broken; it is susceptible to collision attacks and is computationally "fast," meaning an attacker can calculate billions of hashes per second. A secure system must use "slow", memory-hard, or CPU-intensive hashing algorithms (like Argon2, bcrypt, or scrypt) designed specifically for password storage to thwart brute-force and dictionary attacks.
+
+**3. The Principle of Least Privilege (Data Minimization)**
+This principle suggests that systems should only store the minimum amount of information necessary to perform a function. Storing passwords in a reversible or easily crackable format violates the duty of care to protect user data. By using a modern, salted, and iterated hashing function, the system minimizes the "blast radius" of a data breach, ensuring that even if the database is exfiltrated, the actual passwords remain computationally infeasible to recover.
+
+------------------------------------------------------------
+FINAL ANSWER:
+To determine why storing passwords as unsalted MD5 hashes is insecure and to identify the appropriate alternative, we apply the provided cybersecurity principles as follows:
+
+### 1. Defense in Depth (Layered Security)
+Storing passwords as unsalted MD5 hashes creates a **single point of failure**. Because the hashes are unsalted, identical passwords result in identical hash values across the entire database. An attacker who gains access to the database can use precomputed tables (such as Rainbow Tables) to instantly map these hashes back to their original passwords. By failing to implement a unique "salt" for every user, the system lacks the necessary layer of defense to prevent mass-cracking of accounts, meaning the compromise of the database leads to the immediate exposure of all user credentials.
+
+### 2. Cryptographic Agility and Strength (Algorithm Obsolescence)
+MD5 is cryptographically broken and fundamentally unsuitable for password storage. It is a "fast" hashing algorithm, meaning modern hardware can compute billions of MD5 hashes per second, making it trivial for an attacker to perform high-speed brute-force or dictionary attacks. To adhere to the principle of cryptographic strength, the company must replace MD5 with "slow," memory-hard, or CPU-intensive algorithms. These algorithms are specifically designed to be computationally expensive, significantly increasing the time and resources required for an attacker to test a single password guess.
+
+### 3. The Principle of Least Privilege (Data Minimization)
+Storing passwords in an easily crackable format violates the duty of care to protect user data. By using an obsolete algorithm like MD5, the company maximizes the "blast radius" of a potential data breach. To minimize this risk, the system should store only the most secure representation of the password possible. By transitioning to a modern, salted, and iterated hashing function, the company ensures that even if the database is exfiltrated, the actual passwords remain computationally infeasible to recover, thereby minimizing the impact of the breach on the users.
+
+### Conclusion: What should be used instead?
+The company must immediately stop using MD5. Instead, they should implement a **modern, salted, and iterated hashing algorithm** specifically designed for password storage. Recommended industry standards include:
+*   **Argon2id** (the current state-of-the-art, winner of the Password Hashing Competition)
+*   **bcrypt** (a widely trusted, adaptive, and slow hashing algorithm)
+*   **scrypt** (designed to be memory-intensive to thwart hardware-accelerated attacks)
+
+By adopting these algorithms with a unique, cryptographically strong salt for every user, the company will align its security posture with modern best practices.
+
+============================================================
+QUESTION 3
+============================================================
+
+An internal API endpoint trusts a client-supplied user_id
+        parameter to decide which records to return, without checking
+        that it belongs to the authenticated user. What vulnerability
+        class is this, and how should it be fixed?
+
+------------------------------------------------------------
+STEP-BACK PRINCIPLES:
+To address the vulnerability described—which is a classic **Insecure Direct Object Reference (IDOR)**—the following fundamental security principles are essential:
+
+### PRINCIPLES:
+
+1.  **Principle of Least Privilege (PoLP)**
+    *   **Explanation:** This principle dictates that a user or process should only have access to the specific information and resources necessary for its legitimate purpose. In this scenario, the API fails to enforce this because it allows a user to access data (via `user_id`) that falls outside their authorized scope. Implementing PoLP ensures that the system verifies not just *who* the user is, but *what* they are explicitly permitted to access.
+
+2.  **Authorization (Access Control)**
+    *   **Explanation:** Authorization is the process of verifying that an authenticated user has the required permissions to perform an action or access a specific resource. The vulnerability exists because the system confuses **Authentication** (verifying identity) with **Authorization** (verifying permissions). A robust security architecture must perform an explicit authorization check on every request, ensuring the `user_id` requested matches the identity established during the authentication phase (e.g., via a secure session token or JWT).
+
+3.  **Defense in Depth**
+    *   **Explanation:** This principle advocates for layering multiple security controls so that if one fails, others are in place to prevent a breach. Relying solely on a client-supplied parameter is a "single point of failure." A defense-in-depth approach would involve validating the user's identity server-side (e.g., pulling the `user_id` from the secure session/token rather than the request body) and implementing server-side access control lists (ACLs) to ensure the requested resource belongs to the authenticated user.
+
+------------------------------------------------------------
+FINAL ANSWER:
+**ANSWER:**
+
+The vulnerability described is a classic **Insecure Direct Object Reference (IDOR)**. This occurs when an application provides direct access to objects based on user-supplied input without performing adequate authorization checks.
+
+To fix this vulnerability, the following principles must be applied:
+
+**1. Apply the Principle of Least Privilege (PoLP)**
+The system must be reconfigured so that a user’s access is restricted strictly to their own data. Instead of allowing the client to dictate which `user_id` to query, the API should enforce a policy where the system only retrieves records explicitly associated with the authenticated user’s identity. This ensures that the user cannot "reach" into other users' data, as their privilege scope is programmatically limited to their own account.
+
+**2. Implement Robust Authorization (Access Control)**
+The API currently confuses authentication with authorization. While the user may be authenticated, the system fails to verify if they are *authorized* to access the requested `user_id`. To fix this, the server must perform an explicit authorization check on every request. The system should compare the `user_id` requested in the API call against the identity verified during the authentication phase (e.g., the `user_id` stored within a secure, server-side session or a cryptographically signed JWT). If the requested ID does not match the authenticated user's ID, the request must be denied.
+
+**3. Utilize Defense in Depth**
+To prevent the client-supplied parameter from being a single point of failure, the application should move away from trusting user input for resource identification. A defense-in-depth approach involves:
+*   **Server-Side Source of Truth:** Instead of accepting `user_id` from the request body or URL parameters, the API should extract the user's identity directly from the secure, server-side session token.
+*   **Server-Side Access Control Lists (ACLs):** Implement a secondary layer of validation where the database query itself is scoped to the authenticated user (e.g., `SELECT * FROM records WHERE user_id = [authenticated_user_id]`). This ensures that even if a malicious user attempts to manipulate the request, the backend logic inherently prevents access to unauthorized records.</code></pre>
+      </div>
+    </details>
+
+    <div class="block note">
+      <div class="label">Your output can be different</div>
+      <p>The model can select different principles, for example "least privilege" instead of "threat modeling." The final answers stay similar in substance.</p>
+    </div>
+
+    <div class="block look">
+      <div class="label">Look closely</div>
+      <p>In the first question, the principles are defense in depth, fail-safe defaults and threat modeling. The final answer uses each principle as a heading and finds the expected risks, brute force, credential stuffing and account enumeration. The structure of the answer follows the principles from call 1. You can see how the first call shaped the second.</p>
+    </div>
+
+    <h3 class="step"><span class="sn">Inside</span>What happens inside the calls</h3>
+    <p>Your code calls the first chain, keeps its string and puts that string into the second call.</p>
+    <figure class="diagram">
+      <div class="frame"><img src="../../assets/img/diagrams/ai-11-ex1-seq.svg" alt="A sequence diagram with the lanes Your code, step_back_chain, apply_chain, Gemini API. Step 1, Your code to step_back_chain, step_back_chain.invoke({&quot;question&quot; question}), call 1. Step 2, step_back_chain to Gemini API, Request with the first prompt, which 2 or 3 principles answer the question?. Step 3, Gemini API to step_back_chain, Reply, for example defense in depth, fail-safe defaults, threat modeling. Step 4, step_back_chain to Your code, principles, a plain string from the parser, printed first. Step 5, Your code to apply_chain, apply_chain.invoke({&quot;question&quot; ..., &quot;principles&quot; principles}), call 2, the output of call 1 is an input. Step 6, apply_chain to Gemini API, Request with the second prompt, principles first, then the question. Step 7, Gemini API to apply_chain, Reply, risks and fixes, for example rate limits and MFA. Step 8, apply_chain to Your code, FINAL ANSWER, a plain string, printed after the principles. Steps 1 to 8 repeat, Repeated for each of the 3 questions." loading="lazy"></div>
+      <figcaption>Inside the calls of Example 1, step by step.</figcaption>
+    </figure>
+
+    <details class="fold">
+      <summary><span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m16 18 6-6-6-6M8 6l-6 6 6 6"/></svg></span><span class="ft">Full code of Example 1<small>src/10_step_back_google.py</small></span><a class="gh-btn" href="https://github.com/bhardwajAbhi/ai-engineering/blob/main/src/10_step_back_google.py"><svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M12 .5a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2.1c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1.1-.8.1-.8.1-.8 1.2.1 1.9 1.3 1.9 1.3 1.1 1.9 2.9 1.3 3.6 1 .1-.8.4-1.3.8-1.6-2.7-.3-5.5-1.3-5.5-6a4.7 4.7 0 0 1 1.3-3.2c-.1-.3-.6-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.7 1.7.2 2.9.1 3.2a4.7 4.7 0 0 1 1.3 3.2c0 4.6-2.8 5.6-5.5 6 .4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .5z"/></svg>GitHub</a></summary>
+      <div class="fold-body">
+<pre class="code" data-lang="python" data-file="src/10_step_back_google.py"><code>"""
+Title: Step-Back Prompting (Google Generative AI)
+Step-back prompting asks the model to first work out the general
+principles behind a question, then apply those principles to answer
+the specific question.
+
+uv run python src/10_step_back_google.py
+"""
+
+from dotenv import load_dotenv
+from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.output_parsers import StrOutputParser
+
+
+def main():
+    load_dotenv()
+
+    # Initialize the model
+    llm = ChatGoogleGenerativeAI(
+        model="gemini-3.1-flash-lite",
+        temperature=0,
+    )
+
+    # Parser to extract the text from the model response
+    parser = StrOutputParser()
+
+    # Step 1: Extract high-level security principles
+    step_back_prompt = ChatPromptTemplate.from_template("""
+        You are an experienced cybersecurity engineer skilled at
+        identifying underlying security principles.
+
+        Given this specific question:
+
+        {question}
+
+        What are the key security principles, concepts, or frameworks
+        needed to answer this correctly? List 2-3 fundamental principles,
+        then briefly explain each.
+
+        PRINCIPLES:
+    """)
+
+    # Step 2: Apply the principles to the specific question
+    apply_prompt = ChatPromptTemplate.from_template("""
+        Use the following principles to answer the specific question.
+
+        PRINCIPLES:
+        {principles}
+
+        SPECIFIC QUESTION:
+        {question}
+
+        Apply the principles step-by-step to arrive at the answer.
+
+        ANSWER:
+    """)
+
+    # The two chains that make up the step-back pipeline
+    step_back_chain = step_back_prompt | llm | parser
+    apply_chain = apply_prompt | llm | parser
+
+    # Sample security questions
+    questions = [
+        """
+        A web application's login endpoint accepts unlimited password
+        attempts with no rate limiting or account lockout. What security
+        risks does this expose, and how should it be fixed?
+        """,
+
+        """
+        A company stores user passwords using unsalted MD5 hashes. Why is
+        this insecure, and what should be used instead?
+        """,
+
+        """
+        An internal API endpoint trusts a client-supplied user_id
+        parameter to decide which records to return, without checking
+        that it belongs to the authenticated user. What vulnerability
+        class is this, and how should it be fixed?
+        """,
+    ]
+
+    # Invoke the step-back pipeline for each question, one at a time
+    for i, question in enumerate(questions, 1):
+        print(f"\n{'=' * 60}")
+        print(f"QUESTION {i}")
+        print("=" * 60)
+        print(f"\n{question.strip()}\n")
+        print("-" * 60)
+
+        # Show the step-back process
+        principles = step_back_chain.invoke({"question": question})
+        print("STEP-BACK PRINCIPLES:")
+        print(principles)
+        print("\n" + "-" * 60)
+
+        # Apply the principles to reach the final answer
+        answer = apply_chain.invoke({"question": question, "principles": principles})
+        print("FINAL ANSWER:")
+        print(answer)
+
+
+if __name__ == "__main__":
+    main()</code></pre>
+      </div>
+    </details>
+  </section>
+
+  <!-- ================= EXAMPLE 2 ================= -->
+  <section class="example" style="--ex:#0f8a6a">
+
+    <div class="example-banner">
+      <div class="eb-tag">Example 2 · Guided build</div>
+      <h2 data-toc="Example 2, Android security with Qwen">Android security with Qwen</h2>
+      <p>Now you use the same two chains for Android app questions, through OpenRouter.</p>
+      <div class="eb-row">
+        <span class="eb-chip">Qwen 2.5 7B through OpenRouter</span>
+        <span class="eb-chip">src/10_step_back_openrouter.py</span>
+        <a class="gh-btn" href="https://github.com/bhardwajAbhi/ai-engineering/blob/main/src/10_step_back_openrouter.py"><svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M12 .5a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2.1c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1.1-.8.1-.8.1-.8 1.2.1 1.9 1.3 1.9 1.3 1.1 1.9 2.9 1.3 3.6 1 .1-.8.4-1.3.8-1.6-2.7-.3-5.5-1.3-5.5-6a4.7 4.7 0 0 1 1.3-3.2c-.1-.3-.6-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.7 1.7.2 2.9.1 3.2a4.7 4.7 0 0 1 1.3 3.2c0 4.6-2.8 5.6-5.5 6 .4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .5z"/></svg>View on GitHub</a>
+      </div>
+    </div>
+
+    <figure class="diagram">
+      <div class="frame"><img src="../../assets/img/diagrams/ai-11-ex2-flow.svg" alt="Data, for i, question in enumerate(questions, 1), 3 Android security questions, one at a time. Chain 1, step_back_chain = step_back_prompt | llm | parser, Which 2 or 3 principles answer the question?, {question}. Output, principles, for example data encryption, secure storage, least privilege. Chain 2, apply_chain = apply_prompt | llm | parser, Apply the principles step by step, {principles} and {question}. Output, FINAL ANSWER, risks and fixes, with two factual errors. A loop goes back from stage 5 to stage 1, next question." loading="lazy"></div>
+      <figcaption>The program of Example 2, from the input to the printed result.</figcaption>
+    </figure>
+
+    <p>A <span class="same">Same</span> mark tells you that a line has the same job as before. A <span class="new">New</span> mark tells you what is different.</p>
+
+    <h3 class="step"><span class="sn">Steps 1 to 3</span>File, imports, model and parser</h3>
+<pre class="code" data-lang="python" data-file="src/10_step_back_openrouter.py"><code>from dotenv import load_dotenv
+from langchain_openrouter import ChatOpenRouter
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.output_parsers import StrOutputParser
+
+
+def main():
+    load_dotenv()
+
+    # Initialize the model
+    llm = ChatOpenRouter(
+        model="qwen/qwen-2.5-7b-instruct",
+        temperature=0,
+    )
+
+    # Parser to extract the text from the model response
+    parser = StrOutputParser()</code></pre>
+    <ul class="explain">
+      <li><span class="new">New</span><code>ChatOpenRouter</code> with the Qwen model.</li>
+      <li><span class="same">Same</span><code>temperature=0</code> and the parser.</li>
+    </ul>
+
+    <h3 class="step"><span class="sn">Steps 4 to 6</span>The two prompts and the two chains</h3>
+    <ul class="explain">
+      <li><span class="new">New</span>The step-back role is "an Android application security engineer".</li>
+      <li><span class="same">Same</span>The rest of both prompts and the two chains.</li>
+    </ul>
+
+    <h3 class="step"><span class="sn">Steps 7 to 9</span>Questions and run</h3>
+<pre class="code" data-lang="python"><code>    # Sample security questions
+    questions = [
+        """
+        An Android app stores its OAuth access token in SharedPreferences
+        without encryption. What risks does this expose, and how should
+        it be stored instead?
+        """,
+
+        """
+        An Android app's WebView component has addJavascriptInterface()
+        enabled and loads untrusted URLs. What vulnerability class does
+        this expose, and how should it be mitigated?
+        """,
+
+        """
+        An Android app accepts any TLS certificate for its backend API
+        calls, with no certificate pinning. What risks does this expose,
+        and how should it be fixed?
+        """,
+    ]</code></pre>
+    <ul class="explain">
+      <li><span class="new">New</span>Three Android questions. An OAuth access token in <code>SharedPreferences</code>, the app storage for simple settings. A <code>WebView</code> with <code>addJavascriptInterface()</code> that loads untrusted pages. An app that accepts any TLS certificate.</li>
+      <li><span class="same">Same</span>The loop with two calls for each question.</li>
+    </ul>
+<pre class="code" data-lang="bash"><code>uv run python src/10_step_back_openrouter.py</code></pre>
+<details class="fold">
+      <summary><span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m16 18 6-6-6-6M8 6l-6 6 6 6"/></svg></span><span class="ft">Show the full output<small>263 lines</small></span></summary>
+      <div class="fold-body">
+<pre class="code" data-lang="output"><code>============================================================
+QUESTION 1
+============================================================
+
+An Android app stores its OAuth access token in SharedPreferences
+        without encryption. What risks does this expose, and how should
+        it be stored instead?
+
+------------------------------------------------------------
+STEP-BACK PRINCIPLES:
+Certainly! Here are three fundamental security principles that are key to addressing the question:
+
+1. **Data Encryption**:
+   - **Explanation**: Data encryption is a critical principle in securing sensitive information. When data is encrypted, it is converted into a format that cannot be easily understood by unauthorized parties. In the context of storing OAuth access tokens in SharedPreferences, encrypting the token ensures that even if an attacker gains access to the device's file system or SharedPreferences, they will not be able to read the token without the encryption key.
+
+2. **Secure Storage Mechanisms**:
+   - **Explanation**: Secure storage mechanisms ensure that sensitive data is stored in a way that minimizes the risk of unauthorized access. For Android apps, this often involves using built-in secure storage options provided by the platform, such as `KeyStore` or `EncryptedSharedPreferences`. These mechanisms provide a higher level of security compared to plain text storage because they use strong cryptographic algorithms and protect against common attacks like tampering and side-channel attacks.
+
+3. **Least Privilege Principle**:
+   - **Explanation**: The least privilege principle states that a user or application should have only the permissions necessary to perform its tasks. In the context of storing OAuth access tokens, this means that the app should store the token with the minimum necessary permissions and access controls. For example, the token should not be accessible to other apps on the same device unless absolutely required, and it should be stored in a way that limits the scope of potential damage if the token is compromised.
+
+By adhering to these principles, you can significantly reduce the risks associated with storing sensitive information like OAuth access tokens in SharedPreferences.
+
+------------------------------------------------------------
+FINAL ANSWER:
+### Step-by-Step Answer Using the Principles
+
+#### 1. **Identify the Risks**
+
+When an Android app stores its OAuth access token in SharedPreferences without encryption, several risks are exposed:
+
+- **Data Exposure**: If an attacker gains access to the device's file system or SharedPreferences, they can read the OAuth access token directly.
+- **Security Breach**: The token is not protected by any encryption, making it vulnerable to unauthorized use and potential misuse.
+- **Unauthorized Access**: Without encryption, the token can be easily accessed by other apps on the same device if they have the necessary permissions.
+
+#### 2. **Apply Data Encryption Principle**
+
+To mitigate these risks, the OAuth access token should be encrypted before being stored in SharedPreferences. Here’s how you can implement this:
+
+- **Encryption Process**:
+  - Use a strong encryption algorithm (e.g., AES) to encrypt the OAuth access token.
+  - Store the encrypted token in SharedPreferences.
+  - Ensure that the encryption key is securely managed and not stored in plain text.
+
+Example code for encryption and decryption using AES in Java:
+
+```java
+import javax.crypto.Cipher;
+import javax.crypto.spec.SecretKeySpec;
+import java.util.Base64;
+
+public class EncryptionUtil {
+    private static final String ALGORITHM = "AES";
+    private static final String KEY = "YourSecretKey123"; // Must be 16 bytes long
+
+    public static String encrypt(String value) throws Exception {
+        SecretKeySpec secretKey = new SecretKeySpec(KEY.getBytes(), ALGORITHM);
+        Cipher cipher = Cipher.getInstance(ALGORITHM);
+        cipher.init(Cipher.ENCRYPT_MODE, secretKey);
+        byte[] encrypted = cipher.doFinal(value.getBytes());
+        return Base64.getEncoder().encodeToString(encrypted);
+    }
+
+    public static String decrypt(String encryptedValue) throws Exception {
+        SecretKeySpec secretKey = new SecretKeySpec(KEY.getBytes(), ALGORITHM);
+        Cipher cipher = Cipher.getInstance(ALGORITHM);
+        cipher.init(Cipher.DECRYPT_MODE, secretKey);
+        byte[] decodedValue = Base64.getDecoder().decode(encryptedValue);
+        byte[] decrypted = cipher.doFinal(decodedValue);
+        return new String(decrypted);
+    }
+}
+```
+
+#### 3. **Apply Secure Storage Mechanisms Principle**
+
+To further enhance security, consider using secure storage mechanisms provided by Android, such as `EncryptedSharedPreferences` or `KeyStore`.
+
+- **EncryptedSharedPreferences Example**:
+  - Use `EncryptedSharedPreferences` to store the encrypted OAuth access token.
+  - This ensures that even if the device is rooted or compromised, the data remains secure.
+
+Example code for using `EncryptedSharedPreferences`:
+
+```java
+import android.content.Context;
+import androidx.security.crypto.EncryptedSharedPreferences;
+import androidx.security.crypto.MasterKeys;
+
+public class SecureStorageManager {
+    private static final String PREFERENCES_NAME = "SecurePrefs";
+
+    public static EncryptedSharedPreferences getEncryptedSharedPreferences(Context context) throws Exception {
+        String masterKeyAlias = MasterKeys.getOrCreate(MasterKeys.AES256_GCM_SPEC);
+        return EncryptedSharedPreferences.create(
+                PREFERENCES_NAME,
+                masterKeyAlias,
+                context,
+                EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+                EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+        );
+    }
+
+    public static void saveOAuthToken(Context context, String token) throws Exception {
+        EncryptedSharedPreferences sharedPreferences = getEncryptedSharedPreferences(context);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("oauth_token", token);
+        editor.apply();
+    }
+
+    public static String loadOAuthToken(Context context) throws Exception {
+        EncryptedSharedPreferences sharedPreferences = getEncryptedSharedPreferences(context);
+        return sharedPreferences.getString("oauth_token", "");
+    }
+}
+```
+
+#### 4. **Apply Least Privilege Principle**
+
+Ensure that the OAuth access token is stored with the minimum necessary permissions and access controls:
+
+- **Access Controls**: Limit the access to the SharedPreferences or `EncryptedSharedPreferences` to only the components of your app that need it.
+- **Permissions**: Ensure that no other app on the device can access the SharedPreferences or `EncryptedSharedPreferences`.
+
+By following these steps, you can significantly reduce the risks associated with storing sensitive information like OAuth access tokens in SharedPreferences.
+
+============================================================
+QUESTION 2
+============================================================
+
+An Android app's WebView component has addJavascriptInterface()
+        enabled and loads untrusted URLs. What vulnerability class does
+        this expose, and how should it be mitigated?
+
+------------------------------------------------------------
+STEP-BACK PRINCIPLES:
+Certainly! Here are three fundamental security principles that are key to understanding and mitigating the vulnerability in this scenario:
+
+### PRINCIPLES:
+
+1. **Least Privilege (Principle of Least Privilege, PoLP)**
+2. **Separation of Concerns**
+3. **Input Validation and Sanitization**
+
+### EXPLANATION:
+
+1. **Least Privilege (PoLP):**
+   - **Explanation:** The principle of least privilege is a fundamental security concept that suggests that users and processes should be granted only the minimum level of access necessary to perform their tasks. In the context of the WebView component, this means that any JavaScript interfaces exposed via `addJavascriptInterface()` should have the minimum permissions required to perform their intended functions. By limiting the permissions, you reduce the potential damage if an attacker gains control over these interfaces.
+   - **Application to the Scenario:** Ensure that the methods exposed through `addJavascriptInterface()` have the least amount of privileges needed to interact with the app's functionality. Avoid exposing sensitive operations or data.
+
+2. **Separation of Concerns:**
+   - **Explanation:** This principle involves dividing a system into distinct components or modules, each responsible for a specific aspect of the system. By separating concerns, you can isolate vulnerabilities and limit the impact of any security breach. In the case of WebView, this means keeping trusted and untrusted content strictly separated.
+   - **Application to the Scenario:** Ensure that the WebView component does not load untrusted URLs directly. Instead, use a proxy or a secure gateway to validate and sanitize the URLs before loading them. This helps prevent the execution of malicious scripts that could exploit the `addJavascriptInterface()` method.
+
+3. **Input Validation and Sanitization:**
+   - **Explanation:** Input validation and sanitization involve checking and cleaning user inputs to ensure they meet expected formats and do not contain harmful content. This is crucial for preventing injection attacks and other forms of exploitation.
+   - **Application to the Scenario:** Validate and sanitize all inputs received by the `addJavascriptInterface()` methods. Ensure that the inputs are safe and do not contain any malicious code. Additionally, consider using Content Security Policy (CSP) headers to further restrict the sources from which scripts can be loaded.
+
+By adhering to these principles, you can significantly mitigate the risks associated with enabling `addJavascriptInterface()` on a WebView that loads untrusted URLs.
+
+------------------------------------------------------------
+FINAL ANSWER:
+### Vulnerability Class and Mitigation
+
+#### Step 1: Identify the Vulnerability Class
+The scenario where an Android app's WebView component has `addJavascriptInterface()` enabled and loads untrusted URLs exposes a **Cross-Site Scripting (XSS) vulnerability**. XSS vulnerabilities occur when an attacker can inject malicious scripts into content viewed by other users, leading to potential data theft, session hijacking, or other malicious activities.
+
+#### Step 2: Apply the Principle of Least Privilege (PoLP)
+1. **Explanation:** The principle of least privilege suggests that any JavaScript interfaces exposed via `addJavascriptInterface()` should have the minimum level of permissions necessary to perform their intended functions.
+2. **Application to the Scenario:**
+   - Ensure that the methods exposed through `addJavascriptInterface()` have the least amount of privileges needed to interact with the app's functionality.
+   - Avoid exposing sensitive operations or data through these interfaces.
+   - For example, if you need to expose a method to handle user input, ensure it only performs the specific task required and does not have broader access to the app's resources.
+
+#### Step 3: Apply the Separation of Concerns Principle
+1. **Explanation:** This principle involves dividing a system into distinct components or modules, each responsible for a specific aspect of the system. By separating concerns, you can isolate vulnerabilities and limit the impact of any security breach.
+2. **Application to the Scenario:**
+   - Ensure that the WebView component does not load untrusted URLs directly.
+   - Use a proxy or a secure gateway to validate and sanitize the URLs before loading them.
+   - For example, implement a server-side validation mechanism to check the URLs before they are loaded in the WebView.
+   - Consider using Content Security Policy (CSP) headers to further restrict the sources from which scripts can be loaded.
+
+#### Step 4: Apply Input Validation and Sanitization
+1. **Explanation:** Input validation and sanitization involve checking and cleaning user inputs to ensure they meet expected formats and do not contain harmful content.
+2. **Application to the Scenario:**
+   - Validate and sanitize all inputs received by the `addJavascriptInterface()` methods.
+   - Ensure that the inputs are safe and do not contain any malicious code.
+   - Implement input validation on both the client and server sides to prevent injection attacks.
+   - Use libraries or frameworks that provide built-in protection against common injection attacks.
+
+### Summary
+By adhering to the principles of least privilege, separation of concerns, and input validation and sanitization, you can mitigate the risks associated with enabling `addJavascriptInterface()` on a WebView that loads untrusted URLs. Specifically:
+
+- **Least Privilege (PoLP):** Ensure that the methods exposed through `addJavascriptInterface()` have the minimum necessary permissions.
+- **Separation of Concerns:** Use a proxy or secure gateway to validate and sanitize URLs before loading them in the WebView.
+- **Input Validation and Sanitization:** Validate and sanitize all inputs received by the `addJavascriptInterface()` methods to prevent injection attacks.
+
+These steps will help protect your application from XSS and other related vulnerabilities.
+
+============================================================
+QUESTION 3
+============================================================
+
+An Android app accepts any TLS certificate for its backend API
+        calls, with no certificate pinning. What risks does this expose,
+        and how should it be fixed?
+
+------------------------------------------------------------
+STEP-BACK PRINCIPLES:
+Certainly! Here are three key security principles that are essential to understanding and addressing the issue of accepting any TLS certificate for backend API calls without certificate pinning:
+
+1. **Certificate Pinning**:
+   - **Explanation**: Certificate pinning is a security practice where an application verifies the server's SSL/TLS certificate against a pre-defined public key or certificate hash (pin) instead of relying on the system's trust store. This helps prevent man-in-the-middle (MITM) attacks, where an attacker could intercept and modify communications between the client and server by presenting a fraudulent certificate.
+
+2. **Transport Layer Security (TLS)**:
+   - **Explanation**: TLS is a cryptographic protocol designed to provide communication security over a computer network. It ensures data confidentiality, integrity, and authenticity. By accepting any TLS certificate, the app is vulnerable to MITM attacks, as it does not verify the identity of the server beyond what the operating system's trust store provides.
+
+3. **Least Privilege and Defense in Depth**:
+   - **Explanation**: The principle of least privilege means that applications should only have the permissions necessary to perform their intended functions. Defense in depth involves implementing multiple layers of security controls to protect against various types of threats. In this context, not using certificate pinning leaves the app vulnerable to attacks that could be mitigated by additional security measures like certificate pinning.
+
+These principles highlight the importance of verifying the server's identity and ensuring that security measures are robust and layered to protect against potential vulnerabilities.
+
+------------------------------------------------------------
+FINAL ANSWER:
+To address the specific question, we will apply the security principles step-by-step to understand the risks and propose a solution.
+
+### Step 1: Identify the Risks
+
+Given that the Android app accepts any TLS certificate for its backend API calls without certificate pinning, we can identify the following risks:
+
+1. **Man-in-the-Middle (MITM) Attacks**:
+   - **Explanation**: Without certificate pinning, the app relies solely on the system's trust store to validate the server's certificate. An attacker could intercept and modify communications by presenting a fraudulent certificate that is trusted by the system's trust store. This allows the attacker to eavesdrop on or tamper with the data being exchanged between the client and server.
+
+2. **Lack of Identity Verification**:
+   - **Explanation**: The app does not verify the server's identity beyond what the operating system's trust store provides. This means that if the trust store is compromised or contains a fraudulent certificate, the app will still consider it valid, leading to potential security breaches.
+
+3. **Inadequate Security Practices**:
+   - **Explanation**: Accepting any TLS certificate without certificate pinning is a poor security practice. It leaves the app vulnerable to various types of attacks and does not provide the necessary level of assurance required for secure communication.
+
+### Step 2: Apply Certificate Pinning
+
+To mitigate these risks, we need to implement certificate pinning. Here’s how to do it:
+
+1. **Implement Certificate Pinning**:
+   - **Explanation**: Certificate pinning involves verifying the server's SSL/TLS certificate against a pre-defined public key or certificate hash instead of relying on the system's trust store. This ensures that even if the system's trust store is compromised, the app can still detect and reject fraudulent certificates.
+   - **Implementation Steps**:
+     - Obtain the public key or certificate hash from the server.
+     - Store this information securely in the app.
+     - During each API call, verify the server's certificate against the stored public key or certificate hash.
+     - If the certificate does not match, terminate the connection and display an error message to the user.
+
+2. **Ensure Least Privilege and Defense in Depth**:
+   - **Explanation**: Implement additional security measures to ensure that the app has the least privilege necessary and that there are multiple layers of security controls.
+   - **Implementation Steps**:
+     - Use secure network protocols and encryption.
+     - Implement other security practices such as input validation, output encoding, and secure storage of sensitive data.
+     - Regularly update and patch the app to address known vulnerabilities.
+
+### Step 3: Conclusion
+
+By implementing certificate pinning and adhering to the principle of least privilege and defense in depth, the Android app can significantly reduce its exposure to MITM attacks and other security risks. This approach ensures that the app verifies the server's identity more robustly and provides a higher level of security for the communication between the client and server.
+
+In summary, the risks exposed by accepting any TLS certificate without certificate pinning include the vulnerability to MITM attacks and inadequate identity verification. To fix these issues, the app should implement certificate pinning and follow best security practices such as least privilege and defense in depth.</code></pre>
+      </div>
+    </details>
+
+    <div class="block note">
+      <div class="label">Your output can be different</div>
+      <p>A small model can select other principles. Check the facts in the final answer each time.</p>
+    </div>
+
+    <div class="block look">
+      <div class="label">Look closely</div>
+      <p>The principles look reasonable, but two answers contain errors. In the first question, Qwen says that other apps can easily read the token if they have the right permissions. On Android, <code>SharedPreferences</code> are in the private storage of the app, and other apps cannot read them without root access or another flaw.</p>
+      <p>In the third question, the app accepts any certificate, so it does not check the certificate at all. Qwen writes that the app "relies solely on the system's trust store." That is wrong. The first fix is to restore the normal certificate check. Pinning is an extra layer on top of it. Correct principles did not prevent wrong facts.</p>
+    </div>
+
+    <h3 class="step"><span class="sn">Inside</span>What happens inside the calls</h3>
+    <p>The same two calls for the Android questions.</p>
+    <figure class="diagram">
+      <div class="frame"><img src="../../assets/img/diagrams/ai-11-ex2-seq.svg" alt="A sequence diagram with the lanes Your code, step_back_chain, apply_chain, OpenRouter API. Step 1, Your code to step_back_chain, step_back_chain.invoke({&quot;question&quot; question}), call 1. Step 2, step_back_chain to OpenRouter API, Request with the first prompt, which 2 or 3 principles answer the question?. Step 3, OpenRouter API to step_back_chain, Reply, for example data encryption, secure storage, least privilege. Step 4, step_back_chain to Your code, principles, a plain string from the parser, printed first. Step 5, Your code to apply_chain, apply_chain.invoke({&quot;question&quot; ..., &quot;principles&quot; principles}), call 2, the output of call 1 is an input. Step 6, apply_chain to OpenRouter API, Request with the second prompt, principles first, then the question. Step 7, OpenRouter API to apply_chain, Reply, risks and fixes, with two factual errors. Step 8, apply_chain to Your code, FINAL ANSWER, a plain string, printed after the principles. Steps 1 to 8 repeat, Repeated for each of the 3 questions." loading="lazy"></div>
+      <figcaption>Inside the calls of Example 2, step by step.</figcaption>
+    </figure>
+
+    <details class="fold">
+      <summary><span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m16 18 6-6-6-6M8 6l-6 6 6 6"/></svg></span><span class="ft">Full code of Example 2<small>src/10_step_back_openrouter.py</small></span><a class="gh-btn" href="https://github.com/bhardwajAbhi/ai-engineering/blob/main/src/10_step_back_openrouter.py"><svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M12 .5a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2.1c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1.1-.8.1-.8.1-.8 1.2.1 1.9 1.3 1.9 1.3 1.1 1.9 2.9 1.3 3.6 1 .1-.8.4-1.3.8-1.6-2.7-.3-5.5-1.3-5.5-6a4.7 4.7 0 0 1 1.3-3.2c-.1-.3-.6-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.7 1.7.2 2.9.1 3.2a4.7 4.7 0 0 1 1.3 3.2c0 4.6-2.8 5.6-5.5 6 .4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .5z"/></svg>GitHub</a></summary>
+      <div class="fold-body">
+<pre class="code" data-lang="python" data-file="src/10_step_back_openrouter.py"><code>"""
+Title: Step-Back Prompting (OpenRouter)
+Step-back prompting asks the model to first work out the general
+principles behind a question, then apply those principles to answer
+the specific question.
+
+uv run python src/10_step_back_openrouter.py
+"""
+
+from dotenv import load_dotenv
+from langchain_openrouter import ChatOpenRouter
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.output_parsers import StrOutputParser
+
+
+def main():
+    load_dotenv()
+
+    # Initialize the model
+    llm = ChatOpenRouter(
+        model="qwen/qwen-2.5-7b-instruct",
+        temperature=0,
+    )
+
+    # Parser to extract the text from the model response
+    parser = StrOutputParser()
+
+    # Step 1: Extract high-level security principles
+    step_back_prompt = ChatPromptTemplate.from_template("""
+        You are an Android application security engineer skilled at
+        identifying underlying security principles.
+
+        Given this specific question:
+
+        {question}
+
+        What are the key security principles, concepts, or frameworks
+        needed to answer this correctly? List 2-3 fundamental principles,
+        then briefly explain each.
+
+        PRINCIPLES:
+    """)
+
+    # Step 2: Apply the principles to the specific question
+    apply_prompt = ChatPromptTemplate.from_template("""
+        Use the following principles to answer the specific question.
+
+        PRINCIPLES:
+        {principles}
+
+        SPECIFIC QUESTION:
+        {question}
+
+        Apply the principles step-by-step to arrive at the answer.
+
+        ANSWER:
+    """)
+
+    # The two chains that make up the step-back pipeline
+    step_back_chain = step_back_prompt | llm | parser
+    apply_chain = apply_prompt | llm | parser
+
+    # Sample security questions
+    questions = [
+        """
+        An Android app stores its OAuth access token in SharedPreferences
+        without encryption. What risks does this expose, and how should
+        it be stored instead?
+        """,
+
+        """
+        An Android app's WebView component has addJavascriptInterface()
+        enabled and loads untrusted URLs. What vulnerability class does
+        this expose, and how should it be mitigated?
+        """,
+
+        """
+        An Android app accepts any TLS certificate for its backend API
+        calls, with no certificate pinning. What risks does this expose,
+        and how should it be fixed?
+        """,
+    ]
+
+    # Invoke the step-back pipeline for each question, one at a time
+    for i, question in enumerate(questions, 1):
+        print(f"\n{'=' * 60}")
+        print(f"QUESTION {i}")
+        print("=" * 60)
+        print(f"\n{question.strip()}\n")
+        print("-" * 60)
+
+        # Show the step-back process
+        principles = step_back_chain.invoke({"question": question})
+        print("STEP-BACK PRINCIPLES:")
+        print(principles)
+        print("\n" + "-" * 60)
+
+        # Apply the principles to reach the final answer
+        answer = apply_chain.invoke({"question": question, "principles": principles})
+        print("FINAL ANSWER:")
+        print(answer)
+
+
+if __name__ == "__main__":
+    main()</code></pre>
+      </div>
+    </details>
+  </section>
+
+  <h2>Two examples, side by side</h2>
+  <div class="table-wrap">
+    <table class="compare" style="--e1:#2f62c8;--e2:#0f8a6a">
+      <thead><tr><th></th><th class="e1">Example 1</th><th class="e2">Example 2</th></tr></thead>
+      <tbody>
+        <tr><td>Domain</td><td>Web applications and passwords</td><td>Android apps</td></tr>
+        <tr><td>Model</td><td>Gemini 3.1 Flash Lite</td><td>Qwen 2.5 7B, through OpenRouter</td></tr>
+        <tr><td>Calls</td><td>Six, two for each question</td><td>Six, two for each question</td></tr>
+        <tr><td>Quality</td><td>Principles used well in the answers</td><td>Good principles, but factual errors in two answers</td></tr>
+        <tr><td>Same</td><td colspan="2">Two prompts, two chains, two placeholders and the loop</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>When it works and when it does not</h2>
+  <ul>
+    <li><strong>It works</strong> for questions that rest on a general rule, for example security design, physics or law. The step back brings the relevant knowledge to the front.</li>
+    <li><strong>It costs a second call.</strong> Each question needs two calls, so it takes twice the time and more tokens.</li>
+    <li><strong>It does not fix weak knowledge.</strong> A small model can name the right principle and still state a wrong fact about the case.</li>
+    <li><strong>Some problems need many small steps instead.</strong> When a problem is long but each part is simple, split it into subproblems. <a href="12-least-to-most.html">Chapter 12</a> shows least-to-most prompting.</li>
+  </ul>
+
+  <div class="block security">
+    <div class="label">Security lens</div>
+    <p>The output of call 1 goes into the prompt of call 2 without a check. This is the pattern of every multi-step AI system, and it carries risks.</p>
+    <ul>
+      <li><strong>Errors travel.</strong> A wrong principle in call 1 leads call 2 in the wrong direction. Log the intermediate result, so you can find the source of an error.</li>
+      <li><strong>Injection travels too.</strong> If the question contains an injection, call 1 can copy it into the principles, and call 2 then reads it as trusted text. Treat every intermediate output as untrusted input.</li>
+      <li><strong>Security advice needs review.</strong> The Qwen answers in this chapter contain real errors about Android. Never ship security guidance from a model without a review by an expert.</li>
+    </ul>
+  </div>
+
+  <h2>Check yourself</h2>
+  <div class="quiz">
+    <details>
+      <summary><span class="qq">How does the second chain get the principles?</span></summary>
+      <div class="ans"><p>Your code stores the output of the first chain in <code>principles</code>. Then it passes this value in the dictionary of the second call, with the key <code>"principles"</code>.</p></div>
+    </details>
+    <details>
+      <summary><span class="qq">Why does the apply prompt put the principles before the question?</span></summary>
+      <div class="ans"><p>The model reads the text in order. With the principles first, it reads the general knowledge before the case and can apply it.</p></div>
+    </details>
+    <details>
+      <summary><span class="qq">The principles are correct. Is the final answer then correct?</span></summary>
+      <div class="ans"><p>Not always. The Qwen answers show that a model can name the right principles and still state wrong facts about the case.</p></div>
+    </details>
+  </div>
+
+  <section class="yourturn">
+    <span class="yt-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>Your turn</span>
+    <h2 data-toc="Your turn">Is it safe to log request bodies?</h2>
+    <p>A team wants to log the full body of every HTTP request in production for debugging. Build the two step-back chains with a local model and ask if this is safe and what to do instead.</p>
+
+    <div class="hint">
+      <b>Hint. Keep the two prompts and change only the model</b>
+<pre class="code" data-lang="python"><code>from langchain_ollama import ChatOllama
+
+llm = ChatOllama(model="llama3.2:3b", temperature=0)</code></pre>
+      <ul class="explain" style="--ex:var(--accent)">
+        <li>Good principles for this question are data minimization and the protection of secrets in logs.</li>
+        <li>Print the principles before the answer, so you can see the step back.</li>
+      </ul>
+    </div>
+
+    <details class="fold">
+      <summary><span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m16 18 6-6-6-6M8 6l-6 6 6 6"/></svg></span><span class="ft">Show one solution<small>src/10_step_back_ollama.py</small></span></summary>
+      <div class="fold-body">
+<pre class="code" data-lang="python" data-file="src/10_step_back_ollama.py"><code>"""
+Title: Step-Back Prompting (Ollama)
+uv run python src/10_step_back_ollama.py
+"""
+
+from langchain_core.output_parsers import StrOutputParser
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_ollama import ChatOllama
+
+
+def main():
+    llm = ChatOllama(model="llama3.2:3b", temperature=0)
+    parser = StrOutputParser()
+
+    step_back_prompt = ChatPromptTemplate.from_template("""
+        You are a security engineer.
+        Question: {question}
+        List 2-3 general security principles needed to answer it.
+        PRINCIPLES:
+    """)
+
+    apply_prompt = ChatPromptTemplate.from_template("""
+        PRINCIPLES:
+        {principles}
+
+        QUESTION:
+        {question}
+
+        Apply the principles step by step and give a short answer.
+        ANSWER:
+    """)
+
+    step_back_chain = step_back_prompt | llm | parser
+    apply_chain = apply_prompt | llm | parser
+
+    question = (
+        "Our team wants to log the full body of every HTTP request in "
+        "production for debugging. Is this safe, and what should we do instead?"
+    )
+
+    principles = step_back_chain.invoke({"question": question})
+    print(f"PRINCIPLES:\n{principles}\n")
+    answer = apply_chain.invoke({"question": question, "principles": principles})
+    print(f"ANSWER:\n{answer}")
+
+
+if __name__ == "__main__":
+    main()</code></pre>
+        <p>A possible output, shortened. Your principles can be different.</p>
+<pre class="code" data-lang="output"><code>PRINCIPLES:
+1. Data minimization: collect and keep only the data you need.
+2. Protection of secrets: logs must never store passwords, tokens or keys.
+
+ANSWER:
+It is not safe. Request bodies contain passwords, tokens and personal data,
+and logs are read by many people and kept for a long time. Log only metadata
+such as the path, the status code and a request ID. Mask sensitive fields, and
+turn on full logging only for a short time in a test environment.</code></pre>
+      </div>
+    </details>
+  </section>
+
+  <h2>Key terms at a glance</h2>
+  <div class="table-wrap">
+    <table class="kw">
+      <thead><tr><th>Term</th><th>Meaning</th></tr></thead>
+      <tbody>
+        <tr><td>Step-back prompting</td><td>Ask for the general principles first, then apply them to the case.</td></tr>
+        <tr><td>Principle</td><td>A general rule that many specific cases follow.</td></tr>
+        <tr><td>Two-step chain</td><td>Two chains in turn, where the output of the first is an input of the second.</td></tr>
+        <tr><td>Intermediate result</td><td>The output of one call that the next call uses.</td></tr>
+        <tr><td>Salt</td><td>A random value per password that makes equal passwords hash differently.</td></tr>
+        <tr><td>IDOR</td><td>Insecure direct object reference, a missing check that a record belongs to the user.</td></tr>
+        <tr><td>Chain of thought</td><td>One line of steps before the answer.</td></tr>
+        <tr><td>Placeholder</td><td>A slot in a template, written as <code>{name}</code>.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+</article>
+</main>
+
+<script src="../../assets/js/site.js"></script>
+</body>
+</html>

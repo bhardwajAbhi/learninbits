@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 386" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">The steps that turn a Zygote child into a sandboxed app</title>
+  <desc id="d">Seven steps in order. First, fork, where the child starts as a copy of Zygote with its preloaded classes. Second, drop the capability bounding set and set up the storage view. Third, setgroups and setresgid, which join groups such as inet with GID 3003 and switch to the app GID. Fourth, install the seccomp filter, before the UID change because it needs a capability. Fifth, setresuid to the app UID, after which no capabilities remain. Sixth, selinux_android_setcontext moves the process from the zygote domain to untrusted_app. Seventh, close the Zygote socket, then load and run the code of the app.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<line x1="48" y1="40" x2="48" y2="352" stroke="#d9d4c7" stroke-width="3"/>
+<circle cx="48" cy="40" r="14" fill="#5d6b7e"/>
+<text x="48" y="44.68" font-size="13" fill="#fff" text-anchor="middle" font-weight="700">1</text>
+<rect x="76" y="20" width="784" height="40" rx="10" fill="#fff" stroke="#5d6b7e" stroke-width="1.3"/>
+<text x="92" y="45" font-size="12.6" fill="#3f4a59" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">fork()</text>
+<text x="360" y="45" font-size="12" fill="#1c2230" text-anchor="start">The child starts as a copy of Zygote, with its preloaded classes.</text>
+<circle cx="48" cy="92" r="14" fill="#0e7c86"/>
+<text x="48" y="96.68" font-size="13" fill="#fff" text-anchor="middle" font-weight="700">2</text>
+<rect x="76" y="72" width="784" height="40" rx="10" fill="#fff" stroke="#0e7c86" stroke-width="1.3"/>
+<text x="92" y="97" font-size="12.6" fill="#095a61" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">Capabilities and mounts</text>
+<text x="360" y="97" font-size="12" fill="#1c2230" text-anchor="start">Drop the capability bounding set and set up the storage view.</text>
+<circle cx="48" cy="144" r="14" fill="#2f62c8"/>
+<text x="48" y="148.68" font-size="13" fill="#fff" text-anchor="middle" font-weight="700">3</text>
+<rect x="76" y="124" width="784" height="40" rx="10" fill="#fff" stroke="#2f62c8" stroke-width="1.3"/>
+<text x="92" y="149" font-size="12.6" fill="#1f4a9e" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">setgroups and setresgid</text>
+<text x="360" y="149" font-size="12" fill="#1c2230" text-anchor="start">Join groups such as inet (3003), then switch to the app GID.</text>
+<circle cx="48" cy="196" r="14" fill="#b7791f"/>
+<text x="48" y="200.68" font-size="13" fill="#fff" text-anchor="middle" font-weight="700">4</text>
+<rect x="76" y="176" width="784" height="40" rx="10" fill="#fff" stroke="#b7791f" stroke-width="1.3"/>
+<text x="92" y="201" font-size="12.6" fill="#8a5a12" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">Install the seccomp filter</text>
+<text x="360" y="201" font-size="12" fill="#1c2230" text-anchor="start">Before the UID change, because it needs a capability.</text>
+<circle cx="48" cy="248" r="14" fill="#2f62c8"/>
+<text x="48" y="252.68" font-size="13" fill="#fff" text-anchor="middle" font-weight="700">5</text>
+<rect x="76" y="228" width="784" height="40" rx="10" fill="#fff" stroke="#2f62c8" stroke-width="1.3"/>
+<text x="92" y="253" font-size="12.6" fill="#1f4a9e" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">setresuid</text>
+<text x="360" y="253" font-size="12" fill="#1c2230" text-anchor="start">Switch to the app UID. No capabilities remain.</text>
+<circle cx="48" cy="300" r="14" fill="#7a4fc2"/>
+<text x="48" y="304.68" font-size="13" fill="#fff" text-anchor="middle" font-weight="700">6</text>
+<rect x="76" y="280" width="784" height="40" rx="10" fill="#fff" stroke="#7a4fc2" stroke-width="1.3"/>
+<text x="92" y="305" font-size="12.6" fill="#58378f" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">selinux_android_setcontext</text>
+<text x="360" y="305" font-size="12" fill="#1c2230" text-anchor="start">Move from the zygote domain to untrusted_app.</text>
+<circle cx="48" cy="352" r="14" fill="#0f8a6a"/>
+<text x="48" y="356.68" font-size="13" fill="#fff" text-anchor="middle" font-weight="700">7</text>
+<rect x="76" y="332" width="784" height="40" rx="10" fill="#fff" stroke="#0f8a6a" stroke-width="1.3"/>
+<text x="92" y="357" font-size="12.6" fill="#0b6650" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">Close the Zygote socket</text>
+<text x="360" y="357" font-size="12" fill="#1c2230" text-anchor="start">Then load and run the code of the app.</text>
+</svg>

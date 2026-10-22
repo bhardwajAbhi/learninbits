@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Android secure coding practices · LearnInBits</title>
+  <meta name="description" content="Ten habits that keep the data of your users safe, with code that you can copy.">
+  <link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,500;0,8..60,600;1,8..60,500&display=swap">
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <script>try{var t=localStorage.getItem("lib-theme");t=t?JSON.parse(t):(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+</head>
+<body data-root="../" data-page="post" data-kind="article" data-id="android-secure-coding-practices">
+
+<main id="main">
+<article>
+
+  <div class="block oneline">
+    <div class="label">In one line</div>
+    <p>Most security bugs in Android apps come from a small number of habits. Change these habits and you close most of the doors.</p>
+  </div>
+
+  <p>Security reports about Android apps show the same mistakes again and again. An activity is open to all apps. A secret key is in the APK. A token is in the log. Each mistake is small, and each mistake is easy to prevent.</p>
+  <p>This article gives you ten habits. Each habit has a short reason, a wrong example and a correct example. The examples use Kotlin and the Android manifest.</p>
+
+  <h2>Who attacks your app?</h2>
+  <p>Before you write secure code, know who can attack. For a normal Android app, there are four types of attacker:</p>
+  <ul>
+    <li><strong>A different app on the same phone.</strong> It can send intents to your app and read files that your app shares.</li>
+    <li><strong>A person on the same network.</strong> For example, on public Wi-Fi. This person can read data that your app sends without encryption.</li>
+    <li><strong>A person with the phone or with a backup.</strong> This person can read data that your app stores without protection.</li>
+    <li><strong>A person with your APK.</strong> Any person can download your APK and read the code. Code obfuscation makes this slower, but it does not stop it.</li>
+  </ul>
+  <p>Keep these four attackers in mind for each habit.</p>
+
+  <h2>1. Do not export components without a reason</h2>
+  <p>An exported activity, service, receiver or provider is open to all apps on the phone. Export a component only when a different app must start it. Since Android 12, you must set <code>android:exported</code> on each component that has an intent filter. Set it to <code>false</code> when you are not sure.</p>
+  <div class="do-dont">
+    <div class="dont"><h4>Wrong</h4>
+<pre><code>&lt;activity
+  android:name=".AdminActivity"
+  android:exported="true" /&gt;</code></pre></div>
+    <div class="do"><h4>Correct</h4>
+<pre><code>&lt;activity
+  android:name=".AdminActivity"
+  android:exported="false" /&gt;</code></pre></div>
+  </div>
+
+  <h2>2. Protect the components that you export</h2>
+  <p>Sometimes a different app must start your component, for example your second app. Then export the component and add a permission with the <code>signature</code> protection level. Android gives this permission only to apps that you signed with the same key.</p>
+<pre><code>&lt;permission
+  android:name="com.example.app.permission.SYNC"
+  android:protectionLevel="signature" /&gt;
+
+&lt;service
+  android:name=".SyncService"
+  android:exported="true"
+  android:permission="com.example.app.permission.SYNC" /&gt;</code></pre>
+
+  <h2>3. Treat all input as untrusted</h2>
+  <p>Intents, deep links, files and data from a server can come from an attacker. Examine each value before you use it. Make a list of the values that you accept. Refuse all other values.</p>
+  <div class="do-dont">
+    <div class="dont"><h4>Wrong</h4>
+<pre><code>val url = intent.data
+  ?.getQueryParameter("url")
+webView.loadUrl(url!!)</code></pre></div>
+    <div class="do"><h4>Correct</h4>
+<pre><code>val uri = intent.data
+  ?.getQueryParameter("url")
+  ?.let(Uri::parse)
+if (uri?.scheme == "https" &amp;&amp;
+    uri.host == "www.example.com") {
+  webView.loadUrl(uri.toString())
+}</code></pre></div>
+  </div>
+
+  <h2>4. Use explicit intents and immutable PendingIntents</h2>
+  <p>An implicit intent goes to any app that says that it can do the action. A different app can catch it. When you send data to a component in your own app, name the component. When you give a <code>PendingIntent</code> to a different app, make it immutable. Then the other app cannot change it.</p>
+<pre><code>val intent = Intent(context, ReminderReceiver::class.java)
+val pending = PendingIntent.getBroadcast(
+  context, 0, intent, PendingIntent.FLAG_IMMUTABLE
+)</code></pre>
+
+  <h2>5. Use parameters in database queries</h2>
+  <p>If you join user text into an SQL string, an attacker can change the query. This attack has the name <em>SQL injection</em>. It is a risk in content providers that other apps can call. Use a <code>?</code> for each value and give the values separately.</p>
+  <div class="do-dont">
+    <div class="dont"><h4>Wrong</h4>
+<pre><code>db.rawQuery(
+  "SELECT * FROM notes WHERE title = '$title'",
+  null)</code></pre></div>
+    <div class="do"><h4>Correct</h4>
+<pre><code>db.rawQuery(
+  "SELECT * FROM notes WHERE title = ?",
+  arrayOf(title))</code></pre></div>
+  </div>
+
+  <h2>6. Keep secrets out of the APK</h2>
+  <p>Any person can open your APK and find a string in it. An API key in the code or in <code>strings.xml</code> is not secret. Keep server secrets on your server. For keys that must be on the phone, use the <strong>Android Keystore</strong>. The Keystore keeps the key in protected storage, and on many phones in secure hardware. Your app can use the key, but it cannot read the key.</p>
+<pre><code>val generator = KeyGenerator.getInstance(
+  KeyProperties.KEY_ALGORITHM_AES, "AndroidKeyStore")
+generator.init(
+  KeyGenParameterSpec.Builder(
+    "notes_key",
+    KeyProperties.PURPOSE_ENCRYPT or KeyProperties.PURPOSE_DECRYPT)
+    .setBlockModes(KeyProperties.BLOCK_MODE_GCM)
+    .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_NONE)
+    .build())
+val key = generator.generateKey()</code></pre>
+
+  <h2>7. Store private data in private places</h2>
+  <p>Files in the internal storage of your app (<code>context.filesDir</code>) are private to your app. Files in shared storage are not. Keep personal data in internal storage, and encrypt very sensitive data with a Keystore key.</p>
+  <p>Backups are a second path out of the phone. Remove session tokens and similar files from backups. On Android 12 and higher, use data extraction rules:</p>
+<pre><code>&lt;!-- res/xml/data_rules.xml --&gt;
+&lt;data-extraction-rules&gt;
+  &lt;cloud-backup&gt;
+    &lt;exclude domain="sharedpref" path="session.xml" /&gt;
+  &lt;/cloud-backup&gt;
+  &lt;device-transfer&gt;
+    &lt;exclude domain="sharedpref" path="session.xml" /&gt;
+  &lt;/device-transfer&gt;
+&lt;/data-extraction-rules&gt;</code></pre>
+  <p>Then add <code>android:dataExtractionRules="@xml/data_rules"</code> to the <code>&lt;application&gt;</code> element.</p>
+
+  <h2>8. Send data only over HTTPS</h2>
+  <p>A person on the same network can read and change HTTP traffic. Since Android 9, apps cannot use clear text traffic by default. Keep this setting. Write it in a network security configuration, so that a library or a later change cannot turn it on by accident.</p>
+<pre><code>&lt;!-- res/xml/network_security_config.xml --&gt;
+&lt;network-security-config&gt;
+  &lt;base-config cleartextTrafficPermitted="false" /&gt;
+&lt;/network-security-config&gt;</code></pre>
+
+  <h2>9. Lock down WebView</h2>
+  <p>A WebView is a full browser inside your app. If it shows a page from an attacker, that page can attack your app. Give the WebView only the features that the page needs. Do not connect Java or Kotlin objects to JavaScript with <code>addJavascriptInterface</code> on pages that you do not control.</p>
+<pre><code>webView.settings.apply {
+  javaScriptEnabled = false   // set to true only if the page needs it
+  allowFileAccess = false
+  allowContentAccess = false
+}</code></pre>
+
+  <h2>10. Keep personal data out of logs</h2>
+  <p>Logs are easy to collect. A bug report from a user, a test device or a crash tool can copy them. Never write tokens, passwords or personal data to the log.</p>
+  <div class="do-dont">
+    <div class="dont"><h4>Wrong</h4>
+<pre><code>Log.d("Login", "token=$token")</code></pre></div>
+    <div class="do"><h4>Correct</h4>
+<pre><code>Log.d("Login", "Login complete")</code></pre></div>
+  </div>
+
+  <div class="block security">
+    <div class="label">Security lens</div>
+    <p>Look at your own app the way an attacker does. Open the release APK, not the source code. Find each exported component, each permission and each string that looks like a key or a URL. Tools like <a href="https://github.com/bhardwajAbhi/apk-inspector">APK Inspector</a> show this information in one window.</p>
+    <p>Do this check before each release. A new library can add exported components or permissions that you did not write.</p>
+  </div>
+
+  <div class="block try">
+    <div class="label">Try it yourself</div>
+    <p>Find the exported components in an APK. You need <code>aapt</code> from the Android SDK build tools.</p>
+<pre><code># Show the manifest and find the exported components
+aapt dump xmltree app-release.apk AndroidManifest.xml | grep -B 3 exported
+
+# Show only the log lines of your app
+adb logcat --pid=$(adb shell pidof -s com.example.app)</code></pre>
+  </div>
+
+  <h2>Checklist</h2>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Habit</th><th>Check</th></tr></thead>
+      <tbody>
+        <tr><td>Exported components</td><td>Each exported component has a reason</td></tr>
+        <tr><td>Permissions</td><td>Exported components use a signature permission</td></tr>
+        <tr><td>Input</td><td>Each intent value and deep link value is examined</td></tr>
+        <tr><td>Intents</td><td>Explicit intents, immutable PendingIntents</td></tr>
+        <tr><td>Database</td><td>Each query uses parameters</td></tr>
+        <tr><td>Secrets</td><td>No secret keys in the APK. Keys are in the Keystore</td></tr>
+        <tr><td>Storage</td><td>Personal data in internal storage, sensitive files out of backups</td></tr>
+        <tr><td>Network</td><td>HTTPS only</td></tr>
+        <tr><td>WebView</td><td>Only the features that the page needs</td></tr>
+        <tr><td>Logs</td><td>No tokens or personal data</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>Key terms</h2>
+  <dl class="terms">
+    <dt>Exported</dt><dd>A component that other apps can start.</dd>
+    <dt>Intent</dt><dd>A message that asks for an action, for example to open a screen.</dd>
+    <dt>PendingIntent</dt><dd>An intent that you give to a different app to send later.</dd>
+    <dt>Keystore</dt><dd>The Android system that keeps keys safe from the app and from attackers.</dd>
+    <dt>SQL injection</dt><dd>An attack that changes a database query through user input.</dd>
+  </dl>
+
+</article>
+</main>
+
+<script src="../assets/js/site.js"></script>
+</body>
+</html>

@@ -1,0 +1,557 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Talk to a model · AI Engineering · LearnInBits</title>
+  <meta name="description" content="Send your first message to a model and read everything that comes back. Two guided builds, with Gemini and with Qwen through OpenRouter.">
+  <link rel="icon" href="../../assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,500;0,8..60,600;1,8..60,500&display=swap">
+  <link rel="stylesheet" href="../../assets/css/style.css">
+  <script>try{var t=localStorage.getItem("lib-theme");t=t?JSON.parse(t):(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+</head>
+<body data-root="../../" data-page="chapter" data-course="ai-engineering" data-id="01-talk-to-a-model">
+
+<main id="main">
+<article>
+
+  <div class="block oneline">
+    <div class="label">In one line</div>
+    <p>You send one question to a model with <code>invoke()</code>. You get back a message with the answer, the token count and the reason that the answer stopped.</p>
+  </div>
+
+  <section class="learn">
+    <h2>What you will learn</h2>
+    <ul>
+      <li>How a Python program sends a question to a large language model (LLM)</li>
+      <li>What comes back from the model, and where the text of the answer is</li>
+      <li>What a token is, and why the token count matters</li>
+      <li>How to limit the length of an answer, and how to see that the limit cut it</li>
+      <li>Why the same code works with two different providers</li>
+    </ul>
+    <p class="needs">Read <a href="00-start-here.html">chapter 0</a> first. It sets up the project, the libraries and the API keys that this chapter uses.</p>
+  </section>
+
+  <h2>The idea</h2>
+  <p>A large language model does not run inside your program. It runs on the servers of a provider, for example Google or a provider behind OpenRouter. Your program only sends a request over the internet and waits for the reply.</p>
+  <p>LangChain gives you a <strong>model object</strong> for this work. You create it one time, with the name of the model and some settings. Then you call <code>invoke()</code> with your question. The object sends the request, waits and gives you the reply as a <strong>message object</strong>.</p>
+  <p>The model reads and writes text in small pieces with the name <strong>tokens</strong>. A token is often a part of a word, a full short word or a punctuation mark. The provider counts the tokens of your question and of the answer. The count decides the price of the call and the time that it takes.</p>
+
+  <div class="block analogy">
+    <div class="label">Real-life analogy</div>
+    <p>Think of a call to an expert help desk. You dial the number, ask one question and listen to the answer. The phone bill shows how long you spoke and how long the expert spoke. If you say "answer in five seconds," the expert stops in the middle of a sentence when the time ends.</p>
+    <p>The model object is your phone and <code>invoke()</code> is one call. The token count is the bill, and the maximum number of output tokens is the time limit.</p>
+  </div>
+
+  <h2>What comes back from a model</h2>
+  <p>The message object holds more than the answer. This diagram shows the four parts that you use in this chapter and in the chapters after it.</p>
+  <figure class="diagram">
+      <div class="frame"><img src="../../assets/img/diagrams/ai-message-anatomy.svg" alt="The response is an AIMessage object with four useful parts. content is the answer. Qwen gives a plain string and Gemini 3 gives a list of blocks with text and a signature. text gives only the text of the answer as one string, which helps when the content is a list. usage_metadata gives input_tokens, output_tokens and total_tokens, the size of the call that decides the cost. response_metadata gives details from the provider, for example finish_reason, which is MAX_TOKENS or length when the answer was cut." loading="lazy"></div>
+      <figcaption>The parts of the reply. Most programs need only the text, but the other parts tell you what the call cost and why it stopped.</figcaption>
+    </figure>
+
+  <h2>What we build in this chapter</h2>
+  <p>You build two short programs that do the same work with two different providers. Each program asks one factual question and prints all parts of the reply. Then it asks for a very long story, but allows only five output tokens, and prints the reason that the answer stopped.</p>
+
+  <div class="build-cards">
+    <div class="build-card" style="--ex:#2f62c8">
+      <span class="ex-tag"><b>1</b>Example 1</span>
+      <h3>Ask Gemini a question</h3>
+      <dl>
+        <dt>Aim</dt><dd>Send your first question to a model and look at everything that comes back.</dd>
+        <dt>Problem</dt><dd>Ask a factual question. Then ask for a long story with a limit of five tokens.</dd>
+        <dt>Input</dt><dd>"What is the capital of France?" and "Tell me a very long story about the history of the universe."</dd>
+        <dt>Expected output</dt><dd>The answer, the token count and the finish reason, for example<code class="expect">The capital of France is Paris.<br>Finish Reason <b>MAX_TOKENS</b></code></dd>
+        <dt>Model</dt><dd><span class="model-chip">Gemini 3.1 Flash Lite</span></dd>
+      </dl>
+    </div>
+    <div class="build-card" style="--ex:#0f8a6a">
+      <span class="ex-tag"><b>2</b>Example 2</span>
+      <h3>Ask Qwen the same question</h3>
+      <dl>
+        <dt>Aim</dt><dd>See that the same code works with a different provider, and see what changes.</dd>
+        <dt>Problem</dt><dd>The same two questions, through OpenRouter.</dd>
+        <dt>Input</dt><dd>The same two questions as in Example 1.</dd>
+        <dt>Expected output</dt><dd>The same kind of answer, with a different token count and finish reason<code class="expect">The capital of France is Paris.<br>Finish Reason <b>length</b></code></dd>
+        <dt>Model</dt><dd><span class="model-chip">Qwen 2.5 7B, through OpenRouter</span></dd>
+      </dl>
+    </div>
+  </div>
+
+  <!-- ================= EXAMPLE 1 ================= -->
+  <section class="example" style="--ex:#2f62c8">
+
+    <div class="example-banner">
+      <div class="eb-tag">Example 1 · Guided build</div>
+      <h2 data-toc="Example 1, ask Gemini a question">Ask Gemini a question</h2>
+      <p>Send one question to a Gemini model and print the answer, the token count and the finish reason.</p>
+      <div class="eb-row">
+        <span class="eb-chip">Gemini 3.1 Flash Lite</span>
+        <span class="eb-chip">src/01_basic_invoke_google.py</span>
+        <a class="gh-btn" href="https://github.com/bhardwajAbhi/ai-engineering/blob/main/src/01_basic_invoke_google.py"><svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M12 .5a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2.1c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1.1-.8.1-.8.1-.8 1.2.1 1.9 1.3 1.9 1.3 1.1 1.9 2.9 1.3 3.6 1 .1-.8.4-1.3.8-1.6-2.7-.3-5.5-1.3-5.5-6a4.7 4.7 0 0 1 1.3-3.2c-.1-.3-.6-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.7 1.7.2 2.9.1 3.2a4.7 4.7 0 0 1 1.3 3.2c0 4.6-2.8 5.6-5.5 6 .4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .5z"/></svg>View on GitHub</a>
+      </div>
+    </div>
+
+    <figure class="diagram">
+      <div class="frame"><img src="../../assets/img/diagrams/ai-01-ex1-flow.svg" alt="Setup, load_dotenv(), Reads GOOGLE_API_KEY from the .env file. Model, llm = ChatGoogleGenerativeAI(...), model=&quot;gemini-3.1-flash-lite&quot;, temperature=0, max_output_tokens=128. Call, llm.invoke(&quot;What is the capital of France?&quot;), One request to the provider. Reply, AIMessage, content, a list with a text block and a signature, usage_metadata, 8 input, 7 output tokens. Model, short_model = ChatGoogleGenerativeAI(..., max_output_tokens=5), A second model object that can write only 5 tokens. Call, short_model.invoke(&quot;Tell me a very long story ...&quot;), The model wants to write much more than 5 tokens. Output, The answer is cut, content “To”, finish_reason MAX_TOKENS." loading="lazy"></div>
+      <figcaption>The program of Example 1, from the input to the printed result.</figcaption>
+    </figure>
+
+    <h3 class="step"><span class="sn">Step 1</span>Create the file</h3>
+    <p>In your project folder, create the file <code>src/01_basic_invoke_google.py</code> and open it in your editor. You write the program in this file, one piece at a time.</p>
+
+    <h3 class="step"><span class="sn">Step 2</span>Import what you need</h3>
+    <p>Type these two lines at the top of the file.</p>
+<pre class="code" data-lang="python" data-file="src/01_basic_invoke_google.py"><code>from dotenv import load_dotenv
+from langchain_google_genai import ChatGoogleGenerativeAI</code></pre>
+    <ul class="explain">
+      <li><code>from dotenv import load_dotenv</code> takes the function <code>load_dotenv</code> from the <code>python-dotenv</code> library. This function reads your <code>.env</code> file, so your API key stays out of your code.</li>
+      <li><code>from langchain_google_genai import ChatGoogleGenerativeAI</code> takes the class that talks to the Gemini models of Google. <code>langchain_google_genai</code> is the LangChain package for Google. "Chat" in the name tells you that the model works with messages.</li>
+    </ul>
+
+    <h3 class="step"><span class="sn">Step 3</span>Start the main function and load the keys</h3>
+<pre class="code" data-lang="python"><code>def main():
+    load_dotenv()</code></pre>
+    <ul class="explain">
+      <li><code>def main():</code> makes a function with the name <code>main</code>. All the work of the program goes inside it.</li>
+      <li><code>load_dotenv()</code> reads the <code>.env</code> file and puts each value into the environment of the program. After this line, the Gemini class finds <code>GOOGLE_API_KEY</code> by itself.</li>
+    </ul>
+
+    <h3 class="step"><span class="sn">Step 4</span>Create the model object</h3>
+    <p>Inside <code>main()</code>, add these lines.</p>
+<pre class="code" data-lang="python"><code>    # Initialize the model
+    # For reproducible demos, keep temperature at 0 and bound the output length.
+    llm = ChatGoogleGenerativeAI(
+        model="gemini-3.1-flash-lite",
+        temperature=0,
+        max_output_tokens=128,
+    )</code></pre>
+    <ul class="explain">
+      <li>The lines that start with <code>#</code> are comments. Python does not run them. They tell the reader why the settings have these values.</li>
+      <li><code>llm</code> is the name of the variable. It is short for "large language model." You use this object each time that you talk to the model.</li>
+      <li><code>ChatGoogleGenerativeAI(...)</code> creates the model object. It only stores the settings. It does not send anything yet.</li>
+      <li><code>model="gemini-3.1-flash-lite"</code> selects the model. Flash Lite is a small and fast model in the Gemini family.</li>
+      <li><code>temperature=0</code> tells the model to select the most likely next token each time. The answers then change very little from run to run. <a href="03-temperature.html">Chapter 3</a> explains temperature.</li>
+      <li><code>max_output_tokens=128</code> sets the maximum length of the answer, in tokens. A short factual answer needs far fewer. The limit protects you from a very long and expensive answer.</li>
+    </ul>
+
+    <h3 class="step"><span class="sn">Step 5</span>Ask the question</h3>
+<pre class="code" data-lang="python"><code>    # Factual question
+    response = llm.invoke("What is the capital of France?")
+    print(f"Response: {response.content}")</code></pre>
+    <ul class="explain">
+      <li><code>llm.invoke("...")</code> sends the question to the model and waits for the reply. This is the moment when the program uses the internet.</li>
+      <li><code>response</code> holds the reply. It is an <code>AIMessage</code> object, not a plain string.</li>
+      <li><code>response.content</code> is the part with the answer.</li>
+      <li><code>print(f"...")</code> prints a line. The <code>f</code> before the string lets you put a value inside braces, here <code>{response.content}</code>.</li>
+    </ul>
+
+    <h3 class="step"><span class="sn">Step 6</span>Look at the token count</h3>
+<pre class="code" data-lang="python"><code>    # Inspect metadata (usage tokens)
+    print(f"Usage Metadata: {response.usage_metadata}")</code></pre>
+    <p><code>response.usage_metadata</code> is a dictionary with the token count of the call. <code>input_tokens</code> counts your question, <code>output_tokens</code> counts the answer and <code>total_tokens</code> is the sum. Providers set the price per token, so this line shows the cost of the call.</p>
+
+    <h3 class="step"><span class="sn">Step 7</span>Cut a long answer with a small limit</h3>
+<pre class="code" data-lang="python"><code>    # Example: Controlling output length
+    print("\n--- Output Token Limit Example ---")
+    short_model = ChatGoogleGenerativeAI(model="gemini-3.1-flash-lite", max_output_tokens=5)
+    short_response = short_model.invoke(
+        "Tell me a very long story about the history of the universe."
+    )
+    print(f"Short Response: {short_response.content}...")
+    print(f"Finish Reason: {short_response.response_metadata.get('finish_reason')}")</code></pre>
+    <ul class="explain">
+      <li><code>"\n--- ... ---"</code> prints a title. <code>\n</code> adds an empty line before it.</li>
+      <li><code>short_model</code> is a second model object, with <code>max_output_tokens=5</code>. It can write only five tokens.</li>
+      <li>The question asks for a very long story on purpose. The model wants to write much more than five tokens.</li>
+      <li>The <code>...</code> after <code>{short_response.content}</code> is only text in the print. It shows that the answer was cut.</li>
+      <li><code>response_metadata</code> is a dictionary with extra details from the provider. <code>.get('finish_reason')</code> reads the reason that the answer stopped. <code>get()</code> returns <code>None</code> instead of an error if the key is missing.</li>
+    </ul>
+
+    <h3 class="step"><span class="sn">Step 8</span>Make the file start main()</h3>
+    <p>At the bottom of the file, with no indent, add these lines.</p>
+<pre class="code" data-lang="python"><code>if __name__ == "__main__":
+    main()</code></pre>
+    <p>Python sets <code>__name__</code> to <code>"__main__"</code> only when you start this file directly. Then <code>main()</code> runs. When another file imports this file, <code>main()</code> does not start by itself.</p>
+
+    <h3 class="step"><span class="sn">Step 9</span>Run it</h3>
+    <p>In the terminal, in your project folder, type this command.</p>
+<pre class="code" data-lang="bash"><code>uv run python src/01_basic_invoke_google.py</code></pre>
+    <p><code>uv run</code> starts Python in the environment of the project, with all its libraries. You see this output.</p>
+<pre class="code" data-lang="output"><code>Response: [{'type': 'text', 'text': 'The capital of France is Paris.', 'extras': {'signature': 'EnEKbwERTTIPETeczNYlpG4STNHMNYIxBAlqcPlg54TxLgU4aQUqBdEO0m5iwc7s1F54lV2UJfuDD3od8iDFA2NVMOpsLMkwe+yfeFqYWjDaC5KJaC8qLkk22DMJhyY4JyCMVoXSlGL6VCZHn8MgsIaqRQ=='}}]
+Usage Metadata: {'input_tokens': 8, 'output_tokens': 7, 'total_tokens': 15, 'input_token_details': {'cache_read': 0}}
+
+--- Output Token Limit Example ---
+Short Response: [{'type': 'text', 'text': 'To', 'extras': {'signature': 'EnEKbwERTTIPCsHJbYOfitoN2A/QQf8DzNCJzyJGJh2/BXEd3iixGSzDBCucVGtrEIworL032Cnt8JrTZDnHupo0MlgMhaFrvVRpFIz8QENepKm8jl+Js9sjPqR3COegImWOeJf2pLCjj295+ASuCTHTMw=='}}]...
+Finish Reason: MAX_TOKENS</code></pre>
+
+    <div class="block note">
+      <div class="label">Your output can be different</div>
+      <p>Language models do not always give the same answer. The long code after <code>signature</code> changes on every run, and the token counts can change when the provider updates the model. This is normal.</p>
+    </div>
+
+    <div class="block look">
+      <div class="label">Look closely</div>
+      <p>The content is not a plain sentence. Gemini 3 models return a list of blocks. The block with <code>'type': 'text'</code> holds the answer. The <code>signature</code> is a thought signature, an encrypted record of the internal reasoning of the model. Your program does not need it. To get only the text, use <code>response.text</code>, as <a href="03-temperature.html">chapter 3</a> does.</p>
+      <p>The second answer stops after the first word, and the finish reason is <code>MAX_TOKENS</code>. The limit ended the answer, not the model.</p>
+    </div>
+
+    <h3 class="step"><span class="sn">Inside</span>What happens inside the calls</h3>
+    <p>Each step below comes from the code and the output of this example. The program makes two calls, one with each model object.</p>
+    <figure class="diagram">
+      <div class="frame"><img src="../../assets/img/diagrams/ai-01-ex1-seq.svg" alt="A sequence diagram with the lanes Your code, llm, short_model, Gemini API. Step 1, Your code to Your code, load_dotenv(), GOOGLE_API_KEY goes into the environment. Step 2, Your code to llm, invoke(&quot;What is the capital of France?&quot;), a plain string becomes one human message. Step 3, llm to Gemini API, HTTPS request with the API key, temperature 0, at most 128 output tokens. Step 4, Gemini API to llm, Reply with the answer, 8 input, 7 output tokens. Step 5, llm to Your code, AIMessage, the code prints content and usage_metadata. Step 6, Your code to short_model, invoke(&quot;Tell me a very long story ...&quot;), the second model object. Step 7, short_model to Gemini API, HTTPS request, at most 5 output tokens. Step 8, Gemini API to short_model, The model stops at the limit, finish_reason MAX_TOKENS. Step 9, short_model to Your code, AIMessage with a cut answer, content “To”." loading="lazy"></div>
+      <figcaption>Inside the calls of Example 1, step by step.</figcaption>
+    </figure>
+
+    <details class="fold">
+      <summary><span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m16 18 6-6-6-6M8 6l-6 6 6 6"/></svg></span><span class="ft">Full code of Example 1<small>src/01_basic_invoke_google.py</small></span><a class="gh-btn" href="https://github.com/bhardwajAbhi/ai-engineering/blob/main/src/01_basic_invoke_google.py"><svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M12 .5a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2.1c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1.1-.8.1-.8.1-.8 1.2.1 1.9 1.3 1.9 1.3 1.1 1.9 2.9 1.3 3.6 1 .1-.8.4-1.3.8-1.6-2.7-.3-5.5-1.3-5.5-6a4.7 4.7 0 0 1 1.3-3.2c-.1-.3-.6-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.7 1.7.2 2.9.1 3.2a4.7 4.7 0 0 1 1.3 3.2c0 4.6-2.8 5.6-5.5 6 .4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .5z"/></svg>GitHub</a></summary>
+      <div class="fold-body">
+<pre class="code" data-lang="python" data-file="src/01_basic_invoke_google.py"><code>"""
+Title: Basic LLM Invocation (Google Generative AI)
+uv run python src/01_basic_invoke_google.py
+"""
+
+from dotenv import load_dotenv
+from langchain_google_genai import ChatGoogleGenerativeAI
+
+
+def main():
+    load_dotenv()
+
+    # Initialize the model
+    # For reproducible demos, keep temperature at 0 and bound the output length.
+    llm = ChatGoogleGenerativeAI(
+        model="gemini-3.1-flash-lite",
+        temperature=0,
+        max_output_tokens=128,
+    )
+
+    # Factual question
+    response = llm.invoke("What is the capital of France?")
+    print(f"Response: {response.content}")
+
+    # Inspect metadata (usage tokens)
+    print(f"Usage Metadata: {response.usage_metadata}")
+
+    # Example: Controlling output length
+    print("\n--- Output Token Limit Example ---")
+    short_model = ChatGoogleGenerativeAI(model="gemini-3.1-flash-lite", max_output_tokens=5)
+    short_response = short_model.invoke(
+        "Tell me a very long story about the history of the universe."
+    )
+    print(f"Short Response: {short_response.content}...")
+    print(f"Finish Reason: {short_response.response_metadata.get('finish_reason')}")
+
+
+if __name__ == "__main__":
+    main()</code></pre>
+      </div>
+    </details>
+  </section>
+
+  <!-- ================= EXAMPLE 2 ================= -->
+  <section class="example" style="--ex:#0f8a6a">
+
+    <div class="example-banner">
+      <div class="eb-tag">Example 2 · Guided build</div>
+      <h2 data-toc="Example 2, ask Qwen the same question">Ask Qwen the same question</h2>
+      <p>Now you send the same questions to an open model through OpenRouter, and you compare the replies.</p>
+      <div class="eb-row">
+        <span class="eb-chip">Qwen 2.5 7B through OpenRouter</span>
+        <span class="eb-chip">src/01_basic_invoke_openrouter.py</span>
+        <a class="gh-btn" href="https://github.com/bhardwajAbhi/ai-engineering/blob/main/src/01_basic_invoke_openrouter.py"><svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M12 .5a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2.1c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1.1-.8.1-.8.1-.8 1.2.1 1.9 1.3 1.9 1.3 1.1 1.9 2.9 1.3 3.6 1 .1-.8.4-1.3.8-1.6-2.7-.3-5.5-1.3-5.5-6a4.7 4.7 0 0 1 1.3-3.2c-.1-.3-.6-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.7 1.7.2 2.9.1 3.2a4.7 4.7 0 0 1 1.3 3.2c0 4.6-2.8 5.6-5.5 6 .4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .5z"/></svg>View on GitHub</a>
+      </div>
+    </div>
+
+    <figure class="diagram">
+      <div class="frame"><img src="../../assets/img/diagrams/ai-01-ex2-flow.svg" alt="Setup, load_dotenv(), Reads OPENROUTER_API_KEY from the .env file. Model, llm = ChatOpenRouter(...), model=&quot;qwen/qwen-2.5-7b-instruct&quot;, temperature=0, max_tokens=128. Call, llm.invoke(&quot;What is the capital of France?&quot;), One request to the provider. Reply, AIMessage, content, a plain string, usage_metadata, 36 input, 8 output tokens. Model, short_model = ChatOpenRouter(..., max_tokens=5), A second model object that can write only 5 tokens. Call, short_model.invoke(&quot;Tell me a very long story ...&quot;), The model wants to write much more than 5 tokens. Output, The answer is cut, content “The history of the universe”, finish_reason length." loading="lazy"></div>
+      <figcaption>The program of Example 2, from the input to the printed result.</figcaption>
+    </figure>
+
+    <p>Most lines are the same as in Example 1. A <span class="same">Same</span> mark tells you that a line has the same job as before. A <span class="new">New</span> mark tells you what is different.</p>
+
+    <h3 class="step"><span class="sn">Step 1</span>Create the file</h3>
+    <p>Create the file <code>src/01_basic_invoke_openrouter.py</code>.</p>
+
+    <h3 class="step"><span class="sn">Step 2</span>Import what you need</h3>
+<pre class="code" data-lang="python" data-file="src/01_basic_invoke_openrouter.py"><code>from dotenv import load_dotenv
+from langchain_openrouter import ChatOpenRouter</code></pre>
+    <ul class="explain">
+      <li><span class="same">Same</span>The first line imports the <code>.env</code> reader.</li>
+      <li><span class="new">New</span><code>from langchain_openrouter import ChatOpenRouter</code> takes the class that talks to <strong>OpenRouter</strong>. OpenRouter is one service that gives you access to models from many companies with one API key. This class finds <code>OPENROUTER_API_KEY</code> in your environment.</li>
+    </ul>
+
+    <h3 class="step"><span class="sn">Step 3</span>Start the main function and load the keys</h3>
+<pre class="code" data-lang="python"><code>def main():
+    load_dotenv()</code></pre>
+    <ul class="explain">
+      <li><span class="same">Same</span>The main function holds the work, and <code>load_dotenv()</code> loads the keys.</li>
+    </ul>
+
+    <h3 class="step"><span class="sn">Step 4</span>Create the model object</h3>
+<pre class="code" data-lang="python"><code>    # Initialize the model
+    # For reproducible demos, keep temperature at 0 and bound the output length.
+    llm = ChatOpenRouter(
+        model="qwen/qwen-2.5-7b-instruct",
+        temperature=0,
+        max_tokens=128,
+    )</code></pre>
+    <ul class="explain">
+      <li><span class="new">New</span><code>ChatOpenRouter(...)</code> creates the model object for OpenRouter.</li>
+      <li><span class="new">New</span><code>model="qwen/qwen-2.5-7b-instruct"</code> selects the model. <code>qwen/</code> is the maker, the Qwen team. <code>7b</code> means about 7 billion parameters, which is small for a modern model. <code>instruct</code> means that the model learned to follow instructions.</li>
+      <li><span class="same">Same</span><code>temperature=0</code> keeps the answers as stable as possible.</li>
+      <li><span class="new">New</span><code>max_tokens=128</code> has the same job as <code>max_output_tokens</code> in Example 1. Each provider class uses its own name for this setting.</li>
+    </ul>
+
+    <h3 class="step"><span class="sn">Step 5</span>Ask the question and look at the token count</h3>
+<pre class="code" data-lang="python"><code>    # Factual question
+    response = llm.invoke("What is the capital of France?")
+    print(f"Response: {response.content}")
+
+    # Inspect metadata (usage tokens)
+    print(f"Usage Metadata: {response.usage_metadata}")</code></pre>
+    <ul class="explain">
+      <li><span class="same">Same</span><code>invoke()</code>, <code>content</code> and <code>usage_metadata</code> work the same way for every provider. LangChain gives all providers one message format.</li>
+    </ul>
+
+    <h3 class="step"><span class="sn">Step 6</span>Cut a long answer with a small limit</h3>
+<pre class="code" data-lang="python"><code>    # Example: Controlling output length
+    print("\n--- Output Token Limit Example ---")
+    short_model = ChatOpenRouter(model="qwen/qwen-2.5-7b-instruct", max_tokens=5)
+    short_response = short_model.invoke(
+        "Tell me a very long story about the history of the universe."
+    )
+    print(f"Short Response: {short_response.content}...")
+    print(f"Finish Reason: {short_response.response_metadata.get('finish_reason')}")</code></pre>
+    <ul class="explain">
+      <li><span class="new">New</span>The second model object uses <code>max_tokens=5</code>.</li>
+      <li><span class="same">Same</span>The long story request, the print of the cut answer and the finish reason.</li>
+    </ul>
+
+    <h3 class="step"><span class="sn">Step 7</span>Make the file start main()</h3>
+<pre class="code" data-lang="python"><code>if __name__ == "__main__":
+    main()</code></pre>
+    <ul class="explain">
+      <li><span class="same">Same</span><code>main()</code> runs only when you start this file directly.</li>
+    </ul>
+
+    <h3 class="step"><span class="sn">Step 8</span>Run it</h3>
+<pre class="code" data-lang="bash"><code>uv run python src/01_basic_invoke_openrouter.py</code></pre>
+<pre class="code" data-lang="output"><code>Response: The capital of France is Paris.
+Usage Metadata: {'input_tokens': 36, 'output_tokens': 8, 'total_tokens': 44, 'input_token_details': {'cache_read': 0, 'cache_creation': 0}, 'output_token_details': {'reasoning': 0}}
+
+--- Output Token Limit Example ---
+Short Response: The history of the universe...
+Finish Reason: length</code></pre>
+
+    <div class="block note">
+      <div class="label">Your output can be different</div>
+      <p>OpenRouter can send your request to different servers that run the same model. The words of the answer and the token counts can change a little from run to run.</p>
+    </div>
+
+    <div class="block look">
+      <div class="label">Look closely</div>
+      <p>Here the content is a plain string, with no list and no signature. The same question used 36 input tokens with Qwen, but only 8 with Gemini. Each model has its own tokenizer and its own chat format, which wraps your question in extra tokens. A likely part of the difference is a default system message that the chat format of Qwen adds when you send none.</p>
+      <p>The finish reason is <code>length</code>, not <code>MAX_TOKENS</code>. Both words mean "the limit cut the answer." Each provider uses its own word, so check the value for your provider before your code depends on it.</p>
+    </div>
+
+    <h3 class="step"><span class="sn">Inside</span>What happens inside the calls</h3>
+    <p>The two calls of this example. Only the provider, the limit setting and the values change.</p>
+    <figure class="diagram">
+      <div class="frame"><img src="../../assets/img/diagrams/ai-01-ex2-seq.svg" alt="A sequence diagram with the lanes Your code, llm, short_model, OpenRouter API. Step 1, Your code to Your code, load_dotenv(), OPENROUTER_API_KEY goes into the environment. Step 2, Your code to llm, invoke(&quot;What is the capital of France?&quot;), a plain string becomes one human message. Step 3, llm to OpenRouter API, HTTPS request with the API key, temperature 0, at most 128 output tokens. Step 4, OpenRouter API to llm, Reply with the answer, 36 input, 8 output tokens. Step 5, llm to Your code, AIMessage, the code prints content and usage_metadata. Step 6, Your code to short_model, invoke(&quot;Tell me a very long story ...&quot;), the second model object. Step 7, short_model to OpenRouter API, HTTPS request, at most 5 output tokens. Step 8, OpenRouter API to short_model, The model stops at the limit, finish_reason length. Step 9, short_model to Your code, AIMessage with a cut answer, content “The history of the universe”." loading="lazy"></div>
+      <figcaption>Inside the calls of Example 2, step by step.</figcaption>
+    </figure>
+
+    <details class="fold">
+      <summary><span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m16 18 6-6-6-6M8 6l-6 6 6 6"/></svg></span><span class="ft">Full code of Example 2<small>src/01_basic_invoke_openrouter.py</small></span><a class="gh-btn" href="https://github.com/bhardwajAbhi/ai-engineering/blob/main/src/01_basic_invoke_openrouter.py"><svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M12 .5a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2.1c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1.1-.8.1-.8.1-.8 1.2.1 1.9 1.3 1.9 1.3 1.1 1.9 2.9 1.3 3.6 1 .1-.8.4-1.3.8-1.6-2.7-.3-5.5-1.3-5.5-6a4.7 4.7 0 0 1 1.3-3.2c-.1-.3-.6-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.7 1.7.2 2.9.1 3.2a4.7 4.7 0 0 1 1.3 3.2c0 4.6-2.8 5.6-5.5 6 .4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .5z"/></svg>GitHub</a></summary>
+      <div class="fold-body">
+<pre class="code" data-lang="python" data-file="src/01_basic_invoke_openrouter.py"><code>"""
+Title: Basic LLM Invocation (OpenRouter)
+uv run python src/01_basic_invoke_openrouter.py
+"""
+
+from dotenv import load_dotenv
+from langchain_openrouter import ChatOpenRouter
+
+
+def main():
+    load_dotenv()
+
+    # Initialize the model
+    # For reproducible demos, keep temperature at 0 and bound the output length.
+    llm = ChatOpenRouter(
+        model="qwen/qwen-2.5-7b-instruct",
+        temperature=0,
+        max_tokens=128,
+    )
+
+    # Factual question
+    response = llm.invoke("What is the capital of France?")
+    print(f"Response: {response.content}")
+
+    # Inspect metadata (usage tokens)
+    print(f"Usage Metadata: {response.usage_metadata}")
+
+    # Example: Controlling output length
+    print("\n--- Output Token Limit Example ---")
+    short_model = ChatOpenRouter(model="qwen/qwen-2.5-7b-instruct", max_tokens=5)
+    short_response = short_model.invoke(
+        "Tell me a very long story about the history of the universe."
+    )
+    print(f"Short Response: {short_response.content}...")
+    print(f"Finish Reason: {short_response.response_metadata.get('finish_reason')}")
+
+
+if __name__ == "__main__":
+    main()</code></pre>
+      </div>
+    </details>
+  </section>
+
+  <h2>Two examples, side by side</h2>
+  <div class="table-wrap">
+    <table class="compare" style="--e1:#2f62c8;--e2:#0f8a6a">
+      <thead><tr><th></th><th class="e1">Example 1</th><th class="e2">Example 2</th></tr></thead>
+      <tbody>
+        <tr><td>Provider</td><td>Google</td><td>OpenRouter</td></tr>
+        <tr><td>Model</td><td>Gemini 3.1 Flash Lite</td><td>Qwen 2.5 7B</td></tr>
+        <tr><td>Class</td><td><code>ChatGoogleGenerativeAI</code></td><td><code>ChatOpenRouter</code></td></tr>
+        <tr><td>Length setting</td><td><code>max_output_tokens</code></td><td><code>max_tokens</code></td></tr>
+        <tr><td>Type of content</td><td>A list of blocks</td><td>A plain string</td></tr>
+        <tr><td>Input tokens, same question</td><td>8</td><td>36</td></tr>
+        <tr><td>Finish reason when cut</td><td><code>MAX_TOKENS</code></td><td><code>length</code></td></tr>
+        <tr><td>Same</td><td colspan="2"><code>invoke()</code>, <code>content</code>, <code>usage_metadata</code> and <code>response_metadata</code></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>When it works and when it does not</h2>
+  <ul>
+    <li><strong>It works</strong> for one question with a fixed text. A direct <code>invoke()</code> is the simplest way to talk to a model.</li>
+    <li><strong>It is less good</strong> when the question changes each time, for example with a name or a document inside it. Then you build the text with a <strong>prompt template</strong>. <a href="02-your-first-chain.html">Chapter 2</a> shows how.</li>
+    <li><strong>The model remembers nothing.</strong> Each <code>invoke()</code> is a new call. The model does not know your earlier questions. Later chapters show how to keep a conversation.</li>
+  </ul>
+
+  <div class="block security">
+    <div class="label">Security lens</div>
+    <p>Even this small program has three security points.</p>
+    <ul>
+      <li><strong>Protect the API key.</strong> Keep it in <code>.env</code> and add <code>.env</code> to <code>.gitignore</code>. A key in a public repository can be found and used quickly, and you pay for the calls.</li>
+      <li><strong>Limit the length.</strong> Each token costs money. An attacker who can send long requests to your application can run up a large bill. A limit on output tokens is a first defense against this attack, which has the name "denial of wallet."</li>
+      <li><strong>Your text leaves your computer.</strong> The question goes to the servers of the provider. Do not send passwords, keys or personal data of other people in a prompt. Send such data only if the terms of the provider allow it and you have the right to share it.</li>
+    </ul>
+  </div>
+
+  <h2>Check yourself</h2>
+  <div class="quiz">
+    <details>
+      <summary><span class="qq">When does your program use the internet, at <code>ChatGoogleGenerativeAI(...)</code> or at <code>invoke()</code>?</span></summary>
+      <div class="ans"><p>At <code>invoke()</code>. Creating the model object only stores the settings. The request goes to the provider when you call <code>invoke()</code>.</p></div>
+    </details>
+    <details>
+      <summary><span class="qq">The finish reason is <code>MAX_TOKENS</code>. What does that tell you?</span></summary>
+      <div class="ans"><p>The answer is not complete. The limit on output tokens stopped the model before it finished. If you need the full answer, increase <code>max_output_tokens</code> or ask for a shorter answer.</p></div>
+    </details>
+    <details>
+      <summary><span class="qq">Why did Example 1 print a list, and how do you print only the answer?</span></summary>
+      <div class="ans"><p>Gemini 3 models return the content as a list of blocks, with the text and a signature. <code>response.text</code> gives only the text, as one string, for every provider.</p></div>
+    </details>
+  </div>
+
+  <section class="yourturn">
+    <span class="yt-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>Your turn</span>
+    <h2 data-toc="Your turn">Ask a local model about a security term</h2>
+    <p>Run a model on your own computer with Ollama. Ask it to explain what a CVE is, in one sentence. Print only the text of the answer, the token count and the reason that the answer stopped. Then set a very small limit and see the reason change.</p>
+
+    <div class="hint">
+      <b>Hint. Import the local model class and create the model like this</b>
+<pre class="code" data-lang="python"><code>from langchain_ollama import ChatOllama
+
+llm = ChatOllama(
+    model="llama3.2:3b",
+    temperature=0,
+    num_predict=128,
+)</code></pre>
+      <ul class="explain" style="--ex:var(--accent)">
+        <li><code>ChatOllama</code> talks to the Ollama program on your own computer. You need no API key and no internet.</li>
+        <li><code>model="llama3.2:3b"</code> must be a model that you downloaded with <code>ollama pull</code> (see <a href="00-start-here.html">chapter 0</a>).</li>
+        <li><code>num_predict</code> sets the maximum length of the answer. It has the same job as <code>max_tokens</code>.</li>
+        <li>Ollama puts the stop reason in <code>response_metadata</code> with the key <code>done_reason</code>.</li>
+      </ul>
+    </div>
+
+    <details class="fold">
+      <summary><span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m16 18 6-6-6-6M8 6l-6 6 6 6"/></svg></span><span class="ft">Show one solution<small>src/01_basic_invoke_ollama.py</small></span></summary>
+      <div class="fold-body">
+<pre class="code" data-lang="python" data-file="src/01_basic_invoke_ollama.py"><code>"""
+Title: Basic LLM Invocation (Ollama)
+uv run python src/01_basic_invoke_ollama.py
+"""
+
+from langchain_ollama import ChatOllama
+
+
+def main():
+    # A local model needs no API key, so this file does not call load_dotenv()
+    llm = ChatOllama(
+        model="llama3.2:3b",
+        temperature=0,
+        num_predict=128,
+    )
+
+    response = llm.invoke("In one sentence, what is a CVE in cybersecurity?")
+    print(f"Response: {response.text}")
+    print(f"Usage Metadata: {response.usage_metadata}")
+    print(f"Done Reason: {response.response_metadata.get('done_reason')}")
+
+    print("\n--- Output Token Limit Example ---")
+    short_model = ChatOllama(model="llama3.2:3b", num_predict=5)
+    short_response = short_model.invoke("Explain every type of malware in detail.")
+    print(f"Short Response: {short_response.text}...")
+    print(f"Done Reason: {short_response.response_metadata.get('done_reason')}")
+
+
+if __name__ == "__main__":
+    main()</code></pre>
+        <p>A possible output. Your words and token counts will be different.</p>
+<pre class="code" data-lang="output"><code>Response: A CVE (Common Vulnerabilities and Exposures) is a unique identifier given to a publicly known security vulnerability in software or hardware.
+Usage Metadata: {'input_tokens': 38, 'output_tokens': 29, 'total_tokens': 67}
+Done Reason: stop
+
+--- Output Token Limit Example ---
+Short Response: There are many types...
+Done Reason: length</code></pre>
+        <p>The first answer ends with <code>stop</code>, so the model finished by itself. The second ends with <code>length</code>, so the limit cut it.</p>
+      </div>
+    </details>
+  </section>
+
+  <h2>Key terms at a glance</h2>
+  <div class="table-wrap">
+    <table class="kw">
+      <thead><tr><th>Term</th><th>Meaning</th></tr></thead>
+      <tbody>
+        <tr><td>LLM</td><td>Large language model. A model that reads and writes text.</td></tr>
+        <tr><td>Model object</td><td>The Python object that holds the model name and settings and sends your requests.</td></tr>
+        <tr><td>invoke()</td><td>Sends one request to the model and waits for the reply.</td></tr>
+        <tr><td>AIMessage</td><td>The reply object of a chat model.</td></tr>
+        <tr><td>content</td><td>The answer in the reply. A string or a list of blocks.</td></tr>
+        <tr><td>text</td><td>Only the text of the answer, as one string.</td></tr>
+        <tr><td>Token</td><td>A small piece of text that the model reads or writes.</td></tr>
+        <tr><td>usage_metadata</td><td>The token count of one call.</td></tr>
+        <tr><td>Finish reason</td><td>Why the answer stopped, for example the end of the answer or the length limit.</td></tr>
+        <tr><td>Maximum output tokens</td><td>The longest answer that the model can write in one call.</td></tr>
+        <tr><td>API key</td><td>The secret that lets your program use a provider.</td></tr>
+        <tr><td>.env</td><td>The file that keeps your keys out of the code.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+</article>
+</main>
+
+<script src="../../assets/js/site.js"></script>
+</body>
+</html>

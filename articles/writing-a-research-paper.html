@@ -1,0 +1,580 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Writing a research paper, from idea to publication · LearnInBits</title>
+  <meta name="description" content="A practical guide to writing a research paper, from the first idea and the right venue to evidence, structure, ethics and submission.">
+  <link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,500;0,8..60,600;1,8..60,500&display=swap">
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <script>try{var t=localStorage.getItem("lib-theme");t=t?JSON.parse(t):(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+</head>
+<body data-root="../" data-page="post" data-kind="article" data-id="writing-a-research-paper">
+
+<main id="main">
+<article>
+
+  <div class="block oneline">
+    <div class="label">In one line</div>
+    <p>A research paper turns your work into knowledge that others can check, trust and build on.</p>
+  </div>
+
+  <p>Many engineers solve problems that nobody solved before, but the solutions stay in internal reports and code. This guide shows how to turn such work into a research paper, from the first idea to responsible publication. It is based on a session that I prepared and presented on 27 February 2026.</p>
+
+  <div class="deck-box">
+    <div class="db-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg></div>
+    <div class="db-text"><b>The original slides</b><span>How to Write a Research Paper, a simple and practical guide (16 slides)</span></div>
+    <div class="db-actions">
+      <a class="btn small primary" href="https://bhardwajabhi.github.io/writing-a-research-paper/">Open the slides</a>
+      <a class="btn small" href="https://bhardwajabhi.github.io/writing-a-research-paper/assets/pdf/writing_a_research_paper.pdf">Download the PDF</a>
+    </div>
+  </div>
+
+  <h2 id="a-story-to-begin">A story to begin</h2>
+  <div class="story">
+    <p class="st-intro">Think of a research paper as a bridge. On one side is your desk, with a result that only you know. On the other side is a whole field of people who could use it. Follow one engineer across that bridge, and note the questions on the way.</p>
+
+    <div class="scene" style="--sc:#2f62c8">
+      <div class="sc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4M11 8v3M11 14h.01"/></svg></div>
+      <div class="sc-body">
+        <div class="sc-time">Step 1</div>
+        <h3>An odd result</h3>
+        <p>You test a tool at work, and it fails in a way that nobody expected. You investigate, and your fix works better than the usual approach. A colleague says that it deserves a paper.</p>
+        <div class="ask"><span class="q">Is this research, or only a good blog post? Where do research ideas really come from?</span><a href="#part-1">Part 1</a> <a href="#part-2">Part 2</a> <a href="#part-5">Part 5</a></div>
+      </div>
+    </div>
+
+    <div class="scene" style="--sc:#7a4fc2">
+      <div class="sc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M3 12h18"/><circle cx="12" cy="12" r="9"/></svg></div>
+      <div class="sc-body">
+        <div class="sc-time">Step 2</div>
+        <h3>The doubt</h3>
+        <p>A paper takes months. Your work already succeeds without one.</p>
+        <div class="ask"><span class="q">What does a paper give you and the community that a working tool does not?</span><a href="#part-3">Part 3</a></div>
+      </div>
+    </div>
+
+    <div class="scene" style="--sc:#0f8a6a">
+      <div class="sc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6l6-3 6 3 6-3v15l-6 3-6-3-6 3z"/><path d="M9 3v15M15 6v15"/></svg></div>
+      <div class="sc-body">
+        <div class="sc-time">Step 3</div>
+        <h3>The map of venues</h3>
+        <p>You find conferences, journals, workshops and book series, each with different rules and timelines.</p>
+        <div class="ask"><span class="q">Which venue fits this work, and does publication cost money?</span><a href="#part-4">Part 4</a></div>
+      </div>
+    </div>
+
+    <div class="scene" style="--sc:#b7791f">
+      <div class="sc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg></div>
+      <div class="sc-body">
+        <div class="sc-time">Step 4</div>
+        <h3>The blank page</h3>
+        <p>You open a new document. Words such as abstract, corresponding author and Digital Object Identifier (DOI) appear in every template.</p>
+        <div class="ask"><span class="q">What are the parts of a paper, and who does what?</span><a href="#part-6">Part 6</a> <a href="#part-7">Part 7</a> <a href="#part-8">Part 8</a></div>
+      </div>
+    </div>
+
+    <div class="scene" style="--sc:#c2552d">
+      <div class="sc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h16M6 16l4-8 4 5 4-9"/></svg></div>
+      <div class="sc-body">
+        <div class="sc-time">Step 5</div>
+        <h3>The first pages and the numbers</h3>
+        <p>You must explain why the problem matters, what others already tried and why your results are real.</p>
+        <div class="ask"><span class="q">How do you frame the problem, prove the claims and report what did not work?</span><a href="#part-9">Part 9</a> <a href="#part-10">Part 10</a> <a href="#part-11">Part 11</a> <a href="#part-12">Part 12</a></div>
+      </div>
+    </div>
+
+    <div class="scene" style="--sc:#5d6b7e">
+      <div class="sc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg></div>
+      <div class="sc-body">
+        <div class="sc-time">Step 6</div>
+        <h3>Ready to submit</h3>
+        <p>The deadline is close. Your figures sit in five folders, and your references live in a text file.</p>
+        <div class="ask"><span class="q">How do you prepare well, and which ethical lines must you never cross?</span><a href="#part-13">Part 13</a> <a href="#part-14">Part 14</a></div>
+      </div>
+    </div>
+  </div>
+  <div class="part-banner" data-n="1" style="--pc:#2f62c8" id="part-1">
+    <div class="pb-tag">Part 1 of 14</div>
+    <h2 id="a-research-paper-defined" data-toc="1. A research paper, defined">A research paper, defined</h2>
+    <p>A structured approach to a contribution.</p>
+  </div>
+  <p>A research paper is a formal document that addresses a real technical problem in a standard, rigorous format. It does not stand alone. It reviews the studies that came before it and gives them credit through citations. On that base, it proposes something new, such as a solution, an improvement or a new perspective on the problem.</p>
+  <p>Its claims rest on evidence, namely data, experiments, analysis or mathematical proof. Experts in the field evaluate it before acceptance. This peer review protects the quality of published work. Finally, it shares the findings, so that the community can build on them.</p>
+  <figure class="diagram">
+    <div class="frame"><img src="../assets/img/diagrams/rp-paper-traits.svg" alt="A research paper in the center with six traits around it. It is formal and structured, built on existing work, offers new insight, has validated claims, is peer reviewed and shares knowledge." loading="lazy"></div>
+    <figcaption>Six traits that make a document a research paper.</figcaption>
+  </figure>
+
+  <div class="part-banner" data-n="2" style="--pc:#7a4fc2" id="part-2">
+    <div class="pb-tag">Part 2 of 14</div>
+    <h2 id="papers-compared-with-other-formats" data-toc="2. Papers compared with other formats">Papers compared with blogs, books and patents</h2>
+    <p>Different formats serve different goals.</p>
+  </div>
+  <p>Blogs and books aim at expression and education, and patents aim at legal protection. A research paper has a different focus, namely the systematic advance of knowledge.</p>
+  <figure class="diagram">
+    <div class="frame"><img src="../assets/img/diagrams/rp-compare.svg" alt="A comparison on focus, structure, validation, review and purpose. Blogs, books and patents aim at expression, education or protection, with flexible structure, opinion-based validation and editorial review or none. A research paper aims at a systematic advance of knowledge, with fixed sections, evidence-based validation and critical peer review, to fill a gap that others can build on." loading="lazy"></div>
+    <figcaption>The same idea can become a blog post, a book chapter, a patent or a paper. Only the paper must prove its claims to expert reviewers.</figcaption>
+  </figure>
+  <ul>
+    <li><strong>Structure.</strong> Blogs and books are flexible, story-driven or arranged in chapters, and they vary with the style of the author. A paper follows a fixed standard, with an introduction, methods, results and a discussion.</li>
+    <li><strong>Validation.</strong> Blogs and books rest on opinion, experience or a broad synthesis, and verification is optional. In a paper, every claim needs proof from data, mathematics or experiments.</li>
+    <li><strong>Review.</strong> Books receive an editorial review for style and fit, and blogs often receive no review at all. Experts evaluate a paper critically for novelty and correctness.</li>
+    <li><strong>Purpose.</strong> Blogs and books entertain, inform broadly or sell. Patents protect an invention legally. A paper fills a specific gap in knowledge and enables others to build on it.</li>
+  </ul>
+
+  <div class="part-banner" data-n="3" style="--pc:#b7791f" id="part-3">
+    <div class="pb-tag">Part 3 of 14</div>
+    <h2 id="reasons-to-write-a-paper" data-toc="3. Reasons to write a paper">Reasons to write a research paper</h2>
+    <p>Personal and professional growth, and a contribution to the field.</p>
+  </div>
+  <figure class="diagram">
+    <div class="frame"><img src="../assets/img/diagrams/rp-reasons.svg" alt="Six benefits lead to impact. Credibility, structured thinking, recognition, career growth, communication skills and a contribution to society." loading="lazy"></div>
+    <figcaption>Six benefits that add up to impact.</figcaption>
+  </figure>
+  <ul>
+    <li><strong>Professional credibility.</strong> A paper shows deep technical knowledge and establishes the author as a trusted expert in the domain.</li>
+    <li><strong>Structured thinking.</strong> Writing trains the ability to approach complex problems systematically, logically and analytically.</li>
+    <li><strong>Recognition and impact.</strong> Citations and awards bring visibility, and the work influences the wider community.</li>
+    <li><strong>Career growth.</strong> Publications open doors to promotions, advanced degrees, speaking invitations and new jobs.</li>
+    <li><strong>Communication skills.</strong> A paper teaches the art of explaining complex technical concepts clearly, concisely and persuasively.</li>
+    <li><strong>A contribution to society.</strong> Meaningful solutions to real problems advance collective human knowledge.</li>
+  </ul>
+
+  <div class="part-banner" data-n="4" style="--pc:#0f8a6a" id="part-4">
+    <div class="pb-tag">Part 4 of 14</div>
+    <h2 id="venues-for-publication" data-toc="4. Venues for publication">Venues for publication</h2>
+    <p>The right venue for the work.</p>
+  </div>
+  <figure class="diagram">
+    <div class="frame"><img src="../assets/img/diagrams/rp-venues.svg" alt="A map of venues by speed of publication and depth of review. Journals are slower with deep review and suit long archival work. Conferences are faster, with talks, feedback and networking. Workshops and symposia suit early ideas and niche topics. Book chapters are invited and give broader context. Major publishers include IEEE, ACM, Springer and Elsevier. Open access venues can charge an article processing charge, and many subscription journals are free." loading="lazy"></div>
+    <figcaption>Venues differ in speed and in the depth of their review.</figcaption>
+  </figure>
+  <ul>
+    <li><strong>Conferences.</strong> Faster publication cycles, measured in months. They also offer live feedback, presentations and networking.</li>
+    <li><strong>Journals.</strong> Deep, rigorous peer review. They suit longer, detailed articles of archival quality.</li>
+    <li><strong>Workshops and symposia.</strong> Ideal for early-stage ideas, work in progress and specific niche topics.</li>
+    <li><strong>Book chapters.</strong> Invited contributions that give broader context in edited volumes or collections.</li>
+    <li><strong>Major publishers.</strong> Reputable homes for technical research include the Institute of Electrical and Electronics Engineers (IEEE), the Association for Computing Machinery (ACM), Springer and Elsevier.</li>
+    <li><strong>Publication fees.</strong> Some venues charge an article processing charge (APC) for open access, while many subscription journals are free for authors.</li>
+  </ul>
+  <div class="block beyond">
+    <div class="label">Beyond the slides</div>
+    <p>Before submission, check that a recognized database such as Scopus or Web of Science indexes the venue. Also check that its scope matches the topic of the paper. A mismatch in scope is a common reason for a quick rejection, even for good work.</p>
+  </div>
+
+  <div class="part-banner" data-n="5" style="--pc:#4f46b5" id="part-5">
+    <div class="pb-tag">Part 5 of 14</div>
+    <h2 id="sources-of-research-ideas" data-toc="5. Sources of research ideas">Sources of research ideas</h2>
+    <p>From observation to innovation.</p>
+  </div>
+  <p>Research starts with curiosity. A question about an odd result or an unsolved problem leads to a gap, and the gap leads to a hypothesis that you can test.</p>
+  <figure class="diagram">
+    <div class="frame"><img src="../assets/img/diagrams/rp-ideas.svg" alt="Curiosity leads to six sources of ideas, namely workplace problems, experimental anomalies, comparisons and benchmarks, performance improvements, gaps in the literature and new frameworks or datasets. They reveal a gap that nobody solved, which becomes a hypothesis to test." loading="lazy"></div>
+    <figcaption>Six common sources of ideas, all leading to a gap and a hypothesis.</figcaption>
+  </figure>
+  <ul>
+    <li><strong>Workplace problems.</strong> Challenges in daily engineering tasks or business processes often reveal real gaps.</li>
+    <li><strong>Experimental anomalies.</strong> Unexpected results or failures during testing can lead to new discoveries when someone investigates them.</li>
+    <li><strong>Comparisons and benchmarks.</strong> A systematic comparison of technologies or tools shows their trade-offs and efficiency.</li>
+    <li><strong>Performance improvements.</strong> Engineers can optimize existing systems for speed, cost, reliability or user experience.</li>
+    <li><strong>Gaps in the literature.</strong> Current studies can miss, ignore or contradict something important.</li>
+    <li><strong>New frameworks.</strong> Novel architectures, methods or datasets can solve complex problems.</li>
+  </ul>
+
+  <div class="part-banner" data-n="6" style="--pc:#a3407a" id="part-6">
+    <div class="pb-tag">Part 6 of 14</div>
+    <h2 id="the-anatomy-of-a-paper" data-toc="6. The anatomy of a paper">The anatomy of a research paper</h2>
+    <p>The standard structure, block by block.</p>
+  </div>
+  <figure class="diagram">
+    <div class="frame"><img src="../assets/img/diagrams/rp-anatomy.svg" alt="A paper page with six blocks. Front matter has the title, authors, affiliations, abstract and keywords. Context and motivation has the introduction, literature review and problem statement. Methodology has the approach, architecture and assumptions. Experiments and data has the setup, data and metrics. Results and discussion has the results, analysis and discussion. Conclusion and references has limitations, future work, the conclusion and references." loading="lazy"></div>
+    <figcaption>Six blocks from the title to the references.</figcaption>
+  </figure>
+  <ol class="steps">
+    <li><strong>Front matter.</strong> The title, the authors, the affiliations, the abstract and the keywords.</li>
+    <li><strong>Context and motivation.</strong> The introduction, the literature review and the problem statement.</li>
+    <li><strong>Methodology.</strong> The approach, the architecture and the assumptions.</li>
+    <li><strong>Experiments and data.</strong> The experimental setup, if there is one, the data and the metrics.</li>
+    <li><strong>Results and discussion.</strong> The results, their analysis and the discussion.</li>
+    <li><strong>Conclusion and references.</strong> The limitations, future work, the conclusion and the references.</li>
+  </ol>
+
+  <div class="part-banner" data-n="7" style="--pc:#c2552d" id="part-7">
+    <div class="pb-tag">Part 7 of 14</div>
+    <h2 id="author-roles" data-toc="7. Author roles">Author roles</h2>
+    <p>The people behind a paper, and the document that they share.</p>
+  </div>
+  <figure class="diagram">
+    <div class="frame"><img src="../assets/img/diagrams/rp-authors.svg" alt="A manuscript in the center. Authors made direct intellectual contributions and are responsible for content and validity. A contributing author helped with parts such as data, code or sections. The corresponding author submits the paper and answers reviewers, editors and readers. The affiliation is the institution where the work was done." loading="lazy"></div>
+    <figcaption>Each role has a different responsibility for the manuscript.</figcaption>
+  </figure>
+  <ul>
+    <li><strong>Authors.</strong> The people who made significant, direct intellectual contributions to the work. They are responsible for the content and the validity of the paper.</li>
+    <li><strong>Contributing author.</strong> A co-author who helped with specific parts, such as data analysis, code or some sections, but who possibly did not lead the whole project.</li>
+    <li><strong>Corresponding author.</strong> The main contact. This person handles the submission, communicates with reviewers and editors, and answers questions from readers after publication.</li>
+    <li><strong>Affiliation.</strong> The institution, university or company where the authors worked when they did the research. It shows where the credit for the work belongs.</li>
+    <li><strong>Manuscript.</strong> The draft of the paper before publication, that is, the document submitted to a journal or a conference for peer review.</li>
+  </ul>
+  <div class="part-banner" data-n="8" style="--pc:#2f62c8" id="part-8">
+    <div class="pb-tag">Part 8 of 14</div>
+    <h2 id="research-terminology" data-toc="8. Research terminology">Research terminology</h2>
+    <p>The language of academic writing.</p>
+  </div>
+  <ul>
+    <li><strong>Abstract.</strong> A concise summary, usually of 150 to 250 words, of the problem, the method, the key results and the conclusions. It helps readers decide if the paper is relevant for them.</li>
+    <li><strong>Keywords.</strong> Three to six specific terms that index the paper in databases. The right keywords help the right audience find the work.</li>
+    <li><strong>Citation and reference.</strong> A citation is the marker in the text, for example [1]. A reference is the full detail of the source, listed at the end of the paper.</li>
+    <li><strong>Bibliography.</strong> A list of all material consulted during the research, even if not directly cited. Most research papers need only a References section.</li>
+    <li><strong>Digital Object Identifier (DOI).</strong> A unique, permanent string of letters and numbers assigned to a digital document, so that the link to the paper never breaks.</li>
+    <li><strong>Peer review.</strong> The quality control in which experts in the field evaluate the work for validity, novelty and clarity before it is accepted for publication.</li>
+  </ul>
+  <figure class="diagram">
+    <div class="frame"><img src="../assets/img/diagrams/rp-citation.svg" alt="A citation is the marker in the text, for example [1]. A reference is the full source at the end of the paper, under References. The DOI, the Digital Object Identifier, is a unique and permanent code for a digital document, so the link never breaks." loading="lazy"></div>
+    <figcaption>A citation points to a reference, and the DOI keeps the reference reachable for good.</figcaption>
+  </figure>
+  <div class="block beyond">
+    <div class="label">Beyond the slides</div>
+    <p><strong>A simple structure for the abstract.</strong> Write one or two sentences for each of four parts. First the problem and its importance, then the approach, then the main result with a number, and last the impact or conclusion. Write the abstract last, when the results are final.</p>
+  </div>
+
+  <div class="part-banner" data-n="9" style="--pc:#7a4fc2" id="part-9">
+    <div class="pb-tag">Part 9 of 14</div>
+    <h2 id="introduction-and-literature-review" data-toc="9. Introduction and literature review">Introduction and literature review</h2>
+    <p>Setting the stage for the contribution.</p>
+  </div>
+  <figure class="diagram">
+    <div class="frame"><img src="../assets/img/diagrams/rp-funnel.svg" alt="On the left, the introduction narrows from the field to the area, to the specific problem and to your contribution. On the right, a gap matrix of speed and accuracy. Method A is fast but inaccurate. Method B is accurate but slow. The gap is a method that is both fast and accurate." loading="lazy"></div>
+    <figcaption>The introduction narrows from the field to the contribution. The literature review finds the gap.</figcaption>
+  </figure>
+  <h3>The introduction</h3>
+  <ul>
+    <li><strong>Build the context.</strong> Start broad with the field, then narrow down to the specific problem. Explain why it matters now.</li>
+    <li><strong>State the stakes.</strong> Describe the consequence if nobody solves the problem, and the reason that current progress is not enough.</li>
+    <li><strong>Define the goals.</strong> List the contributions clearly, for example with "In this paper, we propose...".</li>
+  </ul>
+  <div class="block key">
+    <div class="label">Key idea</div>
+    <p>The last paragraph of the introduction outlines the structure of the paper.</p>
+  </div>
+  <h3>The literature review</h3>
+  <ul>
+    <li><strong>Search systematically.</strong> Do not just list papers. Group them by method, period or theme.</li>
+    <li><strong>Analyze critically.</strong> Identify the gaps, for example "Method A is fast but inaccurate, and Method B is accurate but slow."</li>
+    <li><strong>Synthesize.</strong> Connect the findings and show how the work fills the specific gap that the review identified.</li>
+  </ul>
+  <div class="block remember">
+    <div class="label">Worth remembering</div>
+    <p>The literature review takes the most time of all phases, so keep detailed notes from the start.</p>
+  </div>
+
+  <div class="part-banner" data-n="10" style="--pc:#b7791f" id="part-10">
+    <div class="pb-tag">Part 10 of 14</div>
+    <h2 id="problem-statement-and-methodology" data-toc="10. Problem statement and methodology">Problem statement and methodology</h2>
+    <p>The core of the paper.</p>
+  </div>
+  <figure class="diagram">
+    <div class="frame"><img src="../assets/img/diagrams/rp-problem.svg" alt="A weak problem statement is vague, for example a wish to improve performance. A strong one is precise, scoped and measurable. Then come the hypothesis, the methodology, the justification of choices and reproducibility. If others cannot reproduce the work, it is not science." loading="lazy"></div>
+    <figcaption>A strong problem statement is precise, scoped and measurable. The method must be reproducible.</figcaption>
+  </figure>
+  <h3>Defining the problem</h3>
+  <ul>
+    <li><strong>Identify the gap.</strong> State clearly what existing solutions cannot do, for example "Current methods are slow or inaccurate because...".</li>
+    <li><strong>Write a precise problem statement.</strong> Keep it scoped and measurable. Avoid vague claims such as "we want to improve performance".</li>
+    <li><strong>State the hypothesis.</strong> Say what you expect to find, and state the research questions clearly.</li>
+  </ul>
+  <div class="block key">
+    <div class="label">Key idea</div>
+    <p>A well-defined problem is half solved. Be specific.</p>
+  </div>
+  <h3>Explaining the approach</h3>
+  <ul>
+    <li><strong>Methodology.</strong> Give a step-by-step plan, and explain the architecture, the algorithms or the process flow.</li>
+    <li><strong>Justification.</strong> Defend each choice, such as the dataset and the parameters.</li>
+    <li><strong>Reproducibility.</strong> Give enough detail so that another engineer can rebuild the work from scratch.</li>
+  </ul>
+  <div class="block remember">
+    <div class="label">Worth remembering</div>
+    <p>The golden rule is simple. If others cannot reproduce the work, it is not science.</p>
+  </div>
+
+  <div class="part-banner" data-n="11" style="--pc:#0f8a6a" id="part-11">
+    <div class="pb-tag">Part 11 of 14</div>
+    <h2 id="experiments-results-and-evaluation" data-toc="11. Experiments, results and evaluation">Experiments, results and evaluation</h2>
+    <p>Proving the claims with data.</p>
+  </div>
+  <figure class="diagram">
+    <div class="frame"><img src="../assets/img/diagrams/rp-evaluation.svg" alt="Four steps. Setup and reproducibility, to be precise. Datasets and baselines, for a fair comparison. Measurable outcomes, to quantify results. Honest reporting, to build trust. A vague claim says better and faster. A measurable claim says 15 percent faster on a named dataset." loading="lazy"></div>
+    <figcaption>Four steps with their purposes, plus the difference between a vague and a measurable claim.</figcaption>
+  </figure>
+  <ol class="steps">
+    <li><strong>Setup and reproducibility (be precise).</strong> Describe the experimental setup in detail, with the hardware, the software versions and the parameters. Another person must be able to repeat the experiment and get the same results.</li>
+    <li><strong>Datasets and baselines (fair comparison).</strong> Explain why the test data is suitable. Compare the results against standard state-of-the-art baselines to show the relative performance.</li>
+    <li><strong>Measurable outcomes (quantify the results).</strong> Avoid vague claims such as "better" or "faster". Use concrete numbers, tables and graphs. Quantify each improvement, for example "15% faster processing".</li>
+    <li><strong>Honest reporting (build trust).</strong> Report also what did not work. Failed attempts and unexpected results add credibility and help others avoid dead ends.</li>
+  </ol>
+  <div class="block remember">
+    <div class="label">Worth remembering</div>
+    <p>Transparency is the golden rule of research. If the results are good only under very specific, hidden conditions, the research is weak.</p>
+  </div>
+
+  <div class="part-banner" data-n="12" style="--pc:#4f46b5" id="part-12">
+    <div class="pb-tag">Part 12 of 14</div>
+    <h2 id="discussion-limitations-and-future-work" data-toc="12. Discussion, limitations and future work">Discussion, limitations and future work</h2>
+    <p>Interpreting the results and showing the path forward.</p>
+  </div>
+  <figure class="diagram">
+    <div class="frame"><img src="../assets/img/diagrams/rp-discussion.svg" alt="Five steps. Interpret the meaning in the real world. Compare with prior work. Acknowledge limitations such as data size, scope and assumptions. Address validity threats such as biases and errors. Suggest concrete future work. Openness about what did not work builds trust." loading="lazy"></div>
+    <figcaption>From the meaning of the results to the next steps.</figcaption>
+  </figure>
+  <ul>
+    <li><strong>Interpret the findings.</strong> Explain what the results mean in the real world. Do not only list numbers. Explain the reasons and the mechanisms behind them.</li>
+    <li><strong>Compare with prior work.</strong> Place the work in context. Show where the approach performs better than existing methods and where it falls behind.</li>
+    <li><strong>Acknowledge the limitations.</strong> Be honest about constraints such as the size of the dataset, the scope or specific assumptions. Perfection is not required, but honesty is.</li>
+    <li><strong>Address threats to validity.</strong> Explain possible biases or errors in the study and the steps taken to reduce them.</li>
+    <li><strong>Suggest future work.</strong> Propose concrete next steps, such as the experiments that others can run and the gaps that remain open.</li>
+    <li><strong>Embrace transparency.</strong> Open discussion of what did not work shows research maturity and builds trust in the contribution.</li>
+  </ul>
+  <div class="block beyond">
+    <div class="label">Beyond the slides</div>
+    <p><strong>Common reasons for rejection.</strong> Reviewers often reject a paper for a contribution that is not new or an evaluation without fair baselines. Other reasons are claims that the data does not support, a scope that does not match the venue and poor writing or structure. Each part of this guide addresses one of these reasons.</p>
+  </div>
+
+  <div class="part-banner" data-n="13" style="--pc:#a3407a" id="part-13">
+    <div class="pb-tag">Part 13 of 14</div>
+    <h2 id="preparation-before-writing" data-toc="13. Preparation before writing">Preparation before writing</h2>
+    <p>Preparation is 80% of the work.</p>
+  </div>
+  <figure class="diagram">
+    <div class="frame"><img src="../assets/img/diagrams/rp-prep.svg" alt="Six steps. Gather materials in one place. Create a master outline. Use the publisher template from the start. Choose a writing tool, Word for teamwork or LaTeX and Overleaf for math. Use a reference manager such as Zotero, Mendeley or EndNote. Use version control and daily backups. Tip, start with the figures and tables." loading="lazy"></div>
+    <figcaption>Six systematic steps before the first paragraph.</figcaption>
+  </figure>
+  <ol class="steps">
+    <li><strong>Gather the materials (consolidate first).</strong> Collect all raw data, processed results, figures, logs and notes in one central place. Do not start to write until the evidence is ready.</li>
+    <li><strong>Create a master outline (structure the thoughts).</strong> Draft a bulleted outline for every section. Decide exactly where each figure and table goes before you write a single paragraph.</li>
+    <li><strong>Use the publisher template (format early).</strong> Download the official template, for example from IEEE, ACM or Springer, at once. Writing directly in the correct format saves hours of reformatting later.</li>
+    <li><strong>Choose the tools (pick wisely).</strong> Microsoft Word is easier for collaboration. LaTeX or Overleaf is better for mathematics and professional typesetting. Choose one and keep it.</li>
+    <li><strong>Manage the references (automate citing).</strong> Use a tool such as Zotero, Mendeley or EndNote. Never type citations by hand, because it causes errors and makes a change of style tedious.</li>
+    <li><strong>Control the versions (back up often).</strong> Save versions systematically, for example v1_draft and v2_review, and back up the work daily to cloud storage such as Google Drive or GitHub.</li>
+  </ol>
+  <div class="block key">
+    <div class="label">Key idea</div>
+    <p>Start with the figures and the tables. The whole story of the paper can often grow around the visual results.</p>
+  </div>
+  <div class="block beyond">
+    <div class="label">Beyond the slides</div>
+    <p><strong>Replies to reviewers.</strong> Thank the reviewers, then answer every comment in order. Quote the comment, describe the change and give its location in the revised paper. When you disagree, explain the reason politely, with evidence.</p>
+  </div>
+
+  <div class="part-banner" data-n="14" style="--pc:#c2552d" id="part-14">
+    <div class="pb-tag">Part 14 of 14</div>
+    <h2 id="ethics-and-responsible-publishing" data-toc="14. Ethics and responsible publishing">Ethics and responsible publishing</h2>
+    <p>The pillars of ethical research.</p>
+  </div>
+  <figure class="diagram">
+    <div class="frame"><img src="../assets/img/diagrams/rp-ethics.svg" alt="Four pillars hold up responsible research, namely no plagiarism, no self-plagiarism, proper citation and an understanding of copyright. Below them, research is a chain of contributing knowledge, thinking systematically, experimenting honestly, writing clearly and publishing responsibly." loading="lazy"></div>
+    <figcaption>Four pillars hold up responsible research, and research itself is a chain of five habits.</figcaption>
+  </figure>
+  <ul>
+    <li><strong>No plagiarism.</strong> Never use the words, ideas or figures of others without clear credit. Plagiarism destroys credibility and can end careers.</li>
+    <li><strong>No self-plagiarism.</strong> Do not recycle your own published text or data as new. Each paper must offer a new contribution.</li>
+    <li><strong>Proper citation.</strong> Cite the original sources accurately. It shows respect for the community and proves that you did your homework.</li>
+    <li><strong>Copyright and terms.</strong> Understand what you sign. Know the difference between a transfer of copyright to a publisher and an open access license.</li>
+  </ul>
+  <p>Research is more than the writing of papers. It is a chain of five habits, namely contributing knowledge, thinking systematically, experimenting honestly, writing clearly and publishing responsibly.</p>
+  <div class="block oneline" data-ste="skip">
+    <div class="label">In one line</div>
+    <p>Today, we are inspired by the work of others. Tomorrow, our work may inspire someone else.</p>
+  </div>
+  <h2 id="my-takeaways">My takeaways</h2>
+  <ol class="takeaways">
+    <li><b>A paper is a contribution, not a report.</b> It fills a specific gap and lets others build on the result.</li>
+    <li><b>Ideas come from daily work.</b> Odd results, slow systems and missing comparisons are all starting points for research.</li>
+    <li><b>A precise problem is half the solution.</b> Scope it, make it measurable and state the hypothesis.</li>
+    <li><b>Evidence carries the claims.</b> Fair baselines, concrete numbers and honest reports of failure build trust.</li>
+    <li><b>Reproducibility is the test of science.</b> Another engineer must be able to rebuild the work from the paper alone.</li>
+    <li><b>Preparation is most of the work.</b> Materials, outline, template, tools, references and versions come before the first paragraph.</li>
+    <li><b>Ethics comes first.</b> Credit every source, never recycle old work as new and understand what you sign.</li>
+  </ol>
+
+  <h2 id="writing-the-paper-a-decision-guide">Writing the paper, a decision guide</h2>
+  <p>Two flowcharts bring the guide together. The first selects a venue. The second checks a draft before submission, and every failed check names the part that helps.</p>
+  <h3>Choosing a venue</h3>
+  <figure class="diagram">
+    <div class="frame"><img src="../assets/img/diagrams/rp-guide-venue.svg" alt="If the work is at an early stage, choose a workshop or symposium. If you need fast publication and live feedback, choose a conference. If the work is long, detailed and of archival value, choose a journal. If an editor invited a contribution with broader context, write a book chapter. Then check the publisher, the indexing, the fees and the scope, and write in its template from day one." loading="lazy"></div>
+    <figcaption>Match the stage and the nature of the work to a venue, then check the venue itself.</figcaption>
+  </figure>
+  <h3>Readiness check before submission</h3>
+  <figure class="diagram">
+    <div class="frame"><img src="../assets/img/diagrams/rp-guide-ready.svg" alt="A draft is ready when the problem is precise, the related work shows a clear gap, another engineer can reproduce the method, claims are measured against fair baselines, limitations and failed attempts are reported, all sources are cited without reused text and the paper follows the template of the venue. Each failed check names the part that helps." loading="lazy"></div>
+    <figcaption>Seven checks between a complete draft and a confident submission.</figcaption>
+  </figure>
+
+  <h2 id="the-whole-guide-on-one-page">The whole guide on one page</h2>
+  <div class="recap-grid">
+    <section style="--pc:#2f62c8">
+      <h4>The basics</h4>
+      <ul>
+        <li>A paper is formal, built on prior work, new, validated, peer reviewed and shared.</li>
+        <li>Unlike blogs, books and patents, it must prove its claims to experts.</li>
+        <li>It brings credibility, structured thinking, recognition, career growth, communication skills and a contribution to society.</li>
+      </ul>
+    </section>
+    <section style="--pc:#0f8a6a">
+      <h4>Ideas and venues</h4>
+      <ul>
+        <li>Ideas come from workplace problems, anomalies, benchmarks, improvements, literature gaps and new frameworks.</li>
+        <li>Conferences are fast, journals are deep, workshops suit early work and book chapters are invited.</li>
+        <li>Open access can carry an APC.</li>
+      </ul>
+    </section>
+    <section style="--pc:#a3407a">
+      <h4>Structure and terms</h4>
+      <ul>
+        <li>Six blocks, from the front matter to the conclusion and references.</li>
+        <li>Authors, contributing authors, the corresponding author and the affiliation.</li>
+        <li>Abstract, keywords, citation, reference, bibliography, DOI and peer review.</li>
+      </ul>
+    </section>
+    <section style="--pc:#b7791f">
+      <h4>Writing the core</h4>
+      <ul>
+        <li>The introduction narrows from the field to the contribution.</li>
+        <li>The literature review groups, criticizes and synthesizes.</li>
+        <li>The problem is precise and measurable, and the method is reproducible.</li>
+        <li>Results use fair baselines and concrete numbers, and report failures honestly.</li>
+      </ul>
+    </section>
+    <section style="--pc:#4f46b5">
+      <h4>Discussion and preparation</h4>
+      <ul>
+        <li>Interpret, compare, admit limitations, address validity and suggest future work.</li>
+        <li>Gather, outline, use the template, pick tools, manage references and keep versions.</li>
+      </ul>
+    </section>
+    <section style="--pc:#c2552d">
+      <h4>Ethics</h4>
+      <ul>
+        <li>No plagiarism, no self-plagiarism, proper citation and an understanding of copyright.</li>
+        <li>Contribute, think, experiment, write and publish responsibly.</li>
+      </ul>
+    </section>
+  </div>
+
+  <h2 id="check-your-learning">Check your learning</h2>
+  <p>Select a question to reveal the answer.</p>
+  <div class="quiz">
+    <details>
+      <summary><span class="qq">A blog post explains a new technique well but has no experiments. Is it a research paper?</span></summary>
+      <div class="ans"><p>No. A research paper must validate its claims with data, experiments, analysis or proof. It also passes peer review (Parts 1 and 2).</p></div>
+    </details>
+    <details>
+      <summary><span class="qq">Your work is at an early stage, and you want feedback from experts. Which venue fits best?</span></summary>
+      <div class="ans"><p>A workshop or a symposium, which suits early ideas and work in progress (Part 4).</p></div>
+    </details>
+    <details>
+      <summary><span class="qq">A venue for open access asks for a fee. What is this fee called?</span></summary>
+      <div class="ans"><p>An article processing charge (APC). Many subscription journals do not charge authors (Part 4).</p></div>
+    </details>
+    <details>
+      <summary><span class="qq">An unexpected failure appears during testing. Can it start a research idea?</span></summary>
+      <div class="ans"><p>Yes. Experimental anomalies, once investigated, often lead to new discoveries (Part 5).</p></div>
+    </details>
+    <details>
+      <summary><span class="qq">In which block of a paper do the abstract and the keywords appear?</span></summary>
+      <div class="ans"><p>In the front matter, with the title, the authors and the affiliations (Part 6).</p></div>
+    </details>
+    <details>
+      <summary><span class="qq">Who answers the reviewers and the editors during submission?</span></summary>
+      <div class="ans"><p>The corresponding author, who also answers questions from readers after publication (Part 7).</p></div>
+    </details>
+    <details>
+      <summary><span class="qq">The marker [1] in the text and the full source at the end have different names. What are they?</span></summary>
+      <div class="ans"><p>The marker is a citation, and the full source detail is a reference (Part 8).</p></div>
+    </details>
+    <details>
+      <summary><span class="qq">A literature review lists twenty papers one after another. What is missing?</span></summary>
+      <div class="ans"><p>Grouping by method, period or theme, a critical analysis of the gaps, and a synthesis that shows how the work fills one gap (Part 9).</p></div>
+    </details>
+    <details>
+      <summary><span class="qq">Is "we want to improve performance" a good problem statement?</span></summary>
+      <div class="ans"><p>No. It is vague. A good statement is precise, scoped and measurable. It says what current methods cannot do (Part 10).</p></div>
+    </details>
+    <details>
+      <summary><span class="qq">Your method works only on one special dataset, and the paper does not say so. Where is the problem?</span></summary>
+      <div class="ans"><p>Transparency. Results that are good only under hidden conditions make the research weak. Report the conditions and the limitations (Parts 11 and 12).</p></div>
+    </details>
+    <details>
+      <summary><span class="qq">Why download the publisher template before writing?</span></summary>
+      <div class="ans"><p>Writing directly in the correct format saves hours of reformatting later (Part 13).</p></div>
+    </details>
+    <details>
+      <summary><span class="qq">You reuse a full section of your earlier paper in a new paper without a note. Is that acceptable?</span></summary>
+      <div class="ans"><p>No. It is self-plagiarism. Each paper must offer a new contribution, and the author must cite the earlier work (Part 14).</p></div>
+    </details>
+  </div>
+
+  <h2 id="key-terms">Key terms</h2>
+  <div class="table-wrap">
+    <table class="kw">
+      <thead><tr><th>Term</th><th>Meaning</th></tr></thead>
+      <tbody>
+        <tr><td>Abstract</td><td>A summary of 150 to 250 words of the problem, the method, the results and the conclusions.</td></tr>
+        <tr><td>Affiliation</td><td>The institution where the authors did the work.</td></tr>
+        <tr><td>Article processing charge (APC)</td><td>A fee that some open access venues charge for publication.</td></tr>
+        <tr><td>Baseline</td><td>A standard method that new results are compared against.</td></tr>
+        <tr><td>Bibliography</td><td>All material consulted, even if not cited.</td></tr>
+        <tr><td>Citation</td><td>The marker in the text that points to a source, for example [1].</td></tr>
+        <tr><td>Corresponding author</td><td>The main contact for editors, reviewers and readers.</td></tr>
+        <tr><td>Digital Object Identifier (DOI)</td><td>A permanent identifier that keeps the link to a paper working.</td></tr>
+        <tr><td>Hypothesis</td><td>The expected answer to a research question, stated before the test.</td></tr>
+        <tr><td>Keywords</td><td>Three to six terms that index the paper in databases.</td></tr>
+        <tr><td>Manuscript</td><td>The draft of a paper before publication.</td></tr>
+        <tr><td>Open access</td><td>Publication that anybody can read without a subscription.</td></tr>
+        <tr><td>Peer review</td><td>Evaluation by experts for validity, novelty and clarity before acceptance.</td></tr>
+        <tr><td>Reference</td><td>The full detail of a source, listed at the end of the paper.</td></tr>
+        <tr><td>Reproducibility</td><td>The ability of others to repeat the work and get the same results.</td></tr>
+        <tr><td>Self-plagiarism</td><td>The reuse of your own published text or data as if it were new.</td></tr>
+        <tr><td>Threat to validity</td><td>A possible bias or error that can weaken the conclusions.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2 id="my-published-research">My published research</h2>
+  <section class="pub-card" data-ste="skip" aria-label="Published paper">
+    <div class="pc-spine" aria-hidden="true"></div>
+    <div class="pc-body">
+      <div class="pc-kicker">Published in Springer proceedings</div>
+      <h3 class="pc-title">A Hybrid Machine Learning Approach for Detection of Malicious Android Apps</h3>
+      <p class="pc-authors">Sunil Kumar Poshala, B. Abhishek, Krishna Chaithanya Manikonda, Mahesh Patil and Lakshmi Eswari P. Reddy</p>
+      <p class="pc-venue">Proceedings of the Sixth International Conference on Advances in Computer Engineering and Communication Systems (ICACECS 2025), Volume 1. Smart Innovation, Systems and Technologies (SIST), volume 488, Springer.</p>
+      <ul class="pc-chips">
+        <li>ICACECS 2025</li><li>Springer</li><li>SIST 488</li><li>Scopus-indexed series</li>
+      </ul>
+      <details class="pc-abstract">
+        <summary>Abstract</summary>
+        <blockquote><p>With the rapid proliferation of mobile platforms, particularly Android, smart-phones have become integral to critical domains such as banking, education, health, e-commerce etc. This widespread adoption, however, has also made mobile devices attractive targets for malware attacks. Detecting such attacks is increasingly complex due to the varied levels of access permissions granted to applications, as well as the diverse metadata that must be analyzed across app environments. To address these challenges, we propose a hybrid Machine Learning (ML)-based system capable of detecting malicious Android applications on both mobile end through light weight model and server end through comprehensive model. By leveraging curated datasets, comprehensive feature sets, and advanced ML algorithms, the proposed model aims to enhance detection accuracy while minimizing false positives. The mobile-end model facilitates lightweight, real-time detection and transmits selected APKs to the server-end for in-depth analysis, enabling a comprehensive threat report using richer feature sets. Together, these components form a scalable and adaptive security framework contributing to a more resilient and secure mobile ecosystem.</p></blockquote>
+      </details>
+      <ul class="pc-keywords" aria-label="Keywords">
+        <li>Android security</li><li>Malware Detection</li><li>Machine Learning (ML)</li><li>Hybrid Model</li><li>Mobile-end Analysis</li><li>Server-end Analysis</li><li>Lightweight ML Model</li>
+      </ul>
+      <div class="pc-actions">
+        <a class="btn primary" href="https://link.springer.com/chapter/10.1007/978-3-032-22114-8_38">Read on SpringerLink</a>
+        <button class="btn ghost" type="button" data-copy="S. K. Poshala, B. Abhishek, K. C. Manikonda, M. Patil and L. E. P. Reddy, &quot;A Hybrid Machine Learning Approach for Detection of Malicious Android Apps,&quot; in Proc. 6th Int. Conf. Advances in Computer Engineering and Communication Systems (ICACECS 2025), Smart Innovation, Systems and Technologies, vol. 488. Springer. doi: 10.1007/978-3-032-22114-8_38.">Copy citation</button>
+        <span class="pc-doi">DOI 10.1007/978-3-032-22114-8_38</span>
+      </div>
+    </div>
+  </section>
+
+  <p class="closing-note">Thank you for reading. I hope this guide helps you turn your ideas into meaningful research contributions. Keep exploring, keep questioning and keep publishing.</p>
+  <div class="the-end" data-ste="skip">That's all, folks</div>
+
+</article>
+</main>
+
+<script src="../assets/js/site.js"></script>
+</body>
+</html>

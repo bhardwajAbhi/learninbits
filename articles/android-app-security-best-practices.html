@@ -1,0 +1,694 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Android app security best practices · LearnInBits</title>
+  <meta name="description" content="Practices that keep an Android app strong against modern threats, from code and storage to components, devices and the network.">
+  <link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,500;0,8..60,600;1,8..60,500&display=swap">
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <script>try{var t=localStorage.getItem("lib-theme");t=t?JSON.parse(t):(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+</head>
+<body data-root="../" data-page="post" data-kind="article" data-id="android-app-security-best-practices">
+
+<main id="main">
+<article>
+
+  <div class="block oneline">
+    <div class="label">In one line</div>
+    <p>A secure Android app protects its code, its data, its doors and its connections. It checks all of them again before each release.</p>
+  </div>
+
+  <p>An Android app runs on a device that you do not control, in the hands of people that you do not know. Some of them are curious, and a few of them are hostile. This article collects the practices that make an app strong against modern threats. Each practice comes with the risk behind it, a real-life comparison and the steps or code that put it into effect.</p>
+
+  <h2 id="a-story-to-begin">A story to begin</h2>
+  <div class="story">
+    <p class="st-intro">Think of your app as a small shop in a busy market. Customers trust it with their money and their details. Walk through one day in the life of the shop, and note the questions on the way.</p>
+
+    <div class="scene" style="--sc:#2f62c8">
+      <div class="sc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></div>
+      <div class="sc-body">
+        <div class="sc-time">Morning</div>
+        <h3>The shop opens</h3>
+        <p>You unlock the front door. Your recipes hang on the wall, and the key to the cash box sits under the doormat. Any visitor can read the recipes and lift the mat.</p>
+        <div class="ask"><span class="q">Can a stranger read the code of my app? Where can a secret key live safely?</span><a href="#part-1">Part 1</a></div>
+      </div>
+    </div>
+
+    <div class="scene" style="--sc:#0f8a6a">
+      <div class="sc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16v13H4zM4 7l2-3h12l2 3M9 12h6"/></svg></div>
+      <div class="sc-body">
+        <div class="sc-time">Late morning</div>
+        <h3>The back room</h3>
+        <p>Customer cards go into boxes in the back room. Some boxes stand in the shared corridor. A helper writes every order, with names and card numbers, into a notebook on the counter.</p>
+        <div class="ask"><span class="q">Which storage on the phone is private? Can other people read my logs?</span><a href="#part-2">Part 2</a></div>
+      </div>
+    </div>
+
+    <div class="scene" style="--sc:#7a4fc2">
+      <div class="sc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="1"/><circle cx="15" cy="12" r="1"/></svg></div>
+      <div class="sc-body">
+        <div class="sc-time">Noon</div>
+        <h3>The side doors</h3>
+        <p>The shop has a side door for deliveries, and nobody locked it. A loudspeaker announces each order to the whole street. A stranger hands over a note that changes the order book.</p>
+        <div class="ask"><span class="q">Can another app call parts of my app? Can input from a user attack my database?</span><a href="#part-3">Part 3</a></div>
+      </div>
+    </div>
+
+    <div class="scene" style="--sc:#b7791f">
+      <div class="sc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4-6 8-6s7 2 8 6"/></svg></div>
+      <div class="sc-body">
+        <div class="sc-time">Afternoon</div>
+        <h3>A strange visitor</h3>
+        <p>A customer arrives with a payment terminal that he built himself. He also asks for the home address of every other customer.</p>
+        <div class="ask"><span class="q">Can I trust a rooted device? How much personal data do I really need?</span><a href="#part-4">Part 4</a></div>
+      </div>
+    </div>
+
+    <div class="scene" style="--sc:#c2552d">
+      <div class="sc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12h13M12 6l6 6-6 6M21 5v14"/></svg></div>
+      <div class="sc-body">
+        <div class="sc-time">Evening</div>
+        <h3>The deliveries</h3>
+        <p>Couriers carry orders across town in open baskets. The warehouse door has no lock, and the order slips use a secret code that every child knows.</p>
+        <div class="ask"><span class="q">How do I protect data on the network? How do I lock my backend?</span><a href="#part-5">Part 5</a></div>
+      </div>
+    </div>
+
+    <div class="scene" style="--sc:#5d6b7e">
+      <div class="sc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11l3 3 8-8M20 12v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h9"/></svg></div>
+      <div class="sc-body">
+        <div class="sc-time">Closing time</div>
+        <h3>The last round</h3>
+        <p>Before you leave, you walk through the shop with a checklist. Every door, every box and every light gets one look.</p>
+        <div class="ask"><span class="q">What must I check before each release?</span><a href="#part-6">Part 6</a></div>
+      </div>
+    </div>
+  </div>
+
+  <h2 id="overview">Six layers of defense</h2>
+  <p>Each scene of the story matches one layer of defense. An attacker must break through all of them, so a weak layer does not decide the outcome on its own.</p>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../assets/img/diagrams/ab-overview.svg" alt="Rings around the app show five layers. Ring 1 is the code and its secrets, ring 2 is data on the device, ring 3 is the app boundaries, ring 4 is the device and the user and ring 5 is the network and the backend. A list on the right names each layer with its topics. Code and secrets covers R8, API keys and libraries. Data covers storage, encryption and logs. Boundaries cover components, permissions, WebView and input. Device and user covers integrity checks and personal data. Network and backend covers HTTPS, Firebase, messages and transfers. A sixth item is a release checklist." loading="lazy"></div>
+    <figcaption>Each layer protects the app from a different direction.</figcaption>
+  </figure>
+
+  <nav class="part-grid" aria-label="Parts of this article">
+    <a href="#part-1" style="--pc:#2f62c8"><b>Part 1</b><span>Protect the code and its secrets</span></a>
+    <a href="#part-2" style="--pc:#0f8a6a"><b>Part 2</b><span>Keep data private on the device</span></a>
+    <a href="#part-3" style="--pc:#7a4fc2"><b>Part 3</b><span>Guard the boundaries of the app</span></a>
+    <a href="#part-4" style="--pc:#b7791f"><b>Part 4</b><span>Trust the device and the user with care</span></a>
+    <a href="#part-5" style="--pc:#c2552d"><b>Part 5</b><span>Secure every connection</span></a>
+    <a href="#part-6" style="--pc:#5d6b7e"><b>Part 6</b><span>A checklist for each release</span></a>
+  </nav>
+
+  <div class="part-banner" data-n="1" style="--pc:#2f62c8" id="part-1">
+    <div class="pb-tag">Part 1 of 6</div>
+    <h2 id="protect-the-code" data-toc="1. Protect the code and its secrets">Protect the code and its secrets</h2>
+    <p>Shrink and rename the code, keep secrets off the device and keep libraries current.</p>
+  </div>
+
+  <h3>Turn on shrinking and obfuscation</h3>
+  <p>An Android Package (APK) is a ZIP file. Free tools turn its bytecode back into readable Java or Kotlin within minutes. Readable class names such as <code>PaymentManager</code> and <code>verifyCard</code> show an attacker exactly where to look.</p>
+  <p><strong>R8</strong> is the code shrinker of the Android build. It removes unused classes and methods, renames the rest to short names without meaning and optimizes the bytecode. The result is a smaller app that is much harder to understand.</p>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../assets/img/diagrams/ab-r8.svg" alt="Before R8, the APK holds readable class names such as PaymentManager and verifyCard, plus unused helpers and a debug screen. R8 shrinks unused code, renames classes and optimizes the rest. After R8, the class is called a, its members are a and the debug screen is gone. A bar chart shows that the release APK becomes smaller and its names carry no meaning." loading="lazy"></div>
+    <figcaption>R8 removes what the app does not use and renames what it keeps.</figcaption>
+  </figure>
+
+<pre class="code" data-lang="kotlin" data-file="app/build.gradle.kts"><code>android {
+    buildTypes {
+        release {
+            isMinifyEnabled = true      // shrink, rename and optimize code
+            isShrinkResources = true    // remove unused resources
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+        }
+    }
+}</code></pre>
+  <p>Test the release build carefully. Code that uses reflection, serialization or the Java Native Interface (JNI) can break when R8 renames a class. Add a <code>-keep</code> rule for exactly those classes and for nothing more. Keep the <code>mapping.txt</code> file of each release, because you need it to read the stack traces of crashes.</p>
+  <div class="block key">
+    <div class="label">Key idea</div>
+    <p>Obfuscation slows an attacker down. It does not hide a secret. Never ship a production app without R8, and never trust R8 to protect a key.</p>
+  </div>
+
+  <h3>Keep API keys off the device</h3>
+  <p>Apps use keys for maps, payments, analytics and many other services. A key in the app is a key in the hands of every user. A string in Kotlin code appears in a decompiler at once. A string in native code from the Native Development Kit (NDK) takes a little longer. The attacker needs the <code>strings</code> tool or a runtime hook. Both places only delay the attacker.</p>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../assets/img/diagrams/ab-api-keys.svg" alt="On the left, three places for a key, from weak to strong. A key in Java or Kotlin code shows up in a decompiler in seconds. A key in native code is still found with the strings tool or a runtime hook. A key only on your server never reaches the app, and the server calls the API. On the right, a key that must ship in the app, such as a Maps key, gets restrictions in the console. These are an application restriction to Android apps, the package name, the SHA-1 certificate fingerprint of the signing key, an API restriction to only the APIs in use, and quotas with alerts." loading="lazy"></div>
+    <figcaption>Only a key that never reaches the device is truly safe.</figcaption>
+  </figure>
+
+  <p>The real protection is architecture.</p>
+  <ul>
+    <li><strong>Secret keys stay on your server.</strong> The app calls your own backend with the token of the signed-in user. The backend checks the user, adds the secret key and calls the paid or private service. A payment key, a key for a large language model or a database password belongs here.</li>
+    <li><strong>Public keys get restrictions.</strong> Some keys must ship in the app, for example a key for a map view. Restrict such a key in the Google Cloud console to Android apps, to your package name and to the SHA-1 fingerprint of your signing certificate. Also restrict it to the few APIs that the app uses, and set quotas and alerts.</li>
+    <li><strong>Keys rotate.</strong> If a key leaks, replace it at once. A server-side design lets you change it without a new release of the app.</li>
+    <li><strong>Keys stay out of the repository.</strong> Keep them in a local properties file or in a secrets manager of your build system, never in version control.</li>
+  </ul>
+  <p>With the restriction in place, a stolen key works only in requests that carry your package name and certificate fingerprint. An attacker can still copy both values into a crafted request, so restrictions reduce abuse but do not replace a server for real secrets.</p>
+
+  <h3>Keep your dependencies current</h3>
+  <p>Most code in a modern app comes from libraries. An old library version can carry a known weakness that a newer version already fixed. Attackers search for apps with such versions, because the weakness and often a working exploit are public.</p>
+  <ul>
+    <li>Update libraries, the Android Gradle Plugin and Kotlin on a regular schedule.</li>
+    <li>Let a tool such as Dependabot or Renovate open pull requests for new versions.</li>
+    <li>Read the release notes for security fixes, and give them priority.</li>
+    <li>Check the Google Play SDK Index for warnings about the SDKs that you use.</li>
+    <li>Keep the target API level current. Each new level turns on more protections of the platform, and Google Play requires a recent level for updates.</li>
+    <li>Remove libraries that the app no longer uses. Unused code is attack surface without any benefit.</li>
+  </ul>
+
+  <div class="part-banner" data-n="2" style="--pc:#0f8a6a" id="part-2">
+    <div class="pb-tag">Part 2 of 6</div>
+    <h2 id="keep-data-private" data-toc="2. Keep data private on the device">Keep data private on the device</h2>
+    <p>Choose the right storage, encrypt what is sensitive and keep secrets out of the logs.</p>
+  </div>
+
+  <h3>Use internal storage for sensitive data</h3>
+  <p>Every app has its own internal storage folder. Its path contains the package name of the app, and the Linux user of the app owns it. Files that the app creates there with the default <code>MODE_PRIVATE</code> are readable only by that app. The device also encrypts this storage at rest, and Android deletes it when the user removes the app.</p>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../assets/img/diagrams/ab-storage-map.svg" alt="Internal app storage under /data/data/&lt;package&gt; can be read only by your app, is encrypted at rest by the device and is removed at uninstall. Use it for all private data. App-specific external storage under /sdcard/Android/data/&lt;package&gt; is blocked for other apps on Android 11 and later, can sit on a removable card and is removed at uninstall. Encrypt data before you write it there. Shared storage such as Pictures, Downloads and Documents can be read by the user and by apps with media or file access and stays after uninstall. Never use it for private data." loading="lazy"></div>
+    <figcaption>Three storage areas with three very different groups of readers.</figcaption>
+  </figure>
+
+<pre class="code" data-lang="kotlin" data-file="Internal storage"><code>// Private to this app. Other apps cannot open it.
+context.openFileOutput("session.json", Context.MODE_PRIVATE).use { out -&gt;
+    out.write(sessionJson.toByteArray())
+}
+
+// Also private: context.filesDir, context.cacheDir,
+// SharedPreferences, DataStore and Room databases.</code></pre>
+  <p>Never use the old modes <code>MODE_WORLD_READABLE</code> or <code>MODE_WORLD_WRITEABLE</code>. Modern Android throws an exception for them. To share one file with another app, use a <code>FileProvider</code> and grant access to that file only.</p>
+
+  <h3>Encrypt data outside internal storage</h3>
+  <p>Large files such as photos and videos sometimes go to external storage. The folder of the app on external storage is closed to other apps from Android 11 on. It can still sit on a removable card, and it gets no app-specific encryption. Shared folders such as Pictures and Downloads are open to the user and to apps with media or file access. Files there also remain after the user removes the app.</p>
+  <p>Encrypt each sensitive file before you write it outside internal storage. Store the initialization vector (IV), a fresh random value, next to the ciphertext. Use the Advanced Encryption Standard (AES) with a 256-bit key in Galois/Counter Mode (GCM). GCM keeps the data secret and also detects any change to it. This detection is the check of validity that every file from external storage needs before the app uses it.</p>
+  <p>The key comes from the <strong>Android Keystore</strong>. The Keystore creates the key inside the system, and on most devices inside secure hardware. The app can use the key, but it can never read or export it.</p>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../assets/img/diagrams/ab-keystore.svg" alt="Plain data such as a token goes into AES-256-GCM, which keeps it secret and adds a tamper check in one step. The stored file holds the IV, the ciphertext and the authentication tag. The key comes from the Android Keystore, which keeps it in secure hardware where the device has such hardware. The key works there but never leaves. On read, a changed file fails the tag check, and the app rejects the data." loading="lazy"></div>
+    <figcaption>The key works inside the Keystore. The file carries the IV, the ciphertext and the tag.</figcaption>
+  </figure>
+
+<pre class="code" data-lang="kotlin" data-file="Encrypt with a Keystore key"><code>// Create the key once. It never leaves the Keystore.
+val spec = KeyGenParameterSpec.Builder(
+    "file_key",
+    KeyProperties.PURPOSE_ENCRYPT or KeyProperties.PURPOSE_DECRYPT
+)
+    .setBlockModes(KeyProperties.BLOCK_MODE_GCM)
+    .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_NONE)
+    .setKeySize(256)
+    .build()
+val generator = KeyGenerator.getInstance(KeyProperties.KEY_ALGORITHM_AES, "AndroidKeyStore")
+generator.init(spec)
+generator.generateKey()
+
+// Encrypt. Store the IV next to the ciphertext.
+val key = (KeyStore.getInstance("AndroidKeyStore").apply { load(null) }
+    .getEntry("file_key", null) as KeyStore.SecretKeyEntry).secretKey
+val cipher = Cipher.getInstance("AES/GCM/NoPadding")
+cipher.init(Cipher.ENCRYPT_MODE, key)
+val iv = cipher.iv
+val encrypted = cipher.doFinal(plainBytes)
+
+// Decrypt. A changed file throws AEADBadTagException.
+cipher.init(Cipher.DECRYPT_MODE, key, GCMParameterSpec(128, iv))
+val plain = cipher.doFinal(encrypted)</code></pre>
+
+  <h3>Protect tokens and passwords</h3>
+  <p>Access tokens, refresh tokens and other credentials need the same care, even inside internal storage. A backup, a rooted device or a bug in another part of the app can expose plain files. Store such values encrypted with a Keystore key, as above, for example inside DataStore. The Jetpack library <code>security-crypto</code> with <code>EncryptedSharedPreferences</code> is deprecated, so new code uses the Keystore directly or a maintained library such as Tink.</p>
+  <ul>
+    <li>Do not store a password at all. Store a token from your server, and let the server end it when needed.</li>
+    <li>Keep tokens short-lived, and refresh them over HTTPS.</li>
+    <li>Exclude sensitive files from cloud backup with the rules in <code>data_extraction_rules.xml</code>.</li>
+    <li>For the most sensitive keys, require user authentication with <code>setUserAuthenticationRequired(true)</code>, so the key works only after a fingerprint or a screen lock check.</li>
+  </ul>
+
+  <h3>Keep sensitive data out of the logs</h3>
+  <p>Developers log service addresses, response bodies, user names and crash details while they build an app. These lines often stay in the release build. Since Android 4.1, an app can read only its own log entries. Other readers still exist. A person with a USB cable and the Android Debug Bridge (adb) can read the whole log. So can a rooted device or a system app.</p>
+  <p>Crash reporting services also collect log lines and send them to a server.</p>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../assets/img/diagrams/ab-logs.svg" alt="A release build that logs URLs, user email, response bodies and payment errors writes them to logcat, the system log. A person with a USB cable and adb, a rooted device or a system app and a crash report that uploads the log can all read them. In the release build, remove debug logs with an R8 rule or a check of BuildConfig.DEBUG, and never log tokens, passwords, personal data, full URLs with parameters or response bodies." loading="lazy"></div>
+    <figcaption>One debug line in a release build can reach several readers.</figcaption>
+  </figure>
+
+  <p>Remove debug logs from the release build. An R8 rule can delete the calls completely.</p>
+<pre class="code" data-lang="text" data-file="proguard-rules.pro"><code># Remove verbose, debug and info logs from release builds
+-assumenosideeffects class android.util.Log {
+    public static int v(...);
+    public static int d(...);
+    public static int i(...);
+}</code></pre>
+  <ul>
+    <li>Never log passwords, tokens, keys, card data or personal data, even in debug builds.</li>
+    <li>Log an identifier or a status code instead of a full response body.</li>
+    <li>Use a logging library that you can switch off for release builds in one place.</li>
+    <li>Check the crash reports of your app for data that does not belong there.</li>
+  </ul>
+
+  <div class="part-banner" data-n="3" style="--pc:#7a4fc2" id="part-3">
+    <div class="pb-tag">Part 3 of 6</div>
+    <h2 id="guard-the-boundaries" data-toc="3. Guard the boundaries of the app">Guard the boundaries of the app</h2>
+    <p>Lock the side doors, ask for few permissions, keep messages inside and treat every input as untrusted.</p>
+  </div>
+
+  <h3>Protect services and content providers</h3>
+  <p>Apps often run work in a background service, for example a download, a sync or a payment. Content providers share data from a database. If such a component is exported, any app on the device can start it or query it. A malicious app can then trigger a payment, read notes or feed false data to the service.</p>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../assets/img/diagrams/ab-components.svg" alt="Your app has three components. PaymentService and NotesProvider set exported to false, so an unknown app cannot reach them. SyncService is exported with a signature permission, so your other app signed with the same key can call it, while an unknown app without the permission is blocked. Android 12 and later require an explicit exported value for components with intent filters." loading="lazy"></div>
+    <figcaption>Only exported components accept calls from outside, and permissions decide who passes.</figcaption>
+  </figure>
+
+<pre class="code" data-lang="xml" data-file="AndroidManifest.xml"><code>&lt;!-- Only this app can start the service. --&gt;
+&lt;service
+    android:name=".PaymentService"
+    android:exported="false" /&gt;
+
+&lt;!-- Only apps signed with the same key get this permission. --&gt;
+&lt;permission
+    android:name="com.example.shop.permission.SYNC"
+    android:protectionLevel="signature" /&gt;
+
+&lt;service
+    android:name=".SyncService"
+    android:exported="true"
+    android:permission="com.example.shop.permission.SYNC" /&gt;
+
+&lt;provider
+    android:name=".NotesProvider"
+    android:authorities="com.example.shop.notes"
+    android:exported="false" /&gt;</code></pre>
+  <ul>
+    <li>Set <code>android:exported="false"</code> on every component that other apps do not need. From Android 12 on, the build requires an explicit value for each component with an intent filter.</li>
+    <li>If another app of yours needs access, protect the component with a permission of the <code>signature</code> level.</li>
+    <li>Start your own services with explicit intents that name the class.</li>
+    <li>Inside an exported component, check all data in the incoming intent before you use it.</li>
+  </ul>
+
+  <h3>Request as few permissions as possible</h3>
+  <p>During development, permissions pile up in the manifest. A team adds the camera, the location and the contacts for features that later change. The release build keeps them all. Each extra permission widens the damage of any bug, worries users and draws questions in the store review.</p>
+  <ul>
+    <li>Review the manifest before each release, and remove every permission that no feature uses.</li>
+    <li>Also check the merged manifest, because libraries can add permissions of their own.</li>
+    <li>Prefer system pickers that need no permission, for example the photo picker instead of storage access.</li>
+    <li>Limit old permissions to old versions with <code>android:maxSdkVersion</code>.</li>
+    <li>Ask for a runtime permission at the moment when the user starts the feature, and explain the reason.</li>
+    <li>Ask for approximate location instead of precise location when the feature allows it.</li>
+  </ul>
+<pre class="code" data-lang="xml" data-file="AndroidManifest.xml"><code>&lt;!-- Needed only on Android 9 and older. --&gt;
+&lt;uses-permission
+    android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+    android:maxSdkVersion="28" /&gt;
+
+&lt;!-- Remove a permission that a library adds. --&gt;
+&lt;uses-permission
+    android:name="android.permission.READ_PHONE_STATE"
+    tools:node="remove" /&gt;</code></pre>
+
+  <h3>Do not broadcast sensitive data</h3>
+  <p>A normal broadcast goes through the system. Any app that registers a receiver for the same action gets a copy. If the intent carries a token, an order or a location, other apps receive it as well.</p>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../assets/img/diagrams/ab-broadcast.svg" alt="On the left, your app calls sendBroadcast with a user token, and any app with a matching receiver can get it. On the right, inside one app, a repository passes data to a screen through StateFlow, SharedFlow or LiveData. The data never leaves the process, and no other app can listen." loading="lazy"></div>
+    <figcaption>A broadcast reaches the whole device. A stream inside the app reaches only its own code.</figcaption>
+  </figure>
+
+  <p>For events inside one app, do not use broadcasts at all. The old <code>LocalBroadcastManager</code> is deprecated. Use an observable stream instead, such as <code>StateFlow</code>, <code>SharedFlow</code> or <code>LiveData</code>. For a broadcast that must reach a receiver, keep it private.</p>
+<pre class="code" data-lang="kotlin" data-file="Private broadcasts"><code>// Send only to your own app.
+val intent = Intent(ACTION_SYNC_DONE).setPackage(context.packageName)
+context.sendBroadcast(intent)
+
+// Register a receiver that other apps cannot reach.
+ContextCompat.registerReceiver(
+    context,
+    receiver,
+    IntentFilter(ACTION_SYNC_DONE),
+    ContextCompat.RECEIVER_NOT_EXPORTED
+)</code></pre>
+
+  <h3>Use WebView JavaScript with caution</h3>
+  <p>A WebView brings the web into your app, and with it the common weaknesses of the web, such as cross-site scripting (XSS). The largest risk is the JavaScript bridge from <code>addJavascriptInterface</code>. Every page that loads in the WebView can call the methods of the bridge. If an untrusted page or an injected script loads, it acts with the permissions of your app.</p>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../assets/img/diagrams/ab-webview.svg" alt="A WebView in your app can show your own pages, with JavaScript and a bridge only if needed. An untrusted page or an injected script can call the bridge from addJavascriptInterface as if it were your code. Five rules reduce the risk. Keep JavaScript off unless the page needs it. Load only allowed hosts and check each URL. Use WebViewAssetLoader for local files instead of file URLs. Expose a small bridge only to trusted pages. Keep WebView updated through Play." loading="lazy"></div>
+    <figcaption>A bridge is safe only when every page in the WebView is your own.</figcaption>
+  </figure>
+
+<pre class="code" data-lang="kotlin" data-file="A locked-down WebView"><code>val loader = WebViewAssetLoader.Builder()
+    .addPathHandler("/assets/", WebViewAssetLoader.AssetsPathHandler(context))
+    .build()
+val allowedHosts = setOf("appassets.androidplatform.net", "www.example.com")
+
+webView.settings.apply {
+    javaScriptEnabled = false       // turn on only for your own pages
+    allowFileAccess = false         // no file:// access
+    allowContentAccess = false
+}
+webView.webViewClient = object : WebViewClient() {
+    override fun shouldInterceptRequest(view: WebView, request: WebResourceRequest) =
+        loader.shouldInterceptRequest(request.url)
+
+    override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest) =
+        request.url.host !in allowedHosts   // true blocks the load
+}</code></pre>
+  <ul>
+    <li>Turn on JavaScript only when the page needs it, and add a bridge only when you fully control and trust every page.</li>
+    <li>Give the bridge a few small methods with simple parameters. Check each parameter inside the method.</li>
+    <li>Load local content through <code>WebViewAssetLoader</code> instead of <code>file://</code> addresses.</li>
+    <li>Open other links in the browser or in Custom Tabs, not in the WebView.</li>
+  </ul>
+
+  <h3>Validate user input</h3>
+  <p>Data from a user, a deep link, an intent or a file is untrusted. In SQLite, the classic risk is SQL injection. If the app builds a query by joining strings, the input can change the meaning of the query itself.</p>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../assets/img/diagrams/ab-sql.svg" alt="The user types x quote OR quote 1 quote equals quote 1 into a search box. With string building, the query becomes WHERE title equals x OR 1 equals 1, so every row matches. With a parameter, written as a question mark with the input in an argument array, the input stays a value, and no row has that title. Room queries with parameters behave the same way." loading="lazy"></div>
+    <figcaption>With a parameter, the input stays a value and never becomes part of the query.</figcaption>
+  </figure>
+
+<pre class="code" data-lang="kotlin" data-file="Queries with parameters"><code>// SQLite: the ? keeps the input as a value
+db.rawQuery("SELECT * FROM notes WHERE title = ?", arrayOf(title))
+
+// Room: named parameters do the same
+@Query("SELECT * FROM notes WHERE title = :title")
+fun findByTitle(title: String): List&lt;Note&gt;</code></pre>
+  <ul>
+    <li>Use parameters in every query. Never join user input into SQL.</li>
+    <li>Check the type, the length, the range and the format of each input. Prefer a list of allowed values to a list of forbidden ones.</li>
+    <li>Treat data from deep links and from other apps like data from a stranger.</li>
+    <li>Check input on the server again. A modified app can skip every check on the device.</li>
+  </ul>
+
+  <div class="part-banner" data-n="4" style="--pc:#b7791f" id="part-4">
+    <div class="pb-tag">Part 4 of 6</div>
+    <h2 id="trust-with-care" data-toc="4. Trust the device and the user with care">Trust the device and the user with care</h2>
+    <p>Check the device before critical actions, and collect as little personal data as you can.</p>
+  </div>
+
+  <h3>Beware of rooted devices</h3>
+  <p>On a rooted device, the user or a malicious tool has full control. Tools on such a device can change the code of your app while it runs, skip a payment check or read its private files. For this reason, do not process payments or other critical tasks on a device that fails an integrity check. Turn off these features automatically, and tell the user the reason.</p>
+  <p>A check that runs only inside the app is weak, because the same tools can change its result. Use the <strong>Play Integrity API</strong> instead. Google Play returns a signed and encrypted verdict about the app, the device and the account. Your server decodes the verdict and makes the decision.</p>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../assets/img/diagrams/ab-integrity.svg" alt="Four lanes, your app, Google Play, your server and the payment step. One, the server and the app agree on the payment details to protect. Two, the app asks Google Play for an integrity token with a hash of those details. Three, Play returns a signed and encrypted token. Four, the app sends the token with the payment request. Five, the server decodes the token with Google and reads the verdicts. Six, the server allows the payment only on a trusted device. The decision is made on the server, because code on the device can be changed." loading="lazy"></div>
+    <figcaption>The server, not the app, decides whether the device is trusted.</figcaption>
+  </figure>
+
+<pre class="code" data-lang="kotlin" data-file="A Play Integrity request (standard)"><code>val manager = IntegrityManagerFactory.createStandard(context)
+
+manager.prepareIntegrityToken(
+    PrepareIntegrityTokenRequest.builder()
+        .setCloudProjectNumber(CLOUD_PROJECT_NUMBER)
+        .build()
+).addOnSuccessListener { provider -&gt;
+    provider.request(
+        StandardIntegrityTokenRequest.builder()
+            .setRequestHash(hashOf(paymentRequest))  // binds the token to this payment
+            .build()
+    ).addOnSuccessListener { response -&gt;
+        sendToServer(paymentRequest, response.token())
+    }
+}</code></pre>
+  <p>On the server, check that the request hash matches, that the app is your genuine app from Play and that the device verdict contains <code>MEETS_DEVICE_INTEGRITY</code>. Decide in proportion to the risk. A news app can run everywhere, but a payment needs a trusted device.</p>
+
+  <h3>Avoid asking for personal data</h3>
+  <p>User privacy is one of the most important concerns today. Every piece of personal data that you collect needs storage, protection, reports and one day deletion. It also becomes a target for attackers. Unless you have a good reason and a very secure infrastructure, do not ask for personal data directly in the app.</p>
+  <ul>
+    <li><strong>Use a trusted sign-in service.</strong> Credential Manager supports passkeys and Sign in with Google. Firebase Authentication manages accounts for you. Your app then never handles a password.</li>
+    <li><strong>Collect the minimum.</strong> Ask only for the data that a feature needs, at the time it needs it.</li>
+    <li><strong>Prefer identifiers that reset.</strong> Use an app-specific identifier instead of a hardware identifier.</li>
+    <li><strong>Be open about it.</strong> Describe each data type in the privacy policy and in the Data safety section of Google Play.</li>
+    <li><strong>Follow the law.</strong> Laws set clear duties for personal data. Examples are the Digital Personal Data Protection Act (DPDP Act) in India and the General Data Protection Regulation (GDPR) in Europe.</li>
+  </ul>
+
+  <div class="part-banner" data-n="5" style="--pc:#c2552d" id="part-5">
+    <div class="pb-tag">Part 5 of 6</div>
+    <h2 id="secure-every-connection" data-toc="5. Secure every connection">Secure every connection</h2>
+    <p>Use HTTPS everywhere, lock the backend, send messages through a safe channel and protect every transfer.</p>
+  </div>
+
+  <h3>Use HTTPS for everything</h3>
+  <p>Public Wi-Fi in a cafe, a station or a hotel is convenient but risky. A hostile hotspot sits between the app and the server. With plain HTTP, it can read every password and change every response, for example to add an unwanted ad or an exploit.</p>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../assets/img/diagrams/ab-network.svg" alt="Top, an app uses HTTP through a public hotspot. The hotspot reads the password and can add an ad or a script before the data reaches the server. Bottom, the app uses HTTPS. A TLS tunnel runs from the app to the server, and the hotspot sees only encrypted bytes and the server name. Below, a network security config sets cleartextTrafficPermitted to false, which is the default for apps that target Android 9 or later." loading="lazy"></div>
+    <figcaption>HTTPS turns the hotspot into a carrier that cannot read or change the data.</figcaption>
+  </figure>
+
+  <ul>
+    <li>Use HTTPS for every connection, including images, analytics and update checks.</li>
+    <li>Keep cleartext traffic blocked. It is the default for apps that target Android 9 or later. Do not add exceptions in <code>network_security_config.xml</code>.</li>
+    <li>Do not accept all certificates in a custom <code>TrustManager</code> or <code>HostnameVerifier</code>, not even for a test build that ships.</li>
+    <li>Pin certificates only with a backup pin and a plan for rotation, because a wrong pin locks out every user.</li>
+  </ul>
+
+  <h3>Write Firebase security rules</h3>
+  <p>Many apps use Firebase as their backend. The client libraries talk to the database directly, so the security rules are the only guard. With open rules, a single <code>curl</code> command from any computer can read, change or delete the entire database. A small mistake here can ruin your app and your business.</p>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../assets/img/diagrams/ab-firebase.svg" alt="On the left, open rules set read and write to true. One request from a terminal can read, change or delete the whole database. On the right, rules under users and a user ID allow read and write only when auth.uid equals that ID. A signed-in user reaches only own data, and App Check adds proof that the call comes from your app." loading="lazy"></div>
+    <figcaption>Rules decide every read and write. Open rules invite anybody.</figcaption>
+  </figure>
+
+  <ul>
+    <li>Never leave the rules open, and never ship the rules of test mode.</li>
+    <li>Allow each user to read and write only own data, based on <code>auth.uid</code>.</li>
+    <li>Check the shape and the size of each write in the rules.</li>
+    <li>Turn on Firebase App Check, so only your genuine app can reach the backend.</li>
+    <li>Test the rules with the emulator suite before each deployment.</li>
+  </ul>
+
+  <h3>Use FCM instead of SMS</h3>
+  <p>Some apps still send data or commands by SMS. The SMS protocol has no encryption, and an attacker can fake the sender. Other apps with SMS access on the device can also read the messages. Firebase Cloud Messaging (FCM) is the safer way to push a message to an app. It travels over Transport Layer Security (TLS) to a token that only your app holds.</p>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../assets/img/diagrams/ab-fcm-sms.svg" alt="SMS travels as plain text in the network, where operators and some attacks can read it. Its sender can be faked, and apps with SMS access on the device can read it. Firebase Cloud Messaging is encrypted in transit with TLS, goes only to a token of your app, and can carry a signal so that the app fetches the data over HTTPS. For a one-time code by SMS, use the SMS Retriever API so that the app needs no SMS permission." loading="lazy"></div>
+    <figcaption>FCM goes only to your app. SMS goes to anyone who can read the phone.</figcaption>
+  </figure>
+
+  <ul>
+    <li>Send a small signal through FCM, and let the app fetch the real data from your server over HTTPS.</li>
+    <li>Do not put secrets or personal data into the notification itself.</li>
+    <li>For a one-time password by SMS, use the SMS Retriever API. The app then reads only its own message and needs no SMS permission.</li>
+  </ul>
+
+  <h3>Protect data in every transfer</h3>
+  <p>Apps also move data over Bluetooth Low Energy (BLE), through Message Queuing Telemetry Transport (MQTT) brokers and in QR codes. Plain text in these channels is easy to read. Encoding such as Base64 changes only the format. Anyone can reverse it in a second, so it gives no protection.</p>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../assets/img/diagrams/ab-encoding.svg" alt="Encoding such as Base64 or hex turns Hello into SGVsbG8 equals. Anyone can reverse it, it has no key, and it only changes the format, so it is not protection. Encryption such as AES-GCM or TLS lets only a key holder read the data, GCM also finds changes, and the keys come from the Keystore. Signing such as HMAC or ECDSA leaves the data readable, but any change breaks the check, and it proves the sender. For Bluetooth, MQTT and QR codes, encrypt and sign the payload." loading="lazy"></div>
+    <figcaption>Encoding changes the format. Encryption keeps the secret, and signing proves the sender.</figcaption>
+  </figure>
+
+  <ul>
+    <li><strong>BLE.</strong> Use LE Secure Connections pairing, and encrypt sensitive values at the application level as well.</li>
+    <li><strong>MQTT.</strong> Connect over TLS, usually on port 8883, with a separate credential for each device and access rules on the broker.</li>
+    <li><strong>QR codes.</strong> Sign the payload, so the app detects a fake code. Encrypt it as well if it contains a secret, and give it a short validity.</li>
+    <li><strong>All channels.</strong> Add a time stamp or a counter, so an attacker cannot replay an old message.</li>
+  </ul>
+
+  <div class="part-banner" data-n="6" style="--pc:#5d6b7e" id="part-6">
+    <div class="pb-tag">Part 6 of 6</div>
+    <h2 id="release-checklist" data-toc="6. A checklist for each release">A checklist for each release</h2>
+    <p>One look at every layer before the app reaches users.</p>
+  </div>
+  <p>Security fades when nobody checks it. Run through this list before each release, and add the checks that your app needs.</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Layer</th><th>Check</th></tr></thead>
+      <tbody>
+        <tr><td>Code</td><td>R8 is on for the release build, and the keep rules are as narrow as possible.</td></tr>
+        <tr><td>Secrets</td><td>No secret key is in the code, the resources or the repository. Public keys have restrictions.</td></tr>
+        <tr><td>Libraries</td><td>All libraries are current, unused ones are gone and the target API level is recent.</td></tr>
+        <tr><td>Storage</td><td>Sensitive data is in internal storage. Data outside it is encrypted with a Keystore key.</td></tr>
+        <tr><td>Logs</td><td>Debug logs are removed, and no log line holds personal data or a token.</td></tr>
+        <tr><td>Components</td><td>Every component has an explicit exported value, and exported ones have permissions.</td></tr>
+        <tr><td>Permissions</td><td>The merged manifest holds only the permissions that features use.</td></tr>
+        <tr><td>Broadcasts</td><td>In-app events use streams. Broadcasts are private.</td></tr>
+        <tr><td>WebView</td><td>JavaScript and bridges are off unless every page is trusted.</td></tr>
+        <tr><td>Input</td><td>Every query uses parameters, and the server checks input again.</td></tr>
+        <tr><td>Device</td><td>Payments and critical actions depend on a Play Integrity verdict on the server.</td></tr>
+        <tr><td>Personal data</td><td>The app collects only what it needs and declares it in the Data safety section.</td></tr>
+        <tr><td>Network</td><td>All traffic uses HTTPS, and no code accepts all certificates.</td></tr>
+        <tr><td>Backend</td><td>Firebase rules are not open, and App Check is on.</td></tr>
+        <tr><td>Messages and transfers</td><td>Pushes use FCM. BLE, MQTT and QR data is encrypted and signed.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2 id="key-takeaways">Key takeaways</h2>
+  <ol class="takeaways">
+    <li><b>The device belongs to someone else.</b> Design as if an attacker can read and change everything that ships in the app.</li>
+    <li><b>Secrets live on the server.</b> Obfuscation and native code only delay an attacker.</li>
+    <li><b>Private data stays private.</b> Use internal storage, and encrypt with a Keystore key wherever data leaves it.</li>
+    <li><b>Every door has a lock.</b> Exported components, broadcasts and WebView bridges need explicit protection.</li>
+    <li><b>Input is untrusted.</b> Parameters in queries and checks on the server stop injection.</li>
+    <li><b>The server decides.</b> Integrity verdicts, Firebase rules and input checks all work on the server side.</li>
+    <li><b>Every connection is encrypted.</b> Use HTTPS, FCM and real encryption, never plain text or simple encoding.</li>
+    <li><b>Security is a habit.</b> A short checklist before each release keeps it alive.</li>
+  </ol>
+
+  <h2 id="choosing-a-home-for-data">Choosing a safe home for data</h2>
+  <p>Many of the practices above come down to one question for each piece of data. The next guide answers it in four steps.</p>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../assets/img/diagrams/ab-data-guide.svg" alt="A decision flow for a piece of data. If it is a secret for a paid or private API, keep it on your server and let the app call your server. Else, if you do not need it, do not collect it. Else, if other apps or the user must open it, use shared storage, but only for data that is not private. Else, if it is a token, a password or personal data, use internal storage encrypted with a Keystore key. Otherwise use internal storage with plain files or DataStore." loading="lazy"></div>
+    <figcaption>Ask four questions, and the right place for the data follows.</figcaption>
+  </figure>
+
+  <h2 id="the-whole-article-on-one-page">The whole article on one page</h2>
+  <div class="recap-grid">
+    <section style="--pc:#2f62c8">
+      <h4>Code and secrets</h4>
+      <ul>
+        <li>Turn on R8 with <code>isMinifyEnabled</code> and <code>isShrinkResources</code>.</li>
+        <li>Keep secret keys on the server. Restrict public keys to the package and the certificate.</li>
+        <li>Update libraries, and keep the target API level current.</li>
+      </ul>
+    </section>
+    <section style="--pc:#0f8a6a">
+      <h4>Data on the device</h4>
+      <ul>
+        <li>Store sensitive data in internal storage.</li>
+        <li>Encrypt with AES-256-GCM and a Keystore key elsewhere.</li>
+        <li>Remove debug logs, and never log secrets.</li>
+      </ul>
+    </section>
+    <section style="--pc:#7a4fc2">
+      <h4>Boundaries</h4>
+      <ul>
+        <li>Set <code>exported="false"</code>, or protect with a signature permission.</li>
+        <li>Request few permissions, and remove extras from libraries.</li>
+        <li>Use streams in the app and private broadcasts outside it.</li>
+        <li>Lock down WebView, and use query parameters.</li>
+      </ul>
+    </section>
+    <section style="--pc:#b7791f">
+      <h4>Device and user</h4>
+      <ul>
+        <li>Check Play Integrity on the server before payments.</li>
+        <li>Use Credential Manager or Firebase Authentication.</li>
+        <li>Collect only the personal data that a feature needs.</li>
+      </ul>
+    </section>
+    <section style="--pc:#c2552d">
+      <h4>Network and backend</h4>
+      <ul>
+        <li>Use HTTPS only, with cleartext blocked.</li>
+        <li>Write Firebase rules for each user, and turn on App Check.</li>
+        <li>Use FCM instead of SMS, and the SMS Retriever API for codes.</li>
+        <li>Encrypt and sign data on BLE, MQTT and QR codes.</li>
+      </ul>
+    </section>
+    <section style="--pc:#5d6b7e">
+      <h4>Release</h4>
+      <ul>
+        <li>Walk through the checklist before every release.</li>
+        <li>Keep the R8 mapping file of each version.</li>
+        <li>Check crash reports for leaked data.</li>
+      </ul>
+    </section>
+  </div>
+
+  <h2 id="check-your-learning">Check your learning</h2>
+  <p>Open each question to see the answer.</p>
+  <div class="quiz">
+    <details>
+      <summary><span class="qq">R8 is on in your release build. Is a payment key in the code now safe?</span></summary>
+      <div class="ans"><p>No. R8 renames and shrinks code, but a decompiler or a runtime hook still finds the key. Keep secret keys on your server (Part 1).</p></div>
+    </details>
+    <details>
+      <summary><span class="qq">A Maps key must ship in the app. Name two restrictions for it.</span></summary>
+      <div class="ans"><p>Restrict it to your package name and the SHA-1 fingerprint of your signing certificate. Also restrict it to the APIs that the app uses (Part 1).</p></div>
+    </details>
+    <details>
+      <summary><span class="qq">Your app saves a video with sensitive content to external storage. What else does it need?</span></summary>
+      <div class="ans"><p>Encryption with AES-256-GCM and a key from the Android Keystore. GCM also detects changes to the file (Part 2).</p></div>
+    </details>
+    <details>
+      <summary><span class="qq">Can another normal app read the log lines of your app on Android 12?</span></summary>
+      <div class="ans"><p>No. Since Android 4.1, an app reads only its own logs. A person with adb, a rooted device, a system app or a crash report can still read them, so remove sensitive logs (Part 2).</p></div>
+    </details>
+    <details>
+      <summary><span class="qq">Your background service handles payments. Which manifest value keeps other apps out?</span></summary>
+      <div class="ans"><p><code>android:exported="false"</code> on the service (Part 3).</p></div>
+    </details>
+    <details>
+      <summary><span class="qq">Your app sends an event from a repository to a screen. Which tool fits best?</span></summary>
+      <div class="ans"><p>An observable stream such as <code>StateFlow</code>, <code>SharedFlow</code> or <code>LiveData</code>. <code>LocalBroadcastManager</code> is deprecated, and a system broadcast leaks to other apps (Part 3).</p></div>
+    </details>
+    <details>
+      <summary><span class="qq">A search box builds SQL by joining strings. The input is x' OR '1'='1. What happens, and what is the fix?</span></summary>
+      <div class="ans"><p>The query matches every row. Use a parameter, such as a question mark in SQLite or a named parameter in Room (Part 3).</p></div>
+    </details>
+    <details>
+      <summary><span class="qq">Your app checks for root on the device and then allows a payment. Is that enough?</span></summary>
+      <div class="ans"><p>No. Tools on a rooted device can change that check. Use the Play Integrity API, and let your server decide (Part 4).</p></div>
+    </details>
+    <details>
+      <summary><span class="qq">The database rules say that read and write are true. Who can change the data?</span></summary>
+      <div class="ans"><p>Anybody, even with one <code>curl</code> command. Write rules for each user and turn on App Check (Part 5).</p></div>
+    </details>
+    <details>
+      <summary><span class="qq">A QR code holds Base64 text. Is the data protected?</span></summary>
+      <div class="ans"><p>No. Base64 only changes the format, and anyone can reverse it. Sign the payload and encrypt it if it holds a secret (Part 5).</p></div>
+    </details>
+    <details>
+      <summary><span class="qq">Your app needs a one-time password from an SMS. Which API avoids the SMS permission?</span></summary>
+      <div class="ans"><p>The SMS Retriever API (Part 5).</p></div>
+    </details>
+  </div>
+
+  <h2 id="key-terms">Key terms</h2>
+  <div class="table-wrap">
+    <table class="kw">
+      <thead><tr><th>Term</th><th>Meaning</th></tr></thead>
+      <tbody>
+        <tr><td>AES-GCM</td><td>A standard encryption mode that keeps data secret and also detects changes to it.</td></tr>
+        <tr><td>Android Keystore</td><td>A system service that creates and uses keys without letting the app read them.</td></tr>
+        <tr><td>APK</td><td>Android Package, the file format of an Android app.</td></tr>
+        <tr><td>App Check</td><td>A Firebase service that lets only your genuine app reach your backend.</td></tr>
+        <tr><td>Base64</td><td>An encoding that writes bytes as text. It is not encryption.</td></tr>
+        <tr><td>BLE</td><td>Bluetooth Low Energy.</td></tr>
+        <tr><td>Content provider</td><td>A component that shares structured data with other parts of the system.</td></tr>
+        <tr><td>Credential Manager</td><td>The Android API for passkeys, passwords and federated sign-in.</td></tr>
+        <tr><td>Exported component</td><td>An activity, service, receiver or provider that other apps can reach.</td></tr>
+        <tr><td>FCM</td><td>Firebase Cloud Messaging, a service that pushes messages to an app.</td></tr>
+        <tr><td>Internal storage</td><td>The private folder of an app that only the app can read.</td></tr>
+        <tr><td>IV</td><td>Initialization vector, a fresh random value for each encryption.</td></tr>
+        <tr><td>MQTT</td><td>Message Queuing Telemetry Transport, a light messaging protocol for devices.</td></tr>
+        <tr><td>NDK</td><td>Native Development Kit, the tools for C and C++ code in Android apps.</td></tr>
+        <tr><td>Obfuscation</td><td>Renaming code so that it is hard to understand.</td></tr>
+        <tr><td>Play Integrity API</td><td>A Google Play service that tells your server whether the app and the device look genuine.</td></tr>
+        <tr><td>R8</td><td>The Android tool that shrinks, obfuscates and optimizes code.</td></tr>
+        <tr><td>Rooted device</td><td>A device where the user or a tool has full system control.</td></tr>
+        <tr><td>Signature permission</td><td>A permission that only apps signed with the same key get.</td></tr>
+        <tr><td>SQL injection</td><td>An attack where input changes the meaning of a database query.</td></tr>
+        <tr><td>TLS</td><td>Transport Layer Security, the encryption behind HTTPS.</td></tr>
+        <tr><td>WebView</td><td>A component that shows web content inside an app.</td></tr>
+        <tr><td>XSS</td><td>Cross-site scripting, an attack that injects a script into a web page.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p class="closing-note">Thank you for reading. Security grows one habit at a time. Pick one practice from this article, and add it to your app this week.</p>
+  <div class="the-end" data-ste="skip">That's all, folks</div>
+
+</article>
+</main>
+
+<script src="../assets/js/site.js"></script>
+</body>
+</html>

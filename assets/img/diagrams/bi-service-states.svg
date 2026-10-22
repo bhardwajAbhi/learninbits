@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 350" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">The states of a service in init</title>
+  <desc id="d">Four states. From stopped, start moves a service to running when the fork succeeds. From running, an exit of a oneshot service returns to stopped. A stop command or SIGTERM moves it to stopping, and the exit then gives stopped. An exit of a service that is not oneshot moves it to restarting, and after restart_period it returns to running. Each state is visible as the property init.svc.&lt;name&gt;, and no starting state exists. On the right, HandleProcessActions loops over the services. It calls Timeout for a running service whose timeout passed and Start for a restarting service whose restart period passed, and it returns the next due time. A critical service that crashes more than four times in four minutes reboots the device.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="70" y="62" width="160" height="56" rx="28" fill="#eef0f3" stroke="#5d6b7e" stroke-width="2"/>
+<text x="150" y="95" font-size="14" fill="#3f4a59" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="700">stopped</text>
+<rect x="390" y="62" width="160" height="56" rx="28" fill="#e3f4ee" stroke="#0f8a6a" stroke-width="2"/>
+<text x="470" y="95" font-size="14" fill="#0b6650" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="700">running</text>
+<rect x="390" y="232" width="160" height="56" rx="28" fill="#fdf4e3" stroke="#b7791f" stroke-width="2"/>
+<text x="470" y="265" font-size="14" fill="#8a5a12" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="700">stopping</text>
+<rect x="70" y="232" width="160" height="56" rx="28" fill="#f3f0fa" stroke="#7a4fc2" stroke-width="2"/>
+<text x="150" y="265" font-size="14" fill="#58378f" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="700">restarting</text>
+<path d="M230 80 L 386 80" fill="none" stroke="#0f8a6a" stroke-width="1.7" marker-end="url(#m4)"/>
+<text x="308" y="70" font-size="11.4" fill="#0b6650" text-anchor="middle" font-weight="600">start, fork succeeds</text>
+<path d="M386 102 L 230 102" fill="none" stroke="#5d6b7e" stroke-width="1.7" marker-end="url(#m8)"/>
+<text x="308" y="120" font-size="11.4" fill="#3f4a59" text-anchor="middle" font-weight="600">exited, oneshot</text>
+<path d="M470 118 L 470 228" fill="none" stroke="#b7791f" stroke-width="1.7" marker-end="url(#m6)"/>
+<text x="480" y="178" font-size="11.4" fill="#8a5a12" text-anchor="start" font-weight="600">stop or SIGTERM</text>
+<path d="M390 270 L 232 270" fill="none" stroke="#b7791f" stroke-width="1.7" marker-end="url(#m6)"/>
+<text x="311" y="262" font-size="11.4" fill="#8a5a12" text-anchor="middle" font-weight="600">exited</text>
+<path d="M390 112 L 228 240" fill="none" stroke="#7a4fc2" stroke-width="1.7" marker-end="url(#m5)"/>
+<text x="330" y="196" font-size="11.4" fill="#58378f" text-anchor="start" font-weight="600">exited, not oneshot</text>
+<path d="M120 232 L 120 118" fill="none" stroke="#7a4fc2" stroke-width="1.7" marker-end="url(#m5)"/>
+<text x="0" y="0" font-size="11.4" fill="#58378f" text-anchor="middle" font-weight="600"></text>
+<text x="110" y="168" font-size="11.4" fill="#58378f" text-anchor="end" font-weight="600">restart_period</text>
+<text x="110" y="183" font-size="11.4" fill="#58378f" text-anchor="end" font-weight="600">passed</text>
+<text x="310" y="330" font-size="12" fill="#4a5263" text-anchor="middle" font-style="italic">Each state is visible as init.svc.&lt;name&gt;. No starting state exists.</text>
+<rect x="600" y="40" width="260" height="198" rx="12" fill="#1f2633"/>
+<path d="M612 40 h236 a12 12 0 0 1 12 12 v22 h-260 v-22 a12 12 0 0 1 12 -12z" fill="#0f8a6a"/>
+<text x="616" y="63" font-size="13.5" fill="#fff" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">HandleProcessActions()</text>
+<text x="616" y="96" font-size="11.2" fill="#e8ecf3" text-anchor="start" font-family="JetBrains Mono, monospace">for (s : ServiceList) {</text>
+<text x="616" y="114" font-size="11.2" fill="#e8ecf3" text-anchor="start" font-family="JetBrains Mono, monospace">  if running and timeout</text>
+<text x="616" y="132" font-size="11.2" fill="#e8ecf3" text-anchor="start" font-family="JetBrains Mono, monospace">    passed: s-&gt;Timeout()</text>
+<text x="616" y="150" font-size="11.2" fill="#e8ecf3" text-anchor="start" font-family="JetBrains Mono, monospace">  if restarting and</text>
+<text x="616" y="168" font-size="11.2" fill="#e8ecf3" text-anchor="start" font-family="JetBrains Mono, monospace">    restart_period passed:</text>
+<text x="616" y="186" font-size="11.2" fill="#e8ecf3" text-anchor="start" font-family="JetBrains Mono, monospace">    s-&gt;Start()</text>
+<text x="616" y="204" font-size="11.2" fill="#e8ecf3" text-anchor="start" font-family="JetBrains Mono, monospace">}</text>
+<text x="616" y="222" font-size="11.2" fill="#9aa6b8" text-anchor="start" font-family="JetBrains Mono, monospace">// returns the next due time</text>
+<rect x="600" y="258" width="260" height="72" rx="10" fill="#fbecec" stroke="#c2552d" stroke-width="1.3"/>
+<text x="614" y="280" font-size="12.4" fill="#963f1f" text-anchor="start" font-weight="700">critical services</text>
+<text x="614" y="300" font-size="11.2" fill="#4a5263" text-anchor="start">More than four crashes in four</text>
+<text x="614" y="315" font-size="11.2" fill="#4a5263" text-anchor="start">minutes reboot the device.</text>
+</svg>

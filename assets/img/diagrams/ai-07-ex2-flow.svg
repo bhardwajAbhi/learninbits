@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 700" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">How the review analysis of Example 2 flows</title>
+  <desc id="d">Schema, class ProductReview(BaseModel), sentiment (POSITIVE, NEGATIVE, NEUTRAL), confidence between 0.0 and 1.0, key_points, 2 or 3 strings, suggested_action. Parser, parser = JsonOutputParser(pydantic_object=ProductReview), get_format_instructions() for each call. Data, for review in reviews, 3 phone reviews, cleaned with &quot; &quot;.join(review.split()). Template, review_analysis_prompt, {format_instructions} and Review {review}. Model, llm = ChatOpenRouter(model=&quot;qwen/qwen-2.5-7b-instruct&quot;, temperature=0), Writes one JSON object for each review. Parser, JsonOutputParser, Turns the JSON text into a dict. Output, result[&#x27;sentiment&#x27;], result[&#x27;confidence&#x27;], ..., POSITIVE 0.85, NEGATIVE 0.98, NEUTRAL 0.8. A loop goes back from stage 7 to stage 3, next review.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="20" y="34" width="92" height="26" rx="13" fill="#fbecec" stroke="#c2552d" stroke-width="1.2"/>
+<text x="66" y="51.32" font-size="12" fill="#963f1f" text-anchor="middle" font-weight="700">Schema</text>
+<rect x="126" y="24" width="680" height="122" rx="12" fill="#fff" stroke="#c2552d" stroke-width="1.6"/>
+<rect x="126" y="24" width="6" height="122" rx="3" fill="#c2552d"/>
+<text x="146" y="52" font-size="13.6" fill="#963f1f" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">class ProductReview(BaseModel)</text>
+<text x="146" y="74" font-size="12.2" fill="#4a5263" text-anchor="start">sentiment (POSITIVE, NEGATIVE, NEUTRAL)</text>
+<text x="146" y="93" font-size="12.2" fill="#4a5263" text-anchor="start">confidence between 0.0 and 1.0</text>
+<text x="146" y="112" font-size="12.2" fill="#4a5263" text-anchor="start">key_points, 2 or 3 strings</text>
+<text x="146" y="131" font-size="12.2" fill="#4a5263" text-anchor="start">suggested_action</text>
+<path d="M466 148 L 466 166" fill="none" stroke="#1c2230" stroke-width="1.6" marker-end="url(#m0)"/>
+<rect x="20" y="180" width="92" height="26" rx="13" fill="#fdf4e3" stroke="#b7791f" stroke-width="1.2"/>
+<text x="66" y="197.32" font-size="12" fill="#8a5a12" text-anchor="middle" font-weight="700">Parser</text>
+<rect x="126" y="170" width="680" height="65" rx="12" fill="#fff" stroke="#b7791f" stroke-width="1.6"/>
+<rect x="126" y="170" width="6" height="65" rx="3" fill="#b7791f"/>
+<text x="146" y="198" font-size="13.6" fill="#8a5a12" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">parser = JsonOutputParser(pydantic_object=ProductReview)</text>
+<text x="146" y="220" font-size="12.2" fill="#4a5263" text-anchor="start">get_format_instructions() for each call</text>
+<path d="M466 237 L 466 255" fill="none" stroke="#1c2230" stroke-width="1.6" marker-end="url(#m0)"/>
+<rect x="20" y="269" width="92" height="26" rx="13" fill="#eef0f3" stroke="#5d6b7e" stroke-width="1.2"/>
+<text x="66" y="286.32" font-size="12" fill="#3f4a59" text-anchor="middle" font-weight="700">Data</text>
+<rect x="126" y="259" width="680" height="65" rx="12" fill="#fff" stroke="#5d6b7e" stroke-width="1.6"/>
+<rect x="126" y="259" width="6" height="65" rx="3" fill="#5d6b7e"/>
+<text x="146" y="287" font-size="13.6" fill="#3f4a59" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">for review in reviews</text>
+<text x="146" y="309" font-size="12.2" fill="#4a5263" text-anchor="start">3 phone reviews, cleaned with &quot; &quot;.join(review.split())</text>
+<path d="M466 326 L 466 344" fill="none" stroke="#1c2230" stroke-width="1.6" marker-end="url(#m0)"/>
+<rect x="20" y="358" width="92" height="26" rx="13" fill="#f3f0fa" stroke="#7a4fc2" stroke-width="1.2"/>
+<text x="66" y="375.32" font-size="12" fill="#58378f" text-anchor="middle" font-weight="700">Template</text>
+<rect x="126" y="348" width="680" height="65" rx="12" fill="#fff" stroke="#7a4fc2" stroke-width="1.6"/>
+<rect x="126" y="348" width="6" height="65" rx="3" fill="#7a4fc2"/>
+<text x="146" y="376" font-size="13.6" fill="#58378f" text-anchor="start" font-weight="700">review_analysis_prompt</text>
+<text x="146" y="398" font-size="12.2" fill="#1c2230" text-anchor="start" font-family="JetBrains Mono, monospace">{format_instructions} and Review: {review}</text>
+<path d="M466 415 L 466 433" fill="none" stroke="#1c2230" stroke-width="1.6" marker-end="url(#m0)"/>
+<rect x="20" y="447" width="92" height="26" rx="13" fill="#eef3fb" stroke="#2f62c8" stroke-width="1.2"/>
+<text x="66" y="464.32" font-size="12" fill="#1f4a9e" text-anchor="middle" font-weight="700">Model</text>
+<rect x="126" y="437" width="680" height="65" rx="12" fill="#fff" stroke="#2f62c8" stroke-width="1.6"/>
+<rect x="126" y="437" width="6" height="65" rx="3" fill="#2f62c8"/>
+<text x="146" y="465" font-size="13.6" fill="#1f4a9e" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">llm = ChatOpenRouter(model=&quot;qwen/qwen-2.5-7b-instruct&quot;, temperature=0)</text>
+<text x="146" y="487" font-size="12.2" fill="#4a5263" text-anchor="start">Writes one JSON object for each review</text>
+<path d="M466 504 L 466 522" fill="none" stroke="#1c2230" stroke-width="1.6" marker-end="url(#m0)"/>
+<rect x="20" y="536" width="92" height="26" rx="13" fill="#fdf4e3" stroke="#b7791f" stroke-width="1.2"/>
+<text x="66" y="553.32" font-size="12" fill="#8a5a12" text-anchor="middle" font-weight="700">Parser</text>
+<rect x="126" y="526" width="680" height="65" rx="12" fill="#fff" stroke="#b7791f" stroke-width="1.6"/>
+<rect x="126" y="526" width="6" height="65" rx="3" fill="#b7791f"/>
+<text x="146" y="554" font-size="13.6" fill="#8a5a12" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">JsonOutputParser</text>
+<text x="146" y="576" font-size="12.2" fill="#4a5263" text-anchor="start">Turns the JSON text into a dict</text>
+<path d="M466 593 L 466 611" fill="none" stroke="#1c2230" stroke-width="1.6" marker-end="url(#m0)"/>
+<rect x="20" y="625" width="92" height="26" rx="13" fill="#e3f4ee" stroke="#0f8a6a" stroke-width="1.2"/>
+<text x="66" y="642.32" font-size="12" fill="#0b6650" text-anchor="middle" font-weight="700">Output</text>
+<rect x="126" y="615" width="680" height="65" rx="12" fill="#fff" stroke="#0f8a6a" stroke-width="1.6"/>
+<rect x="126" y="615" width="6" height="65" rx="3" fill="#0f8a6a"/>
+<text x="146" y="643" font-size="13.6" fill="#0b6650" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">result[&#x27;sentiment&#x27;], result[&#x27;confidence&#x27;], ...</text>
+<text x="146" y="665" font-size="12.2" fill="#4a5263" text-anchor="start">POSITIVE 0.85, NEGATIVE 0.98, NEUTRAL 0.8</text>
+<path d="M806 662 h30 V 277 h-24" fill="none" stroke="#5d6b7e" stroke-width="1.8"/>
+<path d="M820 277 L 810 277" fill="none" stroke="#5d6b7e" stroke-width="1.8" marker-end="url(#m8)"/>
+<text x="852" y="461.5" font-size="11.5" fill="#3f4a59" text-anchor="middle" font-weight="700">next</text>
+<text x="852" y="477.5" font-size="11.5" fill="#3f4a59" text-anchor="middle" font-weight="700">review</text>
+</svg>

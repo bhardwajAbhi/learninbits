@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 222" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">The chain of trust from the hardware to an app</title>
+  <desc id="d">Six links from left to right. The boot ROM holds a fused public key in the SoC. The bootloader verifies vbmeta and the boot images. The kernel uses dm-verity to check every block that it reads. init loads the SELinux policy. Zygote forks and specializes apps. The app runs with its own UID, SELinux domain, seccomp filter and mount namespace. Each link checks the next one before it runs. A broken link stops the boot or shows a warning, and the boot state goes into every attestation record.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="20" y="30" width="128" height="100" rx="12" fill="#fff" stroke="#c2552d" stroke-width="1.6"/>
+<rect x="20" y="30" width="128" height="34" rx="12" fill="#c2552d"/>
+<rect x="20" y="50" width="128" height="14" rx="0" fill="#c2552d"/>
+<text x="84" y="53" font-size="13" fill="#fff" text-anchor="middle" font-weight="700">Boot ROM</text>
+<text x="84" y="88" font-size="11.4" fill="#1c2230" text-anchor="middle">Fused public key</text>
+<text x="84" y="105" font-size="11.4" fill="#1c2230" text-anchor="middle">in the SoC</text>
+<path d="M150 80 L 162 80" fill="none" stroke="#1c2230" stroke-width="1.8" marker-end="url(#m0)"/>
+<rect x="164" y="30" width="128" height="100" rx="12" fill="#fff" stroke="#b7791f" stroke-width="1.6"/>
+<rect x="164" y="30" width="128" height="34" rx="12" fill="#b7791f"/>
+<rect x="164" y="50" width="128" height="14" rx="0" fill="#b7791f"/>
+<text x="228" y="53" font-size="13" fill="#fff" text-anchor="middle" font-weight="700">Bootloader</text>
+<text x="228" y="88" font-size="11.4" fill="#1c2230" text-anchor="middle">Verifies vbmeta</text>
+<text x="228" y="105" font-size="11.4" fill="#1c2230" text-anchor="middle">and boot images</text>
+<path d="M294 80 L 306 80" fill="none" stroke="#1c2230" stroke-width="1.8" marker-end="url(#m0)"/>
+<rect x="308" y="30" width="128" height="100" rx="12" fill="#fff" stroke="#7a4fc2" stroke-width="1.6"/>
+<rect x="308" y="30" width="128" height="34" rx="12" fill="#7a4fc2"/>
+<rect x="308" y="50" width="128" height="14" rx="0" fill="#7a4fc2"/>
+<text x="372" y="53" font-size="13" fill="#fff" text-anchor="middle" font-weight="700">Kernel</text>
+<text x="372" y="88" font-size="11.4" fill="#1c2230" text-anchor="middle">dm-verity checks</text>
+<text x="372" y="105" font-size="11.4" fill="#1c2230" text-anchor="middle">every block read</text>
+<path d="M438 80 L 450 80" fill="none" stroke="#1c2230" stroke-width="1.8" marker-end="url(#m0)"/>
+<rect x="452" y="30" width="128" height="100" rx="12" fill="#fff" stroke="#7a4fc2" stroke-width="1.6"/>
+<rect x="452" y="30" width="128" height="34" rx="12" fill="#7a4fc2"/>
+<rect x="452" y="50" width="128" height="14" rx="0" fill="#7a4fc2"/>
+<text x="516" y="53" font-size="13" fill="#fff" text-anchor="middle" font-weight="700">init</text>
+<text x="516" y="88" font-size="11.4" fill="#1c2230" text-anchor="middle">Loads the</text>
+<text x="516" y="105" font-size="11.4" fill="#1c2230" text-anchor="middle">SELinux policy</text>
+<path d="M582 80 L 594 80" fill="none" stroke="#1c2230" stroke-width="1.8" marker-end="url(#m0)"/>
+<rect x="596" y="30" width="128" height="100" rx="12" fill="#fff" stroke="#0f8a6a" stroke-width="1.6"/>
+<rect x="596" y="30" width="128" height="34" rx="12" fill="#0f8a6a"/>
+<rect x="596" y="50" width="128" height="14" rx="0" fill="#0f8a6a"/>
+<text x="660" y="53" font-size="13" fill="#fff" text-anchor="middle" font-weight="700">Zygote</text>
+<text x="660" y="88" font-size="11.4" fill="#1c2230" text-anchor="middle">Forks and</text>
+<text x="660" y="105" font-size="11.4" fill="#1c2230" text-anchor="middle">specializes apps</text>
+<path d="M726 80 L 738 80" fill="none" stroke="#1c2230" stroke-width="1.8" marker-end="url(#m0)"/>
+<rect x="740" y="30" width="128" height="100" rx="12" fill="#fff" stroke="#2f62c8" stroke-width="1.6"/>
+<rect x="740" y="30" width="128" height="34" rx="12" fill="#2f62c8"/>
+<rect x="740" y="50" width="128" height="14" rx="0" fill="#2f62c8"/>
+<text x="804" y="53" font-size="13" fill="#fff" text-anchor="middle" font-weight="700">App</text>
+<text x="804" y="88" font-size="11.4" fill="#1c2230" text-anchor="middle">UID, SELinux,</text>
+<text x="804" y="105" font-size="11.4" fill="#1c2230" text-anchor="middle">seccomp, namespace</text>
+<rect x="20" y="152" width="840" height="56" rx="12" fill="#f2efe8"/>
+<text x="440" y="176" font-size="12.6" fill="#1c2230" text-anchor="middle" font-weight="700">Each link checks the next one before it runs.</text>
+<text x="440" y="196" font-size="11.6" fill="#4a5263" text-anchor="middle">A broken link stops the boot or shows a warning, and the boot state goes into every attestation record.</text>
+</svg>

@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 372" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">Four steps to prove claims with data</title>
+  <desc id="d">Four steps. Setup and reproducibility, to be precise. Datasets and baselines, for a fair comparison. Measurable outcomes, to quantify results. Honest reporting, to build trust. A vague claim says better and faster. A measurable claim says 15 percent faster on a named dataset.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="24" y="24" width="196" height="236" rx="14" fill="#fff" stroke="#2f62c8" stroke-width="1.8"/>
+<circle cx="54" cy="54" r="15" fill="#2f62c8"/>
+<text x="54" y="59.04" font-size="14" fill="#fff" text-anchor="middle" font-weight="700">1</text>
+<text x="42" y="104" font-size="15.5" fill="#1f4a9e" text-anchor="start" font-weight="700">Setup and</text>
+<text x="42" y="126" font-size="15.5" fill="#1f4a9e" text-anchor="start" font-weight="700">reproducibility</text>
+<text x="42" y="160" font-size="12.5" fill="#4a5263" text-anchor="start">Hardware, software versions,</text>
+<text x="42" y="180" font-size="12.5" fill="#4a5263" text-anchor="start">parameters</text>
+<rect x="42" y="212" width="160" height="30" rx="15" fill="#eef3fb" stroke="#2f62c8" stroke-width="1.2"/>
+<text x="122" y="231.5" font-size="12.5" fill="#1f4a9e" text-anchor="middle" font-weight="600">Be precise</text>
+<path d="M220 142 H234" fill="none" stroke="#1c2230" stroke-width="1.6" marker-end="url(#m0)"/>
+<rect x="236" y="24" width="196" height="236" rx="14" fill="#fff" stroke="#7a4fc2" stroke-width="1.8"/>
+<circle cx="266" cy="54" r="15" fill="#7a4fc2"/>
+<text x="266" y="59.04" font-size="14" fill="#fff" text-anchor="middle" font-weight="700">2</text>
+<text x="254" y="104" font-size="15.5" fill="#58378f" text-anchor="start" font-weight="700">Datasets and</text>
+<text x="254" y="126" font-size="15.5" fill="#58378f" text-anchor="start" font-weight="700">baselines</text>
+<text x="254" y="160" font-size="12.5" fill="#4a5263" text-anchor="start">Suitable data, standard</text>
+<text x="254" y="180" font-size="12.5" fill="#4a5263" text-anchor="start">state-of-the-art baselines</text>
+<rect x="254" y="212" width="160" height="30" rx="15" fill="#f3f0fa" stroke="#7a4fc2" stroke-width="1.2"/>
+<text x="334" y="231.5" font-size="12.5" fill="#58378f" text-anchor="middle" font-weight="600">Fair comparison</text>
+<path d="M432 142 H446" fill="none" stroke="#1c2230" stroke-width="1.6" marker-end="url(#m0)"/>
+<rect x="448" y="24" width="196" height="236" rx="14" fill="#fff" stroke="#b7791f" stroke-width="1.8"/>
+<circle cx="478" cy="54" r="15" fill="#b7791f"/>
+<text x="478" y="59.04" font-size="14" fill="#fff" text-anchor="middle" font-weight="700">3</text>
+<text x="466" y="104" font-size="15.5" fill="#8a5a12" text-anchor="start" font-weight="700">Measurable</text>
+<text x="466" y="126" font-size="15.5" fill="#8a5a12" text-anchor="start" font-weight="700">outcomes</text>
+<text x="466" y="160" font-size="12.5" fill="#4a5263" text-anchor="start">Numbers, tables, graphs,</text>
+<text x="466" y="180" font-size="12.5" fill="#4a5263" text-anchor="start">“15% faster”</text>
+<rect x="466" y="212" width="160" height="30" rx="15" fill="#fdf4e3" stroke="#b7791f" stroke-width="1.2"/>
+<text x="546" y="231.5" font-size="12.5" fill="#8a5a12" text-anchor="middle" font-weight="600">Quantify results</text>
+<path d="M644 142 H658" fill="none" stroke="#1c2230" stroke-width="1.6" marker-end="url(#m0)"/>
+<rect x="660" y="24" width="196" height="236" rx="14" fill="#fff" stroke="#0f8a6a" stroke-width="1.8"/>
+<circle cx="690" cy="54" r="15" fill="#0f8a6a"/>
+<text x="690" y="59.04" font-size="14" fill="#fff" text-anchor="middle" font-weight="700">4</text>
+<text x="678" y="104" font-size="15.5" fill="#0b6650" text-anchor="start" font-weight="700">Honest</text>
+<text x="678" y="126" font-size="15.5" fill="#0b6650" text-anchor="start" font-weight="700">reporting</text>
+<text x="678" y="160" font-size="12.5" fill="#4a5263" text-anchor="start">What did not work, and</text>
+<text x="678" y="180" font-size="12.5" fill="#4a5263" text-anchor="start">unexpected results</text>
+<rect x="678" y="212" width="160" height="30" rx="15" fill="#e3f4ee" stroke="#0f8a6a" stroke-width="1.2"/>
+<text x="758" y="231.5" font-size="12.5" fill="#0b6650" text-anchor="middle" font-weight="600">Build trust</text>
+<rect x="24" y="284" width="404" height="70" rx="14" fill="#fbecec" stroke="#c2552d" stroke-width="1.5"/>
+<text x="44" y="314" font-size="15.5" fill="#963f1f" text-anchor="start" font-weight="700">Vague</text>
+<text x="44" y="338" font-size="13.5" fill="#1c2230" text-anchor="start">“Our method is better and faster.”</text>
+<rect x="452" y="284" width="404" height="70" rx="14" fill="#e3f4ee" stroke="#0f8a6a" stroke-width="1.5"/>
+<text x="472" y="314" font-size="15.5" fill="#0b6650" text-anchor="start" font-weight="700">Measurable</text>
+<text x="472" y="338" font-size="13.5" fill="#1c2230" text-anchor="start">“Our method is 15% faster on dataset X.”</text>
+</svg>

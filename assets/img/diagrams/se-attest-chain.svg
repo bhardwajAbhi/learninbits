@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 436" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">The certificate chain of an attested key</title>
+  <desc id="d">Four certificates, leaf first. Index 0 is the leaf certificate with the subject CN=Android Keystore Key. It holds the public key of the new app key and the key attestation extension with OID 1.3.6.1.4.1.11129.2.1.17. Index 1 is the attestation key certificate, from a factory batch key or an RKP key. Its key signs the leaf inside KeyMint, and it belongs to one device or to a batch of at least 100,000 devices. Next come intermediate certificates, where an RKP chain carries the provisioning information extension with OID 1.3.6.1.4.1.11129.2.1.30, which holds the issued count and the TEE or StrongBox level. Last is a Google attestation root certificate, to compare with the published roots. A new root with the subject CN=Key Attestation CA1 signs chains from 1 February 2026. Each certificate is signed by the next one. KeyStore.getCertificateChain(alias) returns this list, leaf first.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="120" y="24" width="470" height="82" rx="12" fill="#fff" stroke="#2f62c8" stroke-width="1.7"/>
+<rect x="120" y="24" width="8" height="82" rx="4" fill="#2f62c8"/>
+<text x="142" y="50" font-size="13.5" fill="#1f4a9e" text-anchor="start" font-weight="700">Leaf certificate</text>
+<text x="142" y="70" font-size="11.4" fill="#1c2230" text-anchor="start" font-weight="600">Subject CN=Android Keystore Key</text>
+<text x="142" y="90" font-size="11" fill="#4a5263" text-anchor="start">Public key of the new app key</text>
+<text x="610" y="46" font-size="11" fill="#4a5263" text-anchor="start">Key attestation extension</text>
+<text x="610" y="62" font-size="11" fill="#4a5263" text-anchor="start">1.3.6.1.4.1.11129.2.1.17</text>
+<text x="100" y="70" font-size="14" fill="#1f4a9e" text-anchor="end" font-family="JetBrains Mono, monospace" font-weight="800">0</text>
+<path d="M355 118 L 355 108" fill="none" stroke="#2f62c8" stroke-width="1.6" marker-end="url(#m3)" marker-start="url(#m3)"/>
+<text x="368" y="116" font-size="10.4" fill="#4a5263" text-anchor="start" font-weight="600">signed by the next one</text>
+<rect x="120" y="120" width="470" height="82" rx="12" fill="#fff" stroke="#7a4fc2" stroke-width="1.7"/>
+<rect x="120" y="120" width="8" height="82" rx="4" fill="#7a4fc2"/>
+<text x="142" y="146" font-size="13.5" fill="#58378f" text-anchor="start" font-weight="700">Attestation key certificate</text>
+<text x="142" y="166" font-size="11.4" fill="#1c2230" text-anchor="start" font-weight="600">Factory batch key, or an RKP key</text>
+<text x="142" y="186" font-size="11" fill="#4a5263" text-anchor="start">Signs the leaf inside KeyMint</text>
+<text x="610" y="142" font-size="11" fill="#4a5263" text-anchor="start">One device, or a batch of</text>
+<text x="610" y="158" font-size="11" fill="#4a5263" text-anchor="start">at least 100,000 devices</text>
+<text x="100" y="166" font-size="14" fill="#58378f" text-anchor="end" font-family="JetBrains Mono, monospace" font-weight="800">1</text>
+<path d="M355 214 L 355 204" fill="none" stroke="#7a4fc2" stroke-width="1.6" marker-end="url(#m5)" marker-start="url(#m5)"/>
+<text x="368" y="212" font-size="10.4" fill="#4a5263" text-anchor="start" font-weight="600">signed by the next one</text>
+<rect x="120" y="216" width="470" height="82" rx="12" fill="#fff" stroke="#0e7c86" stroke-width="1.7"/>
+<rect x="120" y="216" width="8" height="82" rx="4" fill="#0e7c86"/>
+<text x="142" y="242" font-size="13.5" fill="#095a61" text-anchor="start" font-weight="700">Intermediate certificates</text>
+<text x="142" y="262" font-size="11.4" fill="#1c2230" text-anchor="start" font-weight="600">Provisioning information extension</text>
+<text x="142" y="282" font-size="11" fill="#4a5263" text-anchor="start" font-family="JetBrains Mono, monospace">1.3.6.1.4.1.11129.2.1.30</text>
+<text x="610" y="238" font-size="11" fill="#4a5263" text-anchor="start">Issued count, TEE or StrongBox</text>
+<text x="100" y="262" font-size="14" fill="#095a61" text-anchor="end" font-family="JetBrains Mono, monospace" font-weight="800">2</text>
+<path d="M355 310 L 355 300" fill="none" stroke="#0e7c86" stroke-width="1.6" marker-end="url(#m0)" marker-start="url(#m0)"/>
+<text x="368" y="308" font-size="10.4" fill="#4a5263" text-anchor="start" font-weight="600">signed by the next one</text>
+<rect x="120" y="312" width="470" height="82" rx="12" fill="#fff" stroke="#b7791f" stroke-width="1.7"/>
+<rect x="120" y="312" width="8" height="82" rx="4" fill="#b7791f"/>
+<text x="142" y="338" font-size="13.5" fill="#8a5a12" text-anchor="start" font-weight="700">Root certificate</text>
+<text x="142" y="358" font-size="11.4" fill="#1c2230" text-anchor="start" font-weight="600">A Google attestation root</text>
+<text x="142" y="378" font-size="11" fill="#4a5263" text-anchor="start">Compare with the published roots</text>
+<text x="610" y="334" font-size="11" fill="#4a5263" text-anchor="start">New root CN=Key Attestation CA1</text>
+<text x="610" y="350" font-size="11" fill="#4a5263" text-anchor="start">signs chains from 1 February 2026</text>
+<text x="100" y="358" font-size="14" fill="#8a5a12" text-anchor="end" font-family="JetBrains Mono, monospace" font-weight="800">3</text>
+<text x="100" y="22" font-size="10.4" fill="#4a5263" text-anchor="end" font-weight="600">Index</text>
+<text x="440" y="420" font-size="11.4" fill="#4a5263" text-anchor="middle" font-family="JetBrains Mono, monospace">KeyStore.getCertificateChain(alias) returns this list, leaf first.</text>
+</svg>

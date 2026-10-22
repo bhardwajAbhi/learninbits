@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 300" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">A system broadcast compared with an in-app stream</title>
+  <desc id="d">On the left, your app calls sendBroadcast with a user token, and any app with a matching receiver can get it. On the right, inside one app, a repository passes data to a screen through StateFlow, SharedFlow or LiveData. The data never leaves the process, and no other app can listen.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="20" y="34" width="400" height="250" rx="16" fill="#fbecec" fill-opacity="0.55"/>
+<rect x="20" y="34" width="400" height="250" rx="16" fill="none" stroke="#c2552d" stroke-width="1.2" stroke-dasharray="6 5"/>
+<rect x="36" y="21" width="164.8" height="26" rx="13" fill="#fff" stroke="#c2552d" stroke-width="1.2"/>
+<text x="118.4" y="38.5" font-size="12.5" fill="#963f1f" text-anchor="middle" font-weight="700">A system broadcast</text>
+<rect x="40" y="70" width="150" height="50" rx="10" fill="#fff" stroke="#2f62c8" stroke-width="1.4"/>
+<text x="115" y="100" font-size="12.6" fill="#1f4a9e" text-anchor="middle" font-weight="700">Your app</text>
+<text x="115" y="146" font-size="11" fill="#1c2230" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="600">sendBroadcast(intent)</text>
+<text x="115" y="164" font-size="11" fill="#4a5263" text-anchor="middle">with the user token</text>
+<rect x="260" y="70" width="140" height="46" rx="10" fill="#fbecec" stroke="#c2552d" stroke-width="1.2"/>
+<text x="330" y="98" font-size="10.6" fill="#963f1f" text-anchor="middle" font-weight="600">Any app with a receiver</text>
+<path d="M190 95 C 225 95, 225 93, 256 93" fill="none" stroke="#c2552d" stroke-width="1.4" marker-end="url(#m7)"/>
+<rect x="260" y="136" width="140" height="46" rx="10" fill="#fbecec" stroke="#c2552d" stroke-width="1.2"/>
+<text x="330" y="164" font-size="10.6" fill="#963f1f" text-anchor="middle" font-weight="600">Any app with a receiver</text>
+<path d="M190 95 C 225 95, 225 159, 256 159" fill="none" stroke="#c2552d" stroke-width="1.4" marker-end="url(#m7)"/>
+<rect x="260" y="202" width="140" height="46" rx="10" fill="#fbecec" stroke="#c2552d" stroke-width="1.2"/>
+<text x="330" y="230" font-size="10.6" fill="#963f1f" text-anchor="middle" font-weight="600">Any app with a receiver</text>
+<path d="M190 95 C 225 95, 225 225, 256 225" fill="none" stroke="#c2552d" stroke-width="1.4" marker-end="url(#m7)"/>
+<rect x="460" y="34" width="400" height="250" rx="16" fill="#e3f4ee" fill-opacity="0.55"/>
+<rect x="460" y="34" width="400" height="250" rx="16" fill="none" stroke="#0f8a6a" stroke-width="1.2" stroke-dasharray="6 5"/>
+<rect x="476" y="21" width="134.4" height="26" rx="13" fill="#fff" stroke="#0f8a6a" stroke-width="1.2"/>
+<text x="543.2" y="38.5" font-size="12.5" fill="#0b6650" text-anchor="middle" font-weight="700">Inside one app</text>
+<rect x="480" y="70" width="360" height="190" rx="12" fill="#fff" stroke="#0f8a6a" stroke-width="1.5"/>
+<text x="496" y="94" font-size="12.6" fill="#0b6650" text-anchor="start" font-weight="700">One process</text>
+<rect x="500" y="110" width="140" height="46" rx="10" fill="#eef3fb" stroke="#2f62c8" stroke-width="1.2"/>
+<text x="570" y="138" font-size="12" fill="#1f4a9e" text-anchor="middle" font-weight="600">Repository</text>
+<rect x="680" y="110" width="140" height="46" rx="10" fill="#eef3fb" stroke="#2f62c8" stroke-width="1.2"/>
+<text x="750" y="138" font-size="12" fill="#1f4a9e" text-anchor="middle" font-weight="600">Screen</text>
+<path d="M640 133 L 676 133" fill="none" stroke="#0f8a6a" stroke-width="1.8" marker-end="url(#m4)"/>
+<text x="660" y="186" font-size="11.6" fill="#0b6650" text-anchor="middle" font-weight="600">StateFlow, SharedFlow or LiveData</text>
+<text x="660" y="208" font-size="11.4" fill="#4a5263" text-anchor="middle">Data never leaves the process.</text>
+<text x="660" y="230" font-size="11.4" fill="#4a5263" text-anchor="middle">No other app can listen.</text>
+</svg>

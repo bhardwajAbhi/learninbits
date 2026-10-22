@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 290" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">Where the logs of an app can go</title>
+  <desc id="d">A release build that logs URLs, user email, response bodies and payment errors writes them to logcat, the system log. A person with a USB cable and adb, a rooted device or a system app and a crash report that uploads the log can all read them. In the release build, remove debug logs with an R8 rule or a check of BuildConfig.DEBUG, and never log tokens, passwords, personal data, full URLs with parameters or response bodies.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="20" y="30" width="320" height="126" rx="12" fill="#1f2633"/>
+<path d="M32 30 h296 a12 12 0 0 1 12 12 v22 h-320 v-22 a12 12 0 0 1 12 -12z" fill="#c2552d"/>
+<text x="36" y="53" font-size="13.5" fill="#fff" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">In a release build</text>
+<text x="36" y="86" font-size="11.4" fill="#e8ecf3" text-anchor="start" font-family="JetBrains Mono, monospace">Log.d(&quot;Api&quot;, &quot;url=&quot; + url)</text>
+<text x="36" y="104" font-size="11.4" fill="#e8ecf3" text-anchor="start" font-family="JetBrains Mono, monospace">Log.d(&quot;Api&quot;, &quot;user=&quot; + email)</text>
+<text x="36" y="122" font-size="11.4" fill="#e8ecf3" text-anchor="start" font-family="JetBrains Mono, monospace">Log.d(&quot;Api&quot;, &quot;body=&quot; + json)</text>
+<text x="36" y="140" font-size="11.4" fill="#e8ecf3" text-anchor="start" font-family="JetBrains Mono, monospace">Log.e(&quot;Pay&quot;, &quot;card failed&quot;, e)</text>
+<rect x="380" y="50" width="140" height="70" rx="12" fill="#1c2230"/>
+<text x="450" y="82" font-size="15" fill="#fff" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="700">logcat</text>
+<text x="450" y="102" font-size="11.4" fill="#ffffffcc" text-anchor="middle">system log</text>
+<path d="M340 85 L 376 85" fill="none" stroke="#c2552d" stroke-width="1.8" marker-end="url(#m7)"/>
+<rect x="570" y="26" width="290" height="34" rx="8" fill="#fdf4e3" stroke="#b7791f" stroke-width="1.2"/>
+<text x="584" y="48" font-size="11.8" fill="#8a5a12" text-anchor="start" font-weight="600">A person with a USB cable and adb</text>
+<path d="M520 85 C 545 85, 545 43, 566 43" fill="none" stroke="#b7791f" stroke-width="1.4" marker-end="url(#m6)"/>
+<rect x="570" y="70" width="290" height="34" rx="8" fill="#fbecec" stroke="#c2552d" stroke-width="1.2"/>
+<text x="584" y="92" font-size="11.8" fill="#963f1f" text-anchor="start" font-weight="600">A rooted device or a system app</text>
+<path d="M520 85 C 545 85, 545 87, 566 87" fill="none" stroke="#c2552d" stroke-width="1.4" marker-end="url(#m7)"/>
+<rect x="570" y="114" width="290" height="34" rx="8" fill="#f3f0fa" stroke="#7a4fc2" stroke-width="1.2"/>
+<text x="584" y="136" font-size="11.8" fill="#58378f" text-anchor="start" font-weight="600">A crash report that uploads the log</text>
+<path d="M520 85 C 545 85, 545 131, 566 131" fill="none" stroke="#7a4fc2" stroke-width="1.4" marker-end="url(#m5)"/>
+<rect x="20" y="182" width="840" height="92" rx="12" fill="#e3f4ee" stroke="#0f8a6a" stroke-width="1.3"/>
+<text x="36" y="206" font-size="13" fill="#0b6650" text-anchor="start" font-weight="700">In the release build</text>
+<text x="36" y="228" font-size="11.8" fill="#1c2230" text-anchor="start">Remove debug logs with an R8 rule, or wrap them in a check of BuildConfig.DEBUG.</text>
+<text x="36" y="248" font-size="11.8" fill="#1c2230" text-anchor="start">Never log tokens, passwords, personal data, full URLs with parameters or response bodies.</text>
+</svg>

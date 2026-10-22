@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 322" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">What R8 does to the code of a release build</title>
+  <desc id="d">Before R8, the APK holds readable class names such as PaymentManager and verifyCard, plus unused helpers and a debug screen. R8 shrinks unused code, renames classes and optimizes the rest. After R8, the class is called a, its members are a and the debug screen is gone. A bar chart shows that the release APK becomes smaller and its names carry no meaning.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="20" y="30" width="300" height="162" rx="12" fill="#1f2633"/>
+<path d="M32 30 h276 a12 12 0 0 1 12 12 v22 h-300 v-22 a12 12 0 0 1 12 -12z" fill="#c2552d"/>
+<text x="36" y="53" font-size="13.5" fill="#fff" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">Before, in the APK</text>
+<text x="36" y="86" font-size="11.6" fill="#e8ecf3" text-anchor="start" font-family="JetBrains Mono, monospace">class PaymentManager {</text>
+<text x="36" y="104" font-size="11.6" fill="#e8ecf3" text-anchor="start" font-family="JetBrains Mono, monospace">  String merchantId;</text>
+<text x="36" y="122" font-size="11.6" fill="#e8ecf3" text-anchor="start" font-family="JetBrains Mono, monospace">  void verifyCard(...)</text>
+<text x="36" y="140" font-size="11.6" fill="#e8ecf3" text-anchor="start" font-family="JetBrains Mono, monospace">  void unusedHelper()</text>
+<text x="36" y="158" font-size="11.6" fill="#e8ecf3" text-anchor="start" font-family="JetBrains Mono, monospace">}</text>
+<text x="36" y="176" font-size="11.6" fill="#e8ecf3" text-anchor="start" font-family="JetBrains Mono, monospace">class DebugScreen { ... }</text>
+<rect x="560" y="30" width="300" height="162" rx="12" fill="#1f2633"/>
+<path d="M572 30 h276 a12 12 0 0 1 12 12 v22 h-300 v-22 a12 12 0 0 1 12 -12z" fill="#0f8a6a"/>
+<text x="576" y="53" font-size="13.5" fill="#fff" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">After R8</text>
+<text x="576" y="86" font-size="11.6" fill="#e8ecf3" text-anchor="start" font-family="JetBrains Mono, monospace">class a {</text>
+<text x="576" y="104" font-size="11.6" fill="#e8ecf3" text-anchor="start" font-family="JetBrains Mono, monospace">  String a;</text>
+<text x="576" y="122" font-size="11.6" fill="#e8ecf3" text-anchor="start" font-family="JetBrains Mono, monospace">  void a(...)</text>
+<text x="576" y="140" font-size="11.6" fill="#e8ecf3" text-anchor="start" font-family="JetBrains Mono, monospace">}</text>
+<text x="576" y="158" font-size="11.6" fill="#e8ecf3" text-anchor="start" font-family="JetBrains Mono, monospace"></text>
+<text x="576" y="176" font-size="11.6" fill="#9aa6b8" text-anchor="start" font-family="JetBrains Mono, monospace">// DebugScreen removed</text>
+<rect x="350" y="70" width="180" height="110" rx="14" fill="#f2efe8"/>
+<text x="440" y="100" font-size="18" fill="#1c2230" text-anchor="middle" font-weight="800">R8</text>
+<text x="440" y="124" font-size="11.4" fill="#4a5263" text-anchor="middle" font-weight="500">Shrinks unused code</text>
+<text x="440" y="142" font-size="11.4" fill="#4a5263" text-anchor="middle" font-weight="500">Renames classes</text>
+<text x="440" y="160" font-size="11.4" fill="#4a5263" text-anchor="middle" font-weight="500">Optimizes the rest</text>
+<path d="M320 125 L 346 125" fill="none" stroke="#1c2230" stroke-width="1.8" marker-end="url(#m0)"/>
+<path d="M530 125 L 556 125" fill="none" stroke="#1c2230" stroke-width="1.8" marker-end="url(#m0)"/>
+<text x="20" y="222" font-size="12.5" fill="#1c2230" text-anchor="start" font-weight="700">Size and readability of the release APK</text>
+<text x="20" y="258" font-size="12" fill="#4a5263" text-anchor="start" font-weight="600">Without R8</text>
+<rect x="120" y="238" width="520" height="28" rx="6" fill="#fbecec" stroke="#c2552d" stroke-width="1.2"/>
+<text x="650" y="257" font-size="11.6" fill="#963f1f" text-anchor="start" font-weight="500">Large, with readable names</text>
+<text x="20" y="298" font-size="12" fill="#4a5263" text-anchor="start" font-weight="600">With R8</text>
+<rect x="120" y="278" width="330" height="28" rx="6" fill="#e3f4ee" stroke="#0f8a6a" stroke-width="1.2"/>
+<text x="460" y="297" font-size="11.6" fill="#0b6650" text-anchor="start" font-weight="500">Smaller, names carry no meaning</text>
+</svg>

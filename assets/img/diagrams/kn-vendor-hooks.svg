@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 408" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">Vendor hooks and restricted vendor hooks</title>
+  <desc id="d">Two kinds of hooks. android_vh_* vendor hooks are normal tracepoint hooks that a module can attach and detach at run time, not from atomic context, for example for a memory policy. android_rvh_* restricted vendor hooks sit in hot or atomic paths, are registered once at boot and can never be detached, for example in the scheduler or for interrupts. Below, a simplified pattern. The GKI core calls a trace_android_rvh function at a fixed point, and a vendor module registers its callback once at boot.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="20" y="30" width="410" height="200" rx="12" fill="#fff" stroke="#2f62c8" stroke-width="1.7"/>
+<text x="38" y="60" font-size="16" fill="#1f4a9e" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">android_vh_*</text>
+<text x="412" y="60" font-size="12" fill="#4a5263" text-anchor="end" font-weight="600">Vendor hook</text>
+<circle cx="44" cy="92" r="4" fill="#2f62c8"/>
+<text x="58" y="96" font-size="12.4" fill="#1c2230" text-anchor="start">Normal tracepoint hook</text>
+<circle cx="44" cy="124" r="4" fill="#2f62c8"/>
+<text x="58" y="128" font-size="12.4" fill="#1c2230" text-anchor="start">Attach and detach at run time</text>
+<circle cx="44" cy="156" r="4" fill="#2f62c8"/>
+<text x="58" y="160" font-size="12.4" fill="#1c2230" text-anchor="start">Not in atomic context</text>
+<circle cx="44" cy="188" r="4" fill="#2f62c8"/>
+<text x="58" y="192" font-size="12.4" fill="#1c2230" text-anchor="start">For example memory policy</text>
+<rect x="450" y="30" width="410" height="200" rx="12" fill="#fff" stroke="#c2552d" stroke-width="1.7"/>
+<text x="468" y="60" font-size="16" fill="#963f1f" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">android_rvh_*</text>
+<text x="842" y="60" font-size="12" fill="#4a5263" text-anchor="end" font-weight="600">Restricted vendor hook</text>
+<circle cx="474" cy="92" r="4" fill="#c2552d"/>
+<text x="488" y="96" font-size="12.4" fill="#1c2230" text-anchor="start">In hot or atomic paths</text>
+<circle cx="474" cy="124" r="4" fill="#c2552d"/>
+<text x="488" y="128" font-size="12.4" fill="#1c2230" text-anchor="start">Register once, at boot</text>
+<circle cx="474" cy="156" r="4" fill="#c2552d"/>
+<text x="488" y="160" font-size="12.4" fill="#1c2230" text-anchor="start">Can never be detached</text>
+<circle cx="474" cy="188" r="4" fill="#c2552d"/>
+<text x="488" y="192" font-size="12.4" fill="#1c2230" text-anchor="start">For example scheduler, IRQs</text>
+<rect x="20" y="250" width="840" height="144" rx="12" fill="#1f2633"/>
+<path d="M32 250 h816 a12 12 0 0 1 12 12 v22 h-840 v-22 a12 12 0 0 1 12 -12z" fill="#7a4fc2"/>
+<text x="36" y="273" font-size="13.5" fill="#fff" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">The pattern (simplified)</text>
+<text x="36" y="306" font-size="11.4" fill="#9aa6b8" text-anchor="start" font-family="JetBrains Mono, monospace">// in the GKI core, at a fixed point</text>
+<text x="36" y="324" font-size="11.4" fill="#e8ecf3" text-anchor="start" font-family="JetBrains Mono, monospace">trace_android_rvh_select_task_rq_fair(p, prev_cpu, &amp;target_cpu);</text>
+<text x="36" y="342" font-size="11.4" fill="#e8ecf3" text-anchor="start" font-family="JetBrains Mono, monospace"></text>
+<text x="36" y="360" font-size="11.4" fill="#9aa6b8" text-anchor="start" font-family="JetBrains Mono, monospace">// in a vendor module, once at boot</text>
+<text x="36" y="378" font-size="11.4" fill="#e8ecf3" text-anchor="start" font-family="JetBrains Mono, monospace">register_trace_android_rvh_select_task_rq_fair(my_cpu_pick, NULL);</text>
+</svg>

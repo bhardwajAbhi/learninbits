@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 262" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">A short history of anonymization</title>
+  <desc id="d">Four eras. In the 1960s and 1970s, basic redaction. In the 1980s and 1990s, the first attacks, when Sweeney showed in 1997 that zip code, gender and birth date identify about 87 percent of people. From 2002 to 2007, formal models such as k-anonymity, l-diversity and t-closeness. From 2006, differential privacy, synthetic data, clean rooms and laws such as GDPR, DPDP and CCPA.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<line x1="40" y1="110" x2="840" y2="110" stroke="#1c2230" stroke-width="3"/>
+<circle cx="130" cy="110" r="11" fill="#5d6b7e"/>
+<text x="130" y="82" font-size="12.5" fill="#3f4a59" text-anchor="middle" font-weight="700">1960s to 1970s</text>
+<rect x="40" y="136" width="182" height="112" rx="12" fill="#fff" stroke="#5d6b7e" stroke-width="1.6"/>
+<path d="M52 136 h158 a12 12 0 0 1 12 12 v22 h-182 v-22 a12 12 0 0 1 12 -12z" fill="#5d6b7e"/>
+<text x="54" y="157.86" font-size="13.5" fill="#fff" text-anchor="start" font-weight="700">Origins</text>
+<text x="54" y="192" font-size="11.3" fill="#4a5263" text-anchor="start">Electronic records rise.</text>
+<text x="54" y="209.515" font-size="11.3" fill="#4a5263" text-anchor="start">Basic redaction removes</text>
+<text x="54" y="227.03" font-size="11.3" fill="#4a5263" text-anchor="start">the names and hope.</text>
+<circle cx="335" cy="110" r="11" fill="#c2552d"/>
+<text x="335" y="82" font-size="12.5" fill="#963f1f" text-anchor="middle" font-weight="700">1980s to 1990s</text>
+<rect x="245" y="136" width="182" height="112" rx="12" fill="#fff" stroke="#c2552d" stroke-width="1.6"/>
+<path d="M257 136 h158 a12 12 0 0 1 12 12 v22 h-182 v-22 a12 12 0 0 1 12 -12z" fill="#c2552d"/>
+<text x="259" y="157.86" font-size="13.5" fill="#fff" text-anchor="start" font-weight="700">First attacks</text>
+<text x="259" y="192" font-size="11.3" fill="#4a5263" text-anchor="start">Sweeney (1997) showed that zip</text>
+<text x="259" y="209.515" font-size="11.3" fill="#4a5263" text-anchor="start">code, gender and birth date</text>
+<text x="259" y="227.03" font-size="11.3" fill="#4a5263" text-anchor="start">identify about 87%.</text>
+<circle cx="540" cy="110" r="11" fill="#2f62c8"/>
+<text x="540" y="82" font-size="12.5" fill="#1f4a9e" text-anchor="middle" font-weight="700">2002 to 2007</text>
+<rect x="450" y="136" width="182" height="112" rx="12" fill="#fff" stroke="#2f62c8" stroke-width="1.6"/>
+<path d="M462 136 h158 a12 12 0 0 1 12 12 v22 h-182 v-22 a12 12 0 0 1 12 -12z" fill="#2f62c8"/>
+<text x="464" y="157.86" font-size="13.5" fill="#fff" text-anchor="start" font-weight="700">Formal models</text>
+<text x="464" y="192" font-size="11.3" fill="#4a5263" text-anchor="start">k-anonymity (2002)</text>
+<text x="464" y="209.515" font-size="11.3" fill="#4a5263" text-anchor="start">l-diversity (2006)</text>
+<text x="464" y="227.03" font-size="11.3" fill="#4a5263" text-anchor="start">t-closeness (2007)</text>
+<circle cx="745" cy="110" r="11" fill="#0f8a6a"/>
+<text x="745" y="82" font-size="12.5" fill="#0b6650" text-anchor="middle" font-weight="700">2006 onward</text>
+<rect x="655" y="136" width="182" height="112" rx="12" fill="#fff" stroke="#0f8a6a" stroke-width="1.6"/>
+<path d="M667 136 h158 a12 12 0 0 1 12 12 v22 h-182 v-22 a12 12 0 0 1 12 -12z" fill="#0f8a6a"/>
+<text x="669" y="157.86" font-size="13.5" fill="#fff" text-anchor="start" font-weight="700">Modern methods</text>
+<text x="669" y="192" font-size="11.3" fill="#4a5263" text-anchor="start">Differential privacy (2006),</text>
+<text x="669" y="209.515" font-size="11.3" fill="#4a5263" text-anchor="start">synthetic data, clean rooms,</text>
+<text x="669" y="227.03" font-size="11.3" fill="#4a5263" text-anchor="start">GDPR, DPDP, CCPA</text>
+</svg>

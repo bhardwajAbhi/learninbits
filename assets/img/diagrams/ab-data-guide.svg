@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 466" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">Choosing a safe home for each piece of data</title>
+  <desc id="d">A decision flow for a piece of data. If it is a secret for a paid or private API, keep it on your server and let the app call your server. Else, if you do not need it, do not collect it. Else, if other apps or the user must open it, use shared storage, but only for data that is not private. Else, if it is a token, a password or personal data, use internal storage encrypted with a Keystore key. Otherwise use internal storage with plain files or DataStore.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="330" y="14" width="220" height="34" rx="17" fill="#1c2230"/>
+<text x="440" y="36" font-size="12.4" fill="#fff" text-anchor="middle" font-weight="700">A piece of data to keep</text>
+<path d="M440 48 L 440 62" fill="none" stroke="#1c2230" stroke-width="1.6" marker-end="url(#m0)"/>
+<path d="M440 63 L555 100 L440 137 L325 100 Z" fill="#fff" stroke="#2f62c8" stroke-width="2"/>
+<text x="440" y="96.5" font-size="12.2" fill="#1f4a9e" text-anchor="middle" font-weight="700">A secret for a</text>
+<text x="440" y="113.5" font-size="12.2" fill="#1f4a9e" text-anchor="middle" font-weight="700">paid or private API?</text>
+<rect x="640" y="72" width="220" height="58" rx="10" fill="#fbecec" stroke="#c2552d" stroke-width="1.5"/>
+<text x="652" y="95" font-size="12.4" fill="#963f1f" text-anchor="start" font-weight="700">Keep it on your server</text>
+<text x="652" y="114" font-size="11.2" fill="#4a5263" text-anchor="start">The app calls your server</text>
+<path d="M555 100 L 636 100" fill="none" stroke="#c2552d" stroke-width="1.6" marker-end="url(#m7)"/>
+<text x="596" y="92" font-size="12" fill="#963f1f" text-anchor="middle" font-weight="800">Yes</text>
+<path d="M440 137 L 440 168" fill="none" stroke="#1c2230" stroke-width="1.6" marker-end="url(#m0)"/>
+<text x="456" y="157" font-size="12" fill="#1c2230" text-anchor="start" font-weight="800">No</text>
+<path d="M440 169 L555 206 L440 243 L325 206 Z" fill="#fff" stroke="#2f62c8" stroke-width="2"/>
+<text x="440" y="211" font-size="12.2" fill="#1f4a9e" text-anchor="middle" font-weight="700">Do you need it at all?</text>
+<rect x="640" y="178" width="220" height="58" rx="10" fill="#eef0f3" stroke="#5d6b7e" stroke-width="1.5"/>
+<text x="652" y="201" font-size="12.4" fill="#3f4a59" text-anchor="start" font-weight="700">Do not collect it</text>
+<text x="652" y="220" font-size="11.2" fill="#4a5263" text-anchor="start">Less data, less risk</text>
+<path d="M555 206 L 636 206" fill="none" stroke="#5d6b7e" stroke-width="1.6" marker-end="url(#m8)"/>
+<text x="596" y="198" font-size="12" fill="#3f4a59" text-anchor="middle" font-weight="800">No</text>
+<path d="M440 243 L 440 274" fill="none" stroke="#1c2230" stroke-width="1.6" marker-end="url(#m0)"/>
+<text x="456" y="263" font-size="12" fill="#1c2230" text-anchor="start" font-weight="800">Yes</text>
+<path d="M440 275 L555 312 L440 349 L325 312 Z" fill="#fff" stroke="#2f62c8" stroke-width="2"/>
+<text x="440" y="308.5" font-size="12.2" fill="#1f4a9e" text-anchor="middle" font-weight="700">Must other apps or</text>
+<text x="440" y="325.5" font-size="12.2" fill="#1f4a9e" text-anchor="middle" font-weight="700">the user open it?</text>
+<rect x="640" y="284" width="220" height="58" rx="10" fill="#fdf4e3" stroke="#b7791f" stroke-width="1.5"/>
+<text x="652" y="307" font-size="12.4" fill="#8a5a12" text-anchor="start" font-weight="700">Shared storage</text>
+<text x="652" y="326" font-size="11.2" fill="#4a5263" text-anchor="start">Only data that is not private</text>
+<path d="M555 312 L 636 312" fill="none" stroke="#b7791f" stroke-width="1.6" marker-end="url(#m6)"/>
+<text x="596" y="304" font-size="12" fill="#8a5a12" text-anchor="middle" font-weight="800">Yes</text>
+<path d="M440 349 L 440 380" fill="none" stroke="#1c2230" stroke-width="1.6" marker-end="url(#m0)"/>
+<text x="456" y="369" font-size="12" fill="#1c2230" text-anchor="start" font-weight="800">No</text>
+<path d="M440 381 L555 418 L440 455 L325 418 Z" fill="#fff" stroke="#2f62c8" stroke-width="2"/>
+<text x="440" y="414.5" font-size="12.2" fill="#1f4a9e" text-anchor="middle" font-weight="700">Is it a token, a password</text>
+<text x="440" y="431.5" font-size="12.2" fill="#1f4a9e" text-anchor="middle" font-weight="700">or personal data?</text>
+<rect x="640" y="390" width="220" height="58" rx="10" fill="#e3f4ee" stroke="#0f8a6a" stroke-width="1.5"/>
+<text x="652" y="413" font-size="12.4" fill="#0b6650" text-anchor="start" font-weight="700">Internal storage</text>
+<text x="652" y="432" font-size="11.2" fill="#4a5263" text-anchor="start">Encrypted with a Keystore key</text>
+<path d="M555 418 L 636 418" fill="none" stroke="#0f8a6a" stroke-width="1.6" marker-end="url(#m4)"/>
+<text x="596" y="410" font-size="12" fill="#0b6650" text-anchor="middle" font-weight="800">Yes</text>
+<path d="M325 418 L 254 418" fill="none" stroke="#2f62c8" stroke-width="1.6" marker-end="url(#m3)"/>
+<text x="290" y="410" font-size="12" fill="#1f4a9e" text-anchor="middle" font-weight="800">No</text>
+<rect x="20" y="390" width="230" height="58" rx="10" fill="#eef3fb" stroke="#2f62c8" stroke-width="1.5"/>
+<text x="32" y="413" font-size="12.4" fill="#1f4a9e" text-anchor="start" font-weight="700">Internal storage</text>
+<text x="32" y="432" font-size="11.2" fill="#4a5263" text-anchor="start">Plain files or DataStore</text>
+</svg>

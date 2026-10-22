@@ -1,0 +1,927 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Feature flags · Inside Android · LearnInBits</title>
+  <meta name="description" content="How Android declares feature flags with aconfig, generates code for them, stores their values on the device and tests every combination.">
+  <link rel="icon" href="../../assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,500;0,8..60,600;1,8..60,500&display=swap">
+  <link rel="stylesheet" href="../../assets/css/style.css">
+  <script>try{var t=localStorage.getItem("lib-theme");t=t?JSON.parse(t):(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+</head>
+<body data-root="../../" data-page="chapter" data-course="android" data-id="03-feature-flags">
+
+<main id="main">
+<article>
+
+  <div class="block oneline">
+    <div class="label">In one line</div>
+    <p>Android puts each new feature behind a declared flag, generates code for it and sets its value at build time or on the device.</p>
+  </div>
+
+  <p>The Android Open Source Project (AOSP) changes every day. Thousands of engineers add code to the same source tree, but a half-finished feature must never reach a user. Since Android 14, one system controls this conflict. Its name is <strong>aconfig</strong>. It joins build policy, code generation, storage on the device and testing into one chain.</p>
+  <p>In chapter 2, you saw how the build system turns the source tree into images. In this chapter, you follow one flag through that build and onto the device. You see how an engineer declares it and how the build gives it a value. You also see the generated classes and how the device reads the value without a call to another process. Finally, you learn how tests control flags and how a flag ends its life. The Android 17 source tree has almost 500 declaration files, so this system touches nearly every layer of the platform.</p>
+
+  <h2>Why Android uses feature flags</h2>
+  <p>For many years, Android teams kept unreleased work on long-lived feature branches. Each branch moved away from the main line for weeks or months. At release time, the teams merged all branches together. This brought large merge conflicts and combinations of features that nobody tested together.</p>
+  <p>Android now follows a <strong>trunk-stable</strong> model. All code goes to one main line with the name trunk. The trunk is always ready for a release. New code that is not ready waits behind a disabled flag. The code is present in the build, but it does not run. A <strong>release configuration</strong> then decides which flags are on for a given build target, for example <code>trunk_staging</code> or <code>bp4a</code>.</p>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../../assets/img/diagrams/ff-branch-vs-trunk.svg" alt="Top, the branch model. Features A, B and C leave the main line, live apart and meet late in a release branch, which brings late merges, conflicts and untested mixes. Bottom, the trunk-stable model. Every change goes to one trunk and new code waits behind a flag. At the release cut, a release configuration sets each flag on or off." loading="lazy"></div>
+    <figcaption>Two ways to develop a platform. The trunk-stable model replaces late merges with flags.</figcaption>
+  </figure>
+
+  <p>This model gives five clear benefits.</p>
+  <ul>
+    <li><strong>Fewer merge conflicts.</strong> All engineers work on the same tree, so no branch moves far away from the others.</li>
+    <li><strong>Gradual rollout.</strong> A team can turn on a feature for internal test devices first, then for beta users and then for everyone. If a problem appears, a server can turn the flag off without an over-the-air (OTA) update.</li>
+    <li><strong>Independent releases.</strong> A release can start from any point on the trunk. Features that are not ready stay off.</li>
+    <li><strong>Better tests.</strong> Continuous integration (CI) runs the tests with flags on, off and in combinations. It finds problems between features early.</li>
+    <li><strong>Flagged APIs.</strong> A new public Application Programming Interface (API) can depend on a flag. The API becomes part of the official API surface only when the flag is on.</li>
+  </ul>
+
+  <div class="block analogy">
+    <div class="label">Real-life analogy</div>
+    <p>Think of a new office building. The electricians install the wiring for every floor during construction, also for floors that will open next year. Each floor has a breaker in the main panel. At handover, the building manager seals some breakers in the on or off position. Other breakers stay in a remote panel, so the manager can switch them from the control room.</p>
+    <p>The wiring is the code on the trunk. The breakers are the flags. A sealed breaker is a read-only flag, and a remote breaker is a read-write flag. The handover plan is the release configuration, and the control room is the server that pushes new values.</p>
+  </div>
+
+  <h2>The two settings of every flag</h2>
+  <p>Each flag has a <strong>state</strong> and a <strong>permission</strong>. The two settings are independent of each other.</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Setting</th><th>Value</th><th>Meaning</th></tr></thead>
+      <tbody>
+        <tr><td>State</td><td><code>ENABLED</code></td><td>The feature behind the flag is active.</td></tr>
+        <tr><td>State</td><td><code>DISABLED</code></td><td>The feature behind the flag is not active.</td></tr>
+        <tr><td>Permission</td><td><code>READ_ONLY</code></td><td>The build fixes the value. Nothing can change it while the device runs.</td></tr>
+        <tr><td>Permission</td><td><code>READ_WRITE</code></td><td>A server or a local command can override the value while the device runs.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>A declaration can also set <code>is_fixed_read_only: true</code>. Such a flag always has the permission <code>READ_ONLY</code>. A release can still choose its state, but no values file can make it writable. Because the value can never change, the compilers and the R8 optimizer can remove the code path that never runs. R8 is the tool that shrinks and optimizes Java code for Android.</p>
+  <p>Android 17 adds a third setting, the <strong>type</strong>. Through Android 16, every flag was a boolean. The new schema also knows an integer type. In Android 17, this is groundwork only. The schema, the cache, the storage format and the parser understand integer flags, but the generated accessors still return a boolean.</p>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../../assets/img/diagrams/ff-flag-dimensions.svg" alt="A grid of state against permission. Read-only and disabled means off in this build, with the value in the image. Read-only and enabled means on in this build. Read-write and disabled means off by default, and a server push or local override can turn it on. Read-write and enabled means on by default and can be turned off. On the right, three declaration options. is_fixed_read_only keeps the permission read-only. purpose is FEATURE or BUGFIX. type is boolean today, and the integer type in Android 17 is groundwork only." loading="lazy"></div>
+    <figcaption>State and permission make four kinds of flag. Three options in the declaration add more control.</figcaption>
+  </figure>
+
+  <h2>Containers</h2>
+  <p>A <strong>container</strong> is a unit of software that the build makes and installs as one piece. The main containers are the partitions <code>system</code>, <code>system_ext</code>, <code>vendor</code> and <code>product</code>. Each Android Pony EXpress (APEX) module, for example <code>com.android.wifi</code>, is a container too. An app that has its own release cycle is also its own container.</p>
+  <p>The container is important because the device keeps flag storage per container. Each container gets its own set of storage files. Code in one container cannot read a flag of another container, unless the declaration exports that flag.</p>
+
+  <h2>The path of a flag</h2>
+  <p>A flag passes through two worlds. On the build computer, a Rust program with the name <code>aconfig</code> reads the declarations and the values, writes a cache and generates code and storage files. On the device, a daemon prepares the storage files at boot, and the generated code reads them.</p>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../../assets/img/diagrams/ff-pipeline.svg" alt="At build time, .aconfig declarations and .values files go into aconfig create-cache, which writes a cache with parsed flags and tracepoints. From the cache, create-java-lib, create-cpp-lib and create-rust-lib generate code, and create-storage writes four binary storage files. At run time, the storage files in each container image go to aconfigd-system at boot, which prepares /metadata/aconfig. The generated FeatureFlagsImpl maps those files read-only once, and your code calls Flags.myFlag()." loading="lazy"></div>
+    <figcaption>From the declaration on the build computer to the value that your code reads on the device.</figcaption>
+  </figure>
+
+  <p>The <code>aconfig</code> tool lives in <code>build/make/tools/aconfig/aconfig/</code>. It has these subcommands.</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Subcommand</th><th>What it does</th></tr></thead>
+      <tbody>
+        <tr><td><code>create-cache</code></td><td>Reads the declarations and the values files. Writes one binary cache in the Protocol Buffers (protobuf) format.</td></tr>
+        <tr><td><code>create-java-lib</code></td><td>Generates the Java classes from the cache.</td></tr>
+        <tr><td><code>create-cpp-lib</code></td><td>Generates a C++ header and source file from the cache.</td></tr>
+        <tr><td><code>create-rust-lib</code></td><td>Generates a Rust library from the cache.</td></tr>
+        <tr><td><code>create-storage</code></td><td>Writes the four binary storage files for the device.</td></tr>
+        <tr><td><code>dump-cache</code></td><td>Prints the cache as text, as protobuf or in a custom format.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>Declare a flag</h2>
+  <p>An engineer declares flags in a file with the extension <code>.aconfig</code>. The file uses the text form of protobuf. The message <code>flag_declarations</code> in <code>aconfig_protos/protos/aconfig.proto</code> defines the format. Each file names one package and one container, then lists the flags. This real declaration comes from the APEX daemon.</p>
+<pre class="code" data-lang="text" data-file="system/apex/apexd/apexd.aconfig"><code>package: "com.android.apex.flags"
+container: "system"
+
+flag {
+  name: "mount_before_data"
+  namespace: "treble"
+  description: "This flag controls if allowing mounting APEXes
+                before the data partition"
+  bug: "361701397"
+  is_fixed_read_only: true
+}</code></pre>
+  <p>A flag that other containers can read sets <code>is_exported: true</code>. A flag for a correction, not for a new feature, adds a metadata block with the purpose <code>PURPOSE_BUGFIX</code>.</p>
+<pre class="code" data-lang="text" data-file="Two more declarations"><code>// packages/modules/ConfigInfrastructure/framework/flags.aconfig
+flag {
+  name: "dump_improvements"
+  namespace: "core_experiments_team_internal"
+  description: "Added more information on dumpsys device_config"
+  bug: "364399200"
+  is_exported: true
+}
+
+// system/server_configurable_flags/aconfigd/new_aconfig_storage.aconfig
+flag {
+  name: "support_clear_local_overrides_immediately"
+  namespace: "core_experiments_team_internal"
+  description: "Support ability to clear local overrides immediately."
+  bug: "360205436"
+  metadata {
+    purpose: PURPOSE_BUGFIX
+  }
+}</code></pre>
+
+  <h3>The fields of a declaration</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Field</th><th>Required</th><th>Meaning</th></tr></thead>
+      <tbody>
+        <tr><td><code>name</code></td><td>Yes</td><td>The name of the flag in lowercase snake case, for example <code>mount_before_data</code>.</td></tr>
+        <tr><td><code>namespace</code></td><td>Yes</td><td>The group of the flag for server-side management.</td></tr>
+        <tr><td><code>description</code></td><td>Yes</td><td>What the flag controls, for human readers.</td></tr>
+        <tr><td><code>bug</code></td><td>Yes</td><td>The identifier (ID) of the bug that tracks the work. The tool requires exactly one.</td></tr>
+        <tr><td><code>is_fixed_read_only</code></td><td>No</td><td>Keeps the permission at <code>READ_ONLY</code> in every release.</td></tr>
+        <tr><td><code>is_exported</code></td><td>No</td><td>Lets code outside the container read the flag.</td></tr>
+        <tr><td><code>metadata</code></td><td>No</td><td>Holds the purpose of the flag, <code>PURPOSE_FEATURE</code> or <code>PURPOSE_BUGFIX</code>.</td></tr>
+        <tr><td><code>type</code></td><td>No</td><td>New in Android 17. Boolean by default. The integer type needs a build flag.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>The metadata message also has a <code>storage</code> field, with the values <code>ACONFIGD</code>, <code>DEVICE_CONFIG</code> and <code>NONE</code>. An engineer cannot set it. The parser rejects a declaration that tries. The <code>create-cache</code> step fills it for each flag, as the section on storage explains.</p>
+<pre class="code" data-lang="text" data-file="aconfig.proto, the metadata message"><code>message flag_metadata {
+  enum flag_purpose {
+    PURPOSE_UNSPECIFIED = 0;
+    PURPOSE_FEATURE = 1;
+    PURPOSE_BUGFIX = 2;
+  }
+  enum flag_storage_backend {
+    UNSPECIFIED = 0;
+    ACONFIGD = 1;
+    DEVICE_CONFIG = 2;
+    NONE = 3;
+  }
+  optional flag_purpose purpose = 1;
+  optional flag_storage_backend storage = 2;
+}</code></pre>
+
+  <h3>Names and namespaces</h3>
+  <p>The tool checks each name strictly. A flag name uses lowercase snake case. It cannot start with a digit and cannot contain two underscores in a row. Thus <code>adjust_rate</code> is valid, but <code>AdjustRate</code> and <code>adjust__rate</code> are not. A package name is a list of such segments with dots between them, for example <code>com.android.mypackage</code>. A container name uses lowercase letters, with dots for APEX names.</p>
+  <p>A <strong>namespace</strong> groups the flags that one team owns and rolls out together. On the server, each namespace is a separate area that a team controls. A namespace is not the same as a package. Many packages can share one namespace, and one package can hold flags of different namespaces. The older DeviceConfig storage uses the namespace for each lookup. The new storage finds a flag by package and name, so the namespace matters less there.</p>
+
+  <h2>Set the values for a release</h2>
+  <p>A declaration gives only the identity of a flag. The values for a release come from separate <strong>values files</strong>. Each entry names a package and a flag and sets a state and a permission. Release configurations keep these entries in files with the extension <code>.textproto</code>.</p>
+<pre class="code" data-lang="text" data-file="build/release/aconfig/bp1a/.../single_thread_executor_flag_values.textproto"><code>flag_value {
+  package: "com.android.internal.camera.flags"
+  name: "single_thread_executor"
+  state: ENABLED
+  permission: READ_ONLY
+}</code></pre>
+  <p>The <code>create-cache</code> step applies the values in a fixed order. Each later step can change the result of an earlier step.</p>
+  <ol>
+    <li><strong>The default.</strong> Every flag starts as <code>DISABLED</code> with the permission <code>READ_WRITE</code>.</li>
+    <li><strong>The values files.</strong> The tool applies them in order. A later file overrides an earlier file.</li>
+    <li><strong>The release policy.</strong> If the build flag <code>RELEASE_CONFIG_FORCE_READ_ONLY</code> is on, the tool changes each permission to <code>READ_ONLY</code> without a message. If <code>RELEASE_ACONFIG_REQUIRE_ALL_READ_ONLY</code> is on, the build stops with an error when any flag is still writable.</li>
+    <li><strong>The fixed read-only check.</strong> A values file can set the state of a fixed read-only flag. If it sets the permission <code>READ_WRITE</code>, the tool stops with an error.</li>
+  </ol>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../../assets/img/diagrams/ff-value-layers.svg" alt="Five steps from top to bottom. One, the declaration default, DISABLED and READ_WRITE. Two, the first values file. Three, later values files, where each later file overrides the earlier ones. Four, the release policy, which forces read-only or fails the build if a flag is writable. Five, the fixed read-only check, where a writable value for a fixed flag is an error. The result is the final value in the cache. On the right, the cache keeps one tracepoint record for each file that sets a value, and dump-cache with the trace field shows them." loading="lazy"></div>
+    <figcaption>Five steps decide the value of a flag. The cache records which file set what.</figcaption>
+  </figure>
+
+  <p>The cache keeps a <strong>tracepoint</strong> for each file that sets a value. A tracepoint records the source file, the state and the permission. Thus you can always find out why a flag has its final value.</p>
+<pre class="code" data-lang="text" data-file="aconfig.proto, the tracepoint message"><code>message tracepoint {
+  optional string source = 1;
+  optional flag_state state = 2;
+  optional flag_permission permission = 3;
+}</code></pre>
+
+  <h2>The generated Java code</h2>
+  <p>Nobody reads a flag with a string such as <code>"com.android.apex.flags.mount_before_data"</code>. The build generates a small library for each package instead. Your code calls a normal Java method, and the compiler finds a typo at once. For Java, the generator writes up to five classes, which the next diagram shows.</p>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../../assets/img/diagrams/ff-java-classes.svg" alt="Your code calls Flags.mountBeforeData(). Flags is a final class with FLAG_ name constants, one static getter per flag and a private static FEATURE_FLAGS field. That field points to one implementation of the FeatureFlags interface. FeatureFlagsImpl is the production class that reads storage once and returns constants for read-only flags. CustomFeatureFlags asks a BiPredicate for each value. FakeFeatureFlagsImpl extends CustomFeatureFlags for tests, with setFlag and resetAll. Below, ExportedFlags is a separate class for exported libraries that reads values through AconfigPackage and checks the SDK version for finalized flags." loading="lazy"></div>
+    <figcaption>The Java classes for one package. Your code sees only Flags.</figcaption>
+  </figure>
+
+  <h3>Flags, the public entry point</h3>
+  <p><code>Flags</code> is the only class that normal code uses. It has one constant with the full name of each flag and one static method for each flag. The method name is the flag name in camel case, so <code>mount_before_data</code> becomes <code>mountBeforeData()</code>. Each method calls the same method on a private field with the name <code>FEATURE_FLAGS</code>.</p>
+<pre class="code" data-lang="java" data-file="Flags.java (generated)"><code>package com.android.apex.flags;
+
+public final class Flags {
+
+    /** @hide */
+    public static final String FLAG_MOUNT_BEFORE_DATA =
+        "com.android.apex.flags.mount_before_data";
+
+    @com.android.aconfig.annotations.AssumeTrueForR8
+    @com.android.aconfig.annotations.AconfigFlagAccessor
+    public static boolean mountBeforeData() {
+        return FEATURE_FLAGS.mountBeforeData();
+    }
+
+    private static FeatureFlags FEATURE_FLAGS = new FeatureFlagsImpl();
+}</code></pre>
+  <p>The annotation <code>@AssumeTrueForR8</code> is the key to dead code removal. The generator puts it on each flag that is <code>ENABLED</code> and <code>READ_ONLY</code>. For a flag that is <code>DISABLED</code> and <code>READ_ONLY</code>, it uses <code>@AssumeFalseForR8</code>. R8 then treats the method as a constant and deletes the branch that can never run. A read-write flag gets no such annotation, because its value can change on the device.</p>
+  <p><code>FeatureFlags</code> is an interface with one boolean method for each flag. It is the contract between <code>Flags</code> and every implementation. In test mode, <code>Flags</code> also gets the methods <code>setFeatureFlags()</code> and <code>unsetFeatureFlags()</code>, so a test can replace the implementation.</p>
+
+  <h3>FeatureFlagsImpl, the value on the device</h3>
+  <p><code>FeatureFlagsImpl</code> holds the real work. For a read-only flag, its method returns a constant. For a read-write flag, the method reads the value from the storage files on the first call and keeps it in a static field. This excerpt shows the default template for the new storage.</p>
+<pre class="code" data-lang="java" data-file="FeatureFlagsImpl.java (new storage template, shortened)"><code>public final class FeatureFlagsImpl implements FeatureFlags {
+    private static volatile boolean isCached = false;
+    private static boolean myReadWriteFlag = false;
+
+    private void init() {
+        try {
+            PlatformAconfigPackageInternal reader =
+                PlatformAconfigPackageInternal.load(
+                    "com.example.flags", 0xABCD1234L);
+            myReadWriteFlag = reader.getBooleanFlagValue(0);
+        } catch (Exception e) {
+            Log.e(TAG, e.toString());
+        } catch (LinkageError e) {
+            // Mainline module on an older device
+            Log.e(TAG, e.toString());
+        }
+        isCached = true;
+    }
+
+    @Override
+    public boolean myReadWriteFlag() {
+        if (!isCached) init();
+        return myReadWriteFlag;
+    }
+
+    @Override
+    public boolean myReadOnlyFlag() {
+        return true;   // fixed by the build
+    }
+}</code></pre>
+  <p>Three details are important. First, a read error goes to the log and the field keeps its initial value, so a missing file does not stop the app. Second, the reader class depends on the container. Platform containers use <code>PlatformAconfigPackageInternal</code> and APEX containers use <code>AconfigPackageInternal</code>. Third, the hexadecimal number is the <strong>package fingerprint</strong>. It lets the reader confirm that the storage file matches the code.</p>
+
+  <h3>Four templates for one class</h3>
+  <p>The body of <code>FeatureFlagsImpl</code> depends on the mode of the library and on the storage of its flags. The function <code>add_feature_flags_impl_template</code> in <code>codegen/java.rs</code> makes the choice in a fixed order.</p>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../../assets/img/diagrams/ff-impl-templates.svg" alt="Three questions from left to right. If the library is in test mode, the test_mode template makes every getter throw, so tests must set values. Else, if the library is exported, the exported template reads new storage through AconfigPackage. Else, if the flags use the DeviceConfig backend, the legacy_flag.internal template calls DeviceConfig getBoolean each time. Else, the default new_storage template maps the storage files read-only." loading="lazy"></div>
+    <figcaption>The generator asks three questions. The first answer that is yes wins.</figcaption>
+  </figure>
+
+  <p>The DeviceConfig template reads each flag with <code>DeviceConfig.getBoolean()</code> at each call, without a cache. Android 17 removed an older template that read a full namespace at one time. The full set in <code>build/make/tools/aconfig/aconfig/templates/</code> now has 13 files, for Java, C++ and Rust. The generator fills them with the Rust template engine TinyTemplate.</p>
+
+  <h3>The classes for tests and for custom logic</h3>
+  <p><code>CustomFeatureFlags</code> implements the interface, but it asks a function for each value. The function receives the name of the flag and a getter. Thus a caller can put any logic between the code and the flag values.</p>
+  <p><code>FakeFeatureFlagsImpl</code> extends <code>CustomFeatureFlags</code> and keeps a map from the flag name to a value. A test sets a value with <code>setFlag()</code> and clears all values with <code>resetAll()</code>. If a test reads a flag that it did not set and gave no defaults, the fake throws an exception. A name that the package does not declare also gives an exception. These checks stop a test that silently depends on a production value.</p>
+<pre class="code" data-lang="java" data-file="FakeFeatureFlagsImpl.java (generated, shortened)"><code>public class FakeFeatureFlagsImpl extends CustomFeatureFlags {
+    private final Map&lt;String, Boolean&gt; mFlagMap = new HashMap&lt;&gt;();
+    private final FeatureFlags mDefaults;
+
+    @Override
+    protected boolean getValue(String flagName,
+                               Predicate&lt;FeatureFlags&gt; getter) {
+        Boolean value = this.mFlagMap.get(flagName);
+        if (value != null) return value;
+        if (mDefaults != null) return getter.test(mDefaults);
+        throw new IllegalArgumentException(flagName + " is not set");
+    }
+
+    public void setFlag(String flagName, boolean value) {
+        if (!this.mFlagMap.containsKey(flagName) &amp;&amp; !IS_EXPORTED) {
+            throw new IllegalArgumentException("no such flag " + flagName);
+        }
+        this.mFlagMap.put(flagName, value);
+    }
+
+    public void resetAll() { /* sets every entry back to null */ }
+}</code></pre>
+
+  <h3>ExportedFlags, for apps outside the platform</h3>
+  <p>An app from an app store does not build with the platform. For exported flag libraries, the generator writes <code>ExportedFlags</code> instead of the custom and fake classes. This class does not use <code>Flags</code>. It reads the values through the public class <code>AconfigPackage</code> and keeps its own cache. The generator also marks <code>Flags</code>, <code>FeatureFlags</code> and <code>FeatureFlagsImpl</code> as deprecated in this mode.</p>
+  <p>Each getter of a <strong>finalized</strong> flag starts with a check of the Software Development Kit (SDK) version. A flag is finalized when its API became part of an official SDK level. On that level or a later one, the getter returns <code>true</code> at once.</p>
+<pre class="code" data-lang="java" data-file="ExportedFlags.java (generated, shortened)"><code>public static boolean myExportedFlag() {
+    if (Build.VERSION.SDK_INT &gt;= 36) {
+        return true;   // finalized at API level 36
+    }
+    if (!featureFlags.isCached) {
+        featureFlags.init();   // reads through AconfigPackage
+    }
+    return featureFlags.myExportedFlag;
+}</code></pre>
+  <p>The number in the check is the level at which the flag was finalized. The tool reads it from the finalized-flags records, for example <code>prebuilts/sdk/&lt;N&gt;/finalized-flags.txt</code>.</p>
+
+  <div class="block changed">
+    <div class="label">What changed in Android 17</div>
+    <p>Two build flags can shrink the Java code for read-only flags. With <code>RELEASE_ACONFIG_OPTIMIZE_READ_ONLY_JAVA</code>, each read-only getter in <code>Flags</code> returns its value directly and skips <code>FEATURE_FLAGS</code>. With <code>RELEASE_ACONFIG_DEFAULT_ALLOW_JAVA_IMPL_INTERFACE_REMOVAL</code>, the generator can also leave read-only flags out of the interface and the implementation. When both apply to a package with only read-only flags, the package becomes one single <code>Flags</code> class.</p>
+    <p>A library that still needs the full set of classes sets <code>preserve_legacy_impl_interface: true</code>. For finalized exported flags, Android 17 can also check the minor SDK version through <code>Build.VERSION.SDK_INT_FULL</code> and add the annotation <code>@ChecksSdkIntAtLeast</code>.</p>
+  </div>
+
+  <h2>C++ and Rust code</h2>
+  <p>Native code gets the same safety. For C++, the generator writes a header and a source file. The name comes from the package with underscores, for example <code>com_android_apex_flags.h</code>. The header defines an abstract class <code>flag_provider_interface</code> and a global pointer <code>provider_</code> to an object that reads the storage.</p>
+<pre class="code" data-lang="cpp" data-file="com_android_aconfig_test.h (generated, shortened)"><code>#ifndef COM_ANDROID_ACONFIG_TEST_ENABLED_FIXED_RO
+#define COM_ANDROID_ACONFIG_TEST_ENABLED_FIXED_RO true
+#endif
+
+namespace com::android::aconfig::test {
+
+class flag_provider_interface {
+public:
+    virtual ~flag_provider_interface() = default;
+    virtual bool enabled_fixed_ro() = 0;
+    virtual bool disabled_rw() = 0;
+};
+
+extern std::unique_ptr&lt;flag_provider_interface&gt; provider_;
+
+// Fixed read-only: the compiler knows the value
+constexpr inline bool enabled_fixed_ro() {
+    return COM_ANDROID_ACONFIG_TEST_ENABLED_FIXED_RO;
+}
+
+// Read-write: the provider reads the storage
+inline bool disabled_rw() {
+    return provider_-&gt;disabled_rw();
+}
+}  // namespace
+
+extern "C" bool com_android_aconfig_test_disabled_rw();</code></pre>
+  <p>A fixed read-only flag becomes a <code>constexpr</code> function that returns a preprocessor value. The compiler knows the result and removes the dead branch, as with the old <code>#ifdef</code> switches. A read-write flag goes through <code>provider_</code>. The header also declares plain C functions with <code>extern "C"</code>, so C code and the Java Native Interface (JNI) can read the flags. The pointer has the attribute <code>[[clang::no_destroy]]</code>, which prevents problems with the order of destruction at the end of a process.</p>
+  <p>For Rust, the generator writes a crate with one function for each flag. A fixed read-only function returns a literal. A read-write function asks a global <code>PROVIDER</code>. In test mode, the provider is a <code>Mutex</code> that holds a map of overrides. Tests change it with the generated <code>set_&lt;flag&gt;()</code> functions and clear it with <code>reset_flags()</code>.</p>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../../assets/img/diagrams/ff-three-languages.svg" alt="A table with Java, C++ and Rust as columns. For a fixed read-only flag, the Java getter returns a constant with an R8 annotation, C++ uses a constexpr inline function that returns a macro value, and Rust returns a literal. For a read-write flag, Java FeatureFlagsImpl reads storage once and keeps the value, C++ asks the provider_ object and Rust asks the PROVIDER, which read the storage files. In test mode, Java tests inject FakeFeatureFlagsImpl, C++ gets a setter for each flag and reset_flags, and Rust uses a Mutex provider with set functions and reset_flags." loading="lazy"></div>
+    <figcaption>One declaration, three languages. The treatment of each kind of flag stays the same.</figcaption>
+  </figure>
+
+  <p>The generator has four modes, defined in <code>codegen/mod.rs</code>. The <code>mode</code> property of the library module selects one.</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Mode</th><th>Use</th></tr></thead>
+      <tbody>
+        <tr><td><code>production</code></td><td>The default for code in the platform.</td></tr>
+        <tr><td><code>test</code></td><td>Code for tests, with values that the test must set.</td></tr>
+        <tr><td><code>exported</code></td><td>Code for consumers outside the container of the flags.</td></tr>
+        <tr><td><code>force-read-only</code></td><td>Treats every flag as read-only. The native library then needs no storage code at all.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>Flag storage on the device</h2>
+  <p>A read-write flag needs a place on the device that holds its current value. Android has two storage backends for this. The new backend uses memory-mapped files that the daemon <code>aconfigd</code> manages. The older backend uses DeviceConfig, which keeps values in the settings database. The engineer does not choose the backend. The <code>create-cache</code> step picks it for each flag.</p>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../../assets/img/diagrams/ff-backend-choice.svg" alt="create-cache sets metadata.storage for each parsed flag. If the permission is READ_ONLY, the backend is NONE, so there is no runtime read and the value is part of the code. Else, if the flag is in a Mainline Beta namespace, the backend is DEVICE_CONFIG and reads go through DeviceConfig. Else, the backend is ACONFIGD, with memory-mapped files under /metadata/aconfig. A note says that a declaration cannot set storage, and the parser rejects a .aconfig file that tries." loading="lazy"></div>
+    <figcaption>The cache step chooses the backend. The declaration has no say.</figcaption>
+  </figure>
+
+  <p>A namespace for the Mainline Beta program keeps the old DeviceConfig path. Every other read-write flag uses the new storage.</p>
+
+  <h3>Four files for each container</h3>
+  <p>The step <code>aconfig create-storage</code> writes four binary files for each container. Together, they work like a small read-only database.</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>File</th><th>What it holds</th></tr></thead>
+      <tbody>
+        <tr><td><code>package_map</code></td><td>A hash table from the package name to its ID, its fingerprint and the start of its values.</td></tr>
+        <tr><td><code>flag_map</code></td><td>A hash table from the package ID and the flag name to the index and the type of the flag.</td></tr>
+        <tr><td><code>flag_val</code></td><td>The values. Each boolean flag uses one full byte, so a read needs no bit operations.</td></tr>
+        <tr><td><code>flag_info</code></td><td>Bit flags for each value. They show if the flag is writable and if a server or a local command changed it.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>The lookup always follows the same chain. The package entry gives a start index and the flag entry gives an index inside the package. The sum is the position in the value file.</p>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../../assets/img/diagrams/ff-storage-files.svg" alt="An example lookup of the flag dump_improvements in the package android.provider.flags, with example numbers. Step one, the package_map hash table gives package_id 3, start index 120 and the fingerprint. Step two, the flag_map hash table gives flag_index 2 and the type ReadWriteBoolean for the pair of package 3 and the flag name. The offset is 120 plus 2, that is 122. Step three, the flag_val file holds one byte for each flag, and the byte at offset 122 holds the value. The flag_info file holds bit flags for the same index, namely HasServerOverride, IsReadWrite and HasLocalOverride." loading="lazy"></div>
+    <figcaption>One lookup in the four storage files. The numbers are an example.</figcaption>
+  </figure>
+
+  <p>The format keeps its version in the first four bytes of each file. The table sizes come from a fixed list of prime numbers, which keeps the number of hash collisions low.</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Version</th><th>What it added</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>The package and flag maps and the value storage</td></tr>
+        <tr><td>2</td><td>Package fingerprints. This is the default version for new files.</td></tr>
+        <tr><td>3</td><td>Redaction of reads of exported flags</td></tr>
+        <tr><td>4</td><td>Integer flags, in Android 17 with the build flag <code>RELEASE_ACONFIG_PARSE_V4</code></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>The <strong>package fingerprint</strong> is a SipHash13 value of the sorted flag names of a package. The generated code contains the fingerprint, and the storage file contains it too. If somebody adds or removes a flag, the two values differ. Thus the reader can detect code and storage that do not belong together.</p>
+
+  <h3>The read API</h3>
+  <p>The Rust crate <code>aconfig_storage_read_api</code> gives the low-level functions. Only generated code calls them. First, a caller maps a storage file of a container. Then it finds the package, finds the flag and reads the value at the calculated index.</p>
+<pre class="code" data-lang="rust" data-file="aconfig_storage_read_api/src/lib.rs (signatures)"><code>pub const STORAGE_LOCATION: &amp;str = "/metadata/aconfig";
+
+pub unsafe fn get_mapped_storage_file(
+    container: &amp;str, file_type: StorageFileType) -&gt; Result&lt;Mmap&gt;
+
+pub fn get_package_read_context(
+    file: &amp;Mmap, package: &amp;str) -&gt; Result&lt;Option&lt;PackageReadContext&gt;&gt;
+
+pub fn get_flag_read_context(
+    file: &amp;Mmap, package_id: u32, flag: &amp;str) -&gt; Result&lt;Option&lt;FlagReadContext&gt;&gt;
+
+pub fn get_boolean_flag_value(file: &amp;[u8], index: u32) -&gt; Result&lt;bool&gt;
+
+pub fn get_storage_file_version(file_path: &amp;str) -&gt; Result&lt;u32&gt;
+
+// Android 17, Rust only for now
+pub fn get_int64_flag_value(file: &amp;[u8], index: u32) -&gt; Result&lt;i64&gt;</code></pre>
+  <p>C++ code reaches the same functions through a bridge that the <code>cxx</code> crate generates. Each bridge function returns a plain structure with a success field and an error message. The reason is that the Rust <code>Result</code> type cannot cross the Foreign Function Interface (FFI). The integer reader has no bridge yet, so generated C++ code reads only booleans.</p>
+
+  <h2>One read, from the call to the value</h2>
+  <p>Now all parts are in place. The next diagram follows one call of a read-write flag in Java.</p>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../../assets/img/diagrams/ff-read-path.svg" alt="A sequence with five participants. Your code calls Flags.dumpImprovements(). Flags calls FEATURE_FLAGS.dumpImprovements(). On the first call only, FeatureFlagsImpl calls load with the package name and fingerprint on the platform package reader, which maps the files in /metadata/aconfig read-only, gets package and flag data and returns the value for each index. FeatureFlagsImpl keeps the values in static fields and returns true or false. Later calls return the cached field, with no file access and no IPC." loading="lazy"></div>
+    <figcaption>Only the first call touches the storage files. Every later call reads a field.</figcaption>
+  </figure>
+
+  <ol class="steps">
+    <li><strong>Your code calls the getter.</strong> The call <code>Flags.dumpImprovements()</code> forwards to <code>FEATURE_FLAGS</code>, which is a <code>FeatureFlagsImpl</code> object.</li>
+    <li><strong>The implementation checks its cache.</strong> If <code>isCached</code> is true, it returns the value from a static field. This is the normal case after the first call.</li>
+    <li><strong>The first call loads the package.</strong> The implementation calls <code>load()</code> with the package name and the fingerprint. The reader maps the storage files of the container in read-only mode.</li>
+    <li><strong>The reader finds the values.</strong> It looks up the package in <code>package_map</code>, compares the fingerprint and reads each value from <code>flag_val</code> at its index.</li>
+    <li><strong>The implementation keeps the values.</strong> It writes them into its static fields and sets <code>isCached</code>. Every flag of the package is now ready.</li>
+    <li><strong>The value returns to your code.</strong> No call crossed into another process, and later calls cost only one field read.</li>
+  </ol>
+  <p>Because the values stay in fields, a process keeps the values from its first read for its whole life. This keeps the behavior of a running app stable. A new value takes effect in a process only after that process starts again.</p>
+
+  <h2>aconfigd prepares the storage at boot</h2>
+  <p>The storage files in a container image are only the starting point. The device keeps the live copies under <code>/metadata/aconfig</code>, together with any overrides. A daemon with the name <code>aconfigd</code> creates and updates these copies. It exists in two binaries.</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Binary</th><th>Location</th><th>Job</th></tr></thead>
+      <tbody>
+        <tr><td><code>aconfigd-system</code></td><td><code>/system/bin/</code></td><td>The flags of the platform containers</td></tr>
+        <tr><td><code>aconfigd-mainline</code></td><td><code>/apex/com.android.configinfrastructure/bin/</code></td><td>The flags of the Mainline modules</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>The init program starts <code>aconfigd-system</code> three times during boot, each time with a different command. The file <code>aconfigd.rc</code> defines the three services.</p>
+<pre class="code" data-lang="text" data-file="system/server_configurable_flags/aconfigd/aconfigd.rc (shortened)"><code>service early_system_aconfigd_platform_init
+    /system/bin/aconfigd-system early-platform-init
+    class core
+    user system
+    group system
+    oneshot
+    disabled
+
+service system_aconfigd_platform_init
+    /system/bin/aconfigd-system platform-init
+    ...
+
+service system_aconfigd_socket_service
+    /system/bin/aconfigd-system start-socket
+    ...
+    socket aconfigd_system stream 666 system system
+
+on early-init
+    mkdir /metadata/aconfig 0775 root system
+    mkdir /metadata/aconfig/flags 0770 root system
+    mkdir /metadata/aconfig/maps 0775 root system
+    mkdir /metadata/aconfig/boot 0775 root system
+    exec_start early_system_aconfigd_platform_init</code></pre>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../../assets/img/diagrams/ff-boot.svg" alt="A timeline with three stages. In early-init, init makes the flags, maps and boot folders under /metadata/aconfig. If enable_earlier_aconfigd is on, early-platform-init prepares the platform storage and writes the early_init_done marker on success. In post-fs, platform-init checks for the marker. If it is present, it skips the work and deletes the marker. If not, it prepares the storage now, for example after a data wipe. Later in boot, start-socket listens on the aconfigd_system socket, reads the storage records and applies server and local overrides on request. A failed request goes to the log and the loop keeps running. Below, aconfigd-mainline in the configinfrastructure APEX does the same work for Mainline module flags, and in Android 17 the platform keeps its own records file." loading="lazy"></div>
+    <figcaption>Three commands of one binary. The marker file stops the work from running twice.</figcaption>
+  </figure>
+
+  <p>The early start is new in Android 17, behind the check <code>enable_earlier_aconfigd()</code>. It makes the platform flags available earlier in boot. The <code>post-fs</code> step then works only as a second chance, for example after a data wipe. The socket service stays active. It receives override requests, writes them to the storage and logs any request that fails, so one bad request cannot stop the daemon.</p>
+<pre class="code" data-lang="text" data-file="/metadata/aconfig at run time"><code>/metadata/aconfig/
+    storage_records.pb           index of all storage files
+    platform_storage_records.pb  platform records (Android 17)
+    maps/
+        system.package.map
+        system.flag.map
+        com.android.wifi.package.map
+        ...
+    flags/
+        system.val
+        system.info
+        ...
+    boot/
+        system.val               snapshot for this boot
+        ...</code></pre>
+  <p>In Android 17, <code>aconfigd-system</code> is a pure Rust binary. The temporary migration flag for the Rust version is gone, because the Rust daemon is now the only version.</p>
+
+  <h2>The older DeviceConfig path</h2>
+  <p>Before <code>aconfigd</code>, flags lived only in DeviceConfig. DeviceConfig keeps its values in the <code>config</code> table of the settings provider, in the file <code>settings_config.xml</code>. Some flags still use it, as the backend choice above shows. This path has four limits.</p>
+  <ul>
+    <li><strong>Boot order.</strong> DeviceConfig needs the settings provider. A flag that code reads before the provider starts cannot use it.</li>
+    <li><strong>Cost of each read.</strong> Each read is an Inter-Process Communication (IPC) call through Binder into <code>system_server</code>.</li>
+    <li><strong>No atomic reads across namespaces.</strong> One namespace reads as a unit, but two namespaces do not.</li>
+    <li><strong>Access rules.</strong> A process needs special Security-Enhanced Linux (SELinux) permissions to read the values.</li>
+  </ul>
+  <p>The generated code for this path turns the boot-order problem into a clear error message.</p>
+<pre class="code" data-lang="java" data-file="FeatureFlagsImpl.java (DeviceConfig template, shortened)"><code>@Override
+public boolean myReadWriteFlag() {
+    try {
+        return DeviceConfig.getBoolean(
+            "my_namespace", Flags.FLAG_MY_READ_WRITE_FLAG, false);
+    } catch (NullPointerException e) {
+        throw new RuntimeException(
+            "Cannot read value from namespace my_namespace "
+            + "from DeviceConfig. It could be that the code "
+            + "using flag executed before SettingsProvider "
+            + "initialization. Please use fixed read-only flag "
+            + "by adding is_fixed_read_only: true in flag "
+            + "declaration.", e);
+    }
+}</code></pre>
+
+  <h2>The aflags tool</h2>
+  <p>On a device, the command-line interface (CLI) <code>aflags</code> shows and changes flag values. The binary in <code>/system/bin</code> is only a small wrapper. It starts <code>aflags_updatable</code> in the configinfrastructure APEX, so Google can update the tool through Mainline.</p>
+<pre class="code" data-lang="bash" data-file="Terminal"><code># List all flags with their values
+adb shell aflags list
+
+# Only the flags of one container
+adb shell aflags list --container system
+
+# Override a read-write flag
+adb shell aflags enable com.android.apex.flags.mount_before_data
+
+# Remove the override again
+adb shell aflags unset com.android.apex.flags.mount_before_data</code></pre>
+  <p>The commands <code>enable</code>, <code>disable</code> and <code>unset</code> accept the option <code>--immediate</code>. Android 17 adds <code>aflags list --format proto</code>, which prints the list as Base64-encoded protobuf. It can also merge the Mainline Beta flags from DeviceConfig into the list.</p>
+
+  <h2>Build system integration</h2>
+  <p>The Soong build system from chapter 2 knows flags through special module types. The file <code>build/soong/aconfig/init.go</code> registers the modules for declarations and values. The file <code>build/soong/aconfig/codegen/init.go</code> registers the modules that generate code.</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Module type</th><th>Job</th></tr></thead>
+      <tbody>
+        <tr><td><code>aconfig_declarations</code></td><td>Takes the <code>.aconfig</code> files of one package and makes its cache.</td></tr>
+        <tr><td><code>aconfig_values</code></td><td>Holds the values files for one package.</td></tr>
+        <tr><td><code>aconfig_value_set</code></td><td>Collects many values modules into one set for a release.</td></tr>
+        <tr><td><code>java_aconfig_library</code></td><td>Generates the Java library from a declarations module.</td></tr>
+        <tr><td><code>cc_aconfig_library</code></td><td>Generates the C++ library.</td></tr>
+        <tr><td><code>rust_aconfig_library</code></td><td>Generates the Rust crate.</td></tr>
+        <tr><td><code>aconfig_declarations_group</code></td><td>Puts many flag libraries into one dependency.</td></tr>
+        <tr><td><code>all_aconfig_declarations</code></td><td>Collects every declaration in the tree into combined files.</td></tr>
+        <tr><td><code>exported_java_aconfig_library</code></td><td>Builds <code>android-flags.jar</code> with all exported flags for the SDK.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>A team that adds flags to its module writes two short blocks in its <code>Android.bp</code> file. Then its code module adds the generated library as a normal dependency.</p>
+<pre class="code" data-lang="text" data-file="Android.bp"><code>aconfig_declarations {
+    name: "my-feature-flags",
+    package: "com.android.myfeature.flags",
+    container: "system",
+    srcs: ["my_feature.aconfig"],
+}
+
+java_aconfig_library {
+    name: "my-feature-flags-java",
+    aconfig_declarations: "my-feature-flags",
+}
+
+java_library {
+    name: "my-feature",
+    srcs: ["src/**/*.java"],
+    static_libs: ["my-feature-flags-java"],
+}</code></pre>
+  <p>The values reach the declarations without a line in this file. The release configuration variable <code>RELEASE_ACONFIG_VALUE_SETS</code> names the value sets of the current build. In its <code>DepsMutator</code> step, each <code>aconfig_declarations</code> module adds those sets as an implicit dependency. The <code>create-cache</code> rule then uses the values of the matching package.</p>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../../assets/img/diagrams/ff-soong-graph.svg" alt="The release configuration variable RELEASE_ACONFIG_VALUE_SETS names aconfig_value_set modules, which hold aconfig_values modules for package A and package B. Each aconfig_declarations module with .aconfig files, a package and a container gets the matching values as an implicit dependency, and create-cache makes one cache per package. From it, java_aconfig_library, cc_aconfig_library and rust_aconfig_library generate libraries that a Java or Kotlin module uses through static_libs, a C++ module through shared_libs and a Rust module through rustlibs. Across the whole tree, all_aconfig_declarations makes one file with every flag, the storage files and the list of finalized flags, and exported_java_aconfig_library makes android-flags.jar in the SDK for apps outside the platform." loading="lazy"></div>
+    <figcaption>From the release configuration through the declarations to the code that uses the flags.</figcaption>
+  </figure>
+
+  <p>The library modules add their own dependencies. A Java flag library depends on the annotation library for R8, on <code>unsupportedappusage</code> and on <code>aconfig_storage_stub</code>. A C++ flag library depends on <code>libaconfig_storage_read_api_cc</code>, <code>libbase</code> and <code>liblog</code>, except in the mode <code>force-read-only</code>. Soong also adds JarJar rules, which can rename the generated Java classes when an exported library is repackaged.</p>
+  <p>Some build rules protect the whole system. The module <code>all_aconfig_declarations</code> stops the build if two declarations modules use the same package. Each flag thus has exactly one source, and the IDs and storage positions stay predictable. The rule for <code>create-cache</code> writes its result only if the content changed, so a rebuild does not touch the generated code without a reason.</p>
+  <p>A small set of build flags controls the policy for a release.</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Build flag</th><th>Effect</th></tr></thead>
+      <tbody>
+        <tr><td><code>RELEASE_ACONFIG_VALUE_SETS</code></td><td>Names the value sets that apply to the build.</td></tr>
+        <tr><td><code>RELEASE_ACONFIG_FLAG_DEFAULT_PERMISSION</code></td><td>The default permission of all flags, <code>READ_WRITE</code> unless set.</td></tr>
+        <tr><td><code>RELEASE_ACONFIG_REQUIRE_ALL_READ_ONLY</code></td><td>Makes a writable flag a build error.</td></tr>
+        <tr><td><code>RELEASE_CONFIG_FORCE_READ_ONLY</code></td><td>Changes every permission to <code>READ_ONLY</code>.</td></tr>
+        <tr><td><code>RELEASE_ACONFIG_STORAGE_VERSION</code></td><td>The version of the storage format, 2 unless set.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>These are <strong>build flags</strong>, a different kind of flag. A build flag changes only how the build works. It generates no accessor code and needs no storage on the device.</p>
+
+  <h2>Test code with flags</h2>
+  <p>Flags make testing harder. A module with N flags has 2<sup>N</sup> combinations of values. Android gives a set of tools that keep this under control. Two rules form the base, and annotations tell them what to do.</p>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../../assets/img/diagrams/ff-test-rules.svg" alt="Left, SetFlagsRule for unit tests in five steps. Before the test, reflection saves the field Flags.FEATURE_FLAGS. The rule then puts a FakeFeatureFlagsImpl in it. @EnableFlags and @DisableFlags fill the map of the fake. During the test, Flags.myFlag() reads the value from the map. After the test, the rule puts the original implementation back. Right, CheckFlagsRule for device tests. DeviceFlagsValueProvider reads the real state of each flag on the device. If the device state matches the @RequiresFlagsEnabled or @RequiresFlagsDisabled rule, the test runs. If not, the test is skipped, not failed. The rule never changes a flag." loading="lazy"></div>
+    <figcaption>SetFlagsRule changes the values inside the test process. CheckFlagsRule only reads the device.</figcaption>
+  </figure>
+
+  <h3>SetFlagsRule for unit tests</h3>
+  <p><code>SetFlagsRule</code> is a JUnit rule in <code>platform_testing/libraries/flag-helpers/</code>. Before each test, it uses reflection to save the field <code>FEATURE_FLAGS</code> of each <code>Flags</code> class and to put a <code>FakeFeatureFlagsImpl</code> in its place. After the test, it puts the original object back. The annotations <code>@EnableFlags</code> and <code>@DisableFlags</code> set the values for a test method or a full test class.</p>
+<pre class="code" data-lang="java" data-file="MyFeatureTest.java"><code>@RunWith(AndroidJUnit4.class)
+public class MyFeatureTest {
+    @Rule
+    public final SetFlagsRule mSetFlagsRule = new SetFlagsRule();
+
+    @Test
+    @EnableFlags(Flags.FLAG_MY_NEW_FEATURE)
+    public void newPathWhenEnabled() {
+        assertTrue(Flags.myNewFeature());
+    }
+
+    @Test
+    @DisableFlags(Flags.FLAG_MY_NEW_FEATURE)
+    public void oldPathWhenDisabled() {
+        assertFalse(Flags.myNewFeature());
+    }
+}</code></pre>
+  <p>If a class annotation and a method annotation set the same flag, the two values must agree. A conflict gives an <code>AssertionError</code>. One level also cannot enable and disable the same flag.</p>
+  <p>The older methods <code>enableFlags()</code> and <code>disableFlags()</code> on the rule still work, but they are deprecated. The rule has two start modes. With <code>NULL_DEFAULT</code>, a test must set each flag that it reads. With <code>DEVICE_DEFAULT</code>, the flags start with the values of the build.</p>
+
+  <h3>Test every combination</h3>
+  <p>When two flags interact, <code>FlagsParameterization</code> runs one test for each combination. For two flags, the test runs four times.</p>
+<pre class="code" data-lang="java" data-file="MyParameterizedTest.java"><code>@RunWith(Parameterized.class)
+public class MyParameterizedTest {
+    @Parameterized.Parameters(name = "{0}")
+    public static List&lt;FlagsParameterization&gt; getParams() {
+        return FlagsParameterization.allCombinationsOf(
+            Flags.FLAG_FEATURE_A, Flags.FLAG_FEATURE_B);
+    }
+
+    @Rule
+    public final SetFlagsRule mSetFlagsRule;
+
+    public MyParameterizedTest(FlagsParameterization flags) {
+        mSetFlagsRule = new SetFlagsRule(flags);
+    }
+}</code></pre>
+  <p>If a test also has <code>@EnableFlags</code> and a combination does not fit, JUnit skips that combination. It does not count as a failure.</p>
+
+  <h3>Rules for device and host tests</h3>
+  <p>An instrumentation test on a real device cannot change the flags of the system. For this case, <code>CheckFlagsRule</code> reads the real values through <code>DeviceFlagsValueProvider</code>. The annotations <code>@RequiresFlagsEnabled</code> and <code>@RequiresFlagsDisabled</code> state a precondition. If the device does not meet it, the test is skipped. This is important for the Compatibility Test Suite (CTS), which must pass on devices with different flag values.</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Aspect</th><th>SetFlagsRule</th><th>CheckFlagsRule</th></tr></thead>
+      <tbody>
+        <tr><td>Flag control</td><td>Sets values in the test process</td><td>Reads the state of the device</td></tr>
+        <tr><td>On a mismatch</td><td>Not possible, the rule sets the value</td><td>Skips the test</td></tr>
+        <tr><td>Typical use</td><td>Unit tests and Robolectric</td><td>Instrumentation tests on a device</td></tr>
+        <tr><td>Annotations</td><td><code>@EnableFlags</code>, <code>@DisableFlags</code></td><td><code>@RequiresFlagsEnabled</code>, <code>@RequiresFlagsDisabled</code></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Tests that run on the host computer use <code>HostFlagsValueProvider</code>. It takes read-only values from the parsed flags file that comes with the test. It takes read-write values from the connected device with <code>aflags list</code>. Ravenwood, the host-side test environment for platform code, needs no special provider. <code>SetFlagsRule</code> works there through the same reflection.</p>
+
+  <h3>Test mode in the generated code</h3>
+  <p>A library with <code>mode: "test"</code> generates a <code>FeatureFlagsImpl</code> that throws <code>UnsupportedOperationException</code> for every flag. A test must therefore set each value. In C++, test mode adds a setter for each flag and a function <code>reset_flags()</code>.</p>
+<pre class="code" data-lang="cpp" data-file="A C++ test"><code>TEST(MyTest, FeatureEnabled) {
+    com::android::aconfig::test::my_flag(true);   // setter
+    // ... test the new path ...
+    com::android::aconfig::test::reset_flags();
+}</code></pre>
+  <div class="block remember">
+    <div class="label">Worth remembering</div>
+    <ul>
+      <li>Test both values of every flag. A path without tests breaks on the day the flag changes.</li>
+      <li>Prefer the annotations to calls in the test code. They are easier to read and work with parameterization.</li>
+      <li>Use <code>allCombinationsOf()</code> when two flags change the same behavior.</li>
+      <li>The rule restores the flags after each test, but static state in the code under test can keep an old value.</li>
+    </ul>
+  </div>
+
+  <h2>The life of a flag</h2>
+  <p>A flag is temporary by design. It starts with the first line of a new feature and ends when the feature is stable. Each phase has a clear owner and a clear end.</p>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../../assets/img/diagrams/ff-lifecycle.svg" alt="Four phases from left to right. Development, where you declare the flag as DISABLED, guard the new code and test with overrides. Testing, where dogfood and beta builds turn it on as READ_WRITE, a server runs a staged rollout and CI tests both states. Launch, where the release config sets ENABLED and READ_ONLY and a flagged API is finalized for its SDK level. Cleanup, where you remove the checks, the declaration, the old path and the dependency. Below, a bugfix flag takes a short path, READ_WRITE first for a fast rollback, READ_ONLY after one release with the fix, and removed in the following release." loading="lazy"></div>
+    <figcaption>Four phases from the first line of code to the removal of the flag.</figcaption>
+  </figure>
+
+  <p>The last phase is important. Old flags add branches that nobody tests and settings that nobody understands. The command <code>dump-cache</code> helps to find flags that have the same fixed value in all release configurations. Such flags are ready for removal.</p>
+  <p>A bugfix flag has a shorter life. It starts as writable, so a team can turn off a bad fix at once. After one release with the fix active, it becomes read-only. In the next release, the team removes it.</p>
+
+  <h3>Exported and finalized flags, and @FlaggedApi</h3>
+  <p>A Mainline module ships on many Android versions, and apps outside the platform use its APIs. Such a module exports its flags with <code>is_exported: true</code>. When a new API depends on a flag, the API carries the annotation <code>@FlaggedApi</code>.</p>
+<pre class="code" data-lang="java" data-file="A flagged API"><code>@FlaggedApi(Flags.FLAG_MY_NEW_API)
+public void myNewApi() {
+    // part of the public API only when the flag is on
+}</code></pre>
+  <p>The documentation and API tool metalava reads this annotation. It decides if the API goes into the public API signature and into the SDK stubs. It also checks that each finalized API keeps the link to its flag. When the API becomes final for an SDK level, the build records the flag in the message <code>finalized_flag</code>, with the name, the package and <code>min_sdk</code>. The generated exported code then returns <code>true</code> on that level and later levels, as you saw in <code>ExportedFlags</code>.</p>
+
+  <h2>Older ways to switch features</h2>
+  <p>Before aconfig, Android used several other mechanisms. Much code still uses them, and aconfig sometimes delegates to them, so you will meet all of them.</p>
+  <ul>
+    <li><strong>System properties.</strong> String values such as <code>ro.feature.my_feature</code>. A <code>ro.</code> property is fixed at boot, and a <code>persist.</code> property survives a reboot. There is no type safety and no central list. A value can have at most 91 characters.</li>
+    <li><strong>Settings.Global and Settings.Secure.</strong> Values in the settings provider. They need a <code>ContentResolver</code> and are not available before the provider starts.</li>
+    <li><strong>DeviceConfig.</strong> Since Android 10, values in namespaces that a server can push. The code now lives in the configinfrastructure Mainline module.</li>
+    <li><strong>Resource overlays.</strong> Values in <code>config.xml</code> that a device maker, the Original Equipment Manufacturer (OEM), overrides with a Runtime Resource Overlay (RRO) or a static overlay.</li>
+    <li><strong>Preprocessor macros.</strong> Switches such as <code>#ifdef ENABLE_FANCY_RENDERING</code>, set with <code>cflags</code> in the build. A typo in the name silently creates a new macro.</li>
+  </ul>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Property</th><th>aconfig</th><th>System property</th><th>Settings.Global</th><th>DeviceConfig</th><th>config.xml</th></tr></thead>
+      <tbody>
+        <tr><td>Type safety</td><td>Yes, generated code</td><td>No</td><td>No</td><td>No</td><td>Limited</td></tr>
+        <tr><td>Central declaration</td><td>Yes</td><td>No</td><td>No</td><td>No</td><td>XML file</td></tr>
+        <tr><td>Control at build time</td><td>Yes</td><td>Yes</td><td>No</td><td>No</td><td>Yes</td></tr>
+        <tr><td>Control at run time</td><td>Yes, read-write flags</td><td>Limited</td><td>Yes</td><td>Yes</td><td>No</td></tr>
+        <tr><td>Server push</td><td>Yes</td><td>No</td><td>No</td><td>Yes</td><td>No</td></tr>
+        <tr><td>Dead code removal</td><td>Yes</td><td>No</td><td>No</td><td>No</td><td>No</td></tr>
+        <tr><td>Test support</td><td>Yes</td><td>Manual</td><td>Manual</td><td>Manual</td><td>Manual</td></tr>
+        <tr><td>Available early in boot</td><td>Yes, new storage</td><td>Yes</td><td>No</td><td>No</td><td>Yes</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>To move an old switch to aconfig, declare a flag with the same meaning and generate its library. Then replace each old read with the generated method, add values that keep the old default and add tests for both values. Remove the old switch when no code reads it. Remember that the declaration cannot keep the DeviceConfig backend. Only the namespace decides it.</p>
+
+  <h2>What changed in Android 17</h2>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Area</th><th>Change</th></tr></thead>
+      <tbody>
+        <tr><td>Flag types</td><td>A new <code>flag_type</code> field and an integer value field. The build flag <code>RELEASE_ACONFIG_ENABLE_INT_FLAG</code> allows integer declarations. Generated accessors still return boolean values.</td></tr>
+        <tr><td>Storage</td><td>Version 4 of the format with integer flags, behind <code>RELEASE_ACONFIG_PARSE_V4</code>, with a new Rust reader <code>get_int64_flag_value</code>.</td></tr>
+        <tr><td>Java code</td><td>Read-only getters can return their value directly. A package with only read-only flags can become one <code>Flags</code> class.</td></tr>
+        <tr><td>Templates</td><td>The separate DeviceConfig template is gone. Its logic now lives in the <code>legacy_flag.internal</code> template.</td></tr>
+        <tr><td>Finalized flags</td><td>Checks of the minor SDK version and the annotation <code>@ChecksSdkIntAtLeast</code>, each behind its own build flag.</td></tr>
+        <tr><td>Daemon</td><td>A pure Rust <code>aconfigd-system</code>, the new <code>early-platform-init</code> step and a separate records file for the platform.</td></tr>
+        <tr><td>aflags</td><td>Output as protobuf and Mainline Beta flags in the list.</td></tr>
+        <tr><td>Build</td><td>A response file for <code>create-cache</code>, a <code>srcs</code> list that can change with <code>select()</code> and a split of <code>all_aconfig_declarations</code> into a module and a singleton.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="block security">
+    <div class="label">Security lens</div>
+    <p>Flags decide which code runs on millions of devices, so they are a security control in their own right. These are the main risks and the protections that the system gives.</p>
+    <ul>
+      <li><strong>Disabled code still ships.</strong> A read-write flag that is off keeps its code in the image. A reverse engineer can find unreleased features there. A bug in that code is a real bug on the day a server turns the flag on. Review the code behind a flag before the rollout, not only at the launch.</li>
+      <li><strong>Writable flags are an input.</strong> A read-write flag can change while the device runs, so the code behind it must handle both values safely at any start of a process. A release can remove this risk completely with <code>RELEASE_ACONFIG_REQUIRE_ALL_READ_ONLY</code>, which makes every writable flag a build error.</li>
+      <li><strong>Control of the overrides.</strong> The daemon <code>aconfigd</code> manages the live storage. The folder for values under <code>/metadata/aconfig/flags</code> has the mode 0770 and belongs to root and the group system. Client processes map the files read-only. On Android, SELinux policy also controls which processes can reach sockets such as <code>aconfigd_system</code>.</li>
+      <li><strong>Code and data that do not match.</strong> The package fingerprint lets the reader detect storage that belongs to another version of the code. A read error goes to the log, and the code continues with its initial value instead of a random one.</li>
+      <li><strong>Fixes that a server can turn off.</strong> A bugfix flag starts as writable, so a team can quickly turn off a bad fix. For a security fix, this also means that somebody can turn the fix off. Keep that period short, or make the flag read-only from the start.</li>
+      <li><strong>Old switches.</strong> System properties and settings have no central list and no type safety. A typo in a name can silently disable a protection. Generated accessors move such errors to compile time.</li>
+    </ul>
+  </div>
+
+  <details class="deep">
+    <summary>For the curious, source files and inner details <small>Optional</small></summary>
+    <div class="inner">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Path</th><th>What it holds</th></tr></thead>
+          <tbody>
+            <tr><td><code>build/make/tools/aconfig/aconfig_protos/protos/aconfig.proto</code></td><td>The schema for declarations, values, parsed flags and tracepoints</td></tr>
+            <tr><td><code>build/make/tools/aconfig/aconfig/src/commands.rs</code></td><td>The subcommands, the value order and the choice of the storage backend</td></tr>
+            <tr><td><code>build/make/tools/aconfig/aconfig/src/codegen/java.rs</code></td><td>The Java generator and the choice of the template</td></tr>
+            <tr><td><code>build/make/tools/aconfig/aconfig/src/codegen/cpp.rs</code>, <code>rust.rs</code></td><td>The C++ and Rust generators</td></tr>
+            <tr><td><code>build/make/tools/aconfig/aconfig/templates/</code></td><td>The 13 templates for Java, C++ and Rust</td></tr>
+            <tr><td><code>build/make/tools/aconfig/aconfig_storage_file/src/</code></td><td>The storage format, the versions and the node structures</td></tr>
+            <tr><td><code>build/make/tools/aconfig/aconfig_storage_read_api/src/lib.rs</code></td><td>The read functions and the C++ bridge</td></tr>
+            <tr><td><code>build/soong/aconfig/</code></td><td>The Soong module types and build rules</td></tr>
+            <tr><td><code>system/server_configurable_flags/aconfigd/</code></td><td>The daemon, its <code>.rc</code> file and its commands</td></tr>
+            <tr><td><code>packages/modules/ConfigInfrastructure/aflags/src/main.rs</code></td><td>The real <code>aflags</code> tool</td></tr>
+            <tr><td><code>platform_testing/libraries/flag-helpers/</code></td><td><code>SetFlagsRule</code> and the value providers for tests</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>The structures behind the two hash tables are small. Each entry has a <code>next_offset</code> field for the chain of entries with the same hash.</p>
+<pre class="code" data-lang="rust" data-file="aconfig_storage_file, the table nodes"><code>pub struct PackageTableNode {
+    pub package_name: String,
+    pub package_id: u32,
+    pub fingerprint: u64,             // version 2 and later
+    pub redact_exported_reads: bool,  // version 3
+    pub boolean_start_index: u32,
+    pub int_start_index: u32,         // version 4
+    pub next_offset: Option&lt;u32&gt;,
+}
+
+pub struct FlagTableNode {
+    pub package_id: u32,
+    pub flag_name: String,
+    pub flag_type: StoredFlagType,    // ReadWriteBoolean, ReadOnlyBoolean,
+                                      // FixedReadOnlyBoolean
+    pub flag_index: u16,
+    pub next_offset: Option&lt;u32&gt;,
+}
+
+pub enum FlagInfoBit {
+    HasServerOverride = 1 &lt;&lt; 0,
+    IsReadWrite       = 1 &lt;&lt; 1,
+    HasLocalOverride  = 1 &lt;&lt; 2,
+}</code></pre>
+      <p>Version 4 adds the types <code>ReadWriteInt64</code>, <code>ReadOnlyInt64</code> and <code>FixedReadOnlyInt64</code>. Each hash table takes its size from the constant <code>HASH_PRIMES</code>. This list has 29 prime numbers and starts with 7, 17, 29, 53 and 97.</p>
+      <p>The C++ bridge returns plain structures instead of a Rust <code>Result</code>.</p>
+<pre class="code" data-lang="rust" data-file="aconfig_storage_read_api, the cxx bridge (shortened)"><code>#[cxx::bridge]
+mod ffi {
+    pub struct BooleanFlagValueQueryCXX {
+        pub query_success: bool,
+        pub error_message: String,
+        pub flag_value: bool,
+    }
+    extern "Rust" {
+        pub fn get_boolean_flag_value_cxx(
+            file: &amp;[u8], offset: u32) -&gt; BooleanFlagValueQueryCXX;
+    }
+}</code></pre>
+      <p>The Soong rule for <code>create-cache</code> gives the declarations and values through a response file, which avoids limits on the length of a command line. It then copies the result only if the content changed.</p>
+<pre class="code" data-lang="text" data-file="build/soong/aconfig/init.go (shortened)"><code>Command2: blueprint.NewCommand(
+    Aconfig, ` create-cache`,
+    ` --package ${package}`,
+    ` ${container}`,
+    ` @${out}.rsp`,
+    ` ${default-permission}`,
+    ` ${allow-read-write}`,
+    ` ${mainline-beta-namespace-config}`,
+    ` ${force-read-only}`,
+    ` --cache ${out}.tmp`,
+    ` &amp;&amp; `, android.CpIfChanged, ` ${out}.tmp ${out}`,
+),</code></pre>
+      <p>The module <code>all_aconfig_declarations</code> collects every declaration in the tree, not only the declarations of the current product. Thus the server-side flag system needs only one build to know all flags.</p>
+    </div>
+  </details>
+
+  <div class="block try">
+    <div class="label">Try it yourself</div>
+    <p><strong>On an emulator or a phone.</strong> Look at the flags of your device. The list works with <code>adb shell</code>. For an override, use an emulator or a <code>userdebug</code> build with <code>adb root</code>.</p>
+<pre class="code" data-lang="bash" data-file="Terminal"><code># All flags with their values and permissions
+adb shell aflags list
+
+# The flags of one package
+adb shell aflags list | grep "android.provider.flags"
+
+# Needs root: override a read-write flag, check it, remove it
+adb shell aflags enable android.provider.flags.dump_improvements
+adb shell aflags list | grep dump_improvements
+adb shell aflags unset android.provider.flags.dump_improvements
+
+# Needs root: the live storage files
+adb shell ls -la /metadata/aconfig/maps/ /metadata/aconfig/flags/</code></pre>
+    <p><strong>In an AOSP source tree.</strong> Build the tool, write a small declaration and see what the generator makes.</p>
+<pre class="code" data-lang="bash" data-file="Terminal"><code>m aconfig
+
+cat &gt; /tmp/test.aconfig &lt;&lt; 'EOF'
+package: "com.example.test"
+container: "system"
+flag {
+    name: "my_test_flag"
+    namespace: "test_namespace"
+    description: "A test flag for learning"
+    bug: "12345"
+}
+EOF
+
+aconfig create-cache --package com.example.test --container system \
+    --declarations /tmp/test.aconfig --cache /tmp/test-cache.pb
+
+aconfig dump-cache --cache /tmp/test-cache.pb \
+    --format '{fully_qualified_name} {state} {permission} {trace}'
+
+mkdir -p /tmp/java-out
+aconfig create-java-lib --cache /tmp/test-cache.pb \
+    --mode production --out /tmp/java-out
+find /tmp/java-out -name "*.java"</code></pre>
+    <p>Add <code>is_fixed_read_only: true</code> to the flag, run the commands again and compare the generated <code>Flags.java</code>. Then count the declarations in the full tree with <code>find . -name "*.aconfig" | wc -l</code>.</p>
+  </div>
+
+  <h2>Key terms</h2>
+  <dl class="terms">
+    <dt>Feature flag</dt><dd>A named switch that turns a feature on or off without a change to the code.</dd>
+    <dt>Trunk-stable</dt><dd>A model where all code goes to one main line that is always ready for a release.</dd>
+    <dt>aconfig</dt><dd>The Android flag system, and the name of its build tool.</dd>
+    <dt>Release configuration</dt><dd>The settings of one build target, including the value sets of its flags.</dd>
+    <dt>State</dt><dd>ENABLED or DISABLED.</dd>
+    <dt>Permission</dt><dd>READ_ONLY (fixed by the build) or READ_WRITE (can change on the device).</dd>
+    <dt>Fixed read-only</dt><dd>A flag that can never become writable, so compilers can remove its dead code.</dd>
+    <dt>Container</dt><dd>A partition, an APEX module or an app that the build installs as one piece.</dd>
+    <dt>Namespace</dt><dd>A group of flags that one team manages on the server.</dd>
+    <dt>Values file</dt><dd>A file that sets the state and permission of flags for a release.</dd>
+    <dt>Tracepoint</dt><dd>A record in the cache that shows which file set a value.</dd>
+    <dt>FeatureFlagsImpl</dt><dd>The generated class that returns the real values on the device.</dd>
+    <dt>R8</dt><dd>The tool that shrinks and optimizes Java code for Android.</dd>
+    <dt>aconfigd</dt><dd>The daemon that prepares the flag storage and applies overrides.</dd>
+    <dt>Package fingerprint</dt><dd>A SipHash13 value of the flag names that links the code to its storage.</dd>
+    <dt>aflags</dt><dd>The device command that lists and overrides flags.</dd>
+    <dt>@FlaggedApi</dt><dd>The annotation that links a new API to its flag.</dd>
+    <dt>AOSP</dt><dd>Android Open Source Project.</dd>
+    <dt>APEX</dt><dd>Android Pony EXpress, the format of updatable system modules.</dd>
+    <dt>API</dt><dd>Application Programming Interface.</dd>
+    <dt>CI</dt><dd>Continuous integration.</dd>
+    <dt>CLI</dt><dd>Command-line interface.</dd>
+    <dt>CTS</dt><dd>Compatibility Test Suite.</dd>
+    <dt>FFI</dt><dd>Foreign Function Interface.</dd>
+    <dt>ID</dt><dd>Identifier.</dd>
+    <dt>IPC</dt><dd>Inter-Process Communication.</dd>
+    <dt>JNI</dt><dd>Java Native Interface.</dd>
+    <dt>OEM</dt><dd>Original Equipment Manufacturer.</dd>
+    <dt>OTA</dt><dd>Over-the-air update.</dd>
+    <dt>RRO</dt><dd>Runtime Resource Overlay.</dd>
+    <dt>SDK</dt><dd>Software Development Kit.</dd>
+    <dt>SELinux</dt><dd>Security-Enhanced Linux.</dd>
+  </dl>
+
+</article>
+</main>
+
+<script src="../../assets/js/site.js"></script>
+</body>
+</html>

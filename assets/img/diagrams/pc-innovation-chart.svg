@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 500" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">The innovation chart of privacy</title>
+  <desc id="d">A two by two chart of market and technology. Incremental innovation, with an existing market and existing technology, holds static notice and consent, template-based DPIA, masking and pseudonymization, and PII found by column name. This is privacy in 2016. Architectural innovation holds NER-based LLM security. Disruptive innovation holds agentic DPIA, privacy enhancing technologies and privacy threat modeling. Radical innovation holds SLMs that guard LLMs, prevention of adversarial AI attacks, RAG privacy and security, pseudonymous inference, agentic responsible AI operations and agentic AI red teaming. Privacy in 2025 moves toward the disruptive and radical quadrants.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="134" y="34" width="352" height="202" rx="12" fill="#fdf4e3" stroke="#b7791f" stroke-width="1.5"/>
+<text x="152" y="62" font-size="16" fill="#8a5a12" text-anchor="start" font-weight="700">Architectural</text>
+<text x="152" y="80" font-size="11.5" fill="#4a5263" text-anchor="start">new market, existing technology</text>
+<circle cx="156" cy="105" r="3.5" fill="#b7791f"/>
+<text x="168" y="109" font-size="12" fill="#1c2230" text-anchor="start" font-weight="500">NER-based LLM security</text>
+<rect x="494" y="34" width="352" height="202" rx="12" fill="#fbecec" stroke="#c2552d" stroke-width="1.5"/>
+<text x="512" y="62" font-size="16" fill="#963f1f" text-anchor="start" font-weight="700">Radical</text>
+<text x="512" y="80" font-size="11.5" fill="#4a5263" text-anchor="start">new market, new technology</text>
+<circle cx="516" cy="105" r="3.5" fill="#c2552d"/>
+<text x="528" y="109" font-size="12" fill="#1c2230" text-anchor="start" font-weight="500">SLMs that guard LLMs</text>
+<circle cx="516" cy="126" r="3.5" fill="#c2552d"/>
+<text x="528" y="130" font-size="12" fill="#1c2230" text-anchor="start" font-weight="500">Prevention of adversarial AI attacks</text>
+<circle cx="516" cy="147" r="3.5" fill="#c2552d"/>
+<text x="528" y="151" font-size="12" fill="#1c2230" text-anchor="start" font-weight="500">RAG privacy and security</text>
+<circle cx="516" cy="168" r="3.5" fill="#c2552d"/>
+<text x="528" y="172" font-size="12" fill="#1c2230" text-anchor="start" font-weight="500">Pseudonymous inference</text>
+<circle cx="516" cy="189" r="3.5" fill="#c2552d"/>
+<text x="528" y="193" font-size="12" fill="#1c2230" text-anchor="start" font-weight="500">Agentic responsible AI operations</text>
+<circle cx="516" cy="210" r="3.5" fill="#c2552d"/>
+<text x="528" y="214" font-size="12" fill="#1c2230" text-anchor="start" font-weight="500">Agentic AI red teaming</text>
+<rect x="134" y="244" width="352" height="202" rx="12" fill="#eef0f3" stroke="#5d6b7e" stroke-width="1.5"/>
+<text x="152" y="272" font-size="16" fill="#3f4a59" text-anchor="start" font-weight="700">Incremental</text>
+<text x="152" y="290" font-size="11.5" fill="#4a5263" text-anchor="start">existing market, existing technology</text>
+<circle cx="156" cy="315" r="3.5" fill="#5d6b7e"/>
+<text x="168" y="319" font-size="12" fill="#1c2230" text-anchor="start" font-weight="500">Static notice and consent</text>
+<circle cx="156" cy="336" r="3.5" fill="#5d6b7e"/>
+<text x="168" y="340" font-size="12" fill="#1c2230" text-anchor="start" font-weight="500">Template-based DPIA</text>
+<circle cx="156" cy="357" r="3.5" fill="#5d6b7e"/>
+<text x="168" y="361" font-size="12" fill="#1c2230" text-anchor="start" font-weight="500">Masking and pseudonymization</text>
+<circle cx="156" cy="378" r="3.5" fill="#5d6b7e"/>
+<text x="168" y="382" font-size="12" fill="#1c2230" text-anchor="start" font-weight="500">PII found by column name</text>
+<rect x="494" y="244" width="352" height="202" rx="12" fill="#f3f0fa" stroke="#7a4fc2" stroke-width="1.5"/>
+<text x="512" y="272" font-size="16" fill="#58378f" text-anchor="start" font-weight="700">Disruptive</text>
+<text x="512" y="290" font-size="11.5" fill="#4a5263" text-anchor="start">existing market, new technology</text>
+<circle cx="516" cy="315" r="3.5" fill="#7a4fc2"/>
+<text x="528" y="319" font-size="12" fill="#1c2230" text-anchor="start" font-weight="500">Agentic DPIA</text>
+<circle cx="516" cy="336" r="3.5" fill="#7a4fc2"/>
+<text x="528" y="340" font-size="12" fill="#1c2230" text-anchor="start" font-weight="500">Privacy enhancing technologies</text>
+<circle cx="516" cy="357" r="3.5" fill="#7a4fc2"/>
+<text x="528" y="361" font-size="12" fill="#1c2230" text-anchor="start" font-weight="500">Privacy threat modeling</text>
+<path d="M130 472 H850" fill="none" stroke="#4a5263" stroke-width="1.6" marker-end="url(#m1)"/>
+<text x="130" y="494" font-size="12" fill="#4a5263" text-anchor="start" font-weight="600">Existing technology</text>
+<text x="850" y="494" font-size="12" fill="#4a5263" text-anchor="end" font-weight="600">New technology</text>
+<path d="M108 450 V30" fill="none" stroke="#4a5263" stroke-width="1.6" marker-end="url(#m1)"/>
+<text x="96" y="428" font-size="11.5" fill="#4a5263" text-anchor="end" font-weight="600">Existing</text>
+<text x="96" y="443.87" font-size="11.5" fill="#4a5263" text-anchor="end" font-weight="600">market</text>
+<text x="96" y="44" font-size="11.5" fill="#4a5263" text-anchor="end" font-weight="600">New</text>
+<text x="96" y="59.87" font-size="11.5" fill="#4a5263" text-anchor="end" font-weight="600">market</text>
+<rect x="152" y="406" width="170" height="26" rx="13" fill="#fff" stroke="#5d6b7e" stroke-width="1.2"/>
+<text x="237" y="423.14" font-size="11.5" fill="#3f4a59" text-anchor="middle" font-weight="600">Privacy in 2016</text>
+<rect x="650" y="227" width="170" height="26" rx="13" fill="#fff" stroke="#c2552d" stroke-width="1.2"/>
+<text x="735" y="244.14" font-size="11.5" fill="#963f1f" text-anchor="middle" font-weight="600">Privacy in 2025</text>
+<path d="M326 419 H790 V259" fill="none" stroke="#1c2230" stroke-width="1.6" stroke-dasharray="6 5" marker-end="url(#m0)"/>
+</svg>

@@ -1,0 +1,1205 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Least-to-most prompting · AI Engineering · LearnInBits</title>
+  <meta name="description" content="Split a hard problem into small problems and solve them in order. Two guided builds with two chains each.">
+  <link rel="icon" href="../../assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,500;0,8..60,600;1,8..60,500&display=swap">
+  <link rel="stylesheet" href="../../assets/css/style.css">
+  <script>try{var t=localStorage.getItem("lib-theme");t=t?JSON.parse(t):(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+</head>
+<body data-root="../../" data-page="chapter" data-course="ai-engineering" data-id="12-least-to-most">
+
+<main id="main">
+<article>
+
+  <div class="block oneline">
+    <div class="label">In one line</div>
+    <p>Least-to-most prompting splits a hard problem into small subproblems, from the simplest to the hardest, and solves them in that order.</p>
+  </div>
+
+  <section class="learn">
+    <h2>What you will learn</h2>
+    <ul>
+      <li>How to split a problem into subproblems that build on each other</li>
+      <li>How one chain plans the subproblems and a second chain solves them</li>
+      <li>How to check the plan and the solution separately</li>
+      <li>Why a correct plan can still give a wrong answer</li>
+    </ul>
+    <p class="needs">Read <a href="11-step-back-prompting.html">chapter 11</a> first. This chapter uses the same pattern of two chains in turn.</p>
+  </section>
+
+  <h2>The idea</h2>
+  <p>Some problems are not difficult in any single part. They are difficult because they have many parts. A model that tries to solve everything at once can skip a part or mix up the order.</p>
+  <p><strong>Least-to-most prompting</strong> works in two stages. In the first stage, the model only plans. It lists the subproblems, from the simplest to the most complex, so that each subproblem can use the answers before it. In the second stage, the model solves the subproblems in this order and combines them into the final answer.</p>
+  <p>Chapter 8 also used steps. The difference is the separate plan. Here, a first call writes the plan. You can read and check it before a second call solves it.</p>
+
+  <div class="block analogy">
+    <div class="label">Real-life analogy</div>
+    <p>A child learns to read in steps. First letters, then syllables, then words, then sentences and last full stories. Each level uses the skills of the level before it. Nobody starts with a story. Least-to-most prompting gives the model the same order, from small and simple to large and complex.</p>
+  </div>
+
+  <h2>What we build in this chapter</h2>
+  <p>Both programs solve three security calculations with several parts. The first one uses problems from a security operations center (SOC) and vulnerability management. The second one uses problems from app review and mobile security.</p>
+
+  <div class="build-cards">
+    <div class="build-card" style="--ex:#2f62c8">
+      <span class="ex-tag"><b>1</b>Example 1</span>
+      <h3>Security operations with Gemini</h3>
+      <dl>
+        <dt>Aim</dt><dd>Solve planning calculations for a security team, step by step.</dd>
+        <dt>Problem</dt><dd>Shift sizes, remediation time and the rollout of endpoint protection.</dd>
+        <dt>Input</dt><dd>Three word problems.</dd>
+        <dt>Expected output</dt><dd>Subproblems, solutions and a final answer, for example<code class="expect">(4 / 33) * 100 ≈ 0.1212 * 100 = <b>12.12%</b></code></dd>
+        <dt>Model</dt><dd><span class="model-chip">Gemini 3.1 Flash Lite</span></dd>
+      </dl>
+    </div>
+    <div class="build-card" style="--ex:#0f8a6a">
+      <span class="ex-tag"><b>2</b>Example 2</span>
+      <h3>App security with Qwen</h3>
+      <dl>
+        <dt>Aim</dt><dd>Solve planning calculations for a mobile security team.</dd>
+        <dt>Problem</dt><dd>A review queue, takedown reports and a patch schedule with test days.</dd>
+        <dt>Input</dt><dd>Three word problems.</dd>
+        <dt>Expected output</dt><dd>Subproblems, solutions and a final answer, for example<code class="expect">The total number of hours spent writing takedown reports is <b>270</b> hours.</code></dd>
+        <dt>Model</dt><dd><span class="model-chip">Qwen 2.5 7B, through OpenRouter</span></dd>
+      </dl>
+    </div>
+  </div>
+
+  <!-- ================= EXAMPLE 1 ================= -->
+  <section class="example" style="--ex:#2f62c8">
+
+    <div class="example-banner">
+      <div class="eb-tag">Example 1 · Guided build</div>
+      <h2 data-toc="Example 1, security operations with Gemini">Security operations with Gemini</h2>
+      <p>Build a planning chain and a solving chain, and run them on three problems with a Gemini model.</p>
+      <div class="eb-row">
+        <span class="eb-chip">Gemini 3.1 Flash Lite</span>
+        <span class="eb-chip">src/11_least_to_most_google.py</span>
+        <a class="gh-btn" href="https://github.com/bhardwajAbhi/ai-engineering/blob/main/src/11_least_to_most_google.py"><svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M12 .5a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2.1c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1.1-.8.1-.8.1-.8 1.2.1 1.9 1.3 1.9 1.3 1.1 1.9 2.9 1.3 3.6 1 .1-.8.4-1.3.8-1.6-2.7-.3-5.5-1.3-5.5-6a4.7 4.7 0 0 1 1.3-3.2c-.1-.3-.6-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.7 1.7.2 2.9.1 3.2a4.7 4.7 0 0 1 1.3 3.2c0 4.6-2.8 5.6-5.5 6 .4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .5z"/></svg>View on GitHub</a>
+      </div>
+    </div>
+
+    <figure class="diagram">
+      <div class="frame"><img src="../../assets/img/diagrams/ai-12-ex1-flow.svg" alt="Data, for i, problem in enumerate(problems, 1), 3 SOC calculations, one at a time. Chain 1, decompose_chain = decompose_prompt | llm | parser, List subproblems from simplest to most complex, {problem}. Output, subproblems, for example 5 subproblems for the shift problem. Chain 2, solve_chain = solve_prompt | llm | parser, Solve in order, reuse each result, {subproblems} and {problem}. Output, STEP-BY-STEP SOLUTION, 12.12%, 1,480 hours, 20 days. A loop goes back from stage 5 to stage 1, next problem." loading="lazy"></div>
+      <figcaption>The program of Example 1, from the input to the printed result.</figcaption>
+    </figure>
+
+    <h3 class="step"><span class="sn">Step 1</span>Create the file</h3>
+    <p>In your project folder, create the file <code>src/11_least_to_most_google.py</code>. The docstring at the top explains the method.</p>
+
+    <h3 class="step"><span class="sn">Step 2</span>Import what you need</h3>
+<pre class="code" data-lang="python" data-file="src/11_least_to_most_google.py"><code>from dotenv import load_dotenv
+from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.output_parsers import StrOutputParser</code></pre>
+
+    <h3 class="step"><span class="sn">Step 3</span>Create the model and the parser</h3>
+<pre class="code" data-lang="python"><code>def main():
+    load_dotenv()
+
+    # Initialize the model
+    llm = ChatGoogleGenerativeAI(
+        model="gemini-3.1-flash-lite",
+        temperature=0,
+    )
+
+    # Parser to extract the text from the model response
+    parser = StrOutputParser()</code></pre>
+    <p><code>temperature=0</code> fits calculations, as in chapter 8.</p>
+
+    <h3 class="step"><span class="sn">Step 4</span>Write the decomposition prompt</h3>
+<pre class="code" data-lang="python"><code>    # Step 1: Decompose the problem into subproblems
+    decompose_prompt = ChatPromptTemplate.from_template("""
+        You are an experienced cybersecurity analyst.
+
+        Break down this complex problem into smaller subproblems.
+        List them from simplest to most complex.
+        Each subproblem should be solvable on its own or using solutions
+        from previous subproblems.
+
+        PROBLEM: {problem}
+
+        SUBPROBLEMS (from simplest to most complex):
+        1.
+    """)</code></pre>
+    <ul class="explain">
+      <li>"Break down this complex problem into smaller subproblems" is the task of the first call. The prompt does not ask for the solution.</li>
+      <li>"List them from simplest to most complex" sets the order. This order gives the method its name.</li>
+      <li>"solvable on its own or using solutions from previous subproblems" makes sure that each subproblem has what it needs.</li>
+      <li>The prompt ends with <code>1.</code>, a cue for the first item of a numbered list.</li>
+    </ul>
+
+    <h3 class="step"><span class="sn">Step 5</span>Write the solving prompt</h3>
+<pre class="code" data-lang="python"><code>    # Step 2: Solve the subproblems incrementally
+    solve_prompt = ChatPromptTemplate.from_template("""
+        Solve each subproblem in order, using solutions from previous
+        subproblems when needed.
+
+        ORIGINAL PROBLEM: {problem}
+
+        SUBPROBLEMS:
+        {subproblems}
+
+        Solve each subproblem step by step, then combine for the final answer.
+
+        SOLUTIONS:
+    """)</code></pre>
+    <ul class="explain">
+      <li>The template has two placeholders, <code>{problem}</code> and <code>{subproblems}</code>.</li>
+      <li>"using solutions from previous subproblems when needed" tells the model to reuse each result.</li>
+      <li>"then combine for the final answer" asks for one clear result at the end.</li>
+    </ul>
+
+    <h3 class="step"><span class="sn">Step 6</span>Build the two chains</h3>
+<pre class="code" data-lang="python"><code>    # The two chains that make up the least-to-most pipeline
+    decompose_chain = decompose_prompt | llm | parser
+    solve_chain = solve_prompt | llm | parser</code></pre>
+    <p>The structure is the same as in chapter 11, two prompts, one model and one parser.</p>
+
+    <h3 class="step"><span class="sn">Step 7</span>Add the problems</h3>
+<pre class="code" data-lang="python"><code>    # Sample security problems
+    problems = [
+        """
+        A SOC has 3 shifts: Morning (12 analysts), Afternoon (10 analysts),
+        and Night (6 analysts). Morning shift is adding 25% more analysts,
+        Afternoon is adding 4 new analysts, and Night is losing 2 analysts
+        due to attrition. After these changes, what percentage of the
+        total SOC staff will be on the Night shift?
+        """,
+
+        """
+        A vulnerability scanner found 800 findings. 40% are classified as
+        Critical, 35% as High, and the rest as Medium. Critical findings
+        take 3 hours each to remediate, High findings take 1.5 hours each,
+        and Medium findings take 30 minutes each. What is the total
+        remediation time in hours?
+        """,
+
+        """
+        An organisation has 1,200 endpoints. 65% are already enrolled in
+        EDR. IT can enrol 15 unenrolled endpoints per day. If leadership
+        wants 90% of all endpoints enrolled, how many days will it take
+        from today?
+        """,
+    ]</code></pre>
+    <p>Each problem has three to five parts that build on each other. In the third problem, "EDR" means endpoint detection and response, a security tool on each computer.</p>
+
+    <h3 class="step"><span class="sn">Step 8</span>Plan, then solve each problem</h3>
+<pre class="code" data-lang="python"><code>    # Invoke the least-to-most pipeline for each problem, one at a time
+    for i, problem in enumerate(problems, 1):
+        print(f"\n{'=' * 60}")
+        print(f"PROBLEM {i}")
+        print("=" * 60)
+        print(f"\n{problem.strip()}\n")
+        print("-" * 60)
+
+        # Decompose the problem
+        subproblems = decompose_chain.invoke({"problem": problem})
+        print("SUBPROBLEMS:")
+        print(subproblems)
+        print("\n" + "-" * 60)
+
+        # Solve the subproblems and combine into a final answer
+        solution = solve_chain.invoke({"problem": problem, "subproblems": subproblems})
+        print("STEP-BY-STEP SOLUTION:")
+        print(solution)</code></pre>
+    <ul class="explain">
+      <li><code>decompose_chain.invoke(...)</code> is call 1. <code>subproblems</code> holds the plan as text.</li>
+      <li><code>solve_chain.invoke({"problem": problem, "subproblems": subproblems})</code> is call 2. It gets the original problem and the plan.</li>
+      <li>The program prints the plan and the solution separately, so you can check each one.</li>
+    </ul>
+
+    <h3 class="step"><span class="sn">Step 9</span>Make the file start main() and run it</h3>
+<pre class="code" data-lang="python"><code>if __name__ == "__main__":
+    main()</code></pre>
+<pre class="code" data-lang="bash"><code>uv run python src/11_least_to_most_google.py</code></pre>
+<details class="fold">
+      <summary><span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m16 18 6-6-6-6M8 6l-6 6 6 6"/></svg></span><span class="ft">Show the full output<small>153 lines</small></span></summary>
+      <div class="fold-body">
+<pre class="code" data-lang="output"><code>============================================================
+PROBLEM 1
+============================================================
+
+A SOC has 3 shifts: Morning (12 analysts), Afternoon (10 analysts),
+        and Night (6 analysts). Morning shift is adding 25% more analysts,
+        Afternoon is adding 4 new analysts, and Night is losing 2 analysts
+        due to attrition. After these changes, what percentage of the
+        total SOC staff will be on the Night shift?
+
+------------------------------------------------------------
+SUBPROBLEMS:
+As an experienced cybersecurity analyst, I approach this resource allocation problem by breaking it down into discrete, verifiable steps to ensure accuracy in the final calculation.
+
+**SUBPROBLEMS (from simplest to most complex):**
+
+1.  **Calculate the new Morning shift headcount:** Determine the result of adding 25% to the current 12 analysts (12 * 1.25).
+2.  **Calculate the new Afternoon shift headcount:** Determine the result of adding 4 analysts to the current 10 (10 + 4).
+3.  **Calculate the new Night shift headcount:** Determine the result of subtracting 2 analysts from the current 6 (6 - 2).
+4.  **Calculate the total SOC staff headcount:** Sum the results of the three previous subproblems to find the new total workforce.
+5.  **Calculate the Night shift percentage:** Divide the new Night shift headcount (from subproblem 3) by the new total SOC staff (from subproblem 4) and multiply by 100 to get the final percentage.
+
+------------------------------------------------------------
+STEP-BY-STEP SOLUTION:
+Here are the step-by-step solutions to the subproblems:
+
+**1. Calculate the new Morning shift headcount:**
+Current headcount is 12. Adding 25% (12 * 0.25 = 3) results in:
+12 + 3 = **15 analysts**
+
+**2. Calculate the new Afternoon shift headcount:**
+Current headcount is 10. Adding 4 new analysts results in:
+10 + 4 = **14 analysts**
+
+**3. Calculate the new Night shift headcount:**
+Current headcount is 6. Losing 2 analysts results in:
+6 - 2 = **4 analysts**
+
+**4. Calculate the total SOC staff headcount:**
+Summing the new totals from the three shifts:
+15 (Morning) + 14 (Afternoon) + 4 (Night) = **33 total analysts**
+
+**5. Calculate the Night shift percentage:**
+Divide the new Night shift headcount (4) by the new total SOC staff (33) and multiply by 100:
+(4 / 33) * 100 ≈ 0.1212 * 100 = **12.12%**
+
+**FINAL ANSWER:**
+After the staffing changes, the Night shift will comprise approximately **12.12%** of the total SOC staff.
+
+============================================================
+PROBLEM 2
+============================================================
+
+A vulnerability scanner found 800 findings. 40% are classified as
+        Critical, 35% as High, and the rest as Medium. Critical findings
+        take 3 hours each to remediate, High findings take 1.5 hours each,
+        and Medium findings take 30 minutes each. What is the total
+        remediation time in hours?
+
+------------------------------------------------------------
+SUBPROBLEMS:
+As an experienced cybersecurity analyst, I have broken down this remediation estimation task into logical, sequential steps to ensure accuracy and scalability.
+
+**SUBPROBLEMS (from simplest to most complex):**
+
+1.  **Calculate the quantity of findings per severity level:** Determine the exact number of findings for Critical, High, and Medium categories based on the total count of 800 and the provided percentages.
+2.  **Convert all remediation time units to a standard format:** Ensure all time estimates are in hours (e.g., converting the 30-minute Medium remediation time into 0.5 hours).
+3.  **Calculate the total remediation time for each severity category:** Multiply the quantity of findings (from Subproblem 1) by the time required per finding (from Subproblem 2) for each category.
+4.  **Aggregate the total remediation time:** Sum the results from Subproblem 3 to arrive at the final total project duration in hours.
+
+------------------------------------------------------------
+STEP-BY-STEP SOLUTION:
+To determine the total remediation time, we will follow the subproblems as outlined:
+
+### 1. Calculate the quantity of findings per severity level
+*   **Total findings:** 800
+*   **Critical (40%):** $800 \times 0.40 = 320$ findings
+*   **High (35%):** $800 \times 0.35 = 280$ findings
+*   **Medium (The rest):** $100\% - (40\% + 35\%) = 25\%$
+    *   $800 \times 0.25 = 200$ findings
+
+### 2. Convert all remediation time units to a standard format (hours)
+*   **Critical:** 3 hours
+*   **High:** 1.5 hours
+*   **Medium:** 30 minutes = 0.5 hours
+
+### 3. Calculate the total remediation time for each severity category
+*   **Critical:** $320 \text{ findings} \times 3 \text{ hours/finding} = 960 \text{ hours}$
+*   **High:** $280 \text{ findings} \times 1.5 \text{ hours/finding} = 420 \text{ hours}$
+*   **Medium:** $200 \text{ findings} \times 0.5 \text{ hours/finding} = 100 \text{ hours}$
+
+### 4. Aggregate the total remediation time
+*   **Total Time:** $960 + 420 + 100 = 1,480 \text{ hours}$
+
+**Final Answer:**
+The total remediation time required for all 800 findings is **1,480 hours**.
+
+============================================================
+PROBLEM 3
+============================================================
+
+An organisation has 1,200 endpoints. 65% are already enrolled in
+        EDR. IT can enrol 15 unenrolled endpoints per day. If leadership
+        wants 90% of all endpoints enrolled, how many days will it take
+        from today?
+
+------------------------------------------------------------
+SUBPROBLEMS:
+As an experienced cybersecurity analyst, I have broken this deployment project down into logical, sequential steps to determine the timeline for reaching your 90% coverage goal.
+
+**SUBPROBLEMS (from simplest to most complex):**
+
+1.  **Calculate the current number of enrolled endpoints:** Determine the exact count of the 1,200 endpoints that are already protected (65% of 1,200).
+2.  **Calculate the target number of enrolled endpoints:** Determine the exact count required to reach the 90% coverage goal (90% of 1,200).
+3.  **Calculate the enrollment gap:** Subtract the current number of enrolled endpoints (from Subproblem 1) from the target number (from Subproblem 2) to find the total number of endpoints that still need to be onboarded.
+4.  **Calculate the time to completion:** Divide the enrollment gap (from Subproblem 3) by the daily enrollment capacity (15 endpoints per day) to determine the total number of days required.
+
+***
+
+**Executive Summary of the Calculation:**
+*   **Current Enrolled:** 780 endpoints (1,200 * 0.65)
+*   **Target Enrolled:** 1,080 endpoints (1,200 * 0.90)
+*   **Enrollment Gap:** 300 endpoints (1,080 - 780)
+*   **Days Required:** **20 days** (300 / 15)
+
+------------------------------------------------------------
+STEP-BY-STEP SOLUTION:
+To determine the timeline for reaching the 90% EDR coverage goal, we will solve the subproblems sequentially as outlined:
+
+### Step 1: Calculate the current number of enrolled endpoints
+We need to find 65% of the total 1,200 endpoints.
+*   Calculation: $1,200 \times 0.65 = 780$
+*   **Result:** There are currently **780** endpoints enrolled.
+
+### Step 2: Calculate the target number of enrolled endpoints
+We need to find 90% of the total 1,200 endpoints to meet the leadership goal.
+*   Calculation: $1,200 \times 0.90 = 1,080$
+*   **Result:** The target is **1,080** enrolled endpoints.
+
+### Step 3: Calculate the enrollment gap
+We subtract the current number of enrolled endpoints (from Step 1) from the target number (from Step 2) to identify how many more endpoints must be onboarded.
+*   Calculation: $1,080 - 780 = 300$
+*   **Result:** There is an enrollment gap of **300** endpoints.
+
+### Step 4: Calculate the time to completion
+We divide the enrollment gap (from Step 3) by the IT team's daily capacity of 15 endpoints per day.
+*   Calculation: $300 / 15 = 20$
+*   **Result:** It will take **20 days** to reach the goal.
+
+***
+
+### Final Answer:
+Based on the current enrollment of 780 endpoints and a target of 1,080, the IT team must enroll 300 additional endpoints. At a rate of 15 endpoints per day, it will take **20 days** from today to reach the 90% coverage goal.</code></pre>
+      </div>
+    </details>
+
+    <div class="block note">
+      <div class="label">Your output can be different</div>
+      <p>The plan can have four or five subproblems, and the wording changes. The final numbers must stay the same.</p>
+    </div>
+
+    <div class="block look">
+      <div class="label">Look closely</div>
+      <p>Check the three answers. Problem 1 gives 15 + 14 + 4 = 33 staff and 4 / 33 = 12.12%. Problem 2 gives 960 + 420 + 100 = 1,480 hours. Problem 3 needs 1,080 enrolled endpoints and 780 are enrolled. Thus 300 remain, and 300 / 15 = 20 days. All three are correct.</p>
+      <p>The plan of problem 1 already contains the formulas, for example 12 * 1.25. The first call did a part of the solving. A model does not always keep the two stages apart.</p>
+    </div>
+
+    <h3 class="step"><span class="sn">Inside</span>What happens inside the calls</h3>
+    <p>As in chapter 11, your code calls the first chain, keeps its string and passes it to the second chain.</p>
+    <figure class="diagram">
+      <div class="frame"><img src="../../assets/img/diagrams/ai-12-ex1-seq.svg" alt="A sequence diagram with the lanes Your code, decompose_chain, solve_chain, Gemini API. Step 1, Your code to decompose_chain, decompose_chain.invoke({&quot;problem&quot; problem}), call 1. Step 2, decompose_chain to Gemini API, Request with the first prompt, list subproblems from simplest to most complex. Step 3, Gemini API to decompose_chain, Reply, for example 5 subproblems for the shift problem. Step 4, decompose_chain to Your code, subproblems, a plain string from the parser, printed first. Step 5, Your code to solve_chain, solve_chain.invoke({&quot;problem&quot; ..., &quot;subproblems&quot; subproblems}), call 2, the output of call 1 is an input. Step 6, solve_chain to Gemini API, Request with the second prompt, subproblems first, then the problem. Step 7, Gemini API to solve_chain, Reply, 12.12%, 1,480 hours, 20 days. Step 8, solve_chain to Your code, STEP-BY-STEP SOLUTION, a plain string, printed after the subproblems. Steps 1 to 8 repeat, Repeated for each of the 3 problems." loading="lazy"></div>
+      <figcaption>Inside the calls of Example 1, step by step.</figcaption>
+    </figure>
+
+    <details class="fold">
+      <summary><span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m16 18 6-6-6-6M8 6l-6 6 6 6"/></svg></span><span class="ft">Full code of Example 1<small>src/11_least_to_most_google.py</small></span><a class="gh-btn" href="https://github.com/bhardwajAbhi/ai-engineering/blob/main/src/11_least_to_most_google.py"><svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M12 .5a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2.1c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1.1-.8.1-.8.1-.8 1.2.1 1.9 1.3 1.9 1.3 1.1 1.9 2.9 1.3 3.6 1 .1-.8.4-1.3.8-1.6-2.7-.3-5.5-1.3-5.5-6a4.7 4.7 0 0 1 1.3-3.2c-.1-.3-.6-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.7 1.7.2 2.9.1 3.2a4.7 4.7 0 0 1 1.3 3.2c0 4.6-2.8 5.6-5.5 6 .4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .5z"/></svg>GitHub</a></summary>
+      <div class="fold-body">
+<pre class="code" data-lang="python" data-file="src/11_least_to_most_google.py"><code>"""
+Title: Least-to-Most Prompting (Google Generative AI)
+
+Least-to-most prompting breaks a complex problem into a sequence of
+simpler subproblems, then solves them in order, using earlier
+solutions to help solve the later ones.
+
+uv run python src/11_least_to_most_google.py
+"""
+
+from dotenv import load_dotenv
+from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.output_parsers import StrOutputParser
+
+
+def main():
+    load_dotenv()
+
+    # Initialize the model
+    llm = ChatGoogleGenerativeAI(
+        model="gemini-3.1-flash-lite",
+        temperature=0,
+    )
+
+    # Parser to extract the text from the model response
+    parser = StrOutputParser()
+
+    # Step 1: Decompose the problem into subproblems
+    decompose_prompt = ChatPromptTemplate.from_template("""
+        You are an experienced cybersecurity analyst.
+
+        Break down this complex problem into smaller subproblems.
+        List them from simplest to most complex.
+        Each subproblem should be solvable on its own or using solutions
+        from previous subproblems.
+
+        PROBLEM: {problem}
+
+        SUBPROBLEMS (from simplest to most complex):
+        1.
+    """)
+
+    # Step 2: Solve the subproblems incrementally
+    solve_prompt = ChatPromptTemplate.from_template("""
+        Solve each subproblem in order, using solutions from previous
+        subproblems when needed.
+
+        ORIGINAL PROBLEM: {problem}
+
+        SUBPROBLEMS:
+        {subproblems}
+
+        Solve each subproblem step by step, then combine for the final answer.
+
+        SOLUTIONS:
+    """)
+
+    # The two chains that make up the least-to-most pipeline
+    decompose_chain = decompose_prompt | llm | parser
+    solve_chain = solve_prompt | llm | parser
+
+    # Sample security problems
+    problems = [
+        """
+        A SOC has 3 shifts: Morning (12 analysts), Afternoon (10 analysts),
+        and Night (6 analysts). Morning shift is adding 25% more analysts,
+        Afternoon is adding 4 new analysts, and Night is losing 2 analysts
+        due to attrition. After these changes, what percentage of the
+        total SOC staff will be on the Night shift?
+        """,
+
+        """
+        A vulnerability scanner found 800 findings. 40% are classified as
+        Critical, 35% as High, and the rest as Medium. Critical findings
+        take 3 hours each to remediate, High findings take 1.5 hours each,
+        and Medium findings take 30 minutes each. What is the total
+        remediation time in hours?
+        """,
+
+        """
+        An organisation has 1,200 endpoints. 65% are already enrolled in
+        EDR. IT can enrol 15 unenrolled endpoints per day. If leadership
+        wants 90% of all endpoints enrolled, how many days will it take
+        from today?
+        """,
+    ]
+
+    # Invoke the least-to-most pipeline for each problem, one at a time
+    for i, problem in enumerate(problems, 1):
+        print(f"\n{'=' * 60}")
+        print(f"PROBLEM {i}")
+        print("=" * 60)
+        print(f"\n{problem.strip()}\n")
+        print("-" * 60)
+
+        # Decompose the problem
+        subproblems = decompose_chain.invoke({"problem": problem})
+        print("SUBPROBLEMS:")
+        print(subproblems)
+        print("\n" + "-" * 60)
+
+        # Solve the subproblems and combine into a final answer
+        solution = solve_chain.invoke({"problem": problem, "subproblems": subproblems})
+        print("STEP-BY-STEP SOLUTION:")
+        print(solution)
+
+
+if __name__ == "__main__":
+    main()</code></pre>
+      </div>
+    </details>
+  </section>
+
+  <!-- ================= EXAMPLE 2 ================= -->
+  <section class="example" style="--ex:#0f8a6a">
+
+    <div class="example-banner">
+      <div class="eb-tag">Example 2 · Guided build</div>
+      <h2 data-toc="Example 2, app security with Qwen">App security with Qwen</h2>
+      <p>Now you use the same two chains for problems from mobile app security, through OpenRouter.</p>
+      <div class="eb-row">
+        <span class="eb-chip">Qwen 2.5 7B through OpenRouter</span>
+        <span class="eb-chip">src/11_least_to_most_openrouter.py</span>
+        <a class="gh-btn" href="https://github.com/bhardwajAbhi/ai-engineering/blob/main/src/11_least_to_most_openrouter.py"><svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M12 .5a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2.1c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1.1-.8.1-.8.1-.8 1.2.1 1.9 1.3 1.9 1.3 1.1 1.9 2.9 1.3 3.6 1 .1-.8.4-1.3.8-1.6-2.7-.3-5.5-1.3-5.5-6a4.7 4.7 0 0 1 1.3-3.2c-.1-.3-.6-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.7 1.7.2 2.9.1 3.2a4.7 4.7 0 0 1 1.3 3.2c0 4.6-2.8 5.6-5.5 6 .4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .5z"/></svg>View on GitHub</a>
+      </div>
+    </div>
+
+    <figure class="diagram">
+      <div class="frame"><img src="../../assets/img/diagrams/ai-12-ex2-flow.svg" alt="Data, for i, problem in enumerate(problems, 1), 3 app security calculations, one at a time. Chain 1, decompose_chain = decompose_prompt | llm | parser, List subproblems from simplest to most complex, {problem}. Output, subproblems, the plan already solves some problems. Chain 2, solve_chain = solve_prompt | llm | parser, Solve in order, reuse each result, {subproblems} and {problem}. Output, STEP-BY-STEP SOLUTION, 15.84% (wrong), 270 hours, 16 days (wrong). A loop goes back from stage 5 to stage 1, next problem." loading="lazy"></div>
+      <figcaption>The program of Example 2, from the input to the printed result.</figcaption>
+    </figure>
+
+    <p>A <span class="same">Same</span> mark tells you that a line has the same job as before. A <span class="new">New</span> mark tells you what is different.</p>
+
+    <h3 class="step"><span class="sn">Steps 1 to 3</span>File, imports, model and parser</h3>
+<pre class="code" data-lang="python" data-file="src/11_least_to_most_openrouter.py"><code>from dotenv import load_dotenv
+from langchain_openrouter import ChatOpenRouter
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.output_parsers import StrOutputParser
+
+
+def main():
+    load_dotenv()
+
+    # Initialize the model
+    llm = ChatOpenRouter(
+        model="qwen/qwen-2.5-7b-instruct",
+        temperature=0,
+    )
+
+    # Parser to extract the text from the model response
+    parser = StrOutputParser()</code></pre>
+    <ul class="explain">
+      <li><span class="new">New</span><code>ChatOpenRouter</code> with the Qwen model.</li>
+      <li><span class="same">Same</span><code>temperature=0</code> and the parser.</li>
+    </ul>
+
+    <h3 class="step"><span class="sn">Steps 4 to 6</span>The two prompts and the two chains</h3>
+    <ul class="explain">
+      <li><span class="new">New</span>The role in the first prompt is "an Android application security engineer".</li>
+      <li><span class="same">Same</span>The rest of both prompts and the two chains.</li>
+    </ul>
+
+    <h3 class="step"><span class="sn">Steps 7 to 9</span>Problems and run</h3>
+<pre class="code" data-lang="python"><code>    # Sample security problems
+    problems = [
+        """
+        An app store review queue has 3 categories: Games (500 apps),
+        Utilities (300 apps), and Finance (200 apps). Games submissions
+        increase by 20%, Utilities gains 50 new apps, and Finance
+        submissions drop by 10%. After these changes, what percentage
+        of the total queue will be Finance apps?
+        """,
+        """
+        A permissions/intents classifier scans 10,000 apps. 12% are
+        flagged as suspicious. Of the flagged apps, 30% are confirmed
+        malicious after manual review, and each confirmed malicious app
+        takes 45 minutes to write a takedown report for. How many total
+        hours are spent writing takedown reports?
+        """,
+        """
+        A mobile security team must patch 400 apps for a newly disclosed
+        WebView vulnerability. They can patch 25 apps per day, but every
+        5th day is reserved for regression testing with no patches
+        shipped that day. How many calendar days will it take to patch
+        all 400 apps?
+        """,
+    ]</code></pre>
+    <ul class="explain">
+      <li><span class="new">New</span>Three problems. They are a review queue with three categories, takedown reports after a classifier scan and a patch plan with regular test days.</li>
+      <li><span class="same">Same</span>The loop with two calls for each problem.</li>
+    </ul>
+<pre class="code" data-lang="bash"><code>uv run python src/11_least_to_most_openrouter.py</code></pre>
+<details class="fold">
+      <summary><span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m16 18 6-6-6-6M8 6l-6 6 6 6"/></svg></span><span class="ft">Show the full output<small>293 lines</small></span></summary>
+      <div class="fold-body">
+<pre class="code" data-lang="output"><code>============================================================
+PROBLEM 1
+============================================================
+
+An app store review queue has 3 categories: Games (500 apps),
+        Utilities (300 apps), and Finance (200 apps). Games submissions
+        increase by 20%, Utilities gains 50 new apps, and Finance
+        submissions drop by 10%. After these changes, what percentage
+        of the total queue will be Finance apps?
+
+------------------------------------------------------------
+SUBPROBLEMS:
+Sure, let's break down the problem into smaller subproblems, starting from the simplest to the most complex.
+
+### SUBPROBLEMS
+
+1. **Determine the initial number of apps in each category:**
+   - Games: 500 apps
+   - Utilities: 300 apps
+   - Finance: 200 apps
+
+2. **Calculate the new number of Games apps after a 20% increase:**
+   - New number of Games apps = Initial number of Games apps + (20% of Initial number of Games apps)
+   - New number of Games apps = 500 + (0.20 × 500) = 500 + 100 = 600 apps
+
+3. **Calculate the new number of Utilities apps after gaining 50 new apps:**
+   - New number of Utilities apps = Initial number of Utilities apps + 50
+   - New number of Utilities apps = 300 + 50 = 350 apps
+
+4. **Calculate the new number of Finance apps after a 10% decrease:**
+   - New number of Finance apps = Initial number of Finance apps - (10% of Initial number of Finance apps)
+   - New number of Finance apps = 200 - (0.10 × 200) = 200 - 20 = 180 apps
+
+5. **Calculate the total number of apps in the queue after the changes:**
+   - Total number of apps = New number of Games apps + New number of Utilities apps + New number of Finance apps
+   - Total number of apps = 600 + 350 + 180 = 1130 apps
+
+6. **Calculate the percentage of the total queue that will be Finance apps:**
+   - Percentage of Finance apps = (New number of Finance apps / Total number of apps) × 100
+   - Percentage of Finance apps = (180 / 1130) × 100 ≈ 15.84%
+
+### Summary of Subproblems
+
+1. Determine the initial number of apps in each category.
+2. Calculate the new number of Games apps after a 20% increase.
+3. Calculate the new number of Utilities apps after gaining 50 new apps.
+4. Calculate the new number of Finance apps after a 10% decrease.
+5. Calculate the total number of apps in the queue after the changes.
+6. Calculate the percentage of the total queue that will be Finance apps.
+
+By solving these subproblems step-by-step, you can determine the final percentage of Finance apps in the review queue.
+
+------------------------------------------------------------
+STEP-BY-STEP SOLUTION:
+Sure, let's solve each subproblem step by step and then combine the results to find the final answer.
+
+### SUBPROBLEMS
+
+1. **Determine the initial number of apps in each category:**
+   - Games: 500 apps
+   - Utilities: 300 apps
+   - Finance: 200 apps
+
+2. **Calculate the new number of Games apps after a 20% increase:**
+   - New number of Games apps = Initial number of Games apps + (20% of Initial number of Games apps)
+   - New number of Games apps = 500 + (0.20 × 500) = 500 + 100 = 600 apps
+
+3. **Calculate the new number of Utilities apps after gaining 50 new apps:**
+   - New number of Utilities apps = Initial number of Utilities apps + 50
+   - New number of Utilities apps = 300 + 50 = 350 apps
+
+4. **Calculate the new number of Finance apps after a 10% decrease:**
+   - New number of Finance apps = Initial number of Finance apps - (10% of Initial number of Finance apps)
+   - New number of Finance apps = 200 - (0.10 × 200) = 200 - 20 = 180 apps
+
+5. **Calculate the total number of apps in the queue after the changes:**
+   - Total number of apps = New number of Games apps + New number of Utilities apps + New number of Finance apps
+   - Total number of apps = 600 + 350 + 180 = 1130 apps
+
+6. **Calculate the percentage of the total queue that will be Finance apps:**
+   - Percentage of Finance apps = (New number of Finance apps / Total number of apps) × 100
+   - Percentage of Finance apps = (180 / 1130) × 100 ≈ 15.84%
+
+### Final Answer
+
+The percentage of the total queue that will be Finance apps is approximately **15.84%**.
+
+============================================================
+PROBLEM 2
+============================================================
+
+A permissions/intents classifier scans 10,000 apps. 12% are
+        flagged as suspicious. Of the flagged apps, 30% are confirmed
+        malicious after manual review, and each confirmed malicious app
+        takes 45 minutes to write a takedown report for. How many total
+        hours are spent writing takedown reports?
+
+------------------------------------------------------------
+SUBPROBLEMS:
+Sure, let's break down the problem into smaller subproblems, starting from the simplest to the most complex.
+
+### Subproblems
+
+1. **Calculate the number of apps flagged as suspicious:**
+   - Given that 12% of the 10,000 apps are flagged as suspicious.
+   - Formula: \( \text{Number of flagged apps} = 10,000 \times 0.12 \)
+
+2. **Calculate the number of confirmed malicious apps:**
+   - Given that 30% of the flagged apps are confirmed as malicious.
+   - Formula: \( \text{Number of confirmed malicious apps} = \text{Number of flagged apps} \times 0.30 \)
+
+3. **Calculate the total time spent writing takedown reports:**
+   - Each confirmed malicious app takes 45 minutes to write a takedown report.
+   - Formula: \( \text{Total time in minutes} = \text{Number of confirmed malicious apps} \times 45 \)
+   - Convert the total time from minutes to hours: \( \text{Total time in hours} = \frac{\text{Total time in minutes}}{60} \)
+
+### Detailed Steps
+
+1. **Calculate the number of apps flagged as suspicious:**
+   \[
+   \text{Number of flagged apps} = 10,000 \times 0.12 = 1,200
+   \]
+
+2. **Calculate the number of confirmed malicious apps:**
+   \[
+   \text{Number of confirmed malicious apps} = 1,200 \times 0.30 = 360
+   \]
+
+3. **Calculate the total time spent writing takedown reports:**
+   \[
+   \text{Total time in minutes} = 360 \times 45 = 16,200 \text{ minutes}
+   \]
+   \[
+   \text{Total time in hours} = \frac{16,200}{60} = 270 \text{ hours}
+   \]
+
+### Final Answer
+The total number of hours spent writing takedown reports is \( 270 \) hours.
+
+------------------------------------------------------------
+STEP-BY-STEP SOLUTION:
+Sure, let's solve each subproblem step by step and then combine the results to find the final answer.
+
+### Subproblems
+
+1. **Calculate the number of apps flagged as suspicious:**
+   - Given that 12% of the 10,000 apps are flagged as suspicious.
+   - Formula: \( \text{Number of flagged apps} = 10,000 \times 0.12 \)
+
+2. **Calculate the number of confirmed malicious apps:**
+   - Given that 30% of the flagged apps are confirmed as malicious.
+   - Formula: \( \text{Number of confirmed malicious apps} = \text{Number of flagged apps} \times 0.30 \)
+
+3. **Calculate the total time spent writing takedown reports:**
+   - Each confirmed malicious app takes 45 minutes to write a takedown report.
+   - Formula: \( \text{Total time in minutes} = \text{Number of confirmed malicious apps} \times 45 \)
+   - Convert the total time from minutes to hours: \( \text{Total time in hours} = \frac{\text{Total time in minutes}}{60} \)
+
+### Detailed Steps
+
+#### Step 1: Calculate the number of apps flagged as suspicious
+\[
+\text{Number of flagged apps} = 10,000 \times 0.12 = 1,200
+\]
+
+#### Step 2: Calculate the number of confirmed malicious apps
+\[
+\text{Number of confirmed malicious apps} = 1,200 \times 0.30 = 360
+\]
+
+#### Step 3: Calculate the total time spent writing takedown reports
+\[
+\text{Total time in minutes} = 360 \times 45 = 16,200 \text{ minutes}
+\]
+\[
+\text{Total time in hours} = \frac{16,200}{60} = 270 \text{ hours}
+\]
+
+### Final Answer
+The total number of hours spent writing takedown reports is \( 270 \) hours.
+
+============================================================
+PROBLEM 3
+============================================================
+
+A mobile security team must patch 400 apps for a newly disclosed
+        WebView vulnerability. They can patch 25 apps per day, but every
+        5th day is reserved for regression testing with no patches
+        shipped that day. How many calendar days will it take to patch
+        all 400 apps?
+
+------------------------------------------------------------
+SUBPROBLEMS:
+Sure, let's break down the problem into smaller subproblems, starting from the simplest to the most complex.
+
+### Subproblem 1:
+**Calculate how many apps can be patched in a single day.**
+
+- **Solution:** The team can patch 25 apps per day.
+
+### Subproblem 2:
+**Determine the number of days required to patch all 400 apps without considering regression testing.**
+
+- **Solution:** 
+  - Total apps to patch: 400
+  - Apps patched per day: 25
+  - Days required = Total apps / Apps patched per day = 400 / 25 = 16 days
+
+### Subproblem 3:
+**Account for the regression testing days where no patches are shipped.**
+
+- **Solution:** Every 5th day is reserved for regression testing.
+  - In 16 days, there will be 3 regression testing days (since \( \lfloor \frac{16}{5} \rfloor = 3 \)).
+  - Therefore, the actual number of days available for patching is 16 - 3 = 13 days.
+
+### Subproblem 4:
+**Calculate the total number of apps that can be patched in the available days.**
+
+- **Solution:** 
+  - Apps patched per day: 25
+  - Available days: 13
+  - Apps patched in 13 days = 25 * 13 = 325 apps
+
+### Subproblem 5:
+**Determine if additional days are needed to patch the remaining apps after accounting for regression testing days.**
+
+- **Solution:** 
+  - Remaining apps to patch = 400 - 325 = 75 apps
+  - Days required to patch the remaining apps = 75 / 25 = 3 days
+  - Since these days do not fall on a regression testing day, they are valid working days.
+
+### Subproblem 6:
+**Calculate the total number of calendar days required to patch all 400 apps.**
+
+- **Solution:** 
+  - Days required for patching (excluding regression testing): 13 days
+  - Additional days required for remaining apps: 3 days
+  - Total calendar days = 13 + 3 = 16 days
+
+### Final Answer:
+The total number of calendar days required to patch all 400 apps is **16 days**.
+
+------------------------------------------------------------
+STEP-BY-STEP SOLUTION:
+Sure, let's solve each subproblem step by step and then combine the solutions to find the final answer.
+
+### Subproblem 1:
+**Calculate how many apps can be patched in a single day.**
+
+- **Solution:** The team can patch 25 apps per day.
+
+### Subproblem 2:
+**Determine the number of days required to patch all 400 apps without considering regression testing.**
+
+- **Solution:**
+  - Total apps to patch: 400
+  - Apps patched per day: 25
+  - Days required = Total apps / Apps patched per day = 400 / 25 = 16 days
+
+### Subproblem 3:
+**Account for the regression testing days where no patches are shipped.**
+
+- **Solution:**
+  - Every 5th day is reserved for regression testing.
+  - In 16 days, there will be 3 regression testing days (since \( \lfloor \frac{16}{5} \rfloor = 3 \)).
+  - Therefore, the actual number of days available for patching is 16 - 3 = 13 days.
+
+### Subproblem 4:
+**Calculate the total number of apps that can be patched in the available days.**
+
+- **Solution:**
+  - Apps patched per day: 25
+  - Available days: 13
+  - Apps patched in 13 days = 25 * 13 = 325 apps
+
+### Subproblem 5:
+**Determine if additional days are needed to patch the remaining apps after accounting for regression testing days.**
+
+- **Solution:**
+  - Remaining apps to patch = 400 - 325 = 75 apps
+  - Days required to patch the remaining apps = 75 / 25 = 3 days
+  - Since these days do not fall on a regression testing day, they are valid working days.
+
+### Subproblem 6:
+**Calculate the total number of calendar days required to patch all 400 apps.**
+
+- **Solution:**
+  - Days required for patching (excluding regression testing): 13 days
+  - Additional days required for remaining apps: 3 days
+  - Total calendar days = 13 + 3 = 16 days
+
+### Final Answer:
+The total number of calendar days required to patch all 400 apps is **16 days**.</code></pre>
+      </div>
+    </details>
+
+    <div class="block note">
+      <div class="label">Your output can be different</div>
+      <p>A small model can make different errors on different runs. Check every number.</p>
+    </div>
+
+    <div class="block look">
+      <div class="label">Look closely</div>
+      <p>This output is an important lesson. Problem 2 is correct, 270 hours. Problem 1 has correct steps, 600 + 350 + 180 = 1,130 apps, but the last division is wrong. 180 / 1,130 is 15.93%, not 15.84%.</p>
+      <p>Problem 3 is wrong in its logic. The team patches 25 apps a day, so it needs 16 days of patches. Every 5th day is a test day. Thus the patches happen on days 1 to 4, 6 to 9, 11 to 14 and 16 to 19. The correct answer is 19 calendar days, not 16.</p>
+      <p>The model planned well, but it applied the rule about test days in the wrong way. In problems 2 and 3, the planning call already solved the full problem, so the output shows the solution two times.</p>
+    </div>
+
+    <h3 class="step"><span class="sn">Inside</span>What happens inside the calls</h3>
+    <p>The same two calls for the app security problems.</p>
+    <figure class="diagram">
+      <div class="frame"><img src="../../assets/img/diagrams/ai-12-ex2-seq.svg" alt="A sequence diagram with the lanes Your code, decompose_chain, solve_chain, OpenRouter API. Step 1, Your code to decompose_chain, decompose_chain.invoke({&quot;problem&quot; problem}), call 1. Step 2, decompose_chain to OpenRouter API, Request with the first prompt, list subproblems from simplest to most complex. Step 3, OpenRouter API to decompose_chain, Reply, the plan already solves some problems. Step 4, decompose_chain to Your code, subproblems, a plain string from the parser, printed first. Step 5, Your code to solve_chain, solve_chain.invoke({&quot;problem&quot; ..., &quot;subproblems&quot; subproblems}), call 2, the output of call 1 is an input. Step 6, solve_chain to OpenRouter API, Request with the second prompt, subproblems first, then the problem. Step 7, OpenRouter API to solve_chain, Reply, 15.84% (wrong), 270 hours, 16 days (wrong). Step 8, solve_chain to Your code, STEP-BY-STEP SOLUTION, a plain string, printed after the subproblems. Steps 1 to 8 repeat, Repeated for each of the 3 problems." loading="lazy"></div>
+      <figcaption>Inside the calls of Example 2, step by step.</figcaption>
+    </figure>
+
+    <details class="fold">
+      <summary><span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m16 18 6-6-6-6M8 6l-6 6 6 6"/></svg></span><span class="ft">Full code of Example 2<small>src/11_least_to_most_openrouter.py</small></span><a class="gh-btn" href="https://github.com/bhardwajAbhi/ai-engineering/blob/main/src/11_least_to_most_openrouter.py"><svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M12 .5a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2.1c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1.1-.8.1-.8.1-.8 1.2.1 1.9 1.3 1.9 1.3 1.1 1.9 2.9 1.3 3.6 1 .1-.8.4-1.3.8-1.6-2.7-.3-5.5-1.3-5.5-6a4.7 4.7 0 0 1 1.3-3.2c-.1-.3-.6-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.7 1.7.2 2.9.1 3.2a4.7 4.7 0 0 1 1.3 3.2c0 4.6-2.8 5.6-5.5 6 .4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .5z"/></svg>GitHub</a></summary>
+      <div class="fold-body">
+<pre class="code" data-lang="python" data-file="src/11_least_to_most_openrouter.py"><code>"""
+Title: Least-to-Most Prompting (OpenRouter)
+
+Least-to-most prompting breaks a complex problem into a sequence of
+simpler subproblems, then solves them in order, using earlier
+solutions to help solve the later ones.
+
+uv run python src/11_least_to_most_openrouter.py
+"""
+
+from dotenv import load_dotenv
+from langchain_openrouter import ChatOpenRouter
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.output_parsers import StrOutputParser
+
+
+def main():
+    load_dotenv()
+
+    # Initialize the model
+    llm = ChatOpenRouter(
+        model="qwen/qwen-2.5-7b-instruct",
+        temperature=0,
+    )
+
+    # Parser to extract the text from the model response
+    parser = StrOutputParser()
+
+    # Step 1: Decompose the problem into subproblems
+    decompose_prompt = ChatPromptTemplate.from_template("""
+        You are an Android application security engineer.
+
+        Break down this complex problem into smaller subproblems.
+        List them from simplest to most complex.
+        Each subproblem should be solvable on its own or using solutions
+        from previous subproblems.
+
+        PROBLEM: {problem}
+
+        SUBPROBLEMS (from simplest to most complex):
+        1.
+    """)
+
+    # Step 2: Solve the subproblems incrementally
+    solve_prompt = ChatPromptTemplate.from_template("""
+        Solve each subproblem in order, using solutions from previous
+        subproblems when needed.
+
+        ORIGINAL PROBLEM: {problem}
+
+        SUBPROBLEMS:
+        {subproblems}
+
+        Solve each subproblem step by step, then combine for the final answer.
+
+        SOLUTIONS:
+    """)
+
+    # The two chains that make up the least-to-most pipeline
+    decompose_chain = decompose_prompt | llm | parser
+    solve_chain = solve_prompt | llm | parser
+
+    # Sample security problems
+    problems = [
+        """
+        An app store review queue has 3 categories: Games (500 apps),
+        Utilities (300 apps), and Finance (200 apps). Games submissions
+        increase by 20%, Utilities gains 50 new apps, and Finance
+        submissions drop by 10%. After these changes, what percentage
+        of the total queue will be Finance apps?
+        """,
+        """
+        A permissions/intents classifier scans 10,000 apps. 12% are
+        flagged as suspicious. Of the flagged apps, 30% are confirmed
+        malicious after manual review, and each confirmed malicious app
+        takes 45 minutes to write a takedown report for. How many total
+        hours are spent writing takedown reports?
+        """,
+        """
+        A mobile security team must patch 400 apps for a newly disclosed
+        WebView vulnerability. They can patch 25 apps per day, but every
+        5th day is reserved for regression testing with no patches
+        shipped that day. How many calendar days will it take to patch
+        all 400 apps?
+        """,
+    ]
+
+    # Invoke the least-to-most pipeline for each problem, one at a time
+    for i, problem in enumerate(problems, 1):
+        print(f"\n{'=' * 60}")
+        print(f"PROBLEM {i}")
+        print("=" * 60)
+        print(f"\n{problem.strip()}\n")
+        print("-" * 60)
+
+        # Decompose the problem
+        subproblems = decompose_chain.invoke({"problem": problem})
+        print("SUBPROBLEMS:")
+        print(subproblems)
+        print("\n" + "-" * 60)
+
+        # Solve the subproblems and combine into a final answer
+        solution = solve_chain.invoke({"problem": problem, "subproblems": subproblems})
+        print("STEP-BY-STEP SOLUTION:")
+        print(solution)
+
+
+if __name__ == "__main__":
+    main()</code></pre>
+      </div>
+    </details>
+  </section>
+
+  <h2>Two examples, side by side</h2>
+  <div class="table-wrap">
+    <table class="compare" style="--e1:#2f62c8;--e2:#0f8a6a">
+      <thead><tr><th></th><th class="e1">Example 1</th><th class="e2">Example 2</th></tr></thead>
+      <tbody>
+        <tr><td>Domain</td><td>Security operations</td><td>Mobile app security</td></tr>
+        <tr><td>Model</td><td>Gemini 3.1 Flash Lite</td><td>Qwen 2.5 7B, through OpenRouter</td></tr>
+        <tr><td>Correct answers</td><td>Three of three</td><td>One of three</td></tr>
+        <tr><td>Kind of errors</td><td>None</td><td>One division and one logic error</td></tr>
+        <tr><td>Stages kept apart</td><td>Partly, the plan has formulas</td><td>No, the plan already solved problems 2 and 3</td></tr>
+        <tr><td>Same</td><td colspan="2">Two prompts, two chains, two placeholders and the loop</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>When it works and when it does not</h2>
+  <ul>
+    <li><strong>It works</strong> for long problems with many simple parts, for example plans, schedules and budgets.</li>
+    <li><strong>Check the plan.</strong> The plan is a separate output. You can review it or let code check it before the second call.</li>
+    <li><strong>Do the arithmetic in code.</strong> A model can plan a calculation well and still compute it wrong. For exact numbers, let the model write the formulas and let Python calculate. Later chapters show tools for this.</li>
+    <li><strong>Small models mix the stages.</strong> They often solve the full problem in the planning call. A stricter prompt, for example "Do not solve the subproblems," helps.</li>
+  </ul>
+
+  <h2>All prompting patterns of Part III</h2>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Pattern</th><th>Chapter</th><th>Calls</th><th>Good for</th></tr></thead>
+      <tbody>
+        <tr><td>Chain of thought</td><td>8</td><td>One</td><td>One correct way, for example a calculation</td></tr>
+        <tr><td>Tree of thought</td><td>9</td><td>One</td><td>A choice between alternatives</td></tr>
+        <tr><td>Graph of thought</td><td>10</td><td>One</td><td>A design with connected parts</td></tr>
+        <tr><td>Step-back</td><td>11</td><td>Two</td><td>A case of a general rule</td></tr>
+        <tr><td>Least-to-most</td><td>12</td><td>Two</td><td>A long problem with many simple parts</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="block security">
+    <div class="label">Security lens</div>
+    <p>Numbers from these calculations decide staff plans, budgets and patch schedules. A wrong number has real effects.</p>
+    <ul>
+      <li><strong>A wrong patch date is a risk.</strong> In this chapter, the model said 16 days instead of 19. A team that promises a fix in 16 days leaves users exposed for three more days than planned.</li>
+      <li><strong>Correct steps hide wrong results.</strong> The Qwen output for problem 1 looks careful, but its last number is wrong. Recalculate every result that drives a decision.</li>
+      <li><strong>Keep a person in the loop.</strong> Use the model to structure the problem, and let a person or code confirm the numbers.</li>
+    </ul>
+  </div>
+
+  <h2>Check yourself</h2>
+  <div class="quiz">
+    <details>
+      <summary><span class="qq">What does the first call do in least-to-most prompting?</span></summary>
+      <div class="ans"><p>It splits the problem into subproblems and lists them from the simplest to the most complex. It does not solve them.</p></div>
+    </details>
+    <details>
+      <summary><span class="qq">The steps of the Qwen answer for problem 1 are correct, but the result is wrong. How?</span></summary>
+      <div class="ans"><p>The model planned and added correctly, but it made an error in the last division. Correct steps do not guarantee a correct result, so check the arithmetic.</p></div>
+    </details>
+    <details>
+      <summary><span class="qq">How can you make the numbers in such a program reliable?</span></summary>
+      <div class="ans"><p>Let the model write the formulas or the plan, and let Python do the calculation. Then check the result with a simple test case.</p></div>
+    </details>
+  </div>
+
+  <section class="yourturn">
+    <span class="yt-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>Your turn</span>
+    <h2 data-toc="Your turn">How much storage for test screenshots?</h2>
+    <p>A mobile test lab has 40 devices. Each device takes 300 screenshots a day, and each screenshot is 0.5 MB. The lab keeps them for 30 days. With 1 GB = 1,000 MB, how many GB does the lab need? Solve it with the two least-to-most chains on a local model, then check the answer with Python.</p>
+
+    <div class="hint">
+      <b>Hint. Keep the two prompts and add one line of Python to check</b>
+<pre class="code" data-lang="python"><code>from langchain_ollama import ChatOllama
+
+llm = ChatOllama(model="llama3.2:3b", temperature=0)
+print("Check:", 40 * 300 * 0.5 * 30 / 1000, "GB")</code></pre>
+      <ul class="explain" style="--ex:var(--accent)">
+        <li>The check line does the arithmetic in Python, not in the model.</li>
+        <li>Compare the final answer of the model with the result of the check.</li>
+      </ul>
+    </div>
+
+    <details class="fold">
+      <summary><span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m16 18 6-6-6-6M8 6l-6 6 6 6"/></svg></span><span class="ft">Show one solution<small>src/11_least_to_most_ollama.py</small></span></summary>
+      <div class="fold-body">
+<pre class="code" data-lang="python" data-file="src/11_least_to_most_ollama.py"><code>"""
+Title: Least-to-Most Prompting (Ollama)
+uv run python src/11_least_to_most_ollama.py
+"""
+
+from langchain_core.output_parsers import StrOutputParser
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_ollama import ChatOllama
+
+
+def main():
+    llm = ChatOllama(model="llama3.2:3b", temperature=0)
+    parser = StrOutputParser()
+
+    decompose_prompt = ChatPromptTemplate.from_template("""
+        Break down this problem into smaller subproblems, from simplest to
+        most complex. Do not solve them.
+
+        PROBLEM: {problem}
+
+        SUBPROBLEMS:
+        1.
+    """)
+
+    solve_prompt = ChatPromptTemplate.from_template("""
+        Solve each subproblem in order, then give the final answer.
+
+        PROBLEM: {problem}
+        SUBPROBLEMS:
+        {subproblems}
+
+        SOLUTIONS:
+    """)
+
+    decompose_chain = decompose_prompt | llm | parser
+    solve_chain = solve_prompt | llm | parser
+
+    problem = (
+        "A mobile test lab has 40 devices. Each device takes 300 screenshots a "
+        "day, and each screenshot is 0.5 MB. The lab keeps them for 30 days. "
+        "Using 1 GB = 1,000 MB, how many GB of storage does the lab need?"
+    )
+
+    subproblems = decompose_chain.invoke({"problem": problem})
+    print(f"SUBPROBLEMS:\n{subproblems}\n")
+    print(solve_chain.invoke({"problem": problem, "subproblems": subproblems}))
+
+    print("\nCheck:", 40 * 300 * 0.5 * 30 / 1000, "GB")
+
+
+if __name__ == "__main__":
+    main()</code></pre>
+        <p>A possible output, shortened. Your model can make an error, and the check line shows it.</p>
+<pre class="code" data-lang="output"><code>SUBPROBLEMS:
+1. Screenshots per day for all devices
+2. Storage per day in MB
+3. Storage for 30 days in MB
+4. Storage in GB
+
+1. 40 x 300 = 12,000 screenshots per day
+2. 12,000 x 0.5 = 6,000 MB per day
+3. 6,000 x 30 = 180,000 MB
+4. 180,000 / 1,000 = 180 GB
+
+Final answer: the lab needs 180 GB.
+
+Check: 180.0 GB</code></pre>
+      </div>
+    </details>
+  </section>
+
+  <h2>Key terms at a glance</h2>
+  <div class="table-wrap">
+    <table class="kw">
+      <thead><tr><th>Term</th><th>Meaning</th></tr></thead>
+      <tbody>
+        <tr><td>Least-to-most prompting</td><td>Split a problem into subproblems from simple to complex, then solve them in order.</td></tr>
+        <tr><td>Subproblem</td><td>A small part of a problem that can use the answers of earlier parts.</td></tr>
+        <tr><td>Decomposition</td><td>The step that splits a problem into subproblems.</td></tr>
+        <tr><td>EDR</td><td>Endpoint detection and response, a security tool on each computer.</td></tr>
+        <tr><td>Two-step chain</td><td>Two chains in turn, where the output of the first is an input of the second.</td></tr>
+        <tr><td>Chain of thought</td><td>One line of steps before the answer.</td></tr>
+        <tr><td>SOC</td><td>Security operations center.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+</article>
+</main>
+
+<script src="../../assets/js/site.js"></script>
+</body>
+</html>

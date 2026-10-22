@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 444" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">Seven steps to verify an attestation on a server</title>
+  <desc id="d">Seven steps. First, send a fresh challenge that is random, single use and kept on the server with a short lifetime. Second, receive the whole chain, and never verify on the device that you want to trust. Third, check each signature up to the root, so that each certificate signs the one before it, and check that the dates are valid. Fourth, match the root against the Google roots from android.googleapis.com/attestation/root. Fifth, check every serial against the revocation list at android.googleapis.com/attestation/status. Sixth, read the first attestation extension, because only the first occurrence in the chain counts. Seventh, check the values, namely the challenge, the security level, the origin, the boot state, the lock flag, the patch levels and the app ID. The keyattestation library from github.com/android/keyattestation runs steps 3 to 7.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<line x1="48" y1="40" x2="48" y2="352" stroke="#d9d4c7" stroke-width="3"/>
+<circle cx="48" cy="40" r="14" fill="#2f62c8"/>
+<text x="48" y="44.68" font-size="13" fill="#fff" text-anchor="middle" font-weight="700">1</text>
+<rect x="76" y="20" width="784" height="40" rx="10" fill="#fff" stroke="#2f62c8" stroke-width="1.3"/>
+<text x="92" y="45" font-size="12.6" fill="#1f4a9e" text-anchor="start" font-weight="700">Send a fresh challenge</text>
+<text x="392" y="45" font-size="11.6" fill="#1c2230" text-anchor="start">Random, single use, kept on the server with a short lifetime</text>
+<circle cx="48" cy="92" r="14" fill="#2f62c8"/>
+<text x="48" y="96.68" font-size="13" fill="#fff" text-anchor="middle" font-weight="700">2</text>
+<rect x="76" y="72" width="784" height="40" rx="10" fill="#fff" stroke="#2f62c8" stroke-width="1.3"/>
+<text x="92" y="97" font-size="12.6" fill="#1f4a9e" text-anchor="start" font-weight="700">Receive the whole chain</text>
+<text x="392" y="97" font-size="11.6" fill="#1c2230" text-anchor="start">Never verify on the device that you want to trust</text>
+<circle cx="48" cy="144" r="14" fill="#7a4fc2"/>
+<text x="48" y="148.68" font-size="13" fill="#fff" text-anchor="middle" font-weight="700">3</text>
+<rect x="76" y="124" width="784" height="40" rx="10" fill="#fff" stroke="#7a4fc2" stroke-width="1.3"/>
+<text x="92" y="149" font-size="12.6" fill="#58378f" text-anchor="start" font-weight="700">Check each signature up to the root</text>
+<text x="392" y="149" font-size="11.6" fill="#1c2230" text-anchor="start">Each certificate signs the one before it, and dates are valid</text>
+<circle cx="48" cy="196" r="14" fill="#7a4fc2"/>
+<text x="48" y="200.68" font-size="13" fill="#fff" text-anchor="middle" font-weight="700">4</text>
+<rect x="76" y="176" width="784" height="40" rx="10" fill="#fff" stroke="#7a4fc2" stroke-width="1.3"/>
+<text x="92" y="201" font-size="12.6" fill="#58378f" text-anchor="start" font-weight="700">Match the root</text>
+<text x="392" y="201" font-size="11.6" fill="#1c2230" text-anchor="start">Against the Google roots from android.googleapis.com/attestation/root</text>
+<circle cx="48" cy="248" r="14" fill="#c2552d"/>
+<text x="48" y="252.68" font-size="13" fill="#fff" text-anchor="middle" font-weight="700">5</text>
+<rect x="76" y="228" width="784" height="40" rx="10" fill="#fff" stroke="#c2552d" stroke-width="1.3"/>
+<text x="92" y="253" font-size="12.6" fill="#963f1f" text-anchor="start" font-weight="700">Check revocation</text>
+<text x="392" y="253" font-size="11.6" fill="#1c2230" text-anchor="start">Every serial against android.googleapis.com/attestation/status</text>
+<circle cx="48" cy="300" r="14" fill="#b7791f"/>
+<text x="48" y="304.68" font-size="13" fill="#fff" text-anchor="middle" font-weight="700">6</text>
+<rect x="76" y="280" width="784" height="40" rx="10" fill="#fff" stroke="#b7791f" stroke-width="1.3"/>
+<text x="92" y="305" font-size="12.6" fill="#8a5a12" text-anchor="start" font-weight="700">Read the first attestation extension</text>
+<text x="392" y="305" font-size="11.6" fill="#1c2230" text-anchor="start">Only the first occurrence in the chain counts</text>
+<circle cx="48" cy="352" r="14" fill="#0f8a6a"/>
+<text x="48" y="356.68" font-size="13" fill="#fff" text-anchor="middle" font-weight="700">7</text>
+<rect x="76" y="332" width="784" height="40" rx="10" fill="#fff" stroke="#0f8a6a" stroke-width="1.3"/>
+<text x="92" y="357" font-size="12.6" fill="#0b6650" text-anchor="start" font-weight="700">Check the values</text>
+<text x="392" y="357" font-size="11.6" fill="#1c2230" text-anchor="start">Challenge, security level, origin, boot state, lock, patch levels, app ID</text>
+<rect x="20" y="386" width="840" height="44" rx="10" fill="#f2efe8"/>
+<text x="440" y="413" font-size="12" fill="#1c2230" text-anchor="middle" font-weight="600">The keyattestation library (github.com/android/keyattestation) runs steps 3 to 7 for you.</text>
+</svg>

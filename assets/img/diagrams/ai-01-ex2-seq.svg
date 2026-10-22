@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 608" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">Inside the two calls of Example 2</title>
+  <desc id="d">A sequence diagram with the lanes Your code, llm, short_model, OpenRouter API. Step 1, Your code to Your code, load_dotenv(), OPENROUTER_API_KEY goes into the environment. Step 2, Your code to llm, invoke(&quot;What is the capital of France?&quot;), a plain string becomes one human message. Step 3, llm to OpenRouter API, HTTPS request with the API key, temperature 0, at most 128 output tokens. Step 4, OpenRouter API to llm, Reply with the answer, 36 input, 8 output tokens. Step 5, llm to Your code, AIMessage, the code prints content and usage_metadata. Step 6, Your code to short_model, invoke(&quot;Tell me a very long story ...&quot;), the second model object. Step 7, short_model to OpenRouter API, HTTPS request, at most 5 output tokens. Step 8, OpenRouter API to short_model, The model stops at the limit, finish_reason length. Step 9, short_model to Your code, AIMessage with a cut answer, content “The history of the universe”.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="15" y="18" width="150" height="42" rx="10" fill="#eef0f3" stroke="#5d6b7e" stroke-width="1.4"/>
+<text x="90" y="44" font-size="12.3" fill="#3f4a59" text-anchor="middle" font-weight="700">Your code</text>
+<line x1="90" y1="60" x2="90" y2="592" stroke="#d9d4c7" stroke-width="1.6" stroke-dasharray="5 5"/>
+<rect x="248.333" y="18" width="150" height="42" rx="10" fill="#eef3fb" stroke="#2f62c8" stroke-width="1.4"/>
+<text x="323.333" y="44" font-size="11.8" fill="#1f4a9e" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="700">llm</text>
+<line x1="323.333" y1="60" x2="323.333" y2="592" stroke="#d9d4c7" stroke-width="1.6" stroke-dasharray="5 5"/>
+<rect x="481.667" y="18" width="150" height="42" rx="10" fill="#f3f0fa" stroke="#7a4fc2" stroke-width="1.4"/>
+<text x="556.667" y="44" font-size="11.8" fill="#58378f" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="700">short_model</text>
+<line x1="556.667" y1="60" x2="556.667" y2="592" stroke="#d9d4c7" stroke-width="1.6" stroke-dasharray="5 5"/>
+<rect x="715" y="18" width="150" height="42" rx="10" fill="#fdf4e3" stroke="#b7791f" stroke-width="1.4"/>
+<text x="790" y="44" font-size="12.3" fill="#8a5a12" text-anchor="middle" font-weight="700">OpenRouter API</text>
+<line x1="790" y1="60" x2="790" y2="592" stroke="#d9d4c7" stroke-width="1.6" stroke-dasharray="5 5"/>
+<path d="M90 88 h34 v18 h-30" fill="none" stroke="#5d6b7e" stroke-width="1.6"/>
+<path d="M98 106 L 92 106" fill="none" stroke="#5d6b7e" stroke-width="1.6" marker-end="url(#m8)"/>
+<circle cx="146" cy="97" r="10" fill="#5d6b7e"/>
+<text x="146" y="100.96" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">1</text>
+<text x="162" y="101" font-size="12" fill="#3f4a59" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">load_dotenv()</text>
+<text x="162" y="117" font-size="11.3" fill="#4a5263" text-anchor="start">OPENROUTER_API_KEY goes into the environment</text>
+<path d="M94 154 L 317.333 154" fill="none" stroke="#5d6b7e" stroke-width="1.7" marker-end="url(#m8)"/>
+<circle cx="108" cy="141" r="10" fill="#5d6b7e"/>
+<text x="108" y="144.96" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">2</text>
+<text x="124" y="146" font-size="12" fill="#3f4a59" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">invoke(&quot;What is the capital of France?&quot;)</text>
+<text x="124" y="170" font-size="11.3" fill="#4a5263" text-anchor="start">a plain string becomes one human message</text>
+<path d="M327.333 210 L 784 210" fill="none" stroke="#2f62c8" stroke-width="1.7" marker-end="url(#m3)"/>
+<circle cx="341.333" cy="197" r="10" fill="#2f62c8"/>
+<text x="341.333" y="200.96" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">3</text>
+<text x="357.333" y="202" font-size="12" fill="#1f4a9e" text-anchor="start" font-weight="700">HTTPS request with the API key</text>
+<text x="357.333" y="226" font-size="11.3" fill="#4a5263" text-anchor="start">temperature 0, at most 128 output tokens</text>
+<path d="M786 266 L 329.333 266" fill="none" stroke="#b7791f" stroke-width="1.7" stroke-dasharray="6 4" marker-end="url(#m6)"/>
+<circle cx="341.333" cy="253" r="10" fill="#b7791f"/>
+<text x="341.333" y="256.96" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">4</text>
+<text x="357.333" y="258" font-size="12" fill="#8a5a12" text-anchor="start" font-weight="700">Reply with the answer</text>
+<text x="357.333" y="282" font-size="11.3" fill="#4a5263" text-anchor="start">36 input, 8 output tokens</text>
+<path d="M319.333 322 L 96 322" fill="none" stroke="#2f62c8" stroke-width="1.7" stroke-dasharray="6 4" marker-end="url(#m3)"/>
+<circle cx="108" cy="309" r="10" fill="#2f62c8"/>
+<text x="108" y="312.96" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">5</text>
+<text x="124" y="314" font-size="12" fill="#1f4a9e" text-anchor="start" font-weight="700">AIMessage</text>
+<text x="124" y="338" font-size="11.3" fill="#4a5263" text-anchor="start">the code prints content and usage_metadata</text>
+<path d="M94 378 L 550.667 378" fill="none" stroke="#5d6b7e" stroke-width="1.7" marker-end="url(#m8)"/>
+<circle cx="108" cy="365" r="10" fill="#5d6b7e"/>
+<text x="108" y="368.96" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">6</text>
+<text x="124" y="370" font-size="12" fill="#3f4a59" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">invoke(&quot;Tell me a very long story ...&quot;)</text>
+<text x="124" y="394" font-size="11.3" fill="#4a5263" text-anchor="start">the second model object</text>
+<path d="M560.667 434 L 784 434" fill="none" stroke="#7a4fc2" stroke-width="1.7" marker-end="url(#m5)"/>
+<circle cx="574.667" cy="421" r="10" fill="#7a4fc2"/>
+<text x="574.667" y="424.96" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">7</text>
+<text x="590.667" y="426" font-size="12" fill="#58378f" text-anchor="start" font-weight="700">HTTPS request</text>
+<text x="590.667" y="450" font-size="11.3" fill="#4a5263" text-anchor="start">at most 5 output tokens</text>
+<path d="M786 490 L 562.667 490" fill="none" stroke="#b7791f" stroke-width="1.7" stroke-dasharray="6 4" marker-end="url(#m6)"/>
+<circle cx="574.667" cy="477" r="10" fill="#b7791f"/>
+<text x="574.667" y="480.96" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">8</text>
+<text x="590.667" y="482" font-size="12" fill="#8a5a12" text-anchor="start" font-weight="700">The model stops at the limit</text>
+<text x="590.667" y="506" font-size="11.3" fill="#4a5263" text-anchor="start">finish_reason length</text>
+<path d="M552.667 546 L 96 546" fill="none" stroke="#7a4fc2" stroke-width="1.7" stroke-dasharray="6 4" marker-end="url(#m5)"/>
+<circle cx="108" cy="533" r="10" fill="#7a4fc2"/>
+<text x="108" y="536.96" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">9</text>
+<text x="124" y="538" font-size="12" fill="#58378f" text-anchor="start" font-weight="700">AIMessage with a cut answer</text>
+<text x="124" y="562" font-size="11.3" fill="#4a5263" text-anchor="start">content “The history of the universe”</text>
+</svg>

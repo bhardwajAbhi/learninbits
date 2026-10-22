@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 336" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">The four phases in the life of a flag</title>
+  <desc id="d">Four phases from left to right. Development, where you declare the flag as DISABLED, guard the new code and test with overrides. Testing, where dogfood and beta builds turn it on as READ_WRITE, a server runs a staged rollout and CI tests both states. Launch, where the release config sets ENABLED and READ_ONLY and a flagged API is finalized for its SDK level. Cleanup, where you remove the checks, the declaration, the old path and the dependency. Below, a bugfix flag takes a short path, READ_WRITE first for a fast rollback, READ_ONLY after one release with the fix, and removed in the following release.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<circle cx="46" cy="34" r="13" fill="#2f62c8"/>
+<text x="46" y="38.5" font-size="12.5" fill="#fff" text-anchor="middle" font-weight="700">1</text>
+<text x="68" y="39" font-size="15" fill="#1f4a9e" text-anchor="start" font-weight="700">Development</text>
+<rect x="24" y="58" width="196" height="128" rx="12" fill="#fff" stroke="#2f62c8" stroke-width="1.7"/>
+<rect x="24" y="58" width="6" height="128" rx="3" fill="#2f62c8"/>
+<text x="44" y="86" font-size="1" fill="#1f4a9e" text-anchor="start" font-weight="700"></text>
+<text x="44" y="88" font-size="12.4" fill="#1c2230" text-anchor="start">Declare the flag,</text>
+<text x="44" y="110" font-size="12.4" fill="#1c2230" text-anchor="start">DISABLED by default.</text>
+<text x="44" y="132" font-size="12.4" fill="#1c2230" text-anchor="start">Guard the new code.</text>
+<text x="44" y="154" font-size="12.4" fill="#1c2230" text-anchor="start">Test with overrides.</text>
+<path d="M220 122 L 234 122" fill="none" stroke="#1c2230" stroke-width="1.8" marker-end="url(#m0)"/>
+<circle cx="258" cy="34" r="13" fill="#b7791f"/>
+<text x="258" y="38.5" font-size="12.5" fill="#fff" text-anchor="middle" font-weight="700">2</text>
+<text x="280" y="39" font-size="15" fill="#8a5a12" text-anchor="start" font-weight="700">Testing</text>
+<rect x="236" y="58" width="196" height="128" rx="12" fill="#fff" stroke="#b7791f" stroke-width="1.7"/>
+<rect x="236" y="58" width="6" height="128" rx="3" fill="#b7791f"/>
+<text x="256" y="86" font-size="1" fill="#8a5a12" text-anchor="start" font-weight="700"></text>
+<text x="256" y="88" font-size="12.4" fill="#1c2230" text-anchor="start">Dogfood and beta builds</text>
+<text x="256" y="110" font-size="12.4" fill="#1c2230" text-anchor="start">turn it on, READ_WRITE.</text>
+<text x="256" y="132" font-size="12.4" fill="#1c2230" text-anchor="start">Staged rollout by</text>
+<text x="256" y="154" font-size="12.4" fill="#1c2230" text-anchor="start">server. CI tests both.</text>
+<path d="M432 122 L 446 122" fill="none" stroke="#1c2230" stroke-width="1.8" marker-end="url(#m0)"/>
+<circle cx="470" cy="34" r="13" fill="#0f8a6a"/>
+<text x="470" y="38.5" font-size="12.5" fill="#fff" text-anchor="middle" font-weight="700">3</text>
+<text x="492" y="39" font-size="15" fill="#0b6650" text-anchor="start" font-weight="700">Launch</text>
+<rect x="448" y="58" width="196" height="128" rx="12" fill="#fff" stroke="#0f8a6a" stroke-width="1.7"/>
+<rect x="448" y="58" width="6" height="128" rx="3" fill="#0f8a6a"/>
+<text x="468" y="86" font-size="1" fill="#0b6650" text-anchor="start" font-weight="700"></text>
+<text x="468" y="88" font-size="12.4" fill="#1c2230" text-anchor="start">ENABLED and READ_ONLY</text>
+<text x="468" y="110" font-size="12.4" fill="#1c2230" text-anchor="start">in the release config.</text>
+<text x="468" y="132" font-size="12.4" fill="#1c2230" text-anchor="start">Finalize a flagged API</text>
+<text x="468" y="154" font-size="12.4" fill="#1c2230" text-anchor="start">for its SDK level.</text>
+<path d="M644 122 L 658 122" fill="none" stroke="#1c2230" stroke-width="1.8" marker-end="url(#m0)"/>
+<circle cx="682" cy="34" r="13" fill="#5d6b7e"/>
+<text x="682" y="38.5" font-size="12.5" fill="#fff" text-anchor="middle" font-weight="700">4</text>
+<text x="704" y="39" font-size="15" fill="#3f4a59" text-anchor="start" font-weight="700">Cleanup</text>
+<rect x="660" y="58" width="196" height="128" rx="12" fill="#fff" stroke="#5d6b7e" stroke-width="1.7"/>
+<rect x="660" y="58" width="6" height="128" rx="3" fill="#5d6b7e"/>
+<text x="680" y="86" font-size="1" fill="#3f4a59" text-anchor="start" font-weight="700"></text>
+<text x="680" y="88" font-size="12.4" fill="#1c2230" text-anchor="start">Remove the checks.</text>
+<text x="680" y="110" font-size="12.4" fill="#1c2230" text-anchor="start">Delete the declaration.</text>
+<text x="680" y="132" font-size="12.4" fill="#1c2230" text-anchor="start">Delete the old path</text>
+<text x="680" y="154" font-size="12.4" fill="#1c2230" text-anchor="start">and the dependency.</text>
+<rect x="24" y="214" width="832" height="104" rx="14" fill="#fbfaf6" stroke="#c2552d" stroke-width="1.3" stroke-dasharray="6 5"/>
+<text x="44" y="242" font-size="14" fill="#963f1f" text-anchor="start" font-weight="700">Bugfix flag, a short path</text>
+<rect x="44" y="256" width="240" height="48" rx="10" fill="#fff" stroke="#c2552d" stroke-width="1.2"/>
+<text x="60" y="276" font-size="13" fill="#1c2230" text-anchor="start" font-weight="700">READ_WRITE first</text>
+<text x="60" y="295" font-size="12" fill="#4a5263" text-anchor="start">A fast rollback is possible.</text>
+<path d="M284 280 L 314 280" fill="none" stroke="#c2552d" stroke-width="1.6" marker-end="url(#m7)"/>
+<rect x="316" y="256" width="240" height="48" rx="10" fill="#fff" stroke="#c2552d" stroke-width="1.2"/>
+<text x="332" y="276" font-size="13" fill="#1c2230" text-anchor="start" font-weight="700">READ_ONLY next</text>
+<text x="332" y="295" font-size="12" fill="#4a5263" text-anchor="start">After one release with the fix.</text>
+<path d="M556 280 L 586 280" fill="none" stroke="#c2552d" stroke-width="1.6" marker-end="url(#m7)"/>
+<rect x="588" y="256" width="240" height="48" rx="10" fill="#fff" stroke="#c2552d" stroke-width="1.2"/>
+<text x="604" y="276" font-size="13" fill="#1c2230" text-anchor="start" font-weight="700">Removed</text>
+<text x="604" y="295" font-size="12" fill="#4a5263" text-anchor="start">In the following release.</text>
+</svg>

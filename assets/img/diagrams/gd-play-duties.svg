@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 366" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">Six duties from Google Play and Google ads</title>
+  <desc id="d">Six cards. The Data safety form declares what the app collects and shares, for what purpose, and the security practices, required since July 2022. Account deletion means that apps with accounts offer deletion in the app and through a web link, and delete the linked data. Consent for Google ads means that ads from AdMob for users in the EEA, the UK and Switzerland need a Google-certified consent tool that follows the IAB TCF. The privacy policy needs a working link in the store listing and in the app and must match the Data safety declarations. Permissions and SDKs means asking only for what features need and checking that third-party SDKs follow the same rules. Developer verification means that from 30 September 2026, apps on certified devices in four countries need a registered developer, and the requirement goes global in 2027.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="20" y="30" width="273" height="156" rx="12" fill="#fff" stroke="#2f62c8" stroke-width="1.6"/>
+<rect x="20" y="30" width="6" height="156" rx="3" fill="#2f62c8"/>
+<text x="40" y="58" font-size="13.4" fill="#1f4a9e" text-anchor="start" font-weight="700">Data safety form</text>
+<text x="40" y="84" font-size="11.4" fill="#1c2230" text-anchor="start">Declare what the app collects</text>
+<text x="40" y="105" font-size="11.4" fill="#1c2230" text-anchor="start">and shares, for what purpose,</text>
+<text x="40" y="126" font-size="11.4" fill="#1c2230" text-anchor="start">and the security practices.</text>
+<text x="40" y="147" font-size="11.4" fill="#1c2230" text-anchor="start">Required since July 2022.</text>
+<rect x="307" y="30" width="273" height="156" rx="12" fill="#fff" stroke="#0f8a6a" stroke-width="1.6"/>
+<rect x="307" y="30" width="6" height="156" rx="3" fill="#0f8a6a"/>
+<text x="327" y="58" font-size="13.4" fill="#0b6650" text-anchor="start" font-weight="700">Account deletion</text>
+<text x="327" y="84" font-size="11.4" fill="#1c2230" text-anchor="start">If users can create accounts,</text>
+<text x="327" y="105" font-size="11.4" fill="#1c2230" text-anchor="start">offer deletion in the app</text>
+<text x="327" y="126" font-size="11.4" fill="#1c2230" text-anchor="start">and through a web link.</text>
+<text x="327" y="147" font-size="11.4" fill="#1c2230" text-anchor="start">Delete the linked data too.</text>
+<rect x="594" y="30" width="273" height="156" rx="12" fill="#fff" stroke="#7a4fc2" stroke-width="1.6"/>
+<rect x="594" y="30" width="6" height="156" rx="3" fill="#7a4fc2"/>
+<text x="614" y="58" font-size="13.4" fill="#58378f" text-anchor="start" font-weight="700">Consent for Google ads</text>
+<text x="614" y="84" font-size="11.4" fill="#1c2230" text-anchor="start">Ads from AdMob for users in</text>
+<text x="614" y="105" font-size="11.4" fill="#1c2230" text-anchor="start">the EEA, UK and Switzerland</text>
+<text x="614" y="126" font-size="11.4" fill="#1c2230" text-anchor="start">need a Google-certified consent</text>
+<text x="614" y="147" font-size="11.4" fill="#1c2230" text-anchor="start">tool that follows the IAB TCF.</text>
+<rect x="20" y="200" width="273" height="156" rx="12" fill="#fff" stroke="#b7791f" stroke-width="1.6"/>
+<rect x="20" y="200" width="6" height="156" rx="3" fill="#b7791f"/>
+<text x="40" y="228" font-size="13.4" fill="#8a5a12" text-anchor="start" font-weight="700">Privacy policy</text>
+<text x="40" y="254" font-size="11.4" fill="#1c2230" text-anchor="start">A working link in the store</text>
+<text x="40" y="275" font-size="11.4" fill="#1c2230" text-anchor="start">listing and inside the app.</text>
+<text x="40" y="296" font-size="11.4" fill="#1c2230" text-anchor="start">It must match the Data</text>
+<text x="40" y="317" font-size="11.4" fill="#1c2230" text-anchor="start">safety declarations.</text>
+<rect x="307" y="200" width="273" height="156" rx="12" fill="#fff" stroke="#c2552d" stroke-width="1.6"/>
+<rect x="307" y="200" width="6" height="156" rx="3" fill="#c2552d"/>
+<text x="327" y="228" font-size="13.4" fill="#963f1f" text-anchor="start" font-weight="700">Permissions and SDKs</text>
+<text x="327" y="254" font-size="11.4" fill="#1c2230" text-anchor="start">Ask only for what features</text>
+<text x="327" y="275" font-size="11.4" fill="#1c2230" text-anchor="start">need. Check that third-party</text>
+<text x="327" y="296" font-size="11.4" fill="#1c2230" text-anchor="start">SDKs follow the same rules,</text>
+<text x="327" y="317" font-size="11.4" fill="#1c2230" text-anchor="start">because you are responsible.</text>
+<rect x="594" y="200" width="273" height="156" rx="12" fill="#fff" stroke="#5d6b7e" stroke-width="1.6"/>
+<rect x="594" y="200" width="6" height="156" rx="3" fill="#5d6b7e"/>
+<text x="614" y="228" font-size="13.4" fill="#3f4a59" text-anchor="start" font-weight="700">Developer verification</text>
+<text x="614" y="254" font-size="11.4" fill="#1c2230" text-anchor="start">From 30 September 2026, apps</text>
+<text x="614" y="275" font-size="11.4" fill="#1c2230" text-anchor="start">on certified devices in four</text>
+<text x="614" y="296" font-size="11.4" fill="#1c2230" text-anchor="start">countries need a registered</text>
+<text x="614" y="317" font-size="11.4" fill="#1c2230" text-anchor="start">developer. Global in 2027.</text>
+</svg>

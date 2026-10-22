@@ -1,0 +1,599 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DPDP Act, GDPR and Google Play for Android apps · LearnInBits</title>
+  <meta name="description" content="A guide to the DPDP Act for Android apps in India, with the GDPR differences for users in Europe and the Google Play rules that apply to both.">
+  <link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,500;0,8..60,600;1,8..60,500&display=swap">
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <script>try{var t=localStorage.getItem("lib-theme");t=t?JSON.parse(t):(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+</head>
+<body data-root="../" data-page="post" data-kind="article" data-id="dpdp-gdpr-and-google-play">
+
+<main id="main">
+<article>
+
+  <div class="block oneline">
+    <div class="label">In one line</div>
+    <p>The DPDP Act sets the rules for personal data in India. The GDPR adds its own rules when an app reaches Europe, and Google Play checks both at the store.</p>
+  </div>
+
+  <p>If you build an Android app in India, the <a href="https://www.indiacode.nic.in/bitstream/123456789/22037/2/a2023-22.pdf">Digital Personal Data Protection Act, 2023</a> (DPDP Act) is the first law that applies to it. The Act and the <a href="https://static.pib.gov.in/WriteReadData/specificdocs/documents/2025/nov/doc20251117695301.pdf">DPDP Rules, 2025</a> decide how you collect, use, store and delete the personal data of your users. They also decide whom you tell when something goes wrong, and what a mistake costs.</p>
+  <p>Few apps stay inside one country. Once your app reaches users in the European Union (EU), the <a href="https://eur-lex.europa.eu/eli/reg/2016/679/oj">General Data Protection Regulation</a> (GDPR) applies as well. Its ideas are close to those of the DPDP Act, but the details differ in many places. Google Play adds a third layer with its own policies, and they apply to every app in the store.</p>
+  <p>This article follows the DPDP Act topic by topic. For each topic, it first explains the Indian rule and then shows where the GDPR differs. After the two laws, it turns to Google Play and ends with a checklist for your app. Each rule links to its original text wherever possible. The article explains the rules, but it is not legal advice.</p>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../assets/img/diagrams/gd-overview.svg" alt="On the left, the DPDP Act of India, with the Act of 2023 and the Rules of November 2025. It covers digital personal data only, allows processing on consent or a listed legitimate use, requires a report for every breach and applies in full from May 2027. On the right, the GDPR of the European Union, Regulation 2016/679 in force since 2018. It covers digital and paper records, has six lawful bases, requires breach reports based on risk and allows fines up to 4% of turnover. In the middle, an app with users in India and in Europe. Below, Google Play policies such as the Data safety form, account deletion and consent tools turn many duties into store rules." loading="lazy"></div>
+    <figcaption>Two data protection laws and one app store shape the way an app handles personal data.</figcaption>
+  </figure>
+
+  <h2 id="the-dpdp-act-in-stages">The DPDP Act in stages</h2>
+  <p>The President gave assent to the DPDP Act on 11 August 2023. The government notified the Rules on 13 November 2025 and chose to bring them into force in three steps. The rules on the Data Protection Board of India took effect on the same day. The rules on Consent Managers take effect one year later. Almost every other duty, from notice and consent to breach reporting, starts on <span data-ste="skip">13 May 2027</span>.</p>
+  <p>That date sounds far away, but it is close for a real product. A change to the data flows, consent screens and vendor contracts of an app often takes a year or more. Europe gives no such grace period, because the GDPR took full effect on <span data-ste="skip">25 May 2018</span>.</p>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../assets/img/diagrams/gd-dpdp-timeline.svg" alt="A timeline. The Act received assent on 11 August 2023. The Rules were notified on 13 November 2025, and the rules on the Data Protection Board applied at once. The Consent Manager rules apply from 13 November 2026. All other duties apply from 13 May 2027, including notice, consent, rights, security, breach reporting, children and transfers." loading="lazy"></div>
+    <figcaption>The DPDP framework comes into force in three steps. Most duties for apps start in 2027.</figcaption>
+  </figure>
+
+  <h2 id="parts-of-this-article">Parts of this article</h2>
+  <nav class="part-grid" aria-label="Parts of this article">
+    <a href="#part-1" style="--pc:#2f62c8"><b>Part 1</b><span>Personal data</span></a>
+    <a href="#part-2" style="--pc:#0f8a6a"><b>Part 2</b><span>Scope and responsibility</span></a>
+    <a href="#part-3" style="--pc:#7a4fc2"><b>Part 3</b><span>Consent, notice and children</span></a>
+    <a href="#part-4" style="--pc:#b7791f"><b>Part 4</b><span>Rights and retention</span></a>
+    <a href="#part-5" style="--pc:#c2552d"><b>Part 5</b><span>Security, breaches and penalties</span></a>
+    <a href="#part-6" style="--pc:#0e7c86"><b>Part 6</b><span>Data outside India</span></a>
+    <a href="#part-7" style="--pc:#5d6b7e"><b>Part 7</b><span>Google Play rules</span></a>
+    <a href="#part-8" style="--pc:#b03a6f"><b>Part 8</b><span>A checklist for your app</span></a>
+  </nav>
+
+  <div class="part-banner" data-n="1" style="--pc:#2f62c8" id="part-1">
+    <div class="pb-tag">Part 1 of 8</div>
+    <h2 id="personal-data" data-toc="1. Personal data">Personal data</h2>
+    <p>The Act protects one kind of data, and that choice shapes every rule after it.</p>
+  </div>
+
+  <p>Everything in the DPDP Act starts with one short definition.</p>
+  <div class="block law">
+    <div class="label">From the law</div>
+    <div class="src">DPDP Act, Section 2(t)</div>
+    <blockquote><p>"personal data" means any data about an individual who is identifiable by or in relation to such data;</p></blockquote>
+  </div>
+  <p>The definition is wide on purpose. A name, an email address and a phone number are personal data. So are a device identifier, a precise location, a photo and a voice note, because each of them can point to a person. Data stays personal even when you need a second table to find the name. A user ID in your database is personal data, because your own records link it to a person.</p>
+
+  <h3>One class of data in India</h3>
+  <p>The DPDP Act does not sort personal data into normal and sensitive classes. Health records, bank details, religion and an email address all get the same protection. Before the Act, the Information Technology (IT) Rules of 2011 had a class called sensitive personal data or information (SPDI). Those rules rested on Section 43A of the IT Act. The DPDP Act removes that section and creates no new sensitive class.</p>
+  <p>The Act still gives extra care in two places. The data of children has its own duties, which Part 3 explains. The government can also name a Significant Data Fiduciary (SDF), and the sensitivity of the data is one factor in that choice.</p>
+
+  <h3>Special categories in the GDPR</h3>
+  <p>The GDPR takes the opposite approach. <a href="https://eur-lex.europa.eu/eli/reg/2016/679/oj">Article 9</a> lists special categories of personal data. These are health, genetic data, biometric data for identification, racial or ethnic origin, religion, political opinions, union membership and sex life or sexual orientation. The GDPR forbids the processing of these categories unless one of ten exceptions applies, such as explicit consent. Article 10 adds separate rules for data on criminal convictions.</p>
+  <p>So the same data can carry a different weight in the two laws. A food preference that reveals a religion is ordinary personal data in India. In Europe, it becomes special category data. An app that serves both regions designs for the stricter case.</p>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../assets/img/diagrams/gd-data-kinds.svg" alt="On the left, the terms in GDPR and DPDP. Personal data is any data about an identifiable person. GDPR adds special categories, namely health, genetic data, biometric data for identification, race, religion, political opinions, union membership and sex life, and separate rules for criminal records data in Article 10. The DPDP Act has one category only and no sensitive class. On the right, terms from US laws and industry. PII identifies a person in NIST guidance. NPI is financial data under the Gramm-Leach-Bliley Act. PHI is health data under HIPAA. MNPI is price-sensitive company data under securities law. SPI is a common industry term whose meaning varies." loading="lazy"></div>
+    <figcaption>The DPDP Act and the GDPR use their own terms. Labels such as PII and PHI come from US laws and industry.</figcaption>
+  </figure>
+
+  <h3>Terms from other laws</h3>
+  <p>Privacy documents in India often borrow terms from the United States (US). They are useful in conversation, but neither the DPDP Act nor the GDPR uses them.</p>
+  <ul>
+    <li><strong>Personally identifiable information</strong> (PII) is information that identifies a person, in the guidance of the National Institute of Standards and Technology (NIST).</li>
+    <li><strong>Nonpublic personal information</strong> (NPI) is financial data about consumers under the Gramm-Leach-Bliley Act.</li>
+    <li><strong>Protected health information</strong> (PHI) is health data under the Health Insurance Portability and Accountability Act (HIPAA).</li>
+    <li><strong>Material nonpublic information</strong> (MNPI) is information that can move the price of a share. It belongs to securities law, not privacy law.</li>
+    <li><strong>Sensitive personal information</strong> (SPI) is a common industry term with no fixed meaning.</li>
+  </ul>
+  <p>In a document for an Indian client or regulator, use the terms of the Act. Say personal data, and drop the other labels.</p>
+
+  <h3>Personal data on an Android device</h3>
+  <p>On a phone, much of the personal data never comes from the keyboard. It comes from identifiers that the app reads from the device or creates itself. Each of them is personal data under both laws once it links to a person. Over recent releases, Android closed access to the most permanent ones. The Android guide on <a href="https://developer.android.com/identity/user-data-ids">user data and identifiers</a> explains the choices that remain.</p>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../assets/img/diagrams/gd-android-ids.svg" alt="Three groups. Not available to normal apps are the IMEI and serial number, restricted since Android 10, the ICCID of the SIM, where apps use the subscription ID instead, and the MAC address, which is hidden or randomized. Available with care are the Android ID, scoped to the app signing key and user, the phone number, which needs a runtime permission, and precise location, which is sensitive. Recommended are the advertising ID, resettable and for ads only, the app set ID for analytics across own apps and the Firebase installation ID, scoped to one install and resettable. Every identifier counts as personal data under GDPR and DPDP once it can be linked to a person." loading="lazy"></div>
+    <figcaption>Android identifiers grouped by access. An identifier that the user or the system can reset is the safer choice.</figcaption>
+  </figure>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Identifier</th><th>Access for a normal app</th><th>Advice</th></tr></thead>
+      <tbody>
+        <tr><td>IMEI and serial number</td><td>Blocked since Android 10. Only system apps hold <code>READ_PRIVILEGED_PHONE_STATE</code>.</td><td>Do not use</td></tr>
+        <tr><td>ICCID of the SIM card</td><td>Blocked</td><td>Use the subscription ID for SIM logic</td></tr>
+        <tr><td>MAC address</td><td>Hidden. <code>getHardwareAddress()</code> returns null, and Wi-Fi uses a random address for each network.</td><td>Do not use</td></tr>
+        <tr><td>Android ID (SSAID)</td><td>Available. Since Android 8, each app signing key, user and device gets its own value.</td><td>Use only for fraud checks or to link your own apps</td></tr>
+        <tr><td>Phone number</td><td>Needs a runtime permission such as <code>READ_PHONE_NUMBERS</code></td><td>Let the user type it, or use a sign-in service</td></tr>
+        <tr><td>Advertising ID</td><td>Available through Google Play services. Apps that target API level 33 or higher declare the <code>AD_ID</code> permission.</td><td>Use only for ads. After the user deletes it, the app reads zeros.</td></tr>
+        <tr><td>App set ID</td><td>Available through Google Play services</td><td>Use for analytics across your own apps</td></tr>
+        <tr><td>Firebase installation ID or your own random ID</td><td>The app creates it</td><td>The default choice for analytics and app state</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>The table leads to two simple rules. Pick the identifier with the narrowest scope that does the job, which for most analytics is a random ID for each install. Never link a resettable identifier to a permanent one, because the link undoes the reset. Google Play policy forbids that link for the advertising ID.</p>
+  <p>Once you know which data is personal, the next step is to find out whose duty it is to protect it.</p>
+
+  <div class="part-banner" data-n="2" style="--pc:#0f8a6a" id="part-2">
+    <div class="pb-tag">Part 2 of 8</div>
+    <h2 id="scope-and-responsibility" data-toc="2. Scope and responsibility">Scope and responsibility</h2>
+    <p>The Act reaches beyond India, and it puts the main duty on the business that decides.</p>
+  </div>
+
+  <h3>Scope of the DPDP Act</h3>
+  <p>The DPDP Act applies to digital personal data that a business processes in India. It covers data collected in digital form and data collected on paper and digitized later. It also reaches businesses outside India when they process data to offer goods or services to people in India (Section 3). A foreign app that serves Indian users follows the Act, even without an office here.</p>
+  <p>Two kinds of data stay outside the Act. The first is data that a person uses for personal or domestic purposes, such as the contacts on her own phone. The second is data that the person made public herself, or that someone else published under a legal duty. A public profile that a user posts on her own falls in this second group.</p>
+
+  <h3>Scope of the GDPR</h3>
+  <p>The GDPR covers digital data and also paper records that form part of a filing system. It applies to every organization established in the EU. It also applies to an organization outside the EU that offers goods or services to people in the EU or monitors their behavior there (Article 3). Such an organization usually names a representative in the EU (Article 27). Unlike the DPDP Act, the GDPR has no general exclusion for public data.</p>
+  <p>For an Indian company, this means that an app offered to users in Europe brings the GDPR into play. An office in Europe is not the test. The users are.</p>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../assets/img/diagrams/gd-scope.svg" alt="The DPDP Act covers digital personal data in India, paper data that is later digitized and data processed abroad for goods or services offered in India. The GDPR covers data processed by automated means, paper records in a filing system, organizations in the EU and offers to or monitoring of people in the EU. The DPDP Act excludes personal or domestic use and data that the person made public or that someone published under a legal duty. The GDPR excludes purely personal or household use and has no general exclusion for public data." loading="lazy"></div>
+    <figcaption>The scope of each law. The DPDP Act leaves out data that the person made public. The GDPR has no such general exclusion.</figcaption>
+  </figure>
+
+  <h3>Roles in the DPDP Act</h3>
+  <p>The Act gives new Indian names to roles that privacy law knew long before it. The GDPR uses the older terms for most of them. Two Indian roles have no European counterpart at all.</p>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../assets/img/diagrams/gd-roles.svg" alt="Five rows. A Data Principal in DPDP is a data subject in GDPR, the person the data is about, and DPDP also includes the parent of a child and the guardian of a person with a disability. A Data Fiduciary is a controller, which decides the purpose and the means. A Data Processor is a processor, which acts on behalf of the fiduciary. A Significant Data Fiduciary has no GDPR equivalent. The government names it, and it has extra duties such as a DPO in India, yearly audits and impact assessments. A Consent Manager has no GDPR equivalent. It is registered with the Board and gives one place to give, review and withdraw consent." loading="lazy"></div>
+    <figcaption>DPDP roles and their GDPR counterparts. The Significant Data Fiduciary and the Consent Manager exist only in India.</figcaption>
+  </figure>
+
+  <ul>
+    <li><strong>Data Principal.</strong> The person whom the data is about. For a child, the term includes the parent. For a person with a disability, it includes the lawful guardian. The GDPR calls this person the data subject.</li>
+    <li><strong>Data Fiduciary.</strong> The business that decides the purpose and the means of the processing. It carries almost every duty in the Act. The GDPR calls it the controller.</li>
+    <li><strong>Data Processor.</strong> A business that processes data for a fiduciary under a contract, such as a cloud provider or an analytics vendor. Under the Act, the fiduciary stays responsible for the work of its processors.</li>
+    <li><strong>Significant Data Fiduciary.</strong> A fiduciary that the government names because of the volume and sensitivity of its data and other risks. It appoints a Data Protection Officer (DPO) based in India and an independent data auditor. Every 12 months, it runs a Data Protection Impact Assessment (DPIA) and an audit. It also checks that its algorithms do not put the rights of users at risk.</li>
+    <li><strong>Consent Manager.</strong> A company registered with the Board that gives people one place to give, review and withdraw consent across many apps. It needs a net worth of at least 2 crore rupees.</li>
+  </ul>
+  <p>In Europe, some of the SDF duties apply to every controller. Any controller with high-risk processing runs a DPIA (Article 35). Public bodies and controllers that monitor people or handle special category data at a large scale appoint a DPO (Article 37).</p>
+  <p>As a fiduciary, your first duty is to have a valid ground for each use of personal data. In India, that ground is almost always consent.</p>
+
+  <div class="part-banner" data-n="3" style="--pc:#7a4fc2" id="part-3">
+    <div class="pb-tag">Part 3 of 8</div>
+    <h2 id="consent-notice-and-children" data-toc="3. Consent, notice and children">Consent, notice and children</h2>
+    <p>The Act gives two legal grounds, and consent is the one that most apps use.</p>
+  </div>
+
+  <h3>Two grounds in the DPDP Act</h3>
+  <p>The Act allows processing on two grounds only. The first is the consent of the Data Principal (Section 6). The second is a short list of certain legitimate uses (Section 7). These include legal duties, court orders, medical emergencies, disasters, employment and some services of the State.</p>
+  <p>For an app, the most useful legitimate use is in Section 7(a). It covers data that a person gives voluntarily for a specific purpose, as long as she does not object to that use. A user who types her address to get a delivery gives it for that purpose. The app can use the address for the delivery without a separate consent. It cannot use the same address for marketing.</p>
+  <p>Everything else needs consent, and the Act sets a high bar for it.</p>
+  <div class="block law">
+    <div class="label">From the law</div>
+    <div class="src">DPDP Act, Section 6(1)</div>
+    <blockquote><p>The consent given by the Data Principal shall be free, specific, informed, unconditional and unambiguous with a clear affirmative action, and shall signify an agreement to the processing of her personal data for the specified purpose and be limited to such personal data as is necessary for such specified purpose.</p></blockquote>
+  </div>
+  <p>Each word in that sentence has a practical effect. Free and unconditional mean that the app does not force the user to accept unrelated purposes to get the service. Specific means one purpose at a time. A clear affirmative action means that a box ticked in advance is not consent. The consent also covers only the data that the purpose needs. Under Section 6(4), the user can withdraw consent as easily as she gave it.</p>
+
+  <h3>Six grounds in the GDPR</h3>
+  <p>The GDPR offers six legal bases in Article 6, and consent is only one of them. An app in Europe often relies on the contract for its core service and on legitimate interests for fraud checks or basic analytics. The DPDP Act has neither of these grounds. So an Indian app asks for consent in places where a European app does not.</p>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../assets/img/diagrams/gd-grounds.svg" alt="On the left, the DPDP Act in Sections 4 to 7 allows two grounds. Consent must be free, specific, informed, unconditional and unambiguous with a clear affirmative action, and withdrawal must be as easy as giving it. Certain legitimate uses cover data the person gave for a purpose and did not object to, state services, legal duties, court orders, medical emergencies, disasters and employment. On the right, GDPR Article 6 has six bases, namely consent, contract, legal obligation, vital interests, public task and legitimate interests. Contract and legitimate interests have no direct DPDP equivalent." loading="lazy"></div>
+    <figcaption>The DPDP Act has two grounds and the GDPR has six. Contract and legitimate interests have no direct match in India.</figcaption>
+  </figure>
+
+  <p>When consent is the ground, the two laws ask for almost the same thing. The GDPR definition in Article 4(11) also asks for a freely given, specific, informed and unambiguous indication through a clear affirmative action.</p>
+
+  <h3>The notice before consent</h3>
+  <p>Consent is only informed when the user reads a notice first. Section 5 of the Act and Rule 3 of the Rules decide what that notice contains. It lists the personal data and the purpose of each use. It gives a link to withdraw consent and to use each right. It also tells the user how to complain to the Data Protection Board.</p>
+  <p>Rule 3 adds that the notice must make sense on its own. A notice that the user can only follow by reading the terms of service fails this test. The user can read the notice in English or in any of the 22 languages in the Eighth Schedule of the Constitution.</p>
+  <p>The GDPR asks for more detail in its notice (Articles 13 and 14). It adds the identity of the controller, the legal basis of each purpose, the recipients, transfers outside Europe and the retention period. A short notice in the app with a link to a full privacy policy meets both laws.</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Item in the notice</th><th>DPDP Act and Rule 3</th><th>GDPR, Articles 13 and 14</th></tr></thead>
+      <tbody>
+        <tr><td>Data and purpose</td><td>An itemized list of the data and a clear description of each purpose</td><td>The purposes and the legal basis of each one</td></tr>
+        <tr><td>Withdrawal and rights</td><td>A link to withdraw consent and to use each right</td><td>The rights, including withdrawal of consent</td></tr>
+        <tr><td>Complaints</td><td>The way to complain to the Data Protection Board</td><td>The right to complain to a supervisory authority</td></tr>
+        <tr><td>Contacts</td><td>A contact who answers questions on data, or the DPO</td><td>The identity of the controller and the contact of the DPO</td></tr>
+        <tr><td>Recipients, transfers and retention</td><td>Not required</td><td>Required</td></tr>
+        <tr><td>Language</td><td>English or a language in the Eighth Schedule</td><td>Clear and plain language</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>A good consent screen</h3>
+  <p>The figure shows a consent form for ads in the style that is common in Europe. The same qualities make any consent screen valid under the DPDP Act.</p>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../assets/img/diagrams/gd-consent-form.svg" alt="A phone shows a consent form for an example app. It lists three purposes, namely personalized ads, measurement of ads and content and storage of information on the device. It says that partners can process the data and that the choice can change at any time in Settings. It has a Consent button, an equal Do not consent button and a Manage options link. Notes name four qualities. Purposes are in plain words before the choice, refusing is as easy as accepting, each purpose and partner can be set apart and a link in Settings reopens the form." loading="lazy"></div>
+    <figcaption>A consent form for ads with plain purposes, equal buttons, detailed control and an easy way to change the choice.</figcaption>
+  </figure>
+
+  <ul>
+    <li><strong>Plain purposes.</strong> The screen lists each purpose in simple words before the choice. A single vague purpose, such as "to improve our services", is not specific.</li>
+    <li><strong>Equal choices.</strong> Refusal takes the same effort as acceptance. A small grey link under a large blue button pushes the user toward one answer.</li>
+    <li><strong>Detailed control.</strong> The user can set each purpose and each partner apart. Consent to ads stays separate from consent to a newsletter.</li>
+    <li><strong>Easy withdrawal.</strong> A link in Settings opens the same form again at any time.</li>
+    <li><strong>A record.</strong> The app stores the version of the notice, the choice, the time and the user ID. In a dispute, Section 6(10) puts the burden on the fiduciary to prove the notice and the consent.</li>
+  </ul>
+
+  <h3>Children</h3>
+  <p>Children get the strongest protection in the Act. Under the DPDP Act, a child is anyone under 18 years of age. Before it processes the data of a child, the fiduciary gets the verifiable consent of a parent (Section 9(1)).</p>
+  <p>Rule 10 explains the check. The fiduciary confirms that the person who consents is an adult and is the parent. It can rely on identity and age details that it already holds. It can also use a virtual token from an authorized body, such as DigiLocker.</p>
+  <div class="block law">
+    <div class="label">From the law</div>
+    <div class="src">DPDP Act, Section 9(3)</div>
+    <blockquote><p>A Data Fiduciary shall not undertake such processing of personal data that involves tracking or behavioural monitoring of children or targeted advertising directed at children.</p></blockquote>
+  </div>
+  <p>This ban does not lift with the consent of a parent. An app in India does not show targeted ads to a user under 18, even with a parent's approval. The Fourth Schedule exempts some fiduciaries and purposes from parts of these duties, such as health services, schools and day care centers.</p>
+  <p>The GDPR sets a lower age. Under Article 8, an online service gets parental consent for a user under 16 when consent is the ground. Each member state can lower this age to 13. Germany keeps 16, and France uses 15. The GDPR has no general ban on targeted ads to children, but profiling of children needs extra care.</p>
+  <p>The simplest design for both laws is one age check at sign-up. Users under 18 get a mode with no tracking and no targeted ads, and the app asks for the consent of a parent.</p>
+  <p>Consent opens the door to processing. Once the data is with you, the Data Principal keeps a set of rights over it.</p>
+
+  <div class="part-banner" data-n="4" style="--pc:#b7791f" id="part-4">
+    <div class="pb-tag">Part 4 of 8</div>
+    <h2 id="rights-and-retention" data-toc="4. Rights and retention">Rights and retention</h2>
+    <p>The Act gives four rights to the Data Principal, and it asks you to erase data once its purpose ends.</p>
+  </div>
+
+  <h3>Rights under the DPDP Act</h3>
+  <p>Sections 11 to 14 give every Data Principal four rights.</p>
+  <ol>
+    <li><strong>Right to information</strong> (Section 11). On request, the fiduciary gives a summary of the personal data that it holds and of the processing. It also names the other fiduciaries and processors that received the data.</li>
+    <li><strong>Right to correction and erasure</strong> (Section 12). The person can correct, complete or update her data and ask for its erasure. The fiduciary erases it unless a law requires it to keep the data.</li>
+    <li><strong>Right to grievance redressal</strong> (Section 13). The fiduciary runs a process for complaints. A person complains to the fiduciary first and goes to the Board only after that.</li>
+    <li><strong>Right to nominate</strong> (Section 14). A person can name someone to use her rights after her death or incapacity.</li>
+  </ol>
+  <p>Under Rule 14, the fiduciary publishes on its app or website the way to use these rights. It also publishes the time that it takes to answer a grievance, and that time is 90 days at most.</p>
+  <p>The Act also gives the Data Principal some duties (Section 15). She does not file false or frivolous complaints, does not pose as another person and does not hide facts. A breach of these duties carries a penalty of up to 10,000 rupees.</p>
+
+  <h3>Extra rights in the GDPR</h3>
+  <p>The GDPR gives the same core rights and adds four more. It has no right to nominate.</p>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../assets/img/diagrams/gd-rights.svg" alt="A table of nine rights. Access, correction and erasure exist in both laws. Grievance redressal is the first step under DPDP, while GDPR allows a complaint to the authority. Nomination after death or incapacity exists only in DPDP. Data portability, restriction of processing, objection and limits on automated decisions exist only in GDPR. DPDP requests get an answer within 90 days under Rule 14, and GDPR requests within one month, extendable by two months." loading="lazy"></div>
+    <figcaption>Rights of the individual in both laws. Four GDPR rights have no counterpart in the DPDP Act, and nomination exists only in India.</figcaption>
+  </figure>
+
+  <ul>
+    <li><strong>Portability</strong> (Article 20). The person gets her data in a structured, machine-readable file to move it to another service.</li>
+    <li><strong>Restriction</strong> (Article 18). The person can freeze the processing while a dispute about the data is open.</li>
+    <li><strong>Objection</strong> (Article 21). The person can object to processing based on legitimate interests and can always stop direct marketing.</li>
+    <li><strong>Automated decisions</strong> (Article 22). The person can refuse a decision with legal or similar effects that a machine makes alone.</li>
+  </ul>
+  <p>The GDPR also lets a person go straight to a supervisory authority, without a complaint to the controller first (Article 77). The controller answers a request within one month. For complex cases, it can extend this by two more months (Article 12). A process built for the one-month deadline meets both laws.</p>
+
+  <h3>Retention and erasure</h3>
+  <p>Rights are easier to honor when the app holds less data. Section 8(7) of the Act asks the fiduciary to erase personal data after a withdrawal of consent or once the purpose ends. The fiduciary also tells its processors to erase their copies.</p>
+  <p>Rule 8 and the Third Schedule set a fixed period for three classes of large platforms. These are e-commerce and social media platforms with at least 2 crore registered users in India and online gaming platforms with at least 50 lakh. They erase the data of a user three years after the last contact. They warn the user at least 48 hours before the erasure.</p>
+  <p>Every fiduciary keeps personal data, traffic data and logs of processing for at least one year, for purposes such as investigations. The GDPR sets no fixed period. Article 5(1)(e) asks you to keep data no longer than the purpose needs, so you set and document your own periods.</p>
+  <p>Data that you keep is data that you protect. The next part covers security and the steps that follow when it fails.</p>
+
+  <div class="part-banner" data-n="5" style="--pc:#c2552d" id="part-5">
+    <div class="pb-tag">Part 5 of 8</div>
+    <h2 id="security-breaches-and-penalties" data-toc="5. Security, breaches and penalties">Security, breaches and penalties</h2>
+    <p>Every breach in India goes to the Board, and the penalties reach 250 crore rupees.</p>
+  </div>
+
+  <h3>Reasonable security safeguards</h3>
+  <div class="block law">
+    <div class="label">From the law</div>
+    <div class="src">DPDP Act, Section 8(5)</div>
+    <blockquote><p>A Data Fiduciary shall protect personal data in its possession or under its control, including in respect of any processing undertaken by it or on its behalf by a Data Processor, by taking reasonable security safeguards to prevent personal data breach.</p></blockquote>
+  </div>
+  <p>Rule 6 turns this duty into a minimum list. It names encryption, obfuscation, masking or virtual tokens, access control, logs and monitoring, backups and contracts that bind processors to the same measures. The Rule names no products or standards, so you choose the measures that fit your risk.</p>
+  <p>Article 32 of the GDPR is similar. It asks for security that suits the risk, with measures such as pseudonymization, encryption and regular tests.</p>
+
+  <h3>Reporting a breach</h3>
+  <p>Under the Act, a personal data breach is any unauthorized processing or any accidental disclosure, loss or change of personal data. A lost laptop and a misconfigured cloud bucket count as much as an attack.</p>
+  <p>Under Rule 7, the fiduciary informs the Board without delay once it learns of a breach. Within 72 hours, it sends a detailed report with the facts, the cause, the steps taken and the people affected. It also informs each affected Data Principal without delay, in plain language. That notice explains the likely effects and the steps that the person can take. The Board can extend the 72 hours on a written request.</p>
+  <div class="block key">
+    <div class="label">Key idea</div>
+    <p>The DPDP Act has no risk threshold. Every breach goes to the Board and to every affected person, however small it is.</p>
+  </div>
+  <p>The GDPR works on risk. Under Article 33, the controller reports to the supervisory authority within 72 hours, unless the breach is unlikely to create a risk to people. Under Article 34, it informs the people only when the risk to them is high.</p>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../assets/img/diagrams/gd-breach.svg" alt="Two timelines from the moment the fiduciary learns of a breach to 72 hours. Under DPDP Rule 7, a short intimation goes to the Board without delay, a detailed report follows within 72 hours, and every affected person gets a notice without delay. Every breach counts, with no risk threshold, and the Board can extend the 72 hours on a written request. Under GDPR Articles 33 and 34, the authority gets a report within 72 hours if the breach creates a risk to people, and the people get a notice without undue delay only if the risk is high." loading="lazy"></div>
+    <figcaption>DPDP Rule 7 asks for a report on every breach. GDPR Articles 33 and 34 depend on the risk to people.</figcaption>
+  </figure>
+
+  <p>A team in India also follows the directions of the Indian Computer Emergency Response Team (CERT-In) of April 2022. These directions ask for a report of many kinds of cyber incidents within six hours. The duty comes from the IT Act and runs in parallel with the DPDP Act.</p>
+
+  <h3>Penalties</h3>
+  <p>The Data Protection Board of India enforces the Act. It acts on a complaint, on a breach report or on a reference from the government, and it works as a digital office. After an inquiry, it can impose a penalty up to the limit in the Schedule of the Act.</p>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../assets/img/diagrams/gd-penalties.svg" alt="Under the Schedule of the DPDP Act, maximum penalties per instance are 250 crore rupees for a lack of reasonable security safeguards, 200 crore for no breach notice to the Board or the people, 200 crore for a breach of duties for children, 150 crore for a breach of the extra duties of a Significant Data Fiduciary, 10,000 rupees for a breach of duties by a Data Principal and 50 crore for any other breach. Under GDPR Article 83, core breaches such as of principles, rights or transfers can cost 20 million euros or 4% of worldwide turnover, and other breaches such as of security or records 10 million euros or 2%, whichever is higher." loading="lazy"></div>
+    <figcaption>Maximum penalties. The DPDP Act sets fixed amounts, while the GDPR links them to turnover.</figcaption>
+  </figure>
+
+  <p>The Board sets the amount from the nature, gravity and duration of the breach, the harm and the steps taken to reduce it. A fiduciary can offer a voluntary undertaking during the inquiry, and the Board can accept it and close the case (Section 32). After penalties in two or more cases, the government can block public access to the service on the advice of the Board (Section 37). Appeals go to the Telecom Disputes Settlement and Appellate Tribunal (TDSAT).</p>
+  <p>The GDPR links its fines to the size of the business. The maximum is 20 million euros or 4% of worldwide yearly turnover, whichever is higher (Article 83). The GDPR also lets people claim compensation in court (Article 82). The DPDP Act gives no such private claim, and Section 39 keeps civil courts out of matters within the power of the Board.</p>
+  <p>Until now, this article kept the data in one country. Most apps, however, send data to servers and partners abroad.</p>
+
+  <div class="part-banner" data-n="6" style="--pc:#0e7c86" id="part-6">
+    <div class="pb-tag">Part 6 of 8</div>
+    <h2 id="data-outside-india" data-toc="6. Data outside India">Data outside India</h2>
+    <p>India allows transfers unless the government restricts them. Europe allows them only with a safeguard.</p>
+  </div>
+
+  <h3>Transfers under the DPDP Act</h3>
+  <p>A cloud server, an analytics SDK and a crash reporter often sit outside India. The Act takes a simple position on this.</p>
+  <div class="block law">
+    <div class="label">From the law</div>
+    <div class="src">DPDP Act, Section 16(1)</div>
+    <blockquote><p>The Central Government may, by notification, restrict the transfer of personal data by a Data Fiduciary for processing to such country or territory outside India as may be so notified.</p></blockquote>
+  </div>
+  <p>Until the government notifies such a list, personal data can go to any country. Rule 15 adds one condition. A fiduciary that sends data abroad follows any requirement that the government sets on access to that data by a foreign State.</p>
+  <p>Two other limits matter in practice. Sector rules can be stricter than the Act, and Section 16(2) keeps them in force. For example, the Reserve Bank of India (RBI) requires payment system operators to store payment data only in India. The government can also require an SDF to keep specified data in India, on the advice of a committee (Rule 13).</p>
+
+  <h3>Transfers under the GDPR</h3>
+  <p>The GDPR starts from the other end. Chapter V (Articles 44 to 49) allows a transfer outside the European Economic Area (EEA) in three ways only.</p>
+  <ol>
+    <li><strong>Adequacy.</strong> The European Commission decides that a country protects data well enough. India has no adequacy decision.</li>
+    <li><strong>Appropriate safeguards.</strong> The parties sign Standard Contractual Clauses (SCCs), or a group of companies adopts Binding Corporate Rules (BCRs). The exporter also runs a Transfer Impact Assessment (TIA) on the laws of the target country.</li>
+    <li><strong>Derogations.</strong> Narrow exceptions, such as the explicit consent of a person to one transfer. They do not suit regular transfers at scale.</li>
+  </ol>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../assets/img/diagrams/gd-transfers.svg" alt="On the left, the DPDP Act is open by default. Data can go from India to any country, except a country that the government restricts under Section 16. Rule 15 adds conditions about access by foreign states, and sector laws and data of Significant Data Fiduciaries can be stricter. On the right, the GDPR is closed by default. Data can go to a country with an adequacy decision, to other countries with Standard Contractual Clauses or Binding Corporate Rules and a Transfer Impact Assessment, and otherwise only under narrow derogations, in Chapter V, Articles 44 to 49. India has no adequacy decision." loading="lazy"></div>
+    <figcaption>The DPDP Act allows transfers except to restricted countries. The GDPR allows them only with a safeguard.</figcaption>
+  </figure>
+
+  <p>For an Indian company, the GDPR rule matters in both directions. Data of European users that reaches servers in India leaves the EEA. Without an adequacy decision for India, the company signs SCCs with its European partners or customers and runs a TIA. Most large cloud providers already include SCCs in their data processing terms.</p>
+  <p>The two laws set the rules. Google Play is often the place where these rules first meet your app.</p>
+
+  <div class="part-banner" data-n="7" style="--pc:#5d6b7e" id="part-7">
+    <div class="pb-tag">Part 7 of 8</div>
+    <h2 id="google-play-rules" data-toc="7. Google Play rules">Google Play rules</h2>
+    <p>The store does not enforce the laws, but its policies cover much of the same ground.</p>
+  </div>
+
+  <p>Google Play does not enforce the DPDP Act or the GDPR. Its own <a href="https://support.google.com/googleplay/android-developer/answer/10144311">User Data policy</a> still asks for many of the same things, and it applies to every app in every country. A breach of the policy can lead to a rejected update, a removed app or a suspended account. For many developers in India, an email from the Play policy team is the first privacy rule that they meet.</p>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../assets/img/diagrams/gd-play-duties.svg" alt="Six cards. The Data safety form declares what the app collects and shares, for what purpose, and the security practices, required since July 2022. Account deletion means that apps with accounts offer deletion in the app and through a web link, and delete the linked data. Consent for Google ads means that ads from AdMob for users in the EEA, the UK and Switzerland need a Google-certified consent tool that follows the IAB TCF. The privacy policy needs a working link in the store listing and in the app and must match the Data safety declarations. Permissions and SDKs means asking only for what features need and checking that third-party SDKs follow the same rules. Developer verification means that from 30 September 2026, apps on certified devices in four countries need a registered developer, and the requirement goes global in 2027." loading="lazy"></div>
+    <figcaption>Six duties from Google Play and Google ads that touch personal data.</figcaption>
+  </figure>
+
+  <h3>Data safety section</h3>
+  <p>Every app on Google Play fills in the <a href="https://support.google.com/googleplay/android-developer/answer/10787469">Data safety form</a> in Play Console, even an app that collects no data. For each type of data, you declare whether the app collects it, whether it shares it with third parties and for which purposes. The form groups data into 14 categories, such as location, personal info, financial info and device or other IDs.</p>
+  <p>The form also asks whether the app encrypts data in transit and whether users can ask for deletion. Google shows these answers on the store page, so users read them before they install the app. Data that SDKs inside your app collect counts as your data. A form that does not match the real behavior of the app is a policy breach.</p>
+
+  <h3>Account deletion</h3>
+  <p>If users can create an account in your app, they can also delete it. Under the <a href="https://support.google.com/googleplay/android-developer/answer/13327111">account deletion policy</a>, the app offers deletion inside the app. A web link also lets people ask for deletion without the app, and you add that link to the Data safety form.</p>
+  <p>Deletion of the account also removes the data linked to it. You can keep some data for reasons such as fraud prevention, security or legal duties. You disclose that in the form. This policy is the store version of the right to erasure in Section 12 of the DPDP Act.</p>
+
+  <h3>Privacy policy and prominent disclosure</h3>
+  <p>Every app links a privacy policy in Play Console, at a public address that works. Apps that handle personal or sensitive data also link it inside the app. The policy names the developer and a privacy contact. It also describes the data that the app collects, its use, its sharing and its retention.</p>
+  <p>Some data uses surprise users, such as access to location in the background. In such cases, the app shows a <a href="https://support.google.com/googleplay/android-developer/answer/11150561">prominent disclosure</a> before it asks for the runtime permission. The disclosure states the data and its use, and the user accepts it with a clear action. It is the Play version of notice and consent in Sections 5 and 6 of the Act.</p>
+
+  <h3>Consent for ads in Europe</h3>
+  <p>Google ad products add a rule of their own. A publisher that shows AdMob ads to users in the EEA, the UK or Switzerland uses a <a href="https://support.google.com/admob/answer/13554020">Google-certified Consent Management Platform</a> (CMP). The CMP follows the Transparency and Consent Framework (TCF) of the Interactive Advertising Bureau (IAB) Europe. The User Messaging Platform (UMP) SDK from Google is one certified option.</p>
+  <p>Google has no such ad rule for India. The DPDP Act still asks for consent before personalized ads, and it bans them for children. A consent screen that already works for Europe is a good base for India.</p>
+
+  <h3>SDKs and permissions</h3>
+  <p>Every SDK inside the app acts in your name. If an analytics SDK reads the list of installed apps or sends the advertising ID with an email address, the policy breach is yours. Under the DPDP Act, the SDK vendor is often your processor, so its mistakes also become your responsibility. Check each SDK in the Google Play SDK Index before you add it, and keep it current. Ask only for the permissions that a visible feature needs.</p>
+
+  <h3>Google Checks</h3>
+  <p><a href="https://developers.google.com/checks">Google Checks</a> is a separate compliance product, and a developer signs up for it apart from Play Console. It scans the app and lists the data that the app and its SDKs send. It then compares that list with the privacy policy and the Data safety form. It also flags data types with a higher risk, such as precise location and health data. The <a href="https://developers.google.com/checks/guide/more-info/faq">Checks FAQ</a> gives its own definitions of these types.</p>
+  <p>Checks is a useful second pair of eyes, but it is not part of the Google Play review. The review team does not use its reports. A clean report from Checks also does not prove compliance with the DPDP Act or the GDPR. A tool cannot replace a DPIA, which looks at the purpose, the need and the risk of each processing activity.</p>
+
+  <h3>Developer verification</h3>
+  <p>Android now links apps to verified developers. The rule starts on <a href="https://developer.android.com/developer-verification/guides">30 September 2026</a> in Brazil, Indonesia, Singapore and Thailand. From that date, apps on certified Android devices in those countries come from verified developers, whatever the source of the install. The rollout becomes global in 2027.</p>
+  <ul>
+    <li>A developer who publishes only on Google Play completes verification through the existing Play Console account.</li>
+    <li>A developer who publishes outside Google Play uses the Android Developer Console. There, the developer verifies an identity and registers each package name with its signing key.</li>
+    <li>Students and hobbyists can use limited distribution to up to 20 devices without identity verification.</li>
+    <li>Users can still install unregistered apps through an advanced flow with extra safeguards.</li>
+  </ul>
+
+  <h3>Laws and Play features</h3>
+  <p>The table maps each legal duty to the Play feature that helps with it. A Play feature helps you meet the law, but it never replaces the law.</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Legal duty</th><th>DPDP Act</th><th>GDPR</th><th>Google Play feature</th></tr></thead>
+      <tbody>
+        <tr><td>Notice</td><td>Section 5 and Rule 3</td><td>Articles 13 and 14</td><td>Data safety form, privacy policy, prominent disclosure</td></tr>
+        <tr><td>Consent</td><td>Section 6</td><td>Articles 6, 7 and 8</td><td>Prominent disclosure, runtime permissions, certified CMP for ads in Europe</td></tr>
+        <tr><td>Erasure</td><td>Sections 8(7) and 12</td><td>Article 17</td><td>Account deletion in the app and on the web</td></tr>
+        <tr><td>Data limited to the purpose</td><td>Section 6(1)</td><td>Article 5(1)(b) and (c)</td><td>Permissions policy, purposes in the Data safety form</td></tr>
+        <tr><td>Security</td><td>Section 8(5) and Rule 6</td><td>Article 32</td><td>Encryption in transit in the Data safety form, Play Integrity API</td></tr>
+        <tr><td>Children</td><td>Section 9 and Rule 10</td><td>Article 8</td><td>Families policy and target audience settings</td></tr>
+        <tr><td>Processors and SDKs</td><td>Section 8(2)</td><td>Article 28</td><td>SDK duties in the User Data policy, Google Play SDK Index</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>With the laws and the store rules in view, the last step brings them together for your own app.</p>
+
+  <div class="part-banner" data-n="8" style="--pc:#b03a6f" id="part-8">
+    <div class="pb-tag">Part 8 of 8</div>
+    <h2 id="a-checklist-for-your-app" data-toc="8. A checklist for your app">A checklist for your app</h2>
+    <p>Find the rules that apply, then build one flow that meets the strictest of them.</p>
+  </div>
+
+  <p>Start with the users of the app and the store that carries it. An app for Indian users follows the DPDP Act. If it also serves users in Europe, the GDPR applies on top. If it ships through Google Play, the Play policies apply to every user.</p>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../assets/img/diagrams/gd-which-law.svg" alt="A decision flow for an app that processes personal data. If it is offered to people in India, the DPDP Act applies to digital personal data. Either way, if it offers goods or services to people in the EU or monitors them, the GDPR applies, even without an EU office. Either way, if it is distributed through Google Play, the Play policies apply, such as Data safety, deletion and consent. At the end, meet the strictest rule that applies to each feature, and design one flow for all users." loading="lazy"></div>
+    <figcaption>Three checks decide which rules apply. One design then meets the strictest rule for each feature.</figcaption>
+  </figure>
+
+  <p>Two separate apps for two regions are hard to maintain. One flow that meets the stricter rule for each feature is easier, and the table below follows that idea.</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Area</th><th>Check</th></tr></thead>
+      <tbody>
+        <tr><td>Data map</td><td>Each data item has a purpose, a legal ground, a storage place, a list of recipients and a retention period.</td></tr>
+        <tr><td>Identifiers</td><td>The app uses no hardware identifiers. Each purpose has a resettable ID, never linked to a permanent one.</td></tr>
+        <tr><td>Notice</td><td>A short notice in the app comes before consent and links to the full policy. It makes sense on its own.</td></tr>
+        <tr><td>Consent</td><td>Purposes are separate, the buttons are equal and the app keeps a record of each choice. Settings has a way to withdraw.</td></tr>
+        <tr><td>Children</td><td>An age check at sign-up. Under 18, the app gets verifiable parental consent and turns off tracking and targeted ads.</td></tr>
+        <tr><td>Rights</td><td>Access, correction, deletion and export work in the app. Grievances get an answer within one month.</td></tr>
+        <tr><td>Retention</td><td>Each data item has a period, and a job erases the data when the period ends. Logs stay for one year.</td></tr>
+        <tr><td>Transfers</td><td>Data from Europe has SCCs and a TIA. Sector rules such as RBI data localization are met.</td></tr>
+        <tr><td>Security</td><td>Encryption at rest and in transit, access control, logs and backups are in place, as Rule 6 asks.</td></tr>
+        <tr><td>Breach plan</td><td>Named owners, templates and contacts are ready for the Board, CERT-In and the EU authority.</td></tr>
+        <tr><td>Processors and SDKs</td><td>Each processor has a contract. Each SDK has a review of the data that it sends.</td></tr>
+        <tr><td>Google Play</td><td>The Data safety form matches the app. Account deletion works in the app and on the web. The privacy policy link works, and ads in Europe use a certified CMP.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2 id="key-takeaways">Key takeaways</h2>
+  <ol class="takeaways">
+    <li><b>The DPDP Act comes first for an Indian app.</b> Most of its duties start on <span data-ste="skip">13 May 2027</span>, and the work to meet them takes time.</li>
+    <li><b>All personal data is equal in India.</b> The Act has no sensitive class. The GDPR adds special categories with stricter conditions.</li>
+    <li><b>Consent carries the most weight.</b> The Act has no contract or legitimate interests ground, so an Indian app asks for consent more often than a European one.</li>
+    <li><b>A child is anyone under 18.</b> The app gets verifiable parental consent and never shows targeted ads to children.</li>
+    <li><b>Every breach goes to the Board.</b> The Act has no risk threshold, and the detailed report follows within 72 hours.</li>
+    <li><b>Data can leave India unless the government restricts it.</b> Data from Europe needs a safeguard, because India has no adequacy decision.</li>
+    <li><b>Google Play turns duties into store rules.</b> The Data safety form, account deletion and the privacy policy apply to every app.</li>
+    <li><b>SDK data is your data.</b> Review each SDK, and declare what it collects.</li>
+  </ol>
+
+  <h2 id="recap">Recap</h2>
+  <div class="recap-grid">
+    <section style="--pc:#2f62c8">
+      <h4>Data and scope</h4>
+      <ul>
+        <li>Personal data is any data about an identifiable person.</li>
+        <li>The DPDP Act covers digital data only. The GDPR also covers paper files.</li>
+        <li>Both laws reach businesses abroad that serve their people.</li>
+      </ul>
+    </section>
+    <section style="--pc:#7a4fc2">
+      <h4>Grounds and consent</h4>
+      <ul>
+        <li>The DPDP Act has consent and certain legitimate uses.</li>
+        <li>The GDPR has six legal bases.</li>
+        <li>A notice comes first, and withdrawal is as easy as consent.</li>
+      </ul>
+    </section>
+    <section style="--pc:#b7791f">
+      <h4>Rights and retention</h4>
+      <ul>
+        <li>Information, correction, erasure, grievance and nomination in India.</li>
+        <li>Portability, restriction, objection and automated decision rights only in the GDPR.</li>
+        <li>Erase data when its purpose ends. Keep logs for one year.</li>
+      </ul>
+    </section>
+    <section style="--pc:#c2552d">
+      <h4>Breaches and penalties</h4>
+      <ul>
+        <li>Every breach goes to the Board and to each affected person.</li>
+        <li>DPDP penalties go up to 250 crore rupees.</li>
+        <li>GDPR fines go up to 20 million euros or 4% of turnover.</li>
+      </ul>
+    </section>
+    <section style="--pc:#5d6b7e">
+      <h4>Google Play</h4>
+      <ul>
+        <li>A Data safety form for every app.</li>
+        <li>Account deletion in the app and on the web.</li>
+        <li>A certified CMP for AdMob ads in Europe. Checks is a separate tool.</li>
+      </ul>
+    </section>
+  </div>
+
+  <h2 id="test-yourself">Test yourself</h2>
+  <div class="quiz">
+    <details>
+      <summary><span class="qq">An app stores the health records of its users. Does the DPDP Act treat them as sensitive data?</span></summary>
+      <div class="ans"><p>No. The Act has no sensitive class, so health records get the same protection as other personal data. Under the GDPR, health data is a special category under Article 9 (Part 1).</p></div>
+    </details>
+    <details>
+      <summary><span class="qq">Your analytics uses the IMEI of the device. Is that a good choice?</span></summary>
+      <div class="ans"><p>No. Normal apps cannot read the IMEI since Android 10. Use a Firebase installation ID or your own random ID (Part 1).</p></div>
+    </details>
+    <details>
+      <summary><span class="qq">A company in Singapore offers an app to users in India. Does the DPDP Act apply to it?</span></summary>
+      <div class="ans"><p>Yes. Section 3 extends the Act to processing outside India when it is linked to goods or services offered to people in India (Part 2).</p></div>
+    </details>
+    <details>
+      <summary><span class="qq">An Indian app wants to use legitimate interests as the ground for analytics. Can it?</span></summary>
+      <div class="ans"><p>No. The DPDP Act has no legitimate interests ground. The app needs consent unless one of the certain legitimate uses in Section 7 fits (Part 3).</p></div>
+    </details>
+    <details>
+      <summary><span class="qq">A 17-year-old in India signs up, and a parent gives consent. Can the app now show targeted ads?</span></summary>
+      <div class="ans"><p>No. Section 9(3) bans targeted ads directed at children, and parental consent does not lift the ban (Part 3).</p></div>
+    </details>
+    <details>
+      <summary><span class="qq">A user in India wants a list of the companies that received her data. Which right covers this?</span></summary>
+      <div class="ans"><p>The right to information in Section 11. The fiduciary names the other fiduciaries and processors that received the data (Part 4).</p></div>
+    </details>
+    <details>
+      <summary><span class="qq">A breach is small and has no real risk. Do you report it to the Data Protection Board?</span></summary>
+      <div class="ans"><p>Yes. The DPDP Act has no risk threshold. Under the GDPR, a breach without risk needs no report, but you still record it (Part 5).</p></div>
+    </details>
+    <details>
+      <summary><span class="qq">Your servers sit in Singapore. Can personal data of Indian users go there?</span></summary>
+      <div class="ans"><p>Yes, unless the government restricts that country under Section 16 or a sector rule, such as the RBI rule for payment data, applies (Part 6).</p></div>
+    </details>
+    <details>
+      <summary><span class="qq">An app with accounts offers deletion only by email to support. Does it meet Google Play policy?</span></summary>
+      <div class="ans"><p>No. The app offers deletion inside the app and through a web link in the Data safety form (Part 7).</p></div>
+    </details>
+    <details>
+      <summary><span class="qq">Google Checks shows no issues for your app. Does the app comply with the DPDP Act?</span></summary>
+      <div class="ans"><p>Not necessarily. Checks scans data flows. It does not judge the purpose, the legal ground or the risk. It is also not part of the Play review (Part 7).</p></div>
+    </details>
+  </div>
+
+  <h2 id="key-terms">Key terms</h2>
+  <div class="table-wrap">
+    <table class="kw">
+      <thead><tr><th>Term</th><th>Meaning</th></tr></thead>
+      <tbody>
+        <tr><td>Adequacy decision</td><td>A decision of the European Commission that a country protects data well enough for free transfers.</td></tr>
+        <tr><td>CERT-In</td><td>Indian Computer Emergency Response Team, the national agency for cyber incidents.</td></tr>
+        <tr><td>CMP</td><td>Consent Management Platform, a tool that collects and stores consent for ads.</td></tr>
+        <tr><td>Consent Manager</td><td>A company registered with the Board that lets people manage consent in one place.</td></tr>
+        <tr><td>Controller</td><td>The GDPR term for the business that decides the purpose and means of processing.</td></tr>
+        <tr><td>Data Fiduciary</td><td>The DPDP term for the business that decides the purpose and means of processing.</td></tr>
+        <tr><td>Data Principal</td><td>The DPDP term for the person whom the data is about.</td></tr>
+        <tr><td>Data Protection Board</td><td>The body that enforces the DPDP Act in India.</td></tr>
+        <tr><td>Data safety form</td><td>The Play Console form that declares the data an app collects and shares.</td></tr>
+        <tr><td>Data subject</td><td>The GDPR term for the person whom the data is about.</td></tr>
+        <tr><td>DPIA</td><td>Data Protection Impact Assessment, a review of the risks of a processing activity.</td></tr>
+        <tr><td>DPO</td><td>Data Protection Officer.</td></tr>
+        <tr><td>EEA</td><td>European Economic Area, the EU plus Iceland, Liechtenstein and Norway.</td></tr>
+        <tr><td>Google Checks</td><td>A separate Google compliance product that scans apps for data flows.</td></tr>
+        <tr><td>Processor</td><td>A business that processes data on behalf of a fiduciary or controller.</td></tr>
+        <tr><td>Prominent disclosure</td><td>A Play notice in the app before a sensitive permission or an unexpected collection.</td></tr>
+        <tr><td>SCCs</td><td>Standard Contractual Clauses, contract terms from the European Commission for transfers.</td></tr>
+        <tr><td>SDF</td><td>Significant Data Fiduciary, a fiduciary with extra duties under the DPDP Act.</td></tr>
+        <tr><td>SPDI</td><td>Sensitive personal data or information, a class in the IT Rules of 2011 that the DPDP Act does not keep.</td></tr>
+        <tr><td>Special categories</td><td>GDPR classes of data with extra protection, such as health and religion.</td></tr>
+        <tr><td>TCF</td><td>Transparency and Consent Framework of IAB Europe.</td></tr>
+        <tr><td>TDSAT</td><td>Telecom Disputes Settlement and Appellate Tribunal, which hears appeals against the Board.</td></tr>
+        <tr><td>TIA</td><td>Transfer Impact Assessment, a review of the laws of the target country.</td></tr>
+        <tr><td>UMP</td><td>User Messaging Platform, the certified CMP SDK from Google.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2 id="sources">Sources</h2>
+  <p>The original texts give the full detail. For a deeper look at the DPDP Act, privacy engineering and private AI, see <a href="privacy-in-data-and-ai-pc-dpo-360.html">Learnings from PC DPO 360 on privacy in data and AI</a>.</p>
+  <ul>
+    <li><a href="https://www.indiacode.nic.in/bitstream/123456789/22037/2/a2023-22.pdf">The Digital Personal Data Protection Act, 2023</a>, India Code</li>
+    <li><a href="https://static.pib.gov.in/WriteReadData/specificdocs/documents/2025/nov/doc20251117695301.pdf">Explainer on the DPDP Rules, 2025</a>, Press Information Bureau</li>
+    <li><a href="https://www.scconline.com/blog/post/2025/11/14/meity-notified-digital-personal-data-protection-rules-2025/">DPDP Rules, 2025 notified</a>, SCC Online</li>
+    <li><a href="https://eur-lex.europa.eu/eli/reg/2016/679/oj">Regulation (EU) 2016/679, the GDPR</a>, EUR-Lex</li>
+    <li><a href="https://support.google.com/googleplay/android-developer/answer/10144311">User Data policy</a>, Google Play</li>
+    <li><a href="https://support.google.com/googleplay/android-developer/answer/10787469">Data safety section</a>, Google Play</li>
+    <li><a href="https://support.google.com/googleplay/android-developer/answer/13327111">Account deletion requirements</a>, Google Play</li>
+    <li><a href="https://support.google.com/googleplay/android-developer/answer/11150561">Prominent disclosure and consent</a>, Google Play</li>
+    <li><a href="https://support.google.com/admob/answer/13554020">Certified CMP requirement</a>, AdMob</li>
+    <li><a href="https://developers.google.com/checks">Google Checks</a> and its <a href="https://developers.google.com/checks/guide/more-info/faq">FAQ</a></li>
+    <li><a href="https://developer.android.com/identity/user-data-ids">Best practices for unique identifiers</a>, Android Developers</li>
+    <li><a href="https://developer.android.com/developer-verification/guides">Android developer verification</a>, Android Developers</li>
+  </ul>
+
+  <p class="closing-note">Thank you for reading. Privacy is easier to build in than to add later. Start with the data map of your app, and the rest of the checklist follows from it.</p>
+  <div class="the-end" data-ste="skip">That's all, folks</div>
+
+</article>
+</main>
+
+<script src="../assets/js/site.js"></script>
+</body>
+</html>

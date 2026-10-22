@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 420" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">The plan of the temperature program</title>
+  <desc id="d">One prompt asks for a one-sentence security message about phishing. It goes to three model objects: llm_zero with temperature 0, llm_balanced with temperature 0.7 and llm_creative with temperature 1.5, each with a maximum of 64 output tokens. Each model object runs the prompt three times with invoke. That makes nine calls in total, and you compare the three runs in each row.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="20" y="140" width="200" height="96" rx="12" fill="#fff" stroke="#5d6b7e" stroke-width="1.7"/>
+<text x="36" y="167" font-size="14" fill="#3f4a59" text-anchor="start" font-weight="700">One prompt</text>
+<text x="36" y="190" font-size="11.8" fill="#4a5263" text-anchor="start">A one-sentence security</text>
+<text x="36" y="208" font-size="11.8" fill="#4a5263" text-anchor="start">message about phishing</text>
+<path d="M220 188 C 250 188, 250 74, 280 74" fill="none" stroke="#2f62c8" stroke-width="1.6" marker-end="url(#m3)"/>
+<rect x="284" y="30" width="210" height="88" rx="12" fill="#fff" stroke="#2f62c8" stroke-width="1.7"/>
+<text x="300" y="57" font-size="14" fill="#1f4a9e" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">llm_zero</text>
+<text x="300" y="80" font-size="11.8" fill="#4a5263" text-anchor="start">temperature=0</text>
+<text x="300" y="98" font-size="11.8" fill="#4a5263" text-anchor="start">max 64 output tokens</text>
+<path d="M494 74 L 530 74" fill="none" stroke="#2f62c8" stroke-width="1.6" marker-end="url(#m3)"/>
+<rect x="534" y="44" width="98" height="60" rx="10" fill="#eef3fb" stroke="#2f62c8" stroke-width="1.2"/>
+<text x="583" y="70" font-size="12.5" fill="#1f4a9e" text-anchor="middle" font-weight="700">Run 1</text>
+<text x="583" y="88" font-size="11.5" fill="#4a5263" text-anchor="middle" font-family="JetBrains Mono, monospace">invoke()</text>
+<rect x="642" y="44" width="98" height="60" rx="10" fill="#eef3fb" stroke="#2f62c8" stroke-width="1.2"/>
+<text x="691" y="70" font-size="12.5" fill="#1f4a9e" text-anchor="middle" font-weight="700">Run 2</text>
+<text x="691" y="88" font-size="11.5" fill="#4a5263" text-anchor="middle" font-family="JetBrains Mono, monospace">invoke()</text>
+<rect x="750" y="44" width="98" height="60" rx="10" fill="#eef3fb" stroke="#2f62c8" stroke-width="1.2"/>
+<text x="799" y="70" font-size="12.5" fill="#1f4a9e" text-anchor="middle" font-weight="700">Run 3</text>
+<text x="799" y="88" font-size="11.5" fill="#4a5263" text-anchor="middle" font-family="JetBrains Mono, monospace">invoke()</text>
+<path d="M220 188 C 250 188, 250 194, 280 194" fill="none" stroke="#7a4fc2" stroke-width="1.6" marker-end="url(#m5)"/>
+<rect x="284" y="150" width="210" height="88" rx="12" fill="#fff" stroke="#7a4fc2" stroke-width="1.7"/>
+<text x="300" y="177" font-size="14" fill="#58378f" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">llm_balanced</text>
+<text x="300" y="200" font-size="11.8" fill="#4a5263" text-anchor="start">temperature=0.7</text>
+<text x="300" y="218" font-size="11.8" fill="#4a5263" text-anchor="start">max 64 output tokens</text>
+<path d="M494 194 L 530 194" fill="none" stroke="#7a4fc2" stroke-width="1.6" marker-end="url(#m5)"/>
+<rect x="534" y="164" width="98" height="60" rx="10" fill="#f3f0fa" stroke="#7a4fc2" stroke-width="1.2"/>
+<text x="583" y="190" font-size="12.5" fill="#58378f" text-anchor="middle" font-weight="700">Run 1</text>
+<text x="583" y="208" font-size="11.5" fill="#4a5263" text-anchor="middle" font-family="JetBrains Mono, monospace">invoke()</text>
+<rect x="642" y="164" width="98" height="60" rx="10" fill="#f3f0fa" stroke="#7a4fc2" stroke-width="1.2"/>
+<text x="691" y="190" font-size="12.5" fill="#58378f" text-anchor="middle" font-weight="700">Run 2</text>
+<text x="691" y="208" font-size="11.5" fill="#4a5263" text-anchor="middle" font-family="JetBrains Mono, monospace">invoke()</text>
+<rect x="750" y="164" width="98" height="60" rx="10" fill="#f3f0fa" stroke="#7a4fc2" stroke-width="1.2"/>
+<text x="799" y="190" font-size="12.5" fill="#58378f" text-anchor="middle" font-weight="700">Run 3</text>
+<text x="799" y="208" font-size="11.5" fill="#4a5263" text-anchor="middle" font-family="JetBrains Mono, monospace">invoke()</text>
+<path d="M220 188 C 250 188, 250 314, 280 314" fill="none" stroke="#c2552d" stroke-width="1.6" marker-end="url(#m7)"/>
+<rect x="284" y="270" width="210" height="88" rx="12" fill="#fff" stroke="#c2552d" stroke-width="1.7"/>
+<text x="300" y="297" font-size="14" fill="#963f1f" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">llm_creative</text>
+<text x="300" y="320" font-size="11.8" fill="#4a5263" text-anchor="start">temperature=1.5</text>
+<text x="300" y="338" font-size="11.8" fill="#4a5263" text-anchor="start">max 64 output tokens</text>
+<path d="M494 314 L 530 314" fill="none" stroke="#c2552d" stroke-width="1.6" marker-end="url(#m7)"/>
+<rect x="534" y="284" width="98" height="60" rx="10" fill="#fbecec" stroke="#c2552d" stroke-width="1.2"/>
+<text x="583" y="310" font-size="12.5" fill="#963f1f" text-anchor="middle" font-weight="700">Run 1</text>
+<text x="583" y="328" font-size="11.5" fill="#4a5263" text-anchor="middle" font-family="JetBrains Mono, monospace">invoke()</text>
+<rect x="642" y="284" width="98" height="60" rx="10" fill="#fbecec" stroke="#c2552d" stroke-width="1.2"/>
+<text x="691" y="310" font-size="12.5" fill="#963f1f" text-anchor="middle" font-weight="700">Run 2</text>
+<text x="691" y="328" font-size="11.5" fill="#4a5263" text-anchor="middle" font-family="JetBrains Mono, monospace">invoke()</text>
+<rect x="750" y="284" width="98" height="60" rx="10" fill="#fbecec" stroke="#c2552d" stroke-width="1.2"/>
+<text x="799" y="310" font-size="12.5" fill="#963f1f" text-anchor="middle" font-weight="700">Run 3</text>
+<text x="799" y="328" font-size="11.5" fill="#4a5263" text-anchor="middle" font-family="JetBrains Mono, monospace">invoke()</text>
+<text x="440" y="400" font-size="12.5" fill="#4a5263" text-anchor="middle" font-style="italic">Nine calls in total. Compare the three runs in each row.</text>
+</svg>
