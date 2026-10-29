@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 280" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">The parts of a Parcel</title>
+  <desc id="d">A Parcel for foo.setOwner with the name Asha and a callback. It starts with the interface token android.example.IFoo, then an int with the length 4, the string Asha, a Binder object for the callback and an int at the end of the data. A separate offsets array holds the position of the callback. The receiver checks the interface token first, so a call for the wrong interface fails. The offsets array tells the driver where Binder objects and file descriptors sit. The driver turns each Binder object into a handle that is valid in the receiving process.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<text x="20" y="32" font-size="12.6" fill="#1c2230" text-anchor="start" font-weight="700">A Parcel for foo.setOwner(&quot;Asha&quot;, callback)</text>
+<rect x="20" y="46" width="204" height="60" rx="8" fill="#f3f0fa" stroke="#7a4fc2" stroke-width="1.3"/>
+<text x="122" y="70" font-size="11.6" fill="#58378f" text-anchor="middle" font-weight="700">Interface token</text>
+<text x="122" y="90" font-size="10.8" fill="#1c2230" text-anchor="middle" font-family="JetBrains Mono, monospace">android.example.IFoo</text>
+<rect x="230" y="46" width="64" height="60" rx="8" fill="#eef0f3" stroke="#5d6b7e" stroke-width="1.3"/>
+<text x="262" y="70" font-size="11.6" fill="#3f4a59" text-anchor="middle" font-weight="700">int</text>
+<text x="262" y="90" font-size="10.8" fill="#1c2230" text-anchor="middle" font-family="JetBrains Mono, monospace">4</text>
+<rect x="300" y="46" width="144" height="60" rx="8" fill="#eef3fb" stroke="#2f62c8" stroke-width="1.3"/>
+<text x="372" y="70" font-size="11.6" fill="#1f4a9e" text-anchor="middle" font-weight="700">String</text>
+<text x="372" y="90" font-size="10.8" fill="#1c2230" text-anchor="middle" font-family="JetBrains Mono, monospace">&quot;Asha&quot;</text>
+<rect x="450" y="46" width="164" height="60" rx="8" fill="#fdf4e3" stroke="#b7791f" stroke-width="1.3"/>
+<text x="532" y="70" font-size="11.6" fill="#8a5a12" text-anchor="middle" font-weight="700">Binder object</text>
+<text x="532" y="90" font-size="10.8" fill="#1c2230" text-anchor="middle" font-family="JetBrains Mono, monospace">callback</text>
+<rect x="620" y="46" width="114" height="60" rx="8" fill="#eef0f3" stroke="#5d6b7e" stroke-width="1.3"/>
+<text x="677" y="70" font-size="11.6" fill="#3f4a59" text-anchor="middle" font-weight="700">int</text>
+<text x="677" y="90" font-size="10.8" fill="#1c2230" text-anchor="middle" font-family="JetBrains Mono, monospace">end of data</text>
+<text x="20" y="140" font-size="12" fill="#1c2230" text-anchor="start" font-weight="700">Offsets array</text>
+<rect x="20" y="150" width="170" height="40" rx="8" fill="#fdf4e3" stroke="#b7791f" stroke-width="1.3"/>
+<text x="105" y="175" font-size="10.8" fill="#8a5a12" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="600">[ position of callback ]</text>
+<path d="M190 170 C 420 170, 520 150, 520 108" fill="none" stroke="#b7791f" stroke-width="1.4" stroke-dasharray="5 4"/>
+<text x="20" y="222" font-size="11.2" fill="#4a5263" text-anchor="start">· The receiver checks the interface token first, so a call for the wrong interface fails.</text>
+<text x="20" y="242" font-size="11.2" fill="#4a5263" text-anchor="start">· The offsets array tells the driver where Binder objects and file descriptors sit.</text>
+<text x="20" y="262" font-size="11.2" fill="#4a5263" text-anchor="start">· The driver turns each Binder object into a handle that is valid in the receiving process.</text>
+</svg>

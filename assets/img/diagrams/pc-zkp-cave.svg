@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 414" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">The cave picture of a zero knowledge proof</title>
+  <desc id="d">A ring-shaped cave with paths A and B, joined by a magic door at the back. The prover walks in by one path. The verifier shouts which side to come out. With the password, the prover always comes out on that side. A cheat is right only half the time. After many rounds the verifier is convinced but never learns the password.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<path d="M260 300 V200 A150 150 0 0 1 560 200 V300" fill="none" stroke="#cfc9bb" stroke-width="46"/>
+<path d="M260 300 V200 A150 150 0 0 1 560 200 V300" fill="none" stroke="#f2efe8" stroke-width="40"/>
+<rect x="390" y="38" width="40" height="30" rx="4" fill="#b7791f"/>
+<text x="410" y="30" font-size="11" fill="#8a5a12" text-anchor="middle" font-weight="700">magic door</text>
+<text x="232" y="210" font-size="18" fill="#1f4a9e" text-anchor="middle" font-weight="700">A</text>
+<text x="590" y="210" font-size="18" fill="#1f4a9e" text-anchor="middle" font-weight="700">B</text>
+<rect x="300" y="300" width="220" height="40" rx="8" fill="#fff" stroke="#d9d4c7" stroke-width="1.5"/>
+<text x="410" y="325" font-size="12" fill="#4a5263" text-anchor="middle" font-weight="600">entrance</text>
+<circle cx="540" cy="125" r="14" fill="#7a4fc2"/>
+<text x="574" y="112" font-size="11.5" fill="#58378f" text-anchor="middle" font-weight="700">prover</text>
+<circle cx="410" cy="370" r="14" fill="#0f8a6a"/>
+<text x="410" y="400" font-size="11.5" fill="#0b6650" text-anchor="middle" font-weight="700">verifier says “come out at A!”</text>
+<rect x="640" y="60" width="220" height="250" rx="12" fill="#fff" stroke="#d9d4c7" stroke-width="1.5"/>
+<text x="656" y="86" font-size="13" fill="#1c2230" text-anchor="start" font-weight="700">One round</text>
+<text x="656" y="110" font-size="11.5" fill="#4a5263" text-anchor="start">The prover walks in by A or B.</text>
+<text x="656" y="129" font-size="11.5" fill="#4a5263" text-anchor="start">The verifier shouts a side.</text>
+<text x="656" y="148" font-size="11.5" fill="#4a5263" text-anchor="start">With the password, she can</text>
+<text x="656" y="167" font-size="11.5" fill="#4a5263" text-anchor="start">always come out on that side.</text>
+<text x="656" y="186" font-size="11.5" fill="#4a5263" text-anchor="start">A cheat is right only half</text>
+<text x="656" y="205" font-size="11.5" fill="#4a5263" text-anchor="start">the time. After 20 rounds,</text>
+<text x="656" y="224" font-size="11.5" fill="#4a5263" text-anchor="start">the chance of a cheat is</text>
+<text x="656" y="243" font-size="11.5" fill="#4a5263" text-anchor="start">about 1 in a million.</text>
+<text x="656" y="262" font-size="11.5" fill="#0b6650" text-anchor="start">The verifier never learns</text>
+<text x="656" y="281" font-size="11.5" fill="#0b6650" text-anchor="start">the password.</text>
+</svg>

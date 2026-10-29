@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 276" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">Kernel tracing sources and the Android tools that read them</title>
+  <desc id="d">Four kernel sources feed tracing. ftrace under /sys/kernel/tracing, tracepoints for the scheduler, Binder and power, kprobes if the defconfig enables them and programmable eBPF probes. traced_probes reads the per-CPU ring buffers, also for atrace categories, and writes a Perfetto trace as a protobuf file for the Perfetto UI. simpleperf separately produces CPU profiles and flame graphs.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="20" y="30" width="220" height="50" rx="10" fill="#fff" stroke="#2f62c8" stroke-width="1.4"/>
+<text x="36" y="51" font-size="12.6" fill="#1f4a9e" text-anchor="start" font-weight="700">ftrace</text>
+<text x="36" y="69" font-size="10.8" fill="#4a5263" text-anchor="start" font-family="JetBrains Mono, monospace">/sys/kernel/tracing</text>
+<path d="M240 55 C 290 55, 300 140, 340 140" fill="none" stroke="#2f62c8" stroke-width="1.3" marker-end="url(#m3)"/>
+<rect x="20" y="92" width="220" height="50" rx="10" fill="#fff" stroke="#0f8a6a" stroke-width="1.4"/>
+<text x="36" y="113" font-size="12.6" fill="#0b6650" text-anchor="start" font-weight="700">Tracepoints</text>
+<text x="36" y="131" font-size="10.8" fill="#4a5263" text-anchor="start">sched, binder, power</text>
+<path d="M240 117 C 290 117, 300 140, 340 140" fill="none" stroke="#0f8a6a" stroke-width="1.3" marker-end="url(#m4)"/>
+<rect x="20" y="154" width="220" height="50" rx="10" fill="#fff" stroke="#b7791f" stroke-width="1.4"/>
+<text x="36" y="175" font-size="12.6" fill="#8a5a12" text-anchor="start" font-weight="700">kprobes</text>
+<text x="36" y="193" font-size="10.8" fill="#4a5263" text-anchor="start">if the defconfig has them</text>
+<path d="M240 179 C 290 179, 300 140, 340 140" fill="none" stroke="#b7791f" stroke-width="1.3" marker-end="url(#m6)"/>
+<rect x="20" y="216" width="220" height="50" rx="10" fill="#fff" stroke="#7a4fc2" stroke-width="1.4"/>
+<text x="36" y="237" font-size="12.6" fill="#58378f" text-anchor="start" font-weight="700">eBPF</text>
+<text x="36" y="255" font-size="10.8" fill="#4a5263" text-anchor="start">programmable probes</text>
+<path d="M240 241 C 290 241, 300 140, 340 140" fill="none" stroke="#7a4fc2" stroke-width="1.3" marker-end="url(#m5)"/>
+<rect x="344" y="96" width="200" height="90" rx="12" fill="#1c2230"/>
+<text x="444" y="126" font-size="13" fill="#fff" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="700">traced_probes</text>
+<text x="444" y="148" font-size="11" fill="#ffffffcc" text-anchor="middle">reads the per-CPU</text>
+<text x="444" y="164" font-size="11" fill="#ffffffcc" text-anchor="middle">ring buffers</text>
+<rect x="344" y="30" width="200" height="44" rx="10" fill="#eef0f3" stroke="#5d6b7e" stroke-width="1.2"/>
+<text x="444" y="57" font-size="12" fill="#3f4a59" text-anchor="middle" font-weight="700">atrace categories</text>
+<path d="M444 74 L 444 92" fill="none" stroke="#5d6b7e" stroke-width="1.4" marker-end="url(#m8)"/>
+<path d="M544 140 L 590 140" fill="none" stroke="#1c2230" stroke-width="1.6" marker-end="url(#m0)"/>
+<rect x="594" y="100" width="266" height="80" rx="12" fill="#e3f4ee" stroke="#0f8a6a" stroke-width="1.5"/>
+<text x="610" y="128" font-size="13" fill="#0b6650" text-anchor="start" font-weight="700">Perfetto trace</text>
+<text x="610" y="150" font-size="11.2" fill="#4a5263" text-anchor="start">protobuf file, opened in</text>
+<text x="610" y="166" font-size="11.2" fill="#4a5263" text-anchor="start">the Perfetto UI</text>
+<rect x="594" y="206" width="266" height="50" rx="10" fill="#fff" stroke="#5d6b7e" stroke-width="1.3"/>
+<text x="610" y="230" font-size="12.4" fill="#3f4a59" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">simpleperf</text>
+<text x="610" y="246" font-size="10.8" fill="#4a5263" text-anchor="start">CPU profiles and flame graphs</text>
+</svg>

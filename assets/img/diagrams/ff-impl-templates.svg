@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 390" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">How aconfig chooses the template for FeatureFlagsImpl</title>
+  <desc id="d">Three questions from left to right. If the library is in test mode, the test_mode template makes every getter throw, so tests must set values. Else, if the library is exported, the exported template reads new storage through AconfigPackage. Else, if the flags use the DeviceConfig backend, the legacy_flag.internal template calls DeviceConfig getBoolean each time. Else, the default new_storage template maps the storage files read-only.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<text x="30" y="40" font-size="13" fill="#4a5263" text-anchor="start" font-weight="700">Start</text>
+<path d="M70 36 L 130 36 L 130 62" fill="none" stroke="#1c2230" stroke-width="1.6" marker-end="url(#m0)"/>
+<path d="M130 64 L222 110 L130 156 L38 110 Z" fill="#fff" stroke="#2f62c8" stroke-width="2"/>
+<text x="130" y="115" font-size="12.5" fill="#1f4a9e" text-anchor="middle" font-weight="700">Test mode?</text>
+<path d="M130 156 L 130 210" fill="none" stroke="#c2552d" stroke-width="1.8" marker-end="url(#m7)"/>
+<text x="148" y="186" font-size="12" fill="#963f1f" text-anchor="start" font-weight="800">Yes</text>
+<rect x="30" y="214" width="200" height="116" rx="12" fill="#fff" stroke="#c2552d" stroke-width="1.7"/>
+<rect x="30" y="214" width="6" height="116" rx="3" fill="#c2552d"/>
+<text x="50" y="242" font-size="12.2" fill="#963f1f" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">test_mode</text>
+<text x="50" y="266" font-size="12.3" fill="#4a5263" text-anchor="start">Every getter throws.</text>
+<text x="50" y="284" font-size="12.3" fill="#4a5263" text-anchor="start">Tests must set values.</text>
+<path d="M222 110 L 256 110" fill="none" stroke="#1c2230" stroke-width="1.6" marker-end="url(#m0)"/>
+<text x="240" y="100" font-size="12" fill="#1c2230" text-anchor="middle" font-weight="800">No</text>
+<path d="M350 64 L442 110 L350 156 L258 110 Z" fill="#fff" stroke="#2f62c8" stroke-width="2"/>
+<text x="350" y="115" font-size="12.5" fill="#1f4a9e" text-anchor="middle" font-weight="700">Exported library?</text>
+<path d="M350 156 L 350 210" fill="none" stroke="#7a4fc2" stroke-width="1.8" marker-end="url(#m5)"/>
+<text x="368" y="186" font-size="12" fill="#58378f" text-anchor="start" font-weight="800">Yes</text>
+<rect x="250" y="214" width="200" height="116" rx="12" fill="#fff" stroke="#7a4fc2" stroke-width="1.7"/>
+<rect x="250" y="214" width="6" height="116" rx="3" fill="#7a4fc2"/>
+<text x="270" y="242" font-size="12.2" fill="#58378f" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">exported</text>
+<text x="270" y="266" font-size="12.3" fill="#4a5263" text-anchor="start">Reads new storage</text>
+<text x="270" y="284" font-size="12.3" fill="#4a5263" text-anchor="start">through AconfigPackage.</text>
+<path d="M442 110 L 476 110" fill="none" stroke="#1c2230" stroke-width="1.6" marker-end="url(#m0)"/>
+<text x="460" y="100" font-size="12" fill="#1c2230" text-anchor="middle" font-weight="800">No</text>
+<path d="M570 64 L662 110 L570 156 L478 110 Z" fill="#fff" stroke="#2f62c8" stroke-width="2"/>
+<text x="570" y="115" font-size="12.5" fill="#1f4a9e" text-anchor="middle" font-weight="700">DeviceConfig backend?</text>
+<path d="M570 156 L 570 210" fill="none" stroke="#b7791f" stroke-width="1.8" marker-end="url(#m6)"/>
+<text x="588" y="186" font-size="12" fill="#8a5a12" text-anchor="start" font-weight="800">Yes</text>
+<rect x="470" y="214" width="200" height="116" rx="12" fill="#fff" stroke="#b7791f" stroke-width="1.7"/>
+<rect x="470" y="214" width="6" height="116" rx="3" fill="#b7791f"/>
+<text x="490" y="242" font-size="12.2" fill="#8a5a12" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">legacy_flag.internal</text>
+<text x="490" y="266" font-size="12.3" fill="#4a5263" text-anchor="start">Calls DeviceConfig</text>
+<text x="490" y="284" font-size="12.3" fill="#4a5263" text-anchor="start">getBoolean() each time.</text>
+<path d="M662 110 L 720 110" fill="none" stroke="#1c2230" stroke-width="1.6" marker-end="url(#m0)"/>
+<text x="680" y="100" font-size="12" fill="#1c2230" text-anchor="middle" font-weight="800">No</text>
+<rect x="724" y="52" width="140" height="116" rx="12" fill="#fff" stroke="#0f8a6a" stroke-width="1.7"/>
+<rect x="724" y="52" width="6" height="116" rx="3" fill="#0f8a6a"/>
+<text x="744" y="80" font-size="12.2" fill="#0b6650" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">new_storage</text>
+<text x="744" y="104" font-size="12.3" fill="#4a5263" text-anchor="start">The default.</text>
+<text x="744" y="122" font-size="12.3" fill="#4a5263" text-anchor="start">Maps the storage</text>
+<text x="744" y="140" font-size="12.3" fill="#4a5263" text-anchor="start">files read-only.</text>
+<text x="440" y="368" font-size="12.5" fill="#4a5263" text-anchor="middle" font-style="italic">Each result is a template file with the name FeatureFlagsImpl.&lt;result&gt;.java.template</text>
+</svg>

@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 380" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">The three parties in key attestation</title>
+  <desc id="d">Three areas. The device holds the app, keystore2 and KeyMint in the TEE or StrongBox. KeyMint creates the key pair, writes the key properties and the boot state and signs the certificate with an attestation key that never leaves the secure hardware. Your server makes a random challenge, checks the chain, the challenge and the properties and then decides to trust the key or not. Google publishes the attestation root keys and the revocation status list at android.googleapis.com/attestation. In step 1 the server sends the challenge to the app. In step 2 the app sends the certificate chain to the server. In step 3 the server uses the roots and the revocation list from Google.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="20" y="34" width="360" height="330" rx="16" fill="#eef3fb" fill-opacity="0.55"/>
+<rect x="20" y="34" width="360" height="330" rx="16" fill="none" stroke="#2f62c8" stroke-width="1.2" stroke-dasharray="6 5"/>
+<rect x="36" y="21" width="104" height="26" rx="13" fill="#fff" stroke="#2f62c8" stroke-width="1.2"/>
+<text x="88" y="38.5" font-size="12.5" fill="#1f4a9e" text-anchor="middle" font-weight="700">The device</text>
+<rect x="450" y="34" width="200" height="330" rx="16" fill="#e3f4ee" fill-opacity="0.55"/>
+<rect x="450" y="34" width="200" height="330" rx="16" fill="none" stroke="#0f8a6a" stroke-width="1.2" stroke-dasharray="6 5"/>
+<rect x="466" y="21" width="111.6" height="26" rx="13" fill="#fff" stroke="#0f8a6a" stroke-width="1.2"/>
+<text x="521.8" y="38.5" font-size="12.5" fill="#0b6650" text-anchor="middle" font-weight="700">Your server</text>
+<rect x="690" y="34" width="170" height="330" rx="16" fill="#fdf4e3" fill-opacity="0.55"/>
+<rect x="690" y="34" width="170" height="330" rx="16" fill="none" stroke="#b7791f" stroke-width="1.2" stroke-dasharray="6 5"/>
+<rect x="770.4" y="21" width="73.6" height="26" rx="13" fill="#fff" stroke="#b7791f" stroke-width="1.2"/>
+<text x="807.2" y="38.5" font-size="12.5" fill="#8a5a12" text-anchor="middle" font-weight="700">Google</text>
+<rect x="44" y="66" width="312" height="46" rx="10" fill="#fff" stroke="#2f62c8" stroke-width="1.4"/>
+<text x="60" y="94" font-size="13" fill="#1f4a9e" text-anchor="start" font-weight="700">App</text>
+<rect x="44" y="140" width="312" height="46" rx="10" fill="#fff" stroke="#0f8a6a" stroke-width="1.4"/>
+<text x="60" y="168" font-size="13" fill="#0b6650" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">keystore2</text>
+<rect x="44" y="214" width="312" height="126" rx="12" fill="#c2552d"/>
+<text x="60" y="240" font-size="13" fill="#fff" text-anchor="start" font-weight="700">KeyMint in the TEE or StrongBox</text>
+<text x="60" y="264" font-size="11.4" fill="#ffffffdd" text-anchor="start">Creates the key pair</text>
+<text x="60" y="281" font-size="11.4" fill="#ffffffdd" text-anchor="start">Writes the key properties and boot state</text>
+<text x="60" y="298" font-size="11.4" fill="#ffffffdd" text-anchor="start">Signs the certificate with an</text>
+<text x="60" y="315" font-size="11.4" fill="#ffffffdd" text-anchor="start">attestation key that never leaves</text>
+<rect x="472" y="66" width="156" height="274" rx="12" fill="#fff" stroke="#0f8a6a" stroke-width="1.5"/>
+<text x="486" y="92" font-size="11.6" fill="#1c2230" text-anchor="start">Makes a random</text>
+<text x="486" y="110" font-size="11.6" fill="#1c2230" text-anchor="start">challenge</text>
+<text x="486" y="128" font-size="11.6" fill="#1c2230" text-anchor="start"></text>
+<text x="486" y="146" font-size="11.6" fill="#1c2230" text-anchor="start">Checks the chain,</text>
+<text x="486" y="164" font-size="11.6" fill="#1c2230" text-anchor="start">the challenge and</text>
+<text x="486" y="182" font-size="11.6" fill="#1c2230" text-anchor="start">the properties</text>
+<text x="486" y="200" font-size="11.6" fill="#1c2230" text-anchor="start"></text>
+<text x="486" y="218" font-size="11.6" fill="#1c2230" text-anchor="start">Decides to trust</text>
+<text x="486" y="236" font-size="11.6" fill="#1c2230" text-anchor="start">the key or not</text>
+<rect x="706" y="66" width="138" height="120" rx="12" fill="#fff" stroke="#b7791f" stroke-width="1.5"/>
+<text x="718" y="92" font-size="11.6" fill="#1c2230" text-anchor="start" font-weight="600">Attestation</text>
+<text x="718" y="109" font-size="11.6" fill="#1c2230" text-anchor="start" font-weight="600">root keys</text>
+<text x="718" y="126" font-size="11.6" fill="#1c2230" text-anchor="start" font-weight="600"></text>
+<text x="718" y="143" font-size="11.6" fill="#1c2230" text-anchor="start" font-weight="600">Revocation</text>
+<text x="718" y="160" font-size="11.6" fill="#1c2230" text-anchor="start" font-weight="600">status list</text>
+<rect x="706" y="206" width="138" height="134" rx="12" fill="#fdf4e3"/>
+<text x="718" y="230" font-size="10.6" fill="#1c2230" text-anchor="start">Publishes the roots</text>
+<text x="718" y="246" font-size="10.6" fill="#1c2230" text-anchor="start">and the list at</text>
+<text x="718" y="262" font-size="10.6" fill="#1c2230" text-anchor="start">android.googleapis</text>
+<text x="718" y="278" font-size="10.6" fill="#1c2230" text-anchor="start">.com/attestation</text>
+<path d="M472 92 L 360 92" fill="none" stroke="#1c2230" stroke-width="1.6" marker-end="url(#m0)"/>
+<circle cx="416" cy="92" r="11" fill="#1c2230"/>
+<text x="416" y="95.96" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">1</text>
+<path d="M200 112 L 200 136" fill="none" stroke="#1c2230" stroke-width="1.6" marker-end="url(#m0)"/>
+<path d="M200 186 L 200 210" fill="none" stroke="#1c2230" stroke-width="1.6" marker-end="url(#m0)"/>
+<path d="M356 300 C 420 300, 420 200, 470 200" fill="none" stroke="#1c2230" stroke-width="1.6" marker-end="url(#m0)"/>
+<circle cx="408" cy="262" r="11" fill="#1c2230"/>
+<text x="408" y="265.96" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">2</text>
+<path d="M706 120 L 632 140" fill="none" stroke="#1c2230" stroke-width="1.6" marker-end="url(#m0)"/>
+<circle cx="669" cy="130" r="11" fill="#1c2230"/>
+<text x="669" y="133.96" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">3</text>
+</svg>

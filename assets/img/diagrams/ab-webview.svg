@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 280" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">The risk of a JavaScript bridge in WebView and five rules</title>
+  <desc id="d">A WebView in your app can show your own pages, with JavaScript and a bridge only if needed. An untrusted page or an injected script can call the bridge from addJavascriptInterface as if it were your code. Five rules reduce the risk. Keep JavaScript off unless the page needs it. Load only allowed hosts and check each URL. Use WebViewAssetLoader for local files instead of file URLs. Expose a small bridge only to trusted pages. Keep WebView updated through Play.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="20" y="30" width="400" height="236" rx="12" fill="#fff" stroke="#2f62c8" stroke-width="1.6"/>
+<text x="36" y="56" font-size="13.5" fill="#1f4a9e" text-anchor="start" font-weight="700">WebView in your app</text>
+<rect x="40" y="72" width="360" height="54" rx="8" fill="#e3f4ee" stroke="#0f8a6a" stroke-width="1.2"/>
+<text x="54" y="94" font-size="11.8" fill="#0b6650" text-anchor="start" font-weight="700">Your own pages, packaged or on your domain</text>
+<text x="54" y="112" font-size="11.2" fill="#4a5263" text-anchor="start">JavaScript and a bridge only if needed</text>
+<rect x="40" y="138" width="360" height="54" rx="8" fill="#fbecec" stroke="#c2552d" stroke-width="1.2"/>
+<text x="54" y="160" font-size="11.8" fill="#963f1f" text-anchor="start" font-weight="700">An untrusted page or an injected script</text>
+<text x="54" y="178" font-size="11.2" fill="#4a5263" text-anchor="start">Calls the bridge as if it were your code</text>
+<rect x="40" y="204" width="360" height="46" rx="8" fill="#1c2230"/>
+<text x="220" y="232" font-size="11.4" fill="#fff" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="600">addJavascriptInterface(bridge, &quot;App&quot;)</text>
+<path d="M220 192 L 220 200" fill="none" stroke="#c2552d" stroke-width="1.6" marker-end="url(#m7)"/>
+<rect x="460" y="30" width="400" height="40" rx="8" fill="#fff" stroke="#0f8a6a" stroke-width="1.3"/>
+<circle cx="480" cy="50" r="10" fill="#0f8a6a"/>
+<text x="480" y="53.96" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">1</text>
+<text x="500" y="55" font-size="12.2" fill="#0b6650" text-anchor="start" font-weight="700">Keep JavaScript off</text>
+<text x="844" y="55" font-size="11.2" fill="#4a5263" text-anchor="end">unless the page needs it</text>
+<rect x="460" y="77" width="400" height="40" rx="8" fill="#fff" stroke="#0f8a6a" stroke-width="1.3"/>
+<circle cx="480" cy="97" r="10" fill="#0f8a6a"/>
+<text x="480" y="100.96" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">2</text>
+<text x="500" y="102" font-size="12.2" fill="#0b6650" text-anchor="start" font-weight="700">Load only allowed hosts</text>
+<text x="844" y="102" font-size="11.2" fill="#4a5263" text-anchor="end">check each URL before load</text>
+<rect x="460" y="124" width="400" height="40" rx="8" fill="#fff" stroke="#0f8a6a" stroke-width="1.3"/>
+<circle cx="480" cy="144" r="10" fill="#0f8a6a"/>
+<text x="480" y="147.96" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">3</text>
+<text x="500" y="149" font-size="12.2" fill="#0b6650" text-anchor="start" font-weight="700">Use WebViewAssetLoader</text>
+<text x="844" y="149" font-size="11.2" fill="#4a5263" text-anchor="end">for local files, not file://</text>
+<rect x="460" y="171" width="400" height="40" rx="8" fill="#fff" stroke="#0f8a6a" stroke-width="1.3"/>
+<circle cx="480" cy="191" r="10" fill="#0f8a6a"/>
+<text x="480" y="194.96" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">4</text>
+<text x="500" y="196" font-size="12.2" fill="#0b6650" text-anchor="start" font-weight="700">Expose a small bridge</text>
+<text x="844" y="196" font-size="11.2" fill="#4a5263" text-anchor="end">and only to trusted pages</text>
+<rect x="460" y="218" width="400" height="40" rx="8" fill="#fff" stroke="#0f8a6a" stroke-width="1.3"/>
+<circle cx="480" cy="238" r="10" fill="#0f8a6a"/>
+<text x="480" y="241.96" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">5</text>
+<text x="500" y="243" font-size="12.2" fill="#0b6650" text-anchor="start" font-weight="700">Keep WebView updated</text>
+<text x="844" y="243" font-size="11.2" fill="#4a5263" text-anchor="end">it updates through Play</text>
+</svg>

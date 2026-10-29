@@ -1,0 +1,1166 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Structured output · AI Engineering · LearnInBits</title>
+  <meta name="description" content="Get answers as clean data with Pydantic and a JSON parser. Two guided builds that analyze a privacy policy and product reviews.">
+  <link rel="icon" href="../../assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,500;0,8..60,600;1,8..60,500&display=swap">
+  <link rel="stylesheet" href="../../assets/css/style.css?v=20261029d">
+  <script>try{var t=localStorage.getItem("lib-theme");t=t?JSON.parse(t):(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+</head>
+<body data-root="../../" data-page="chapter" data-course="ai-engineering" data-id="07-structured-output">
+
+<main id="main">
+<article>
+
+  <div class="block oneline">
+    <div class="label">In one line</div>
+    <p>Structured output makes the model answer in a fixed shape, such as JSON with named fields, so your code can use the answer directly.</p>
+  </div>
+
+  <section class="learn">
+    <h2>What you will learn</h2>
+    <ul>
+      <li>Why free text is hard for a program to use, and why JSON is easier</li>
+      <li>How to describe the wanted fields with a Pydantic class and <code>Field</code></li>
+      <li>How <code>JsonOutputParser</code> writes the format instructions and reads the JSON</li>
+      <li>What the parser checks, and what your code must still check</li>
+    </ul>
+    <p class="needs">Read <a href="05-zero-shot-prompts.html">chapter 5</a> first, for the chain with a parser. Basic Python classes help, but the chapter explains each line.</p>
+  </section>
+
+  <h2>The idea</h2>
+  <p>Until now, the model answered with text and your program printed it. A real program needs more. It must store the result, compare it, count it or send it to another system. For this, the answer needs a fixed structure, for example fields with names and types.</p>
+  <p><strong>JSON</strong> (JavaScript Object Notation) is a common text format for such data. It has names and values, lists and nested objects. Python reads JSON into a dictionary.</p>
+  <p>The approach in this chapter has three parts.</p>
+  <ol>
+    <li><strong>Describe the shape.</strong> A <strong>Pydantic</strong> class lists each field, its type and a short description. Pydantic is a Python library for data models.</li>
+    <li><strong>Tell the model.</strong> The parser turns the class into <strong>format instructions</strong>, a text with a JSON schema. The prompt includes this text.</li>
+    <li><strong>Read the answer.</strong> The model writes JSON. The parser turns the JSON text into a Python dictionary.</li>
+  </ol>
+
+  <div class="block analogy">
+    <div class="label">Real-life analogy</div>
+    <p>A bank does not ask you to write a free letter to open an account. It gives you a form with boxes, for example name, date of birth and address. The form tells you exactly what to write and where. The clerk can then process the form quickly. The Pydantic class is the form, and the JSON answer is the filled form.</p>
+  </div>
+
+  <h2>The idea in one picture</h2>
+  <p>The class becomes instructions, the instructions go into the prompt, the model writes JSON and the parser returns a dictionary.</p>
+  <figure class="diagram">
+      <div class="frame"><img src="../../assets/img/diagrams/ai-structured-output-flow.svg" alt="A Pydantic model, for example PrivacyPolicyAnalysis with app_name, data_practices and overall_transparency of LOW, MEDIUM or HIGH, goes to a JsonOutputParser. Its get_format_instructions method writes a JSON schema and the rules as plain text. The prompt template puts them into the placeholder format_instructions, next to the privacy policy. The model writes JSON text. The JsonOutputParser turns the JSON text into a Python dictionary, and your code reads values such as result app_name. A note says that the parser checks only that the text is JSON, not the types, allowed values or limits, so your code must check them." loading="lazy"></div>
+      <figcaption>From a Pydantic class to a Python dictionary. Read the note at the bottom carefully.</figcaption>
+    </figure>
+
+  <h2>What we build in this chapter</h2>
+  <p>You build two programs that turn text into data. The first one reads a full privacy policy and extracts its data practices. The second one reads short product reviews and extracts a sentiment, a confidence value and key points.</p>
+
+  <div class="build-cards">
+    <div class="build-card" style="--ex:#2f62c8">
+      <span class="ex-tag"><b>1</b>Example 1</span>
+      <h3>Analyze a privacy policy</h3>
+      <dl>
+        <dt>Aim</dt><dd>A privacy analyst wants the key facts of a policy in a fixed form, for many apps.</dd>
+        <dt>Problem</dt><dd>Extract the data collected, the sharing, the retention, the user controls, the security and the concerns.</dd>
+        <dt>Input</dt><dd>The privacy policy of an invented taxi app, QuickRide.</dd>
+        <dt>Expected output</dt><dd>A dictionary with nested lists, for example<code class="expect">Application: QuickRide<br>Overall Transparency: <b>MEDIUM</b></code></dd>
+        <dt>Model</dt><dd><span class="model-chip">Gemini 3.1 Flash Lite</span></dd>
+      </dl>
+    </div>
+    <div class="build-card" style="--ex:#0f8a6a">
+      <span class="ex-tag"><b>2</b>Example 2</span>
+      <h3>Analyze product reviews</h3>
+      <dl>
+        <dt>Aim</dt><dd>A shop wants each review as data for a dashboard.</dd>
+        <dt>Problem</dt><dd>Extract the sentiment, a confidence value, two or three key points and a suggested action.</dd>
+        <dt>Input</dt><dd>Three short reviews of phones.</dd>
+        <dt>Expected output</dt><dd>One dictionary for each review, for example<code class="expect">Sentiment: <b>NEGATIVE</b><br>Confidence: 0.98</code></dd>
+        <dt>Model</dt><dd><span class="model-chip">Qwen 2.5 7B, through OpenRouter</span></dd>
+      </dl>
+    </div>
+  </div>
+
+  <!-- ================= EXAMPLE 1 ================= -->
+  <section class="example" style="--ex:#2f62c8">
+
+    <div class="example-banner">
+      <div class="eb-tag">Example 1 · Guided build</div>
+      <h2 data-toc="Example 1, analyze a privacy policy">Analyze a privacy policy</h2>
+      <p>Describe a privacy analysis as Pydantic classes, and let a Gemini model fill it from a policy.</p>
+      <div class="eb-row">
+        <span class="eb-chip">Gemini 3.1 Flash Lite</span>
+        <span class="eb-chip">src/06_pydantic_structured_output_google.py</span>
+        <a class="gh-btn" href="https://github.com/bhardwajAbhi/ai-engineering/blob/main/src/06_pydantic_structured_output_google.py"><svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M12 .5a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2.1c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1.1-.8.1-.8.1-.8 1.2.1 1.9 1.3 1.9 1.3 1.1 1.9 2.9 1.3 3.6 1 .1-.8.4-1.3.8-1.6-2.7-.3-5.5-1.3-5.5-6a4.7 4.7 0 0 1 1.3-3.2c-.1-.3-.6-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.7 1.7.2 2.9.1 3.2a4.7 4.7 0 0 1 1.3 3.2c0 4.6-2.8 5.6-5.5 6 .4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .5z"/></svg>View on GitHub</a>
+      </div>
+    </div>
+
+    <figure class="diagram">
+      <div class="frame"><img src="../../assets/img/diagrams/ai-07-ex1-flow.svg" alt="Schema, class PrivacyPolicyAnalysis(BaseModel), app_name, data_practices, third_party_sharing, retention_periods, user_controls, security_measures, privacy_concerns, overall_transparency (LOW, MEDIUM, HIGH), summary, data_practices holds DataCollectionPractice objects. Parser, parser = JsonOutputParser(pydantic_object=...), get_format_instructions() writes the JSON schema as text. Template, privacy_policy_prompt, 5 rules, then {format_instructions} and {privacy_policy}. Data, privacy_policy, The QuickRide policy, about 60 lines. Model, llm = ChatGoogleGenerativeAI(model=&quot;gemini-3.1-flash-lite&quot;, temperature=0), Writes one JSON object. Parser, JsonOutputParser, Turns the JSON text into a Python dict, without validation. Output, result[&#x27;app_name&#x27;], for practice in result[&#x27;data_practices&#x27;], QuickRide, transparency MEDIUM, 5 data categories, 4 concerns." loading="lazy"></div>
+      <figcaption>The program of Example 1, from the input to the printed result.</figcaption>
+    </figure>
+
+    <h3 class="step"><span class="sn">Step 1</span>Create the file</h3>
+    <p>In your project folder, create the file <code>src/06_pydantic_structured_output_google.py</code> and open it in your editor.</p>
+
+    <h3 class="step"><span class="sn">Step 2</span>Import what you need</h3>
+<pre class="code" data-lang="python" data-file="src/06_pydantic_structured_output_google.py"><code>from typing import Literal
+from pydantic import BaseModel, Field
+from dotenv import load_dotenv
+
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.output_parsers import JsonOutputParser
+from langchain_google_genai import ChatGoogleGenerativeAI</code></pre>
+    <ul class="explain">
+      <li><code>from typing import Literal</code> takes <code>Literal</code>, which limits a field to a fixed set of values, for example LOW, MEDIUM or HIGH.</li>
+      <li><code>from pydantic import BaseModel, Field</code> takes the base class for data models and <code>Field</code>, which adds a description and limits to a field.</li>
+      <li><code>JsonOutputParser</code> is a new parser. It writes the format instructions and reads JSON text.</li>
+      <li>The other imports are known from earlier chapters.</li>
+    </ul>
+
+    <h3 class="step"><span class="sn">Step 3</span>Describe one data practice</h3>
+<pre class="code" data-lang="python"><code>class DataCollectionPractice(BaseModel):
+    """Details about one category of personal data mentioned in the policy."""
+
+    data_category: str = Field(description="General category of personal data")
+
+    data_elements: list[str] = Field(description="Specific personal data elements collected")
+
+    collection_method: Literal["USER_PROVIDED", "AUTOMATICALLY_COLLECTED", "RECEIVED_FROM_THIRD_PARTY", "NOT_SPECIFIED"]
+
+    purposes: list[str] = Field(description="Purpose for which the data is collected or used")</code></pre>
+    <ul class="explain">
+      <li><code>class DataCollectionPractice(BaseModel):</code> makes a data model. Each line in the class is one field.</li>
+      <li>The text in <code>"""</code> under the class name is the <strong>docstring</strong>. It also goes into the schema, so the model reads it.</li>
+      <li><code>data_category: str</code> is a field with the type string. <code>list[str]</code> is a list of strings.</li>
+      <li><code>Field(description="...")</code> explains the field. The model reads these descriptions, so clear words here give better answers.</li>
+      <li><code>collection_method: Literal[...]</code> allows only four values. This gives the answer a fixed vocabulary, like the labels in chapter 5.</li>
+    </ul>
+
+    <h3 class="step"><span class="sn">Step 4</span>Describe the full analysis</h3>
+<pre class="code" data-lang="python"><code>class PrivacyPolicyAnalysis(BaseModel):
+    """Structured analysis of a mobile application's privacy policy."""
+
+    app_name: str = Field(description="Name of the mobile application")
+
+    data_practices: list[DataCollectionPractice] = Field(description="Personal data categories and their collection practices")
+
+    third_party_sharing: list[str] = Field(description="Third parties or recipient categories receiving the data")
+
+    retention_periods: list[str] = Field(description="Data retention periods stated in the policy")
+
+    user_controls: list[str] = Field(description="Privacy controls or choices available to users")
+
+    security_measures: list[str] = Field(description="Security measures claimed in the policy")
+
+    privacy_concerns: list[str] = Field(description="Important ambiguities, omissions, or privacy concerns")
+
+    overall_transparency: Literal["LOW", "MEDIUM", "HIGH"] = Field(description="How clearly the policy explains its data practices")
+
+    summary: str = Field(description="A concise summary of the application's privacy practices")</code></pre>
+    <ul class="explain">
+      <li><code>PrivacyPolicyAnalysis</code> is the top level of the answer.</li>
+      <li><code>data_practices: list[DataCollectionPractice]</code> is a list of the class from Step 3. Thus the JSON has objects inside a list inside an object. Pydantic models can nest like this.</li>
+      <li><code>privacy_concerns</code> asks the model to find gaps, not only facts. This is the field where the model must think about what the policy does not say.</li>
+      <li><code>overall_transparency</code> allows only LOW, MEDIUM or HIGH.</li>
+    </ul>
+
+    <h3 class="step"><span class="sn">Step 5</span>Create the model, print a title and create the parser</h3>
+<pre class="code" data-lang="python"><code>def main():
+    load_dotenv()
+
+    # Initialize the model
+    llm = ChatGoogleGenerativeAI(
+        model="gemini-3.1-flash-lite",
+        temperature=0,
+    )
+
+    print("="*80)
+    print("MOBILE APP PRIVACY POLICY ANALYSIS")
+    print("="*80)
+
+    # The parser generates formatting instructions from the Pydantic models
+    # and converts the JSON response into a Python dictionary.
+    parser = JsonOutputParser(pydantic_object=PrivacyPolicyAnalysis)</code></pre>
+    <ul class="explain">
+      <li><code>temperature=0</code> keeps the extraction stable.</li>
+      <li><code>JsonOutputParser(pydantic_object=PrivacyPolicyAnalysis)</code> creates the parser and gives it the class. The parser uses the class to write the format instructions.</li>
+    </ul>
+
+    <h3 class="step"><span class="sn">Step 6</span>Write the prompt</h3>
+<pre class="code" data-lang="python"><code>    #Prompt for analysing the privacy policy
+    privacy_policy_prompt = ChatPromptTemplate.from_template("""
+        You are an experienced mobile application privacy analyst.
+
+        Read the supplied privacy policy and extract its data practices.
+
+        Important instructions:
+
+        1. Report only information stated or reasonably evident in the policy.
+        2. Do not assume that the application collects data that is not mentioned.
+        3. Distinguish between user-provided data and automatically collected data.
+        4. Identify unclear statements, missing details, and broad data-use purposes.
+        5. This is a preliminary policy analysis, not a final legal compliance decision.
+
+        {format_instructions}
+
+        Privacy policy:
+
+        {privacy_policy}
+    """)</code></pre>
+    <ul class="explain">
+      <li>The five numbered instructions limit the model to the text of the policy. Instruction 2 is important. Without it, a model can add data practices that are common in taxi apps, but that this policy does not state.</li>
+      <li><code>{format_instructions}</code> is a placeholder for the schema text from the parser.</li>
+      <li><code>{privacy_policy}</code> is a placeholder for the policy.</li>
+    </ul>
+
+    <h3 class="step"><span class="sn">Step 7</span>Join the parts into a chain</h3>
+<pre class="code" data-lang="python"><code>    # Create the chain
+    chain = privacy_policy_prompt | llm | parser</code></pre>
+    <p>The chain is the same shape as in chapter 5. Only the parser at the end is different.</p>
+
+    <h3 class="step"><span class="sn">Step 8</span>Add the privacy policy</h3>
+    <p>The policy is a long string of 60 lines. It describes an invented taxi app with accounts, location, payments, device data, sharing, retention, user choices and security. Open the fold to see it.</p>
+    <details class="fold">
+      <summary><span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m16 18 6-6-6-6M8 6l-6 6 6 6"/></svg></span><span class="ft">The sample privacy policy<small>lines 91 to 151</small></span></summary>
+      <div class="fold-body">
+<pre class="code" data-lang="python"><code>    # Sample privacy policy
+    privacy_policy = """
+        QuickRide Privacy Policy
+
+        QuickRide is a mobile application that allows users to book local taxi rides.
+
+        Information provided by users:
+        When an account is created, we collect the user's full name, mobile number,
+        email address, and profile photograph. Users may optionally add an emergency
+        contact containing the contact's name and mobile number.
+
+        Location and trip information:
+        We collect precise location while the application is being used to identify
+        nearby drivers, determine pickup and destination points, calculate fares, and
+        provide navigation. We maintain a record of completed rides, including pickup
+        location, destination, fare, driver details, date, and time.
+
+        Payment information:
+        Payments are processed by our payment service provider. QuickRide stores the
+        payment transaction identifier and payment status but does not store complete
+        credit or debit card numbers.
+
+        Device and usage information:
+        We automatically collect the device model, operating-system version, IP
+        address, advertising identifier, application version, crash reports, and
+        information about how users interact with the application.
+
+        How we use information:
+        We use personal data to create and manage accounts, provide rides, process
+        payments, prevent fraud, provide customer support, improve our services, and
+        send promotional offers. Users may disable promotional notifications through
+        the application settings.
+
+        Sharing of information:
+        Pickup location, destination, first name, and masked phone number are shared
+        with the assigned driver. Payment information is shared with our payment
+        processor. Device and usage information may be shared with analytics and
+        advertising partners. We may also disclose information when required by law.
+
+        Retention:
+        Account information is retained while the account remains active. Trip and
+        transaction records may be retained for seven years for legal and accounting
+        purposes. Crash reports are normally retained for 12 months. The policy does
+        not specify how long advertising identifiers or precise location records are
+        retained.
+
+        User choices:
+        Users may view and correct their profile information, disable promotional
+        notifications, revoke location permission through device settings, or request
+        account deletion by contacting privacy@quickride.example. Some records may
+        continue to be retained when required by law.
+
+        Security:
+        QuickRide states that it uses encryption during transmission, access controls,
+        and periodic security reviews. However, no information is provided about
+        encryption of stored personal data.
+
+        Policy updates:
+        This policy may be updated periodically. Users will be informed about material
+        changes through the application or by email.
+        """</code></pre>
+      </div>
+    </details>
+    <p>The policy leaves some gaps on purpose. It does not say how long location records and advertising identifiers stay, and it says nothing about encryption of stored data. A good analysis must find these gaps.</p>
+
+    <h3 class="step"><span class="sn">Step 9</span>Run the chain</h3>
+<pre class="code" data-lang="python"><code>    # Invoke the chain
+    result = chain.invoke({"privacy_policy":privacy_policy, "format_instructions": parser.get_format_instructions()})
+
+    # Display raw results
+    print(f"\nResult object type: {type(result)}")
+    print(f"Result content: {result}")
+    print("-" * 80)</code></pre>
+    <ul class="explain">
+      <li><code>chain.invoke({...})</code> fills both placeholders. <code>parser.get_format_instructions()</code> returns the schema text for <code>{format_instructions}</code>.</li>
+      <li><code>type(result)</code> shows that <code>result</code> is a Python <code>dict</code>, not a string and not a Pydantic object.</li>
+    </ul>
+
+    <h3 class="step"><span class="sn">Step 10</span>Use the data</h3>
+<pre class="code" data-lang="python"><code>    # Display formatted results
+    print(f"\nApplication: {result['app_name']}")
+    print(f"Overall Transparency: {result['overall_transparency']}")
+
+    print("\nPERSONAL DATA COLLECTION")
+    print("-" * 80)
+
+    for practice in result["data_practices"]:
+        print(f"\nData Category: {practice['data_category']}")
+        print(f"Collection Method: {practice['collection_method']}")
+
+        print("Data Elements:")
+        for element in practice["data_elements"]:
+            print(f"  - {element}")
+
+        print("Purposes:")
+        for purpose in practice["purposes"]:
+            print(f"  - {purpose}")
+
+    print("\nTHIRD-PARTY SHARING")
+    print("-" * 80)
+    for recipient in result["third_party_sharing"]:
+        print(f"  - {recipient}")</code></pre>
+    <ul class="explain">
+      <li><code>result['app_name']</code> reads one value from the dictionary by its key.</li>
+      <li><code>for practice in result["data_practices"]:</code> loops over the nested list. Each <code>practice</code> is again a dictionary.</li>
+      <li>The rest of the file prints the other lists in the same way, retention, controls, security, concerns and the summary. The full code below shows all of it.</li>
+    </ul>
+
+    <h3 class="step"><span class="sn">Step 11</span>Make the file start main() and run it</h3>
+<pre class="code" data-lang="python"><code>if __name__ == "__main__":
+    main()</code></pre>
+<pre class="code" data-lang="bash"><code>uv run python src/06_pydantic_structured_output_google.py</code></pre>
+<details class="fold">
+      <summary><span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m16 18 6-6-6-6M8 6l-6 6 6 6"/></svg></span><span class="ft">Show the full output<small>109 lines</small></span></summary>
+      <div class="fold-body">
+<pre class="code" data-lang="output"><code>================================================================================
+MOBILE APP PRIVACY POLICY ANALYSIS
+================================================================================
+Result object type: &lt;class 'dict'&gt;
+Result content: {'app_name': 'QuickRide', 'data_practices': [{'data_category': 'Account Information', 'data_elements': ['full name', 'mobile number', 'email address', 'profile photograph'], 'collection_method': 'USER_PROVIDED', 'purposes': ['create and manage accounts', 'provide customer support']}, {'data_category': 'Emergency Contact Information', 'data_elements': ['contact name', 'contact mobile number'], 'collection_method': 'USER_PROVIDED', 'purposes': ['emergency contact']}, {'data_category': 'Location and Trip Information', 'data_elements': ['precise location', 'pickup location', 'destination', 'fare', 'driver details', 'date', 'time'], 'collection_method': 'AUTOMATICALLY_COLLECTED', 'purposes': ['identify nearby drivers', 'determine pickup and destination points', 'calculate fares', 'provide navigation', 'provide rides']}, {'data_category': 'Payment Information', 'data_elements': ['payment transaction identifier', 'payment status'], 'collection_method': 'AUTOMATICALLY_COLLECTED', 'purposes': ['process payments']}, {'data_category': 'Device and Usage Information', 'data_elements': ['device model', 'operating-system version', 'IP address', 'advertising identifier', 'application version', 'crash reports', 'interaction information'], 'collection_method': 'AUTOMATICALLY_COLLECTED', 'purposes': ['prevent fraud', 'improve services', 'send promotional offers']}], 'third_party_sharing': ['assigned drivers', 'payment service provider', 'analytics partners', 'advertising partners', 'legal authorities'], 'retention_periods': ['Account information: while account is active', 'Trip and transaction records: 7 years', 'Crash reports: 12 months'], 'user_controls': ['view and correct profile information', 'disable promotional notifications', 'revoke location permission', 'request account deletion'], 'security_measures': ['encryption during transmission', 'access controls', 'periodic security reviews'], 'privacy_concerns': ['Retention period for advertising identifiers is not specified', 'Retention period for precise location records is not specified', 'Lack of information regarding encryption of stored personal data', "Broad purpose for 'improving services' and 'preventing fraud' without specific details"], 'overall_transparency': 'MEDIUM', 'summary': 'QuickRide collects user-provided account details and automatically tracks location, trip history, and device usage to facilitate taxi services, process payments, and serve advertisements. While it provides clear retention periods for some data, it fails to specify retention for location and advertising data and lacks detail on data-at-rest security.'}
+--------------------------------------------------------------------------------
+
+Application: QuickRide
+Overall Transparency: MEDIUM
+
+PERSONAL DATA COLLECTION
+--------------------------------------------------------------------------------
+
+Data Category: Account Information
+Collection Method: USER_PROVIDED
+Data Elements:
+  - full name
+  - mobile number
+  - email address
+  - profile photograph
+Purposes:
+  - create and manage accounts
+  - provide customer support
+
+Data Category: Emergency Contact Information
+Collection Method: USER_PROVIDED
+Data Elements:
+  - contact name
+  - contact mobile number
+Purposes:
+  - emergency contact
+
+Data Category: Location and Trip Information
+Collection Method: AUTOMATICALLY_COLLECTED
+Data Elements:
+  - precise location
+  - pickup location
+  - destination
+  - fare
+  - driver details
+  - date
+  - time
+Purposes:
+  - identify nearby drivers
+  - determine pickup and destination points
+  - calculate fares
+  - provide navigation
+  - provide rides
+
+Data Category: Payment Information
+Collection Method: AUTOMATICALLY_COLLECTED
+Data Elements:
+  - payment transaction identifier
+  - payment status
+Purposes:
+  - process payments
+
+Data Category: Device and Usage Information
+Collection Method: AUTOMATICALLY_COLLECTED
+Data Elements:
+  - device model
+  - operating-system version
+  - IP address
+  - advertising identifier
+  - application version
+  - crash reports
+  - interaction information
+Purposes:
+  - prevent fraud
+  - improve services
+  - send promotional offers
+
+THIRD-PARTY SHARING
+--------------------------------------------------------------------------------
+  - assigned drivers
+  - payment service provider
+  - analytics partners
+  - advertising partners
+  - legal authorities
+
+RETENTION PERIODS
+--------------------------------------------------------------------------------
+  - Account information: while account is active
+  - Trip and transaction records: 7 years
+  - Crash reports: 12 months
+
+USER CONTROLS
+--------------------------------------------------------------------------------
+  - view and correct profile information
+  - disable promotional notifications
+  - revoke location permission
+  - request account deletion
+
+SECURITY MEASURES
+--------------------------------------------------------------------------------
+  - encryption during transmission
+  - access controls
+  - periodic security reviews
+
+PRIVACY CONCERNS
+--------------------------------------------------------------------------------
+  - Retention period for advertising identifiers is not specified
+  - Retention period for precise location records is not specified
+  - Lack of information regarding encryption of stored personal data
+  - Broad purpose for 'improving services' and 'preventing fraud' without specific details
+
+SUMMARY
+--------------------------------------------------------------------------------
+QuickRide collects user-provided account details and automatically tracks location, trip history, and device usage to facilitate taxi services, process payments, and serve advertisements. While it provides clear retention periods for some data, it fails to specify retention for location and advertising data and lacks detail on data-at-rest security.</code></pre>
+      </div>
+    </details>
+
+    <div class="block note">
+      <div class="label">Your output can be different</div>
+      <p>The model can group the data categories in a different way or use other words for a purpose. The keys of the dictionary stay the same, because the schema fixes them.</p>
+    </div>
+
+    <div class="block look">
+      <div class="label">Look closely</div>
+      <p>The model found all three gaps in the policy. These are the retention of advertising identifiers, the retention of location records and the encryption of stored data.</p>
+      <p>One value is questionable. The payment information has the method AUTOMATICALLY_COLLECTED. The policy says that the payment provider processes the payments, so RECEIVED_FROM_THIRD_PARTY is a strong option too. A structured answer looks exact, but each value is still the judgment of a model.</p>
+    </div>
+
+    <h3 class="step"><span class="sn">Inside</span>What happens inside the calls</h3>
+    <p>The parser works two times, first for the format instructions and then for the reply.</p>
+    <figure class="diagram">
+      <div class="frame"><img src="../../assets/img/diagrams/ai-07-ex1-seq.svg" alt="A sequence diagram with the lanes Your code, prompt, llm, Gemini API, parser. Step 1, Your code to parser, get_format_instructions(), the parser turns the Pydantic classes into a JSON schema text. Step 2, parser to Your code, Format instructions, a plain string. Step 3, Your code to prompt, chain.invoke({&quot;privacy_policy&quot; ..., &quot;format_instructions&quot; ...}), two placeholders. Step 4, prompt to llm, Prompt value, rules, schema and the full policy. Step 5, llm to Gemini API, HTTPS request, temperature 0. Step 6, Gemini API to llm, JSON text, app_name, data_practices, ... summary. Step 7, llm to parser, AIMessage, the chain passes the reply to the parser. Step 8, parser to parser, Parse the JSON, no check of the types or the allowed values. Step 9, parser to Your code, dict, the code reads values by key and prints each section. Steps 3 to 9 repeat, One call of the chain." loading="lazy"></div>
+      <figcaption>Inside the calls of Example 1, step by step.</figcaption>
+    </figure>
+
+    <details class="fold">
+      <summary><span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m16 18 6-6-6-6M8 6l-6 6 6 6"/></svg></span><span class="ft">Full code of Example 1<small>src/06_pydantic_structured_output_google.py</small></span><a class="gh-btn" href="https://github.com/bhardwajAbhi/ai-engineering/blob/main/src/06_pydantic_structured_output_google.py"><svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M12 .5a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2.1c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1.1-.8.1-.8.1-.8 1.2.1 1.9 1.3 1.9 1.3 1.1 1.9 2.9 1.3 3.6 1 .1-.8.4-1.3.8-1.6-2.7-.3-5.5-1.3-5.5-6a4.7 4.7 0 0 1 1.3-3.2c-.1-.3-.6-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.7 1.7.2 2.9.1 3.2a4.7 4.7 0 0 1 1.3 3.2c0 4.6-2.8 5.6-5.5 6 .4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .5z"/></svg>GitHub</a></summary>
+      <div class="fold-body">
+<pre class="code" data-lang="python" data-file="src/06_pydantic_structured_output_google.py"><code>"""
+Title: Structured Output with Pydantic (Google Generative AI)
+uv run python src/06_pydantic_structured_output_google.py
+"""
+from typing import Literal
+from pydantic import BaseModel, Field
+from dotenv import load_dotenv
+
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.output_parsers import JsonOutputParser
+from langchain_google_genai import ChatGoogleGenerativeAI
+
+
+class DataCollectionPractice(BaseModel):
+    """Details about one category of personal data mentioned in the policy."""
+
+    data_category: str = Field(description="General category of personal data")
+
+    data_elements: list[str] = Field(description="Specific personal data elements collected")
+
+    collection_method: Literal["USER_PROVIDED", "AUTOMATICALLY_COLLECTED", "RECEIVED_FROM_THIRD_PARTY", "NOT_SPECIFIED"]
+
+    purposes: list[str] = Field(description="Purpose for which the data is collected or used")
+
+
+class PrivacyPolicyAnalysis(BaseModel):
+    """Structured analysis of a mobile application's privacy policy."""
+
+    app_name: str = Field(description="Name of the mobile application")
+
+    data_practices: list[DataCollectionPractice] = Field(description="Personal data categories and their collection practices")
+
+    third_party_sharing: list[str] = Field(description="Third parties or recipient categories receiving the data")
+
+    retention_periods: list[str] = Field(description="Data retention periods stated in the policy")
+
+    user_controls: list[str] = Field(description="Privacy controls or choices available to users")
+
+    security_measures: list[str] = Field(description="Security measures claimed in the policy")
+
+    privacy_concerns: list[str] = Field(description="Important ambiguities, omissions, or privacy concerns")
+
+    overall_transparency: Literal["LOW", "MEDIUM", "HIGH"] = Field(description="How clearly the policy explains its data practices")
+
+    summary: str = Field(description="A concise summary of the application's privacy practices")
+
+    
+
+
+def main():
+    load_dotenv()
+
+    # Initialize the model
+    llm = ChatGoogleGenerativeAI(
+        model="gemini-3.1-flash-lite",
+        temperature=0,
+    )
+
+    print("="*80)
+    print("MOBILE APP PRIVACY POLICY ANALYSIS")
+    print("="*80)
+
+    # The parser generates formatting instructions from the Pydantic models
+    # and converts the JSON response into a Python dictionary.
+    parser = JsonOutputParser(pydantic_object=PrivacyPolicyAnalysis)
+
+    #Prompt for analysing the privacy policy
+    privacy_policy_prompt = ChatPromptTemplate.from_template("""
+        You are an experienced mobile application privacy analyst.
+
+        Read the supplied privacy policy and extract its data practices.
+
+        Important instructions:
+
+        1. Report only information stated or reasonably evident in the policy.
+        2. Do not assume that the application collects data that is not mentioned.
+        3. Distinguish between user-provided data and automatically collected data.
+        4. Identify unclear statements, missing details, and broad data-use purposes.
+        5. This is a preliminary policy analysis, not a final legal compliance decision.
+
+        {format_instructions}
+
+        Privacy policy:
+
+        {privacy_policy}
+    """)
+
+    # Create the chain
+    chain = privacy_policy_prompt | llm | parser
+
+    # Sample privacy policy
+    privacy_policy = """
+        QuickRide Privacy Policy
+
+        QuickRide is a mobile application that allows users to book local taxi rides.
+
+        Information provided by users:
+        When an account is created, we collect the user's full name, mobile number,
+        email address, and profile photograph. Users may optionally add an emergency
+        contact containing the contact's name and mobile number.
+
+        Location and trip information:
+        We collect precise location while the application is being used to identify
+        nearby drivers, determine pickup and destination points, calculate fares, and
+        provide navigation. We maintain a record of completed rides, including pickup
+        location, destination, fare, driver details, date, and time.
+
+        Payment information:
+        Payments are processed by our payment service provider. QuickRide stores the
+        payment transaction identifier and payment status but does not store complete
+        credit or debit card numbers.
+
+        Device and usage information:
+        We automatically collect the device model, operating-system version, IP
+        address, advertising identifier, application version, crash reports, and
+        information about how users interact with the application.
+
+        How we use information:
+        We use personal data to create and manage accounts, provide rides, process
+        payments, prevent fraud, provide customer support, improve our services, and
+        send promotional offers. Users may disable promotional notifications through
+        the application settings.
+
+        Sharing of information:
+        Pickup location, destination, first name, and masked phone number are shared
+        with the assigned driver. Payment information is shared with our payment
+        processor. Device and usage information may be shared with analytics and
+        advertising partners. We may also disclose information when required by law.
+
+        Retention:
+        Account information is retained while the account remains active. Trip and
+        transaction records may be retained for seven years for legal and accounting
+        purposes. Crash reports are normally retained for 12 months. The policy does
+        not specify how long advertising identifiers or precise location records are
+        retained.
+
+        User choices:
+        Users may view and correct their profile information, disable promotional
+        notifications, revoke location permission through device settings, or request
+        account deletion by contacting privacy@quickride.example. Some records may
+        continue to be retained when required by law.
+
+        Security:
+        QuickRide states that it uses encryption during transmission, access controls,
+        and periodic security reviews. However, no information is provided about
+        encryption of stored personal data.
+
+        Policy updates:
+        This policy may be updated periodically. Users will be informed about material
+        changes through the application or by email.
+        """
+
+
+    # Invoke the chain
+    result = chain.invoke({"privacy_policy":privacy_policy, "format_instructions": parser.get_format_instructions()})
+
+    # Display raw results
+    print(f"\nResult object type: {type(result)}")
+    print(f"Result content: {result}")
+    print("-" * 80)
+
+    # Display formatted results
+    print(f"\nApplication: {result['app_name']}")
+    print(f"Overall Transparency: {result['overall_transparency']}")
+
+    print("\nPERSONAL DATA COLLECTION")
+    print("-" * 80)
+
+    for practice in result["data_practices"]:
+        print(f"\nData Category: {practice['data_category']}")
+        print(f"Collection Method: {practice['collection_method']}")
+
+        print("Data Elements:")
+        for element in practice["data_elements"]:
+            print(f"  - {element}")
+
+        print("Purposes:")
+        for purpose in practice["purposes"]:
+            print(f"  - {purpose}")
+
+    print("\nTHIRD-PARTY SHARING")
+    print("-" * 80)
+    for recipient in result["third_party_sharing"]:
+        print(f"  - {recipient}")
+
+    print("\nRETENTION PERIODS")
+    print("-" * 80)
+    for retention in result["retention_periods"]:
+        print(f"  - {retention}")
+
+    print("\nUSER CONTROLS")
+    print("-" * 80)
+    for control in result["user_controls"]:
+        print(f"  - {control}")
+
+    print("\nSECURITY MEASURES")
+    print("-" * 80)
+    for measure in result["security_measures"]:
+        print(f"  - {measure}")
+
+    print("\nPRIVACY CONCERNS")
+    print("-" * 80)
+    for concern in result["privacy_concerns"]:
+        print(f"  - {concern}")
+
+    print("\nSUMMARY")
+    print("-" * 80)
+    print(result["summary"])
+
+
+
+if __name__ == "__main__":
+    main()</code></pre>
+      </div>
+    </details>
+  </section>
+
+  <!-- ================= EXAMPLE 2 ================= -->
+  <section class="example" style="--ex:#0f8a6a">
+
+    <div class="example-banner">
+      <div class="eb-tag">Example 2 · Guided build</div>
+      <h2 data-toc="Example 2, analyze product reviews">Analyze product reviews</h2>
+      <p>Now you use a small schema with limits on the values, and run it for three reviews through OpenRouter.</p>
+      <div class="eb-row">
+        <span class="eb-chip">Qwen 2.5 7B through OpenRouter</span>
+        <span class="eb-chip">src/06_pydantic_structured_output_openrouter.py</span>
+        <a class="gh-btn" href="https://github.com/bhardwajAbhi/ai-engineering/blob/main/src/06_pydantic_structured_output_openrouter.py"><svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M12 .5a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2.1c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1.1-.8.1-.8.1-.8 1.2.1 1.9 1.3 1.9 1.3 1.1 1.9 2.9 1.3 3.6 1 .1-.8.4-1.3.8-1.6-2.7-.3-5.5-1.3-5.5-6a4.7 4.7 0 0 1 1.3-3.2c-.1-.3-.6-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.7 1.7.2 2.9.1 3.2a4.7 4.7 0 0 1 1.3 3.2c0 4.6-2.8 5.6-5.5 6 .4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .5z"/></svg>View on GitHub</a>
+      </div>
+    </div>
+
+    <figure class="diagram">
+      <div class="frame"><img src="../../assets/img/diagrams/ai-07-ex2-flow.svg" alt="Schema, class ProductReview(BaseModel), sentiment (POSITIVE, NEGATIVE, NEUTRAL), confidence between 0.0 and 1.0, key_points, 2 or 3 strings, suggested_action. Parser, parser = JsonOutputParser(pydantic_object=ProductReview), get_format_instructions() for each call. Data, for review in reviews, 3 phone reviews, cleaned with &quot; &quot;.join(review.split()). Template, review_analysis_prompt, {format_instructions} and Review {review}. Model, llm = ChatOpenRouter(model=&quot;qwen/qwen-2.5-7b-instruct&quot;, temperature=0), Writes one JSON object for each review. Parser, JsonOutputParser, Turns the JSON text into a dict. Output, result[&#x27;sentiment&#x27;], result[&#x27;confidence&#x27;], ..., POSITIVE 0.85, NEGATIVE 0.98, NEUTRAL 0.8. A loop goes back from stage 7 to stage 3, next review." loading="lazy"></div>
+      <figcaption>The program of Example 2, from the input to the printed result.</figcaption>
+    </figure>
+
+    <p>A <span class="same">Same</span> mark tells you that a line has the same job as before. A <span class="new">New</span> mark tells you what is different.</p>
+
+    <h3 class="step"><span class="sn">Steps 1 and 2</span>Create the file and import</h3>
+<pre class="code" data-lang="python" data-file="src/06_pydantic_structured_output_openrouter.py"><code>from typing import Literal
+from pydantic import BaseModel, Field
+from dotenv import load_dotenv
+
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.output_parsers import JsonOutputParser
+from langchain_openrouter import ChatOpenRouter</code></pre>
+    <ul class="explain">
+      <li><span class="same">Same</span>The imports, with <code>ChatOpenRouter</code> instead of the Gemini class.</li>
+    </ul>
+
+    <h3 class="step"><span class="sn">Step 3</span>Describe one review</h3>
+<pre class="code" data-lang="python"><code>class ProductReview(BaseModel):
+    """Structured analysis of a product review"""
+
+    sentiment: Literal["POSITIVE", "NEGATIVE", "NEUTRAL"] = Field(description="Overall sentiment expressed in the product review")
+
+    confidence: float = Field(description="Confidence score for the sentiment classification", ge=0.0, le=1.0)
+
+    key_points: list[str] = Field(description="Two or three main points identified in the review", min_length=2, max_length=3)
+
+    suggested_action: str = Field(description="A concise recommended for the business")</code></pre>
+    <ul class="explain">
+      <li><span class="new">New</span>One flat class with four fields. No nested classes.</li>
+      <li><span class="new">New</span><code>ge=0.0, le=1.0</code> means "greater than or equal to 0" and "less than or equal to 1". The confidence must stay between 0 and 1.</li>
+      <li><span class="new">New</span><code>min_length=2, max_length=3</code> asks for two or three key points.</li>
+    </ul>
+
+    <h3 class="step"><span class="sn">Steps 4 to 6</span>Model, parser, prompt and chain</h3>
+<pre class="code" data-lang="python"><code>def main():
+    load_dotenv()
+
+    # Initialize the model
+    llm = ChatOpenRouter(
+        model="qwen/qwen-2.5-7b-instruct",
+        temperature=0,
+    )
+
+    print("=" * 60)
+    print("STRUCTURED PRODUCT REVIEW ANALYSIS")
+    print("=" * 60)
+
+    # Create the parser using Pydantic model
+    parser = JsonOutputParser(pydantic_object=ProductReview) 
+
+    # Create the prompt
+    review_analysis_prompt = ChatPromptTemplate.from_template("""
+        You are an experienced customer-feedback analyst. 
+        Analyze the product review and extract the required information.
+
+        {format_instructions}
+
+        Review: {review}
+    """)
+
+    # Create the chain
+    chain = review_analysis_prompt | llm | parser</code></pre>
+    <ul class="explain">
+      <li><span class="same">Same</span><code>temperature=0</code>, <code>JsonOutputParser</code> with the class and the placeholder <code>{format_instructions}</code>.</li>
+      <li><span class="new">New</span>A short prompt with one role and one placeholder <code>{review}</code>.</li>
+    </ul>
+
+    <h3 class="step"><span class="sn">Step 7</span>Add the reviews</h3>
+<pre class="code" data-lang="python"><code>    # Some sample reviews
+    reviews = [
+        """
+        The battery life is incredible and easily lasts three days.
+        However, the camera struggles in low light. Overall, I am
+        very happy with my purchase.
+        """,
+
+        """
+        Worst phone I have ever owned. It crashes constantly,
+        overheats, and the screen cracked within a week.
+        Avoid it at all costs!
+        """,
+
+        """
+        It is an okay phone. It does what it needs to do.
+        Nothing special, but I have no major complaints either.
+        """,
+    ]</code></pre>
+    <p><span class="new">New</span> Three reviews, one positive with a complaint, one clearly negative and one neutral.</p>
+
+    <h3 class="step"><span class="sn">Step 8</span>Run the chain for each review and use the data</h3>
+<pre class="code" data-lang="python"><code>    # Analyse each product review
+    for review in reviews:
+        cleaned_review = " ".join(review.split())
+
+        print(f"\n{'=' * 60}")
+        print(f"Review: {cleaned_review}")
+        print("-" * 60)
+
+        result = chain.invoke(
+            {
+                "review": cleaned_review,
+                "format_instructions": parser.get_format_instructions(),
+            }
+        )
+
+        print(f"Sentiment: {result['sentiment']}")
+        print(f"Confidence: {result['confidence']}")
+
+        print("Key Points:")
+        for point in result["key_points"]:
+            print(f"  - {point}")
+
+        print(f"Suggested Action: {result['suggested_action']}")
+        print(f"Result Type: {type(result)}")
+        print(f"Raw Result: {result}")</code></pre>
+    <ul class="explain">
+      <li><span class="new">New</span><code>" ".join(review.split())</code> removes the line breaks and extra spaces of the review. <code>split()</code> cuts the text into words, and <code>join()</code> puts them back together with one space.</li>
+      <li><span class="same">Same</span><code>invoke()</code> with both placeholders, and reads of the dictionary by key.</li>
+    </ul>
+
+    <h3 class="step"><span class="sn">Step 9</span>Make the file start main() and run it</h3>
+<pre class="code" data-lang="bash"><code>uv run python src/06_pydantic_structured_output_openrouter.py</code></pre>
+<pre class="code" data-lang="output"><code>============================================================
+STRUCTURED PRODUCT REVIEW ANALYSIS
+============================================================
+
+============================================================
+Review: The battery life is incredible and easily lasts three days. However, the camera struggles in low light. Overall, I am very happy with my purchase.
+------------------------------------------------------------
+Sentiment: POSITIVE
+Confidence: 0.85
+Key Points:
+  - Battery life is incredible and lasts three days
+  - Camera struggles in low light
+  - Overall happy with purchase
+Suggested Action: Improve camera performance in low light conditions
+Result Type: &lt;class 'dict'&gt;
+Raw Result: {'sentiment': 'POSITIVE', 'confidence': 0.85, 'key_points': ['Battery life is incredible and lasts three days', 'Camera struggles in low light', 'Overall happy with purchase'], 'suggested_action': 'Improve camera performance in low light conditions'}
+
+============================================================
+Review: Worst phone I have ever owned. It crashes constantly, overheats, and the screen cracked within a week. Avoid it at all costs!
+------------------------------------------------------------
+Sentiment: NEGATIVE
+Confidence: 0.98
+Key Points:
+  - crashes constantly
+  - overheats
+  - screen cracked within a week
+Suggested Action: Improve product quality and reliability
+Result Type: &lt;class 'dict'&gt;
+Raw Result: {'sentiment': 'NEGATIVE', 'confidence': 0.98, 'key_points': ['crashes constantly', 'overheats', 'screen cracked within a week'], 'suggested_action': 'Improve product quality and reliability'}
+
+============================================================
+Review: It is an okay phone. It does what it needs to do. Nothing special, but I have no major complaints either.
+------------------------------------------------------------
+Sentiment: NEUTRAL
+Confidence: 0.8
+Key Points:
+  - okay phone
+  - does what it needs to do
+  - no major complaints
+Suggested Action: Maintain current pricing and features
+Result Type: &lt;class 'dict'&gt;
+Raw Result: {'sentiment': 'NEUTRAL', 'confidence': 0.8, 'key_points': ['okay phone', 'does what it needs to do', 'no major complaints'], 'suggested_action': 'Maintain current pricing and features'}</code></pre>
+
+    <div class="block note">
+      <div class="label">Your output can be different</div>
+      <p>The confidence values and the wording of the key points can change. A small model can also break the JSON on some runs, and then the parser raises an error.</p>
+    </div>
+
+    <div class="block look">
+      <div class="label">Look closely</div>
+      <p>The first review got three key points, the most that the schema allows. All values look correct, but nothing in this program checked them. <code>JsonOutputParser</code> uses the class only to write the instructions. It does not check that the confidence is between 0 and 1 or that there are at most three points. A model can break these rules, and the program accepts the result.</p>
+      <p>The confidence value comes from the model. It is a guess of the model about itself, not a measured probability.</p>
+    </div>
+
+    <h3 class="step"><span class="sn">Inside</span>What happens inside the calls</h3>
+    <p>The same parser and chain, one call for each review.</p>
+    <figure class="diagram">
+      <div class="frame"><img src="../../assets/img/diagrams/ai-07-ex2-seq.svg" alt="A sequence diagram with the lanes Your code, prompt, llm, OpenRouter API, parser. Step 1, Your code to Your code, cleaned_review = &quot; &quot;.join(review.split()), one line of text. Step 2, Your code to prompt, chain.invoke({&quot;review&quot; ..., &quot;format_instructions&quot; ...}). Step 3, prompt to llm, Prompt value, schema and the review. Step 4, llm to OpenRouter API, HTTPS request, temperature 0. Step 5, OpenRouter API to llm, JSON text, sentiment, confidence, key_points, suggested_action. Step 6, llm to parser, AIMessage. Step 7, parser to parser, Parse the JSON, the limits of the schema are not checked. Step 8, parser to Your code, dict, the code prints each field and the raw result. Steps 1 to 8 repeat, Repeated for each of the 3 reviews." loading="lazy"></div>
+      <figcaption>Inside the calls of Example 2, step by step.</figcaption>
+    </figure>
+
+    <details class="fold">
+      <summary><span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m16 18 6-6-6-6M8 6l-6 6 6 6"/></svg></span><span class="ft">Full code of Example 2<small>src/06_pydantic_structured_output_openrouter.py</small></span><a class="gh-btn" href="https://github.com/bhardwajAbhi/ai-engineering/blob/main/src/06_pydantic_structured_output_openrouter.py"><svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M12 .5a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2.1c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1.1-.8.1-.8.1-.8 1.2.1 1.9 1.3 1.9 1.3 1.1 1.9 2.9 1.3 3.6 1 .1-.8.4-1.3.8-1.6-2.7-.3-5.5-1.3-5.5-6a4.7 4.7 0 0 1 1.3-3.2c-.1-.3-.6-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.7 1.7.2 2.9.1 3.2a4.7 4.7 0 0 1 1.3 3.2c0 4.6-2.8 5.6-5.5 6 .4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .5z"/></svg>GitHub</a></summary>
+      <div class="fold-body">
+<pre class="code" data-lang="python" data-file="src/06_pydantic_structured_output_openrouter.py"><code>"""
+Title: Structured Output with Pydantic (OpenRouter)
+uv run python src/06_pydantic_structured_output_openrouter.py
+"""
+
+from typing import Literal
+from pydantic import BaseModel, Field
+from dotenv import load_dotenv
+
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.output_parsers import JsonOutputParser
+from langchain_openrouter import ChatOpenRouter
+
+
+class ProductReview(BaseModel):
+    """Structured analysis of a product review"""
+
+    sentiment: Literal["POSITIVE", "NEGATIVE", "NEUTRAL"] = Field(description="Overall sentiment expressed in the product review")
+
+    confidence: float = Field(description="Confidence score for the sentiment classification", ge=0.0, le=1.0)
+
+    key_points: list[str] = Field(description="Two or three main points identified in the review", min_length=2, max_length=3)
+
+    suggested_action: str = Field(description="A concise recommended for the business")
+
+
+def main():
+    load_dotenv()
+
+    # Initialize the model
+    llm = ChatOpenRouter(
+        model="qwen/qwen-2.5-7b-instruct",
+        temperature=0,
+    )
+
+    print("=" * 60)
+    print("STRUCTURED PRODUCT REVIEW ANALYSIS")
+    print("=" * 60)
+
+    # Create the parser using Pydantic model
+    parser = JsonOutputParser(pydantic_object=ProductReview) 
+
+    # Create the prompt
+    review_analysis_prompt = ChatPromptTemplate.from_template("""
+        You are an experienced customer-feedback analyst. 
+        Analyze the product review and extract the required information.
+
+        {format_instructions}
+
+        Review: {review}
+    """)
+
+    # Create the chain
+    chain = review_analysis_prompt | llm | parser
+
+
+    # Some sample reviews
+    reviews = [
+        """
+        The battery life is incredible and easily lasts three days.
+        However, the camera struggles in low light. Overall, I am
+        very happy with my purchase.
+        """,
+
+        """
+        Worst phone I have ever owned. It crashes constantly,
+        overheats, and the screen cracked within a week.
+        Avoid it at all costs!
+        """,
+
+        """
+        It is an okay phone. It does what it needs to do.
+        Nothing special, but I have no major complaints either.
+        """,
+    ]
+
+    # Analyse each product review
+    for review in reviews:
+        cleaned_review = " ".join(review.split())
+
+        print(f"\n{'=' * 60}")
+        print(f"Review: {cleaned_review}")
+        print("-" * 60)
+
+        result = chain.invoke(
+            {
+                "review": cleaned_review,
+                "format_instructions": parser.get_format_instructions(),
+            }
+        )
+
+        print(f"Sentiment: {result['sentiment']}")
+        print(f"Confidence: {result['confidence']}")
+
+        print("Key Points:")
+        for point in result["key_points"]:
+            print(f"  - {point}")
+
+        print(f"Suggested Action: {result['suggested_action']}")
+        print(f"Result Type: {type(result)}")
+        print(f"Raw Result: {result}")
+
+
+
+
+
+if __name__ == "__main__":
+    main()</code></pre>
+      </div>
+    </details>
+  </section>
+
+  <h2>Two examples, side by side</h2>
+  <div class="table-wrap">
+    <table class="compare" style="--e1:#2f62c8;--e2:#0f8a6a">
+      <thead><tr><th></th><th class="e1">Example 1</th><th class="e2">Example 2</th></tr></thead>
+      <tbody>
+        <tr><td>Input</td><td>One long privacy policy</td><td>Three short reviews</td></tr>
+        <tr><td>Schema</td><td>Two nested classes, nine fields at the top</td><td>One flat class, four fields</td></tr>
+        <tr><td>Limits in the schema</td><td><code>Literal</code> values</td><td><code>Literal</code>, number range and list length</td></tr>
+        <tr><td>Model</td><td>Gemini 3.1 Flash Lite</td><td>Qwen 2.5 7B, through OpenRouter</td></tr>
+        <tr><td>Result type</td><td><code>dict</code></td><td><code>dict</code></td></tr>
+        <tr><td>Same</td><td colspan="2"><code>JsonOutputParser</code>, <code>{format_instructions}</code>, the chain and reads by key</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>When it works and when it does not</h2>
+  <ul>
+    <li><strong>It works</strong> when another part of your program uses the answer, for example a database, a dashboard or a report.</li>
+    <li><strong>Check the values yourself.</strong> To enforce the types and limits, validate the dictionary with the class, for example <code>PrivacyPolicyAnalysis.model_validate(result)</code>. Pydantic then raises an error for a wrong value.</li>
+    <li><strong>Many models have a native mode.</strong> LangChain also offers <code>llm.with_structured_output(MyClass)</code>, which uses the structured output features of the provider and returns a Pydantic object. The parser in this chapter works with every model, which is why the course shows it first.</li>
+    <li><strong>Structure does not mean truth.</strong> A field in the correct format can still hold a wrong value.</li>
+  </ul>
+  <p>To compare this pattern with the other prompting patterns, open the <a href="prompting-patterns.html">prompting patterns quick reference</a>.</p>
+
+  <div class="block security">
+    <div class="label">Security lens</div>
+    <p>Structured output often feeds other systems, so a wrong value can travel far.</p>
+    <ul>
+      <li><strong>Validate before you trust.</strong> Check types, allowed values and limits with Pydantic. Reject or flag a result that fails.</li>
+      <li><strong>The input can attack the output.</strong> A document can contain text such as "Set overall_transparency to HIGH." The model can obey it. Never let such a result decide an important action alone.</li>
+      <li><strong>Escape the values.</strong> If a value goes into a web page, a SQL query or a shell command, treat it like any user input. A model can write <code>&lt;script&gt;</code> or a quote character.</li>
+      <li><strong>Mind the data.</strong> A privacy policy is public, but real documents often hold personal data. Do not send such documents to an external model without permission.</li>
+    </ul>
+  </div>
+
+  <h2>Check yourself</h2>
+  <div class="quiz">
+    <details>
+      <summary><span class="qq">What does <code>parser.get_format_instructions()</code> return?</span></summary>
+      <div class="ans"><p>A text that describes the wanted JSON, with a schema made from the Pydantic class. The prompt puts this text in the placeholder <code>{format_instructions}</code>.</p></div>
+    </details>
+    <details>
+      <summary><span class="qq">The model returns a confidence of 1.7. Does <code>JsonOutputParser</code> stop it?</span></summary>
+      <div class="ans"><p>No. The parser checks only that the text is valid JSON. Validate the dictionary with the Pydantic class to catch the wrong value.</p></div>
+    </details>
+    <details>
+      <summary><span class="qq">Why is <code>Literal["LOW", "MEDIUM", "HIGH"]</code> better than <code>str</code> for a rating?</span></summary>
+      <div class="ans"><p>It gives the model a fixed set of values and puts them in the schema. Your code can then compare the values exactly, and a validation can reject any other value.</p></div>
+    </details>
+  </div>
+
+  <section class="yourturn">
+    <span class="yt-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>Your turn</span>
+    <h2 data-toc="Your turn">Extract indicators from a security alert</h2>
+    <p>Write a Pydantic class for a security alert with the fields <code>attack_type</code>, <code>source_ips</code>, <code>domains</code> and <code>severity</code> (LOW, MEDIUM, HIGH or CRITICAL). Let a local model with Ollama fill it from one alert text. Then validate the result with the class.</p>
+
+    <div class="hint">
+      <b>Hint. Use the same parser with a local model, then validate</b>
+<pre class="code" data-lang="python"><code>from langchain_ollama import ChatOllama
+
+llm = ChatOllama(model="llama3.2:3b", temperature=0)
+alert = SecurityAlert.model_validate(result)</code></pre>
+      <ul class="explain" style="--ex:var(--accent)">
+        <li><code>model_validate()</code> turns the dictionary into a <code>SecurityAlert</code> object and checks every field.</li>
+        <li>Put the call in <code>try</code> and <code>except ValidationError</code>, so your program can handle a bad answer.</li>
+      </ul>
+    </div>
+
+    <details class="fold">
+      <summary><span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m16 18 6-6-6-6M8 6l-6 6 6 6"/></svg></span><span class="ft">Show one solution<small>src/06_structured_output_ollama.py</small></span></summary>
+      <div class="fold-body">
+<pre class="code" data-lang="python" data-file="src/06_structured_output_ollama.py"><code>"""
+Title: Structured Output with Pydantic (Ollama)
+uv run python src/06_structured_output_ollama.py
+"""
+
+from typing import Literal
+
+from langchain_core.output_parsers import JsonOutputParser
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_ollama import ChatOllama
+from pydantic import BaseModel, Field, ValidationError
+
+
+class SecurityAlert(BaseModel):
+    """Indicators extracted from one security alert."""
+
+    attack_type: str = Field(description="Short name of the attack")
+    source_ips: list[str] = Field(description="IP addresses of the attacker")
+    domains: list[str] = Field(description="Domain names in the alert")
+    severity: Literal["LOW", "MEDIUM", "HIGH", "CRITICAL"]
+
+
+def main():
+    llm = ChatOllama(model="llama3.2:3b", temperature=0)
+    parser = JsonOutputParser(pydantic_object=SecurityAlert)
+
+    prompt = ChatPromptTemplate.from_template("""
+        Extract the indicators from this security alert.
+        Use only facts stated in the alert.
+
+        {format_instructions}
+
+        Alert: {alert}
+    """)
+
+    chain = prompt | llm | parser
+
+    alert_text = (
+        "Phishing emails with links to login-secure-bank.example were sent "
+        "from 203.0.113.25 and 203.0.113.26. Two users entered their passwords."
+    )
+
+    result = chain.invoke(
+        {"alert": alert_text, "format_instructions": parser.get_format_instructions()}
+    )
+
+    try:
+        alert = SecurityAlert.model_validate(result)
+        print(alert)
+    except ValidationError as error:
+        print(f"The model returned invalid data:\n{error}")
+
+
+if __name__ == "__main__":
+    main()</code></pre>
+        <p>A possible output. A small model can also produce invalid data, and then the <code>except</code> branch prints the error.</p>
+<pre class="code" data-lang="output"><code>attack_type='Phishing' source_ips=['203.0.113.25', '203.0.113.26'] domains=['login-secure-bank.example'] severity='HIGH'</code></pre>
+      </div>
+    </details>
+  </section>
+
+  <h2>Key terms at a glance</h2>
+  <div class="table-wrap">
+    <table class="kw">
+      <thead><tr><th>Term</th><th>Meaning</th></tr></thead>
+      <tbody>
+        <tr><td>Structured output</td><td>An answer with a fixed shape that a program can use directly.</td></tr>
+        <tr><td>JSON</td><td>JavaScript Object Notation, a text format with names, values and lists.</td></tr>
+        <tr><td>Pydantic</td><td>A Python library that describes and checks data with classes.</td></tr>
+        <tr><td>BaseModel</td><td>The base class for a Pydantic data model.</td></tr>
+        <tr><td>Field</td><td>Adds a description and limits to one field of a model.</td></tr>
+        <tr><td>Literal</td><td>A type that allows only a fixed set of values.</td></tr>
+        <tr><td>JsonOutputParser</td><td>Writes format instructions and turns JSON text into a dictionary.</td></tr>
+        <tr><td>Format instructions</td><td>The text that tells the model which JSON to write.</td></tr>
+        <tr><td>Validation</td><td>A check that each value has the correct type and limits.</td></tr>
+        <tr><td>Output parser</td><td>Turns the reply of the model into the form that you need.</td></tr>
+        <tr><td>Prompt injection</td><td>Text that tries to change the instructions of the model.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+</article>
+</main>
+
+<script src="../../assets/js/site.js?v=20261029d"></script>
+</body>
+</html>

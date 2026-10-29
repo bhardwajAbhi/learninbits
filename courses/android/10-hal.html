@@ -1,0 +1,601 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Hardware abstraction layer · Inside Android · LearnInBits</title>
+  <meta name="description" content="How Android talks to vendor hardware through HALs, from legacy shared libraries and HIDL to AIDL HALs, frozen versions, VINTF, lazy HALs and SELinux.">
+  <link rel="icon" href="../../assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,500;0,8..60,600;1,8..60,500&display=swap">
+  <link rel="stylesheet" href="../../assets/css/style.css?v=20261029d">
+  <script>try{var t=localStorage.getItem("lib-theme");t=t?JSON.parse(t):(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+</head>
+<body data-root="../../" data-page="chapter" data-course="android" data-id="10-hal">
+
+<main id="main">
+<article>
+
+  <div class="block oneline">
+    <div class="label">In one line</div>
+    <p>A hardware abstraction layer is a stable contract between an operating system and the code for specific hardware. Each side can then change without breaking the other.</p>
+  </div>
+
+  <p>Android runs on thousands of devices with different cameras, sensors, modems and displays. The framework cannot know the details of each chip. The companies that build the chips, on the other hand, do not want to change the framework for every new phone. A hardware abstraction layer (HAL) sits between the two. The framework talks to a fixed interface, and the vendor implements that interface for its own hardware.</p>
+  <p>This chapter explains how that contract works and how it changed over three generations. It starts with the reasons for the HAL and with the old HALs that were plain shared libraries. It continues with the HAL Interface Definition Language (HIDL) of Project Treble. It ends with today's HALs in AIDL, which use the Binder system from <a href="09-binder-ipc.html">chapter 9</a>. Later sections cover versions, the Vendor Interface (VINTF) that checks both sides, the life of a HAL process and the new HALs of Android 17.</p>
+
+  <h2>Why Android needs a HAL</h2>
+  <p>The HAL solves two problems at once, a technical one and a practical one.</p>
+  <p>The technical problem is variety. A camera app on every phone calls the same <code>CameraManager</code> API. Below that API, two phones can have cameras from two vendors. The drivers, registers and image processors differ. The framework needs one way to say "open camera 0 and stream frames" that works on both. The HAL interface defines that way, and each vendor writes the code behind it.</p>
+  <p>The practical problem is ownership and updates. The Linux kernel uses the GNU General Public License (GPL), which requires vendors to publish the source of their kernel code. The Apache License of the framework does not. Many vendors keep valuable logic, such as the tuning of an image processor, in user space code that they do not publish. The HAL gives that code a clear home between the kernel and the framework. Since Project Treble, it also lets Google update the framework while the vendor code of a phone stays the same.</p>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../../assets/img/diagrams/hl-stack.svg" alt="Six layers from top to bottom. The app, Kotlin or Java code such as a flashlight app, updated through the Play Store. The framework, system_server, CameraService and the public APIs, updated through a system update. The HAL interface, a stable contract in AIDL such as ICameraProvider, with frozen versions. A line marks this layer as the boundary. The HAL implementation, a vendor process such as the camera provider service, updated through a vendor update. The kernel driver, a device node such as /dev/video0, also updated through a vendor update. The hardware, the camera sensor and its image processor." loading="lazy"></div>
+    <figcaption>The HAL interface is the line between the parts that Google updates and the parts that the vendor updates.</figcaption>
+  </figure>
+
+  <p>The figure follows a request from an app to the hardware. Everything above the HAL interface comes with the system image. Everything below it belongs to the vendor. The interface itself is frozen, so that a new system and an old vendor image still understand each other.</p>
+
+  <div class="block analogy">
+    <div class="label">Real-life analogy</div>
+    <p>A HAL works like the standard socket in a wall. Any appliance with the right plug works with it, whoever made the appliance and whoever built the power station. The socket standard changes very slowly, and a new standard keeps the old pins working. Appliance makers and power companies can then improve their products without asking each other.</p>
+  </div>
+
+  <h2>Three generations</h2>
+  <p>Android changed the form of its HALs twice. Each step fixed a weakness of the step before, and all three forms still exist on some devices today.</p>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../../assets/img/diagrams/hl-generations.svg" alt="Three generations from left to right. The legacy HAL from Android 1.0 in 2008, a shared library loaded with dlopen into the framework process, with no IPC and no versions that the system checks. It is still present for a few modules. HIDL from Android 8.0 in 2017, with separate HAL processes on /dev/hwbinder or passthrough in the client, and versions such as 2.4 per package. It is deprecated and kept for old vendors. The AIDL HAL from Android 11 in 2020, with separate HAL processes on /dev/binder and stable AIDL, one language for framework services and HALs. It is the standard for all new HALs." loading="lazy"></div>
+    <figcaption>From shared libraries to separate processes, and from a special language to the AIDL that the framework already used.</figcaption>
+  </figure>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Generation</th><th>Since</th><th>How the framework reaches it</th><th>Versions</th><th>Status today</th></tr></thead>
+      <tbody>
+        <tr><td>Legacy HAL</td><td>Android 1.0</td><td>Loads a shared library into its own process with <code>dlopen()</code></td><td>A number in a struct, not checked</td><td>Kept for a few modules</td></tr>
+        <tr><td>HIDL</td><td>Android 8.0</td><td>Binder calls on <code>/dev/hwbinder</code>, or passthrough in the same process</td><td><code>package@major.minor</code></td><td>Deprecated since Android 10</td></tr>
+        <tr><td>AIDL HAL</td><td>Android 11</td><td>Binder calls on <code>/dev/binder</code></td><td>Frozen integer versions</td><td>The standard for new HALs</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>The legacy HAL</h2>
+  <p>The first HALs were shared libraries in C. The framework loaded the library of a module into its own process and called functions through a table of pointers. The headers that define this contract are in <code>hardware/libhardware/include/hardware/</code>, and the loader is in <code>hardware/libhardware/hardware.c</code>.</p>
+  <p>Two structures carry the whole design. <code>hw_module_t</code> describes a module, such as the lights module. <code>hw_device_t</code> describes an opened device of that module. Every HAL library exports one global variable with the name <code>HMI</code>, short for hardware module information. This variable is a <code>hw_module_t</code>, often embedded at the start of a larger structure of the specific module.</p>
+<pre class="code" data-lang="c" data-file="hardware/libhardware/include/hardware/hardware.h"><code>typedef struct hw_module_t {
+    uint32_t tag;                  // must be HARDWARE_MODULE_TAG
+    uint16_t module_api_version;
+    uint16_t hal_api_version;
+    const char *id;                // such as "lights"
+    const char *name;
+    const char *author;
+    struct hw_module_methods_t* methods;   // contains open()
+    void* dso;                     // the handle from dlopen()
+    uint64_t reserved[32-7];       // room for future fields
+} hw_module_t;
+
+#define HAL_MODULE_INFO_SYM         HMI
+#define HAL_MODULE_INFO_SYM_AS_STR  "HMI"</code></pre>
+  <p>To use a module, framework code calls <code>hw_get_module()</code> with the identifier of the module. The function searches for a matching library, loads it with <code>dlopen()</code> and looks up the symbol <code>HMI</code> with <code>dlsym()</code>. The caller then calls <code>open()</code> through <code>methods</code> and receives a device structure with the function pointers of that module.</p>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../../assets/img/diagrams/hl-legacy-load.svg" alt="hw_get_module for lights looks for a file name in this order. First the property ro.hardware.lights, which gives lights dot value dot so. Then ro.hardware, for example lights.ranchu.so on the emulator. Then ro.product.board, ro.board.platform and ro.arch. If no property matched, lights.default.so. For each name, it checks the folders /odm/lib64/hw, /vendor/lib64/hw and /system/lib64/hw. The first file that exists wins. Then dlopen loads it, and dlsym of HMI finds its module record. On 32-bit devices, lib/hw replaces lib64/hw." loading="lazy"></div>
+    <figcaption>The loader builds a file name from system properties and takes the first file that exists.</figcaption>
+  </figure>
+
+  <p>The file name encodes the module and the hardware variant, such as <code>lights.ranchu.so</code> on the emulator, whose <code>ro.hardware</code> property is <code>ranchu</code>. The loader tries several properties in a fixed order and falls back to <code>lights.default.so</code>. This lets one system image carry implementations for several boards and pick the right one at runtime.</p>
+
+  <h3>Why the legacy HAL was not enough</h3>
+  <ul>
+    <li><strong>No isolation.</strong> The vendor library ran inside a framework process, with all of its rights. A crash in the library crashed the framework process, and a security bug in it exposed that process.</li>
+    <li><strong>No real versions.</strong> The version fields were hints. Nothing checked at build time or at boot that a library matched the framework.</li>
+    <li><strong>No discovery.</strong> The framework only tried to load a library and saw whether it existed.</li>
+    <li><strong>No separate updates.</strong> The framework and the library shared one address space and one set of headers. A new framework often needed a rebuilt vendor library.</li>
+  </ul>
+  <p>The last point mattered most. Every Android update required new vendor code from every chip maker, and many phones never received updates. Project Treble set out to fix this, and HIDL was its tool.</p>
+
+  <h2>HIDL and Project Treble</h2>
+  <p>Project Treble arrived with Android 8.0. It split the software of a phone into two sides. Google and the device maker update the system side, and the chip maker owns the vendor side. The two sides talk only through declared, versioned interfaces. A new system image can then run on an old vendor image, as long as the interfaces still match.</p>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../../assets/img/diagrams/hl-treble.svg" alt="Left, the system side with /system, /system_ext and /product, holding the framework and system apps. It has a framework manifest, which says what the system offers, and a framework compatibility matrix, which says what the system needs. Right, the vendor side with /vendor and /odm, holding HAL services and firmware. It has a device manifest, which says what the vendor offers, and a device compatibility matrix, which says what the vendor needs. Arrows cross between them. Each side checks the offer of the other side against its own needs, at build time, at update time and at boot." loading="lazy"></div>
+    <figcaption>Each side declares what it offers and what it needs. Updates go through only when both declarations fit.</figcaption>
+  </figure>
+
+  <p>HIDL was the language for these interfaces. Its files end in <code>.hal</code> and live in <code>hardware/interfaces/</code>, such as <code>hardware/interfaces/light/2.0/ILight.hal</code>. A HIDL package carries its version in its name, such as <code>android.hardware.light@2.0</code>. A minor version, such as 2.1, extends the interface of 2.0. A major version starts a new package.</p>
+<pre class="code" data-lang="text" data-file="hardware/interfaces/light/2.0/ILight.hal"><code>package android.hardware.light@2.0;
+
+interface ILight {
+    setLight(Type type, LightState state) generates (Status status);
+    getSupportedTypes() generates (vec&lt;Type&gt; types);
+};</code></pre>
+  <p>The keyword <code>generates</code> names the values that a method returns. The tool <code>hidl-gen</code> turned such files into C++ and Java code, much as the AIDL compiler does.</p>
+
+  <h3>Binderized and passthrough</h3>
+  <p>HIDL offered two ways to run a HAL. In binderized mode, the HAL runs in its own process and the framework calls it through Binder on <code>/dev/hwbinder</code>. In passthrough mode, the framework loads the HAL library into its own process, like a legacy HAL, but calls it through the HIDL interface.</p>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../../assets/img/diagrams/hl-hidl-modes.svg" alt="Left, binderized mode. The framework process calls IFoo through a proxy. The call goes through /dev/hwbinder, where hwservicemanager finds the HAL. The HAL process has its own SELinux domain and its own UID. Right, passthrough mode. The framework process calls IFoo directly, through a generated passthrough wrapper in the same process, which calls a legacy shared library loaded with dlopen. All three are in one process." loading="lazy"></div>
+    <figcaption>Binderized mode gives the HAL its own process. Passthrough mode keeps the old library in the caller, behind the new interface.</figcaption>
+  </figure>
+
+  <p>Binderized mode was the goal. A HAL in its own process gets its own SELinux domain and UID, so a bug in it stays inside that process. Passthrough mode was a bridge for old libraries. It also served a few HALs where a process switch costs too much. An example is the graphics mapper, which works on memory buffers inside the caller. The VINTF manifest of the device declares the mode of each HIDL HAL with <code>&lt;transport&gt;hwbinder&lt;/transport&gt;</code> or <code>&lt;transport&gt;passthrough&lt;/transport&gt;</code>.</p>
+  <p>HIDL services register with <code>hwservicemanager</code>, the service manager of <code>/dev/hwbinder</code>. Their full names include the version, such as <code>android.hardware.light@2.0::ILight/default</code>. The shell tool <code>lshal</code> lists them.</p>
+
+  <h3>Why HIDL was replaced</h3>
+  <p>HIDL solved the problem of separate updates, but it doubled the work of the platform. Android now had two interface languages, two code generators, two Binder devices and two service managers. Developers had to learn a second syntax, and HIDL never gained Rust support. Meanwhile, AIDL gained the stability features of HIDL.</p>
+  <p>Android 10 introduced stable AIDL, and Android 11 allowed HALs in AIDL. AOSP marks HIDL as deprecated since Android 10 and accepts no new HIDL interfaces. Old HIDL HALs remain, because a vendor image that froze a HIDL interface years ago still needs it. The HIDL runtime in <code>system/libhidl</code> and <code>hwservicemanager</code> therefore stay as a compatibility layer. A device with only AIDL HALs does not run a real <code>hwservicemanager</code> at all.</p>
+
+  <h2>HALs in AIDL</h2>
+  <p>An AIDL HAL is a normal Binder service with a stronger promise. It uses the same AIDL language, the same <code>servicemanager</code> and the same tools as the framework services of chapter 9. Three additions turn it into a HAL. Every type carries <code>@VintfStability</code>. The interface is frozen at numbered versions. The device declares the HAL in its VINTF manifest.</p>
+  <p>The source of the interfaces in AOSP is spread over three folders, depending on who provides the interface. <code>hardware/interfaces/</code> holds interfaces that hardware provides, such as lights, sensors and the camera. <code>frameworks/hardware/interfaces/</code> holds interfaces that the framework provides to hardware. <code>system/hardware/interfaces/</code> holds low-level interfaces of the system. Each interface sits in an <code>aidl/</code> folder next to the old HIDL versions, if any exist.</p>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../../assets/img/diagrams/hl-anatomy.svg" alt="The files of one AIDL HAL, here the lights HAL. On the interface side, shared by framework and vendor, ILights.aidl is the interface with @VintfStability. The aidl_interface module in Android.bp sets stability vintf and lists frozen versions. The build generates libraries such as android.hardware.light-V2-ndk, and also rust and java variants. The service binary links them. On the vendor side, the service binary in vendor/bin/hw, the init script lights-default.rc that tells init how to start it, the VINTF fragment lights-default.xml that declares ILights/default, and the SELinux policy with the domain, the service label and the binder rules." loading="lazy"></div>
+    <figcaption>An AIDL HAL is an interface module plus four files on the vendor side.</figcaption>
+  </figure>
+
+  <h3>The lights HAL, step by step</h3>
+  <p>The lights HAL is one of the smallest AIDL HALs, which makes it a good model. It lets the framework set the color and brightness of logical lights. Examples are the backlight of the screen, the notification LED and the light of the keyboard. The default implementation in AOSP is written in Rust.</p>
+<pre class="code" data-lang="java" data-file="hardware/interfaces/light/aidl/android/hardware/light/ILights.aidl"><code>package android.hardware.light;
+
+import android.hardware.light.HwLight;
+import android.hardware.light.HwLightState;
+
+@VintfStability
+interface ILights {
+    // Set the light with this id to the given state.
+    void setLightState(in int id, in HwLightState state);
+
+    // List the lights that this device supports.
+    HwLight[] getLights();
+}</code></pre>
+  <p>The interface looks like any framework interface. The only visible difference is <code>@VintfStability</code>. The parcelables <code>HwLight</code> and <code>HwLightState</code> carry the same annotation, because every type of a VINTF-stable interface must be stable too. The compiler rejects the interface otherwise.</p>
+  <p>The build module turns the interface into libraries. It sets the stability, enables the backends and lists the frozen versions.</p>
+<pre class="code" data-lang="text" data-file="hardware/interfaces/light/aidl/Android.bp"><code>aidl_interface {
+    name: "android.hardware.light",
+    vendor_available: true,
+    srcs: ["android/hardware/light/*.aidl"],
+    stability: "vintf",
+    frozen: true,
+    backend: {
+        java: { sdk_version: "module_current" },
+        rust: { enabled: true },
+    },
+    versions_with_info: [
+        { version: "1", imports: [] },
+        { version: "2", imports: [] },
+        // ... one entry for each frozen version
+    ],
+}</code></pre>
+  <p><code>vendor_available</code> lets vendor code link the generated libraries. <code>frozen: true</code> tells the build that the sources must match the newest frozen version. The libraries follow the pattern <code>NAME-VVERSION-BACKEND</code>, such as <code>android.hardware.light-V2-ndk</code> for C++ code on the vendor side or <code>android.hardware.light-V2-rust</code> for Rust.</p>
+  <p>The service itself is a small program. It creates the implementation, wraps it in the generated stub, registers it under its instance name and joins the thread pool.</p>
+<pre class="code" data-lang="rust" data-file="hardware/interfaces/light/aidl/default/main.rs"><code>fn main() {
+    // ... set up logging
+    binder::ProcessState::set_thread_pool_max_thread_count(0);
+
+    let lights_service = LightsService::default();
+    let lights_service_binder =
+        BnLights::new_binder(lights_service, BinderFeatures::default());
+
+    let service_name = format!("{}/default", LightsService::get_descriptor());
+    binder::add_service(&amp;service_name, lights_service_binder.as_binder())
+        .expect("Failed to register service");
+
+    binder::ProcessState::join_thread_pool()
+}</code></pre>
+  <p>The instance name joins the descriptor of the interface and an instance, so the full name is <code>android.hardware.light.ILights/default</code>. A device with two modules of the same kind uses two instances, such as <code>IModule/default</code> and <code>IModule/bluetooth</code> for audio. The thread pool size of 0 means that the main thread alone handles the calls, which is enough for a HAL with little traffic.</p>
+  <p>Two small files on the vendor side complete the HAL. An <code>init</code> script starts the process, and a VINTF fragment declares the interface.</p>
+<pre class="code" data-lang="text" data-file="hardware/interfaces/light/aidl/default/lights-default.rc"><code>service vendor.light-default /vendor/bin/hw/android.hardware.lights-service.example
+    class hal
+    user nobody
+    group nobody
+    shutdown critical</code></pre>
+<pre class="code" data-lang="xml" data-file="hardware/interfaces/light/aidl/default/lights-default.xml"><code>&lt;manifest version="1.0" type="device"&gt;
+    &lt;hal format="aidl"&gt;
+        &lt;name&gt;android.hardware.light&lt;/name&gt;
+        &lt;version&gt;2&lt;/version&gt;
+        &lt;fqname&gt;ILights/default&lt;/fqname&gt;
+    &lt;/hal&gt;
+&lt;/manifest&gt;</code></pre>
+  <p>The class <code>hal</code> lets <code>init</code> start all HALs together during boot, after the core services. The user <code>nobody</code> gives the process no extra rights, because a lights HAL only needs access to a few files under <code>/sys</code>, which SELinux grants. The fragment tells the system that this device provides version 2 of <code>ILights</code> under the instance <code>default</code>. The build module of the service names both files, with <code>init_rc</code> and <code>vintf_fragments</code>, so that they land in the right places of the vendor image.</p>
+
+  <h3>From start to first call</h3>
+  <figure class="diagram">
+    <div class="frame"><img src="../../assets/img/diagrams/hl-register.svg" alt="A sequence diagram with the lanes init, HAL process, servicemanager, Client. Step 1, init to HAL process, start from the .rc file, class hal. Step 2, HAL process to servicemanager, AServiceManager_addService(...), name IFoo/default. Step 3, servicemanager to servicemanager, is the name in the VINTF manifest?, and can this domain add it?. Step 4, servicemanager to HAL process, STATUS_OK, or an error if not declared. Step 5, HAL process to HAL process, ABinderProcess_joinThreadPool(), wait for calls. Step 6, Client to servicemanager, AServiceManager_waitForService(...). Step 7, servicemanager to Client, binder of the HAL. Step 8, Client to HAL process, setLightState(...), a normal Binder call." loading="lazy"></div>
+    <figcaption>The service manager accepts the HAL only if the device declares it. The client then calls it like any Binder service.</figcaption>
+  </figure>
+
+  <p>The order in the figure shows why the VINTF fragment matters. When the HAL calls <code>addService()</code>, the service manager sees a VINTF-stable binder and checks that the device manifest declares the name. A HAL that is missing from the manifest fails to register, even when its code is correct. The service manager also checks with SELinux that the domain of the HAL can add this name. Only then does the client receive the binder.</p>
+  <p>A client in the framework usually asks with <code>waitForDeclaredService()</code> or, in the NDK, <code>AServiceManager_waitForService()</code>. Before it waits, the declared variant checks the manifest. If the device does not declare the HAL, the client gets null at once. It can then turn the feature off and does not wait for a service that never comes.</p>
+
+  <h3>Which backend for which side</h3>
+  <p>AOSP is strict about the code on the vendor side. Native vendor code must use the NDK backend or the Rust backend. The NDK backend links to <code>libbinder_ndk</code>, and the Rust backend builds on it. Only code on the system side can use <code>libbinder</code> directly, through the CPP backend. The two sides update separately, and only <code>libbinder_ndk</code> keeps a stable interface across releases. For new interfaces, AOSP even advises to switch the CPP backend off, so that nobody uses it on the vendor side by mistake.</p>
+
+  <h3>Callbacks and fast message queues</h3>
+  <p>Some HALs need to push data to the framework. The health HAL, for example, reports changes of the battery. The framework passes a callback object in a normal call, and the HAL keeps it and calls it later. The callback is just another AIDL interface, usually with one-way methods, so that a slow framework cannot block the HAL.</p>
+  <p>Other HALs move large amounts of data, such as samples from the motion sensors, often hundreds of them each second. A Binder call for every sample costs too much. These HALs use Binder only to set up a Fast Message Queue (FMQ), a ring buffer in shared memory. After the setup, the HAL writes samples into the buffer and the framework reads them, without any Binder call.</p>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../../assets/img/diagrams/hl-fmq.svg" alt="SensorService in the framework reads events, and the Sensors HAL in the vendor partition writes them. Binder carries the control calls once, such as initialize with the queue descriptors and activate. A Fast Message Queue, a ring buffer in shared memory, sits between them. The HAL writes samples into it and the framework reads them. Hundreds of samples each second travel through the queue, not through Binder." loading="lazy"></div>
+    <figcaption>Binder sets up the queue. The data itself flows through shared memory.</figcaption>
+  </figure>
+
+  <p>The library <code>system/libfmq/</code> provides the queues. An AIDL method receives the description of a queue as an <code>MQDescriptor</code>, which carries the shared memory and its layout. Both sides then map the same memory. A small word in the shared memory, the event flag, wakes a reader that waits for data. The reader then does not need to poll.</p>
+
+  <h2>Versions and freezing</h2>
+  <p>A HAL interface lives for many years. A vendor image for one version must keep working when the system image moves on. A new vendor image must work with the system that it ships with. AIDL handles this with frozen integer versions.</p>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../../assets/img/diagrams/hl-versions.svg" alt="The folder aidl_api for android.hardware.example holds snapshot 1, frozen, with IExample.aidl and Info.aidl. Snapshot 2, frozen, adds newMethod to IExample and an extra field to Info. The folder current is in development, matches the source files and stays until the next freeze. Allowed between versions are adding a method at the end, adding a field at the end of a parcelable, adding a constant or an enum value and adding a field at the end of a union. Never allowed are removing or renaming a method or field, changing the order of methods, changing a type or a direction and editing a frozen snapshot." loading="lazy"></div>
+    <figcaption>Each frozen version is a full snapshot. A new version only adds to the one before it.</figcaption>
+  </figure>
+
+  <p>The build system stores each frozen version as a complete copy of the interface files in <code>aidl_api/NAME/VERSION/</code>, together with a hash. The folder <code>current/</code> holds the state in development. Two build targets manage the folders. <code>m NAME-update-api</code> refreshes <code>current/</code> from the sources. <code>m NAME-freeze-api</code> copies them into the next numbered folder, which is then immutable. Every frozen file starts with a warning that nobody can edit it.</p>
+  <p>Before the build accepts a new version, it compares it with the last frozen one. A new version can add methods and fields at the end, and it can add constants and enum values. Anything else changes the meaning of old data or old transaction codes, so the build fails. A change that breaks compatibility needs a new package with a new major name, such as <code>android.hardware.bluetooth2</code>.</p>
+
+  <h3>New clients, old servers</h3>
+  <p>A framework that knows version 3 can meet a vendor HAL that implements only version 2. Before it calls a method that version 3 added, the client asks the server for its version with <code>getInterfaceVersion()</code>. If the client calls such a method anyway, the server answers with <code>UNKNOWN_TRANSACTION</code>. In Java, that answer becomes a <code>RemoteException</code>. In the NDK, it becomes <code>STATUS_UNKNOWN_TRANSACTION</code>. Each new feature in a HAL therefore comes with a fallback in the framework for devices with an older version.</p>
+  <p>The Vendor Test Suite (VTS) checks the promise from the other side. Every VINTF-stable interface on a device must use a frozen, released version. No device then ships an interface that is still in development.</p>
+
+  <h2>VINTF, the vendor interface object</h2>
+  <p>Freezing keeps one interface stable. The Vendor Interface (VINTF) object checks the whole device. It answers two questions. Does the vendor side provide every HAL that this system needs? Does the system provide everything that the vendor side needs? The library <code>system/libvintf/</code> builds the answers from four XML documents.</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Document</th><th>Written by</th><th>Says</th></tr></thead>
+      <tbody>
+        <tr><td>Device manifest</td><td>The vendor</td><td>Which HALs the vendor side provides, with versions and instances</td></tr>
+        <tr><td>Framework compatibility matrix</td><td>Google, for each Android release</td><td>Which HALs the system needs, with the versions that it accepts</td></tr>
+        <tr><td>Framework manifest</td><td>The system side</td><td>Which services the system provides to the vendor</td></tr>
+        <tr><td>Device compatibility matrix</td><td>The vendor</td><td>What the vendor side needs from the system</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>A manifest is an offer, and a matrix is a demand. The device is compatible when each offer meets the demand of the other side. A matrix can accept a range of versions, such as <code>&lt;version&gt;1-3&lt;/version&gt;</code>, so that a newer system still works with an older vendor HAL. An entry can also be marked <code>optional="true"</code>, when the system can work without that HAL.</p>
+<pre class="code" data-lang="xml" data-file="hardware/interfaces/compatibility_matrices/compatibility_matrix.202504.xml (excerpt)"><code>&lt;compatibility-matrix version="1.0" type="framework" level="202504"&gt;
+    &lt;hal format="aidl"&gt;
+        &lt;name&gt;android.hardware.audio.core&lt;/name&gt;
+        &lt;version&gt;1-3&lt;/version&gt;
+        &lt;interface&gt;
+            &lt;name&gt;IModule&lt;/name&gt;
+            &lt;instance&gt;default&lt;/instance&gt;
+            &lt;instance&gt;bluetooth&lt;/instance&gt;
+            &lt;instance&gt;usb&lt;/instance&gt;
+        &lt;/interface&gt;
+    &lt;/hal&gt;
+    &lt;!-- many more HALs --&gt;
+&lt;/compatibility-matrix&gt;</code></pre>
+
+  <h3>Where the files live</h3>
+  <p>The device manifest is not one file. The system assembles it from several sources at runtime. The main vendor manifest is <code>/vendor/etc/vintf/manifest.xml</code>, and fragments from <code>vintf_fragments</code> in the build add one entry for each HAL. The ODM partition can add its own manifest under <code>/odm/etc/vintf/</code>, and a device can pick a manifest for its SKU, a product variant, through a property. Vendor APEX modules bring fragments in <code>/apex/NAME/etc/vintf/</code>. A later manifest can replace an entry of an earlier one only when the entry says <code>override="true"</code>.</p>
+  <p>The framework matrices come from <code>hardware/interfaces/compatibility_matrices/</code>. The system image holds one matrix for each level that it still supports, and the device chooses one through its target level.</p>
+
+  <h3>Levels of the framework matrix</h3>
+  <p>Each Android release adds a framework compatibility matrix (FCM) with a level number. A device declares a target FCM level in its manifest, normally the level of the Android version that it launched with. The system then applies the matrix of that level. It asks an old device only for the HALs that existed at the launch of that device.</p>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../../assets/img/diagrams/hl-fcm.svg" alt="A timeline of framework compatibility matrix levels. Level 7 for Android 13, level 8 for Android 14, level 202404 for Android 15, level 202504 for Android 16 and level 202604 for Android 17. From Android 15, levels use the form year and month. A device declares its target level in the device manifest." loading="lazy"></div>
+    <figcaption>Level numbers changed from small integers to the year and month form with Android 15.</figcaption>
+  </figure>
+
+  <p>Up to Android 14, the levels were small integers, with 7 for Android 13 and 8 for Android 14. From Android 15, a level names the year and month of the release cycle, such as 202404 for Android 15 and 202604 for Android 17. Each source tree also stages the matrix of the next release, so that HAL owners can prepare their changes early.</p>
+
+  <h3>When the checks run</h3>
+  <ul>
+    <li><strong>At build time.</strong> The tools <code>assemble_vintf</code> and <code>check_vintf</code> build the manifests and compare them with the matrices. A missing HAL or a wrong version fails the build.</li>
+    <li><strong>At update time.</strong> An over-the-air (OTA) update for one side carries information that lets the device check it against the other side before the update applies.</li>
+    <li><strong>At boot.</strong> <code>VintfObject::checkCompatibility()</code> compares the running device with the matrices, including the kernel version, kernel options and the SELinux policy version.</li>
+    <li><strong>At registration.</strong> The service manager refuses any VINTF-stable service that the manifest does not declare, as the earlier section showed.</li>
+    <li><strong>In tests.</strong> VTS checks that every declared HAL runs, has the declared version and offers the declared instances.</li>
+  </ul>
+  <p>Together, these checks turn the promise of Treble into something a machine can verify. A device maker cannot ship a system that expects a HAL which the vendor image lacks, and a HAL cannot quietly appear without a declaration.</p>
+
+  <h2>Build a small HAL of your own</h2>
+  <p>The quickest way to understand a HAL is to build a tiny one. The example below defines a greeting HAL with three methods, implements it in C++ with the NDK backend and calls it from a small client. It needs an AOSP tree and an emulator or a development device that you can flash. The folder <code>vendor/example/</code> keeps it apart from the real interfaces.</p>
+
+  <h3>Step 1. Define the interface</h3>
+<pre class="code" data-lang="java" data-file="vendor/example/greeting/aidl/vendor/example/greeting/IGreeting.aidl"><code>package vendor.example.greeting;
+
+import vendor.example.greeting.GreetingResponse;
+
+@VintfStability
+interface IGreeting {
+    GreetingResponse greet();
+    GreetingResponse greetByName(in String name);
+    int getGreetingCount();
+}</code></pre>
+<pre class="code" data-lang="java" data-file="vendor/example/greeting/aidl/vendor/example/greeting/GreetingResponse.aidl"><code>package vendor.example.greeting;
+
+@VintfStability
+parcelable GreetingResponse {
+    String message;
+    long timestampMs;
+}</code></pre>
+  <p>Both files carry <code>@VintfStability</code>. The package name starts with <code>vendor.</code>, which marks the interface as a private contract of the vendor, not one that Google defines for every device.</p>
+
+  <h3>Step 2. Describe the build module</h3>
+<pre class="code" data-lang="text" data-file="vendor/example/greeting/aidl/Android.bp"><code>aidl_interface {
+    name: "vendor.example.greeting",
+    vendor_available: true,
+    srcs: ["vendor/example/greeting/*.aidl"],
+    stability: "vintf",
+    backend: {
+        cpp: { enabled: false },
+        ndk: { enabled: true },
+        java: { enabled: false },
+    },
+}</code></pre>
+  <p>Only the NDK backend is enabled, because only vendor C++ code uses this interface. The module has no frozen versions yet. Until the first freeze, the build treats the sources as version 1 in development.</p>
+
+  <h3>Step 3. Implement the methods</h3>
+<pre class="code" data-lang="cpp" data-file="vendor/example/greeting/aidl/default/Greeting.h"><code>#pragma once
+
+#include &lt;aidl/vendor/example/greeting/BnGreeting.h&gt;
+#include &lt;atomic&gt;
+#include &lt;chrono&gt;
+
+namespace aidl::vendor::example::greeting {
+
+class Greeting : public BnGreeting {
+  public:
+    ndk::ScopedAStatus greet(GreetingResponse* out) override {
+        *out = make("Hello from the greeting HAL");
+        return ndk::ScopedAStatus::ok();
+    }
+    ndk::ScopedAStatus greetByName(const std::string&amp; name,
+                                   GreetingResponse* out) override {
+        if (name.empty()) {
+            return ndk::ScopedAStatus::fromServiceSpecificError(1);
+        }
+        *out = make("Hello, " + name);
+        return ndk::ScopedAStatus::ok();
+    }
+    ndk::ScopedAStatus getGreetingCount(int32_t* out) override {
+        *out = mCount.load();
+        return ndk::ScopedAStatus::ok();
+    }
+  private:
+    GreetingResponse make(const std::string&amp; text) {
+        GreetingResponse r;
+        r.message = text;
+        r.timestampMs = std::chrono::duration_cast&lt;std::chrono::milliseconds&gt;(
+            std::chrono::system_clock::now().time_since_epoch()).count();
+        mCount++;
+        return r;
+    }
+    std::atomic&lt;int32_t&gt; mCount{0};
+};
+
+}  // namespace aidl::vendor::example::greeting</code></pre>
+  <p>The class derives from the generated stub <code>BnGreeting</code>. Each method returns a status and writes its result through a pointer, which is the pattern of the NDK backend. An empty name returns a service-specific error with the code 1, which the client receives as such and can handle.</p>
+
+  <h3>Step 4. Register the service</h3>
+<pre class="code" data-lang="cpp" data-file="vendor/example/greeting/aidl/default/main.cpp"><code>#include &lt;android/binder_manager.h&gt;
+#include &lt;android/binder_process.h&gt;
+#include &lt;android-base/logging.h&gt;
+#include "Greeting.h"
+
+using aidl::vendor::example::greeting::Greeting;
+
+int main() {
+    ABinderProcess_setThreadPoolMaxThreadCount(0);
+    auto service = ndk::SharedRefBase::make&lt;Greeting&gt;();
+    const std::string name = std::string(Greeting::descriptor) + "/default";
+    CHECK_EQ(AServiceManager_addService(service-&gt;asBinder().get(), name.c_str()),
+             STATUS_OK);
+    ABinderProcess_joinThreadPool();
+    return EXIT_FAILURE;   // joinThreadPool() does not return
+}</code></pre>
+
+  <h3>Step 5. Add the vendor files</h3>
+<pre class="code" data-lang="text" data-file="vendor/example/greeting/aidl/default/Android.bp"><code>cc_binary {
+    name: "vendor.example.greeting-service",
+    relative_install_path: "hw",
+    vendor: true,
+    init_rc: ["greeting.rc"],
+    vintf_fragments: ["greeting.xml"],
+    srcs: ["main.cpp"],
+    shared_libs: ["libbase", "libbinder_ndk"],
+    static_libs: ["vendor.example.greeting-V1-ndk"],
+}</code></pre>
+<pre class="code" data-lang="text" data-file="vendor/example/greeting/aidl/default/greeting.rc"><code>service vendor.greeting /vendor/bin/hw/vendor.example.greeting-service
+    class hal
+    user nobody
+    group nobody</code></pre>
+<pre class="code" data-lang="xml" data-file="vendor/example/greeting/aidl/default/greeting.xml"><code>&lt;manifest version="1.0" type="device"&gt;
+    &lt;hal format="aidl"&gt;
+        &lt;name&gt;vendor.example.greeting&lt;/name&gt;
+        &lt;version&gt;1&lt;/version&gt;
+        &lt;fqname&gt;IGreeting/default&lt;/fqname&gt;
+    &lt;/hal&gt;
+&lt;/manifest&gt;</code></pre>
+  <p>Add <code>vendor.example.greeting-service</code> to <code>PRODUCT_PACKAGES</code> of your product, so that the image includes it. A vendor HAL is not part of any framework matrix from Google. The device therefore adds its own small matrix through <code>DEVICE_FRAMEWORK_COMPATIBILITY_MATRIX_FILE</code>, so that the VINTF check at build time accepts the new entry.</p>
+
+  <h3>Step 6. Give it an SELinux domain</h3>
+  <p>The new service needs a domain, a label for its executable and a label for its service name. Without them, <code>init</code> does not start it or the service manager does not register it.</p>
+<pre class="code" data-lang="text" data-file="vendor sepolicy, greeting.te"><code>type hal_greeting_default, domain;
+type hal_greeting_default_exec, exec_type, vendor_file_type, file_type;
+init_daemon_domain(hal_greeting_default)
+
+type hal_greeting_service, hal_service_type, service_manager_type;
+add_service(hal_greeting_default, hal_greeting_service)
+binder_use(hal_greeting_default)</code></pre>
+<pre class="code" data-lang="text" data-file="vendor sepolicy, file_contexts and service_contexts"><code># file_contexts
+/vendor/bin/hw/vendor\.example\.greeting-service  u:object_r:hal_greeting_default_exec:s0
+
+# service_contexts
+vendor.example.greeting.IGreeting/default         u:object_r:hal_greeting_service:s0</code></pre>
+  <p>A client domain then needs <code>allow CLIENT hal_greeting_service:service_manager find;</code> and <code>binder_call(CLIENT, hal_greeting_default)</code>. For a quick test on an emulator, run the client as root in a permissive build first. Read the <code>avc: denied</code> messages and then write exact rules.</p>
+
+  <h3>Step 7. Call it from a client</h3>
+<pre class="code" data-lang="cpp" data-file="A small native client"><code>#include &lt;aidl/vendor/example/greeting/IGreeting.h&gt;
+#include &lt;android/binder_manager.h&gt;
+#include &lt;iostream&gt;
+
+using aidl::vendor::example::greeting::IGreeting;
+using aidl::vendor::example::greeting::GreetingResponse;
+
+int main() {
+    const std::string name = std::string(IGreeting::descriptor) + "/default";
+    std::shared_ptr&lt;IGreeting&gt; hal = IGreeting::fromBinder(
+        ndk::SpAIBinder(AServiceManager_waitForService(name.c_str())));
+
+    GreetingResponse r;
+    if (hal-&gt;greetByName("Asha", &amp;r).isOk()) {
+        std::cout &lt;&lt; r.message &lt;&lt; std::endl;
+    }
+    int32_t count = 0;
+    hal-&gt;getGreetingCount(&amp;count);
+    std::cout &lt;&lt; "Greetings so far " &lt;&lt; count &lt;&lt; std::endl;
+}</code></pre>
+  <p>After you build and flash, <code>adb shell service check vendor.example.greeting.IGreeting/default</code> confirms the registration. The client then prints the greeting. If the service is missing, check three things in this order. The VINTF fragment must use exactly the same name. The SELinux labels must match the paths. The process must appear in <code>adb shell ps -AZ</code>.</p>
+
+  <h3>Step 8. Freeze the first version</h3>
+  <p>Before the HAL ships, freeze it with <code>m vendor.example.greeting-freeze-api</code>. The build copies the interface into <code>aidl_api/vendor.example.greeting/1/</code> and adds <code>versions_with_info</code> to the module. From now on, every change must be a compatible addition, and the next freeze creates version 2. When you add a method later, also raise the version in the VINTF fragment. Clients then see the new version on the devices that have it.</p>
+
+  <h2>The life of a HAL process</h2>
+  <p>Most HALs start during boot and run until shutdown. <code>init</code> starts every service of the class <code>hal</code> after the core services, as <a href="04-boot-and-init.html">chapter 4</a> described. A few HALs that the boot itself needs, such as the HALs for keys and the boot control, belong to the class <code>early_hal</code> and start sooner.</p>
+  <p>A HAL can crash like any other process. When that happens, the driver sends death notifications to all clients, the service manager removes the registration, and <code>init</code> restarts the process according to its <code>.rc</code> file. A well-written client links to the death of the HAL, waits for the new instance with <code>waitForService()</code> and connects again. For HALs that the system cannot live without, the <code>.rc</code> file can mark the service as <code>critical</code>, so that repeated crashes reboot the device.</p>
+
+  <h3>Lazy HALs</h3>
+  <p>Some HALs are needed rarely, such as the HAL for a fingerprint sensor during enrollment, or a HAL for a test feature. Running them all the time wastes memory. A lazy HAL starts only when a client asks for it and exits when no client uses it any more.</p>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../../assets/img/diagrams/hl-lazy.svg" alt="Six states. Not running after boot. A client asks, and servicemanager tells init to start the HAL. Started, the HAL registers as lazy. In use, clients hold the binder. No clients, checked every 5 seconds. Exits, and the memory is free again. The next request starts the cycle again." loading="lazy"></div>
+    <figcaption>A lazy HAL uses memory only while a client holds it.</figcaption>
+  </figure>
+
+  <p>A lazy HAL registers with <code>AServiceManager_registerLazyService()</code> in the NDK, or with <code>LazyServiceRegistrar</code> in <code>libbinder</code>. Its <code>.rc</code> file marks the service as <code>disabled</code>, so that <code>init</code> does not start it at boot, and names the interface that it serves.</p>
+<pre class="code" data-lang="text" data-file="An init script of a lazy HAL"><code>service vendor.example-lazy /vendor/bin/hw/android.hardware.example-service.lazy
+    interface aidl android.hardware.example.IExample/default
+    class hal
+    user nobody
+    group nobody
+    disabled
+    oneshot</code></pre>
+  <p>When a client asks for <code>android.hardware.example.IExample/default</code>, the service manager sees that the service is declared but not running. It sets a control property that asks <code>init</code> to start the service that serves this interface. Every few seconds, the service manager checks whether lazy services still have clients. When the count drops to zero, it tells the service, which unregisters and exits. <code>oneshot</code> stops <code>init</code> from restarting it at once.</p>
+
+  <h3>SELinux for a HAL</h3>
+  <p>A HAL process runs in its own SELinux domain, such as <code>hal_light_default</code>. The policy decides four things about it. Which domain can register the service name, which domains can find it and call it and which device files it can open. AOSP defines attributes for each HAL in <code>system/sepolicy/</code>, so that a vendor policy needs only a few lines.</p>
+<pre class="code" data-lang="text" data-file="A vendor SELinux policy for a lights HAL"><code># The domain and its executable
+type hal_light_default, domain;
+hal_server_domain(hal_light_default, hal_light)
+type hal_light_default_exec, exec_type, vendor_file_type, file_type;
+init_daemon_domain(hal_light_default)
+
+# Access to the hardware, here the LED files in sysfs
+allow hal_light_default sysfs_leds:dir search;
+allow hal_light_default sysfs_leds:file rw_file_perms;</code></pre>
+  <p>The macro <code>hal_server_domain()</code> marks the domain as a server of the lights HAL. The shared policy of AOSP then lets it add the lights service. It also lets clients of the lights HAL, such as <code>system_server</code>, find it and call it. <code>init_daemon_domain()</code> makes <code>init</code> switch into this domain when it starts the executable. A missing rule does not always crash the HAL. It can also leave a registered service that no client can find, which shows up only as an <code>avc: denied</code> message in the kernel log.</p>
+
+  <div class="block changed">
+    <div class="label">What changed in Android 17</div>
+    <p>Android 17 adds new HAL packages, all in AIDL and none in HIDL. They show where the platform moves.</p>
+    <ul>
+      <li><strong>Motion context HAL.</strong> <code>android.hardware.motioncontext</code> lets a low-power processor classify motion such as walking or driving. It delivers events without waking the main processor.</li>
+      <li><strong>NPU scheduling HAL.</strong> <code>android.hardware.npu</code> lets the framework tell a neural processing unit which apps have priority. It is not an inference interface. Its libraries ship in an updatable APEX module, so that the contract can update outside the system image.</li>
+      <li><strong>Trusted HALs.</strong> The family under <code>hardware/interfaces/security/see/</code> defines HALs whose implementation runs inside the TEE. Only protected virtual machines can reach them. Examples are interfaces for keys, device state and storage.</li>
+      <li><strong>HALs only for virtual machines.</strong> The VINTF manifest can mark a HAL as reachable only from a virtual machine, so that the host system never sees it.</li>
+      <li><strong>A new matrix level.</strong> Devices that launch with Android 17 target FCM level 202604, and the source tree already stages level 202704 for the next release.</li>
+    </ul>
+  </div>
+
+  <div class="block security">
+    <div class="label">Security lens</div>
+    <p>HALs run closest to the hardware and often hold rights that no app has, such as access to device nodes. They are a frequent target, and their design limits the damage of a bug.</p>
+    <ul>
+      <li><strong>One process, one HAL, small rights.</strong> A binderized HAL runs in its own process with its own domain and often as the user <code>nobody</code>. A bug in the camera HAL then cannot read the files of the audio HAL. The legacy model, with vendor code inside <code>system_server</code>, offered no such wall.</li>
+      <li><strong>Treat every call as untrusted.</strong> A HAL receives data from the framework, and through the framework often from apps. Check every index, length and enum value before you use it with a driver.</li>
+      <li><strong>Keep the find rules narrow.</strong> Apps must never call a HAL directly. SELinux neverallow rules in AOSP stop app domains from finding most HAL services, and vendor policy must not open that door.</li>
+      <li><strong>Declare everything.</strong> The VINTF check at registration stops an unknown service from posing as a HAL under a declared name, as long as the manifest stays accurate.</li>
+      <li><strong>Prefer Rust for new HALs.</strong> Many HAL bugs are memory errors in C and C++. The Rust backend of AIDL removes most of this class of bugs, and AOSP writes many new reference HALs in Rust.</li>
+    </ul>
+  </div>
+
+  <div class="block remember">
+    <div class="label">Worth remembering</div>
+    <ul>
+      <li>A HAL is the contract between the framework and vendor code, so that each side can update without the other.</li>
+      <li>Legacy HALs were shared libraries inside framework processes. HIDL moved HALs into their own processes. AIDL HALs keep that model and reuse the AIDL of the framework.</li>
+      <li>An AIDL HAL needs <code>@VintfStability</code>, frozen versions, an entry in the VINTF manifest and an SELinux domain.</li>
+      <li>Frozen versions only grow at the end. New clients check the version of old servers before they call new methods.</li>
+      <li>VINTF compares what each side offers with what the other side needs, at build time, at update time, at boot and at registration.</li>
+      <li>Vendor code uses the NDK or Rust backend, because only <code>libbinder_ndk</code> has a stable interface across releases.</li>
+    </ul>
+  </div>
+
+  <details class="deep">
+    <summary>For the curious, source files <small>Optional</small></summary>
+    <div class="inner">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Path</th><th>Content</th></tr></thead>
+          <tbody>
+            <tr><td><code>hardware/libhardware/</code></td><td>The legacy HAL loader and its headers, such as <code>hardware.h</code> and <code>hardware.c</code></td></tr>
+            <tr><td><code>hardware/interfaces/</code></td><td>HIDL and AIDL interfaces that hardware provides, with default implementations and VTS tests</td></tr>
+            <tr><td><code>hardware/interfaces/compatibility_matrices/</code></td><td>The framework compatibility matrices for each level</td></tr>
+            <tr><td><code>system/libvintf/</code></td><td>The VINTF library, <code>assemble_vintf</code>, <code>check_vintf</code> and the on-device <code>vintf</code> tool</td></tr>
+            <tr><td><code>system/libhidl/</code>, <code>system/hwservicemanager/</code></td><td>The HIDL runtime and its service manager</td></tr>
+            <tr><td><code>system/libfmq/</code></td><td>Fast message queues</td></tr>
+            <tr><td><code>frameworks/native/cmds/servicemanager/</code></td><td>The service manager and its VINTF check</td></tr>
+            <tr><td><code>frameworks/native/cmds/lshal/</code></td><td>The <code>lshal</code> tool for HIDL HALs</td></tr>
+            <tr><td><code>system/sepolicy/public/attributes</code>, <code>te_macros</code></td><td>The HAL attributes and the macros <code>hal_server_domain()</code> and <code>hal_client_domain()</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>To follow a HAL from end to end, pick one small interface, such as lights or vibrator. Read its <code>.aidl</code> file, its <code>Android.bp</code>, the default implementation in <code>default/</code> and the VTS test in <code>vts/</code>. Then search the framework for the descriptor, such as <code>android.hardware.light.ILights</code>, to find the client in <code>system_server</code>.</p>
+    </div>
+  </details>
+
+  <div class="block try">
+    <div class="label">Try it yourself</div>
+    <p><strong>On an emulator or a test device.</strong> List the AIDL HALs, read the manifest and look at the HAL processes.</p>
+<pre class="code" data-lang="bash" data-file="Terminal"><code>adb shell service list | grep android.hardware
+adb shell service check android.hardware.light.ILights/default
+adb shell ls /vendor/bin/hw/
+adb shell ls /vendor/etc/vintf/ /vendor/etc/vintf/manifest/
+adb shell ps -AZ | grep hal_
+adb shell getprop ro.hardware</code></pre>
+    <p>The third command lists the HAL programs of the vendor image. The fifth shows each HAL process with its SELinux domain, such as <code>u:r:hal_light_default:s0</code>.</p>
+    <p>On a device that still has HIDL HALs, <code>lshal</code> lists them with their transport. The on-device <code>vintf</code> tool prints the assembled manifests and matrices.</p>
+<pre class="code" data-lang="bash" data-file="Terminal"><code>adb shell lshal
+adb shell vintf dm | head -60     # the assembled device manifest
+adb shell vintf fcm | head -40    # the framework compatibility matrix</code></pre>
+    <p><strong>In an AOSP source tree.</strong> Compare the HIDL and AIDL forms of the same HAL, and find the frozen versions.</p>
+<pre class="code" data-lang="bash" data-file="Terminal"><code>ls hardware/interfaces/light/
+cat hardware/interfaces/light/2.0/ILight.hal
+ls hardware/interfaces/light/aidl/aidl_api/android.hardware.light/
+grep -A6 "android.hardware.light" \
+    hardware/interfaces/compatibility_matrices/compatibility_matrix.202504.xml</code></pre>
+    <p>On an emulator, many HALs are default or emulated implementations, and some names differ from a real phone. The structure is the same.</p>
+  </div>
+
+  <h2>Key terms</h2>
+  <dl class="terms">
+    <dt>HAL</dt><dd>Hardware abstraction layer, the stable interface between the framework and vendor code for hardware.</dd>
+    <dt>Legacy HAL</dt><dd>A shared library that a framework process loads with <code>dlopen()</code>.</dd>
+    <dt><code>hw_module_t</code></dt><dd>The structure that describes a legacy HAL module, exported under the symbol <code>HMI</code>.</dd>
+    <dt>Project Treble</dt><dd>The split of Android into a system side and a vendor side with stable interfaces, from Android 8.0.</dd>
+    <dt>HIDL</dt><dd>HAL Interface Definition Language, the HAL language of Treble, now deprecated.</dd>
+    <dt>Binderized HAL</dt><dd>A HAL that runs in its own process and receives Binder calls.</dd>
+    <dt>Passthrough HAL</dt><dd>A HIDL HAL that runs inside the process of its client.</dd>
+    <dt>AIDL HAL</dt><dd>A HAL defined in stable AIDL with <code>@VintfStability</code>, registered with <code>servicemanager</code>.</dd>
+    <dt>Instance name</dt><dd>The name of one HAL service, such as <code>android.hardware.light.ILights/default</code>.</dd>
+    <dt>Frozen version</dt><dd>A numbered snapshot of an interface that nobody can change.</dd>
+    <dt>VINTF</dt><dd>Vendor Interface object, the system that compares what each side offers and needs.</dd>
+    <dt>Device manifest</dt><dd>The list of HALs that the vendor side provides.</dd>
+    <dt>Compatibility matrix</dt><dd>The list of HALs and versions that one side needs from the other.</dd>
+    <dt>FCM level</dt><dd>The level of the framework compatibility matrix that a device targets.</dd>
+    <dt>Lazy HAL</dt><dd>A HAL that starts on the first request and exits when it has no clients.</dd>
+    <dt>FMQ</dt><dd>Fast Message Queue, a ring buffer in shared memory for high-rate data.</dd>
+    <dt>VTS</dt><dd>Vendor Test Suite, the tests that check HALs and the vendor side.</dd>
+  </dl>
+
+</article>
+</main>
+
+<script src="../../assets/js/site.js?v=20261029d"></script>
+</body>
+</html>

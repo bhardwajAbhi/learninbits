@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>What is AOSP? · Inside Android · LearnInBits</title>
+  <meta name="description" content="Android, AOSP and the five layers of the Android stack, in simple words.">
+  <link rel="icon" href="../../assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,500;0,8..60,600;1,8..60,500&display=swap">
+  <link rel="stylesheet" href="../../assets/css/style.css?v=20261029d">
+  <script>try{var t=localStorage.getItem("lib-theme");t=t?JSON.parse(t):(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+</head>
+<body data-root="../../" data-page="chapter" data-course="android" data-id="01-introduction">
+
+<main id="main">
+<article>
+
+  <div class="block oneline">
+    <div class="label">In one line</div>
+    <p>AOSP is the open-source code of Android. Phone makers use it to make the software for their phones.</p>
+  </div>
+
+  <p>You use Android every day. But what is inside it? In this course, we open Android layer by layer. We start at the bottom, with the first code that runs when you push the power button. We stop at the top, with the apps on your screen.</p>
+  <p>This first chapter gives you the map. Each later chapter zooms in on one part of the map.</p>
+
+  <h2>Android and AOSP are not the same</h2>
+  <p>AOSP means <strong>Android Open Source Project</strong>. It is the source code of Android that all people can read, change and use. Google writes most of this code and publishes it.</p>
+  <p>The Android on your phone has more parts than AOSP. It has three parts:</p>
+  <ul>
+    <li><strong>AOSP</strong>: the base system. All Android phones share it.</li>
+    <li><strong>Google apps and services</strong>: for example, the Play Store, Gmail and Google Play services. These are not open source. Phone makers get them under a separate contract with Google.</li>
+    <li><strong>Parts from the phone maker</strong>: drivers for the chips of the phone, a custom look and extra apps.</li>
+  </ul>
+  <p>Some products use only AOSP and no Google apps. Examples are some custom ROMs, many TV boxes and many devices in factories and cars. Their makers use AOSP as a free base.</p>
+
+  <div class="block analogy">
+    <div class="label">Real-life analogy</div>
+    <p>Think of AOSP as the frame and the engine of a car. The design is free, and all car makers can use it. Each maker adds its own body, seats and paint. One company also sells a navigation system and a music service. Many makers buy them and put them in the car. Those extras are the Google apps.</p>
+  </div>
+
+  <h2>The five layers</h2>
+  <p>Android is a stack of layers. Each layer gives services to the layer above it. Each layer uses the layer below it. The picture shows the five layers. We use the same colors for these layers in all the diagrams on this site.</p>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../../assets/img/diagrams/android-stack.svg" alt="The five layers of Android. From top to bottom: apps, Java API framework, Android Runtime, native libraries and HAL, Linux kernel. The hardware is under the kernel."></div>
+    <figcaption>The Android stack. The top is closer to you. The bottom is closer to the hardware.</figcaption>
+  </figure>
+
+  <h3>1. The Linux kernel</h3>
+  <p>The kernel is the lowest software layer. It controls the hardware directly. It starts and stops processes, and it gives memory to each process. It also holds the drivers for the screen, the camera and the modem. Android adds some special parts to Linux. The most important part is the <strong>Binder driver</strong>, which lets processes send messages to each other.</p>
+
+  <h3>2. Native libraries and the HAL</h3>
+  <p>This layer is C and C++ code. It has the C library of Android, which has the name <strong>Bionic</strong>. It also has programs that do heavy work, for example <strong>SurfaceFlinger</strong>, which puts the image on the screen.</p>
+  <p>The <strong>HAL</strong> (hardware abstraction layer) is also here. Each phone has different chips. The HAL gives the same interface for each type of chip. Thus, the upper layers do not need to know the brand of the camera chip.</p>
+
+  <h3>3. The Android Runtime (ART)</h3>
+  <p>Developers write most apps in Java or Kotlin. The build tools change this code into <strong>DEX</strong> files. ART reads the DEX files and runs them. ART also changes hot code into fast machine code, and it frees memory that the app does not use.</p>
+
+  <h3>4. The Java API framework</h3>
+  <p>This is the layer that app developers know. It has the classes like <code>Activity</code>, <code>Intent</code> and <code>NotificationManager</code>. Most of the real work happens in one large process, <code>system_server</code>. This process holds about one hundred system services. Each service controls one part of the phone, for example windows, packages or power.</p>
+
+  <h3>5. Apps</h3>
+  <p>At the top are the apps. The home screen, the Settings app and the status bar are apps too. They use the same framework as your apps. Some of them have more permissions.</p>
+
+  <h2>One tap, through all the layers</h2>
+  <p>A good way to learn the stack is to follow one action. Here is what happens when you tap an app icon on the home screen. Each step is a full chapter later in this course.</p>
+
+  <ol class="steps">
+    <li><strong>The kernel gets the touch.</strong> The touch screen driver tells the kernel the position of your finger.</li>
+    <li><strong>The input system finds the window.</strong> Native code reads the touch and sends it to the window under your finger. Here, that is the home screen app.</li>
+    <li><strong>The home screen app asks for the new app.</strong> It sends an <em>intent</em> to the framework. The message travels through Binder.</li>
+    <li><strong>The framework starts a process.</strong> A system service in <code>system_server</code> asks <strong>Zygote</strong> for a new process. Zygote is a parent process that has the common code ready in memory.</li>
+    <li><strong>ART runs the app.</strong> ART loads the code of the app and calls its first methods.</li>
+    <li><strong>The app draws its first screen.</strong> SurfaceFlinger puts the image on the display. You see the app.</li>
+  </ol>
+
+  <p>All of this takes less than one second. In the next chapters, we slow it down and look at each step.</p>
+
+  <div class="block security">
+    <div class="label">Security lens</div>
+    <p>Each layer adds a wall. These are the main walls:</p>
+    <ul>
+      <li><strong>App sandbox.</strong> Each app gets its own Linux user ID. Thus, the kernel does not let one app read the files of a different app.</li>
+      <li><strong>SELinux.</strong> A set of rules in the kernel tells each process what it can do. A process cannot do actions outside its rules, even with root access.</li>
+      <li><strong>Permissions.</strong> The framework checks if an app has permission before it gives access to the camera, location or contacts.</li>
+      <li><strong>Verified boot.</strong> At start, each stage examines the next stage. If a person changed the system, the phone shows a warning or does not start.</li>
+    </ul>
+    <p>AOSP is open, so attackers can read the code. But defenders can read it too. Google publishes a security bulletin each month with the security problems that it repaired.</p>
+  </div>
+
+  <details class="deep">
+    <summary>For the curious: the source tree <small>Optional</small></summary>
+    <div class="inner">
+      <p>The AOSP source is not one Git repository. It is more than one thousand Git repositories. A tool with the name <code>repo</code> downloads all of them. A <em>manifest</em> file lists each repository and its folder. These are the main top folders:</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Folder</th><th>What it holds</th></tr></thead>
+          <tbody>
+            <tr><td><code>frameworks/</code></td><td>The Java API framework, <code>system_server</code> and many native services</td></tr>
+            <tr><td><code>system/</code></td><td>Low-level parts, for example <code>init</code> and the core tools</td></tr>
+            <tr><td><code>art/</code></td><td>The Android Runtime</td></tr>
+            <tr><td><code>bionic/</code></td><td>The C library and the dynamic linker</td></tr>
+            <tr><td><code>hardware/</code></td><td>HAL interfaces and some HAL code</td></tr>
+            <tr><td><code>packages/</code></td><td>System apps, for example Settings and the launcher</td></tr>
+            <tr><td><code>external/</code></td><td>Open-source projects from outside Android</td></tr>
+            <tr><td><code>build/</code></td><td>The build system</td></tr>
+            <tr><td><code>device/</code></td><td>Settings for each device, for example the emulator</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>Most AOSP code uses the Apache 2.0 license. The Linux kernel uses the GPL version 2 license.</p>
+    </div>
+  </details>
+
+  <div class="block try">
+    <div class="label">Try it yourself</div>
+    <p>Connect a phone with USB debugging on, or start an emulator. Then type these commands on your computer.</p>
+<pre><code># Which Android version is on the device?
+adb shell getprop ro.build.version.release
+
+# Which Linux kernel version does it use?
+adb shell uname -r
+
+# List some of the processes that run now
+adb shell ps -A | head -20</code></pre>
+    <p>In the list of processes, find <code>init</code> (process ID 1), <code>zygote64</code> and <code>system_server</code>. You will meet each of them in this course.</p>
+  </div>
+
+  <h2>Key terms</h2>
+  <dl class="terms">
+    <dt>AOSP</dt><dd>Android Open Source Project. The open source code of Android.</dd>
+    <dt>Kernel</dt><dd>The lowest software layer. It controls the hardware, processes and memory.</dd>
+    <dt>HAL</dt><dd>Hardware abstraction layer. The same interface for different chips.</dd>
+    <dt>ART</dt><dd>Android Runtime. It runs the code of apps.</dd>
+    <dt>system_server</dt><dd>The process that holds most system services of the framework.</dd>
+    <dt>Zygote</dt><dd>The parent process of all apps.</dd>
+    <dt>Binder</dt><dd>The system that lets processes send messages to each other.</dd>
+  </dl>
+
+</article>
+</main>
+
+<script src="../../assets/js/site.js?v=20261029d"></script>
+</body>
+</html>

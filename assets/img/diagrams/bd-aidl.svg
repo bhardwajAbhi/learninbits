@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 300" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">One AIDL file, four backends</title>
+  <desc id="d">One file, IFoo.aidl, goes into the aidl compiler in system/tools/aidl. The compiler writes four backends. Java, with IFoo.Stub and IFoo.Stub.Proxy, used by apps and system_server. CPP, with BnFoo and BpFoo on libbinder, used by platform native code. NDK, with BnFoo and BpFoo on libbinder_ndk, used by vendor code and APEX modules. Rust, with BnFoo and BpFoo on libbinder_rs, used by new native services.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="20" y="120" width="170" height="64" rx="10" fill="#f3f0fa" stroke="#7a4fc2" stroke-width="1.4"/>
+<text x="105" y="149" font-size="12.6" fill="#58378f" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="700">IFoo.aidl</text>
+<text x="105" y="167" font-size="11" fill="#4a5263" text-anchor="middle">one interface file</text>
+<path d="M192 152 L 232 152" fill="none" stroke="#1c2230" stroke-width="1.6" marker-end="url(#m0)"/>
+<rect x="236" y="120" width="150" height="64" rx="10" fill="#eef0f3" stroke="#5d6b7e" stroke-width="1.4"/>
+<text x="311" y="149" font-size="12.6" fill="#3f4a59" text-anchor="middle" font-weight="700">aidl compiler</text>
+<text x="311" y="167" font-size="11" fill="#4a5263" text-anchor="middle">system/tools/aidl</text>
+<path d="M388 152 C 420 152, 420 50, 452 50" fill="none" stroke="#1c2230" stroke-width="1.3"/>
+<rect x="456" y="20" width="404" height="60" rx="10" fill="#eef3fb" stroke="#2f62c8" stroke-width="1.3"/>
+<text x="472" y="44" font-size="12.6" fill="#1f4a9e" text-anchor="start" font-weight="700">Java</text>
+<text x="530" y="44" font-size="11.4" fill="#1c2230" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="600">IFoo.Stub, IFoo.Stub.Proxy</text>
+<text x="530" y="64" font-size="11" fill="#4a5263" text-anchor="start">used by apps, system_server</text>
+<path d="M388 152 C 420 152, 420 120, 452 120" fill="none" stroke="#1c2230" stroke-width="1.3"/>
+<rect x="456" y="90" width="404" height="60" rx="10" fill="#e3f4ee" stroke="#0f8a6a" stroke-width="1.3"/>
+<text x="472" y="114" font-size="12.6" fill="#0b6650" text-anchor="start" font-weight="700">CPP</text>
+<text x="530" y="114" font-size="11.4" fill="#1c2230" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="600">BnFoo, BpFoo on libbinder</text>
+<text x="530" y="134" font-size="11" fill="#4a5263" text-anchor="start">used by platform native code</text>
+<path d="M388 152 C 420 152, 420 190, 452 190" fill="none" stroke="#1c2230" stroke-width="1.3"/>
+<rect x="456" y="160" width="404" height="60" rx="10" fill="#e6f3f4" stroke="#0e7c86" stroke-width="1.3"/>
+<text x="472" y="184" font-size="12.6" fill="#095a61" text-anchor="start" font-weight="700">NDK</text>
+<text x="530" y="184" font-size="11.4" fill="#1c2230" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="600">BnFoo, BpFoo on libbinder_ndk</text>
+<text x="530" y="204" font-size="11" fill="#4a5263" text-anchor="start">used by vendor code, APEX modules</text>
+<path d="M388 152 C 420 152, 420 260, 452 260" fill="none" stroke="#1c2230" stroke-width="1.3"/>
+<rect x="456" y="230" width="404" height="60" rx="10" fill="#fdf4e3" stroke="#b7791f" stroke-width="1.3"/>
+<text x="472" y="254" font-size="12.6" fill="#8a5a12" text-anchor="start" font-weight="700">Rust</text>
+<text x="530" y="254" font-size="11.4" fill="#1c2230" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="600">BnFoo, BpFoo on libbinder_rs</text>
+<text x="530" y="274" font-size="11" fill="#4a5263" text-anchor="start">used by new native services</text>
+</svg>

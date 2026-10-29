@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 450" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">How a few-shot prompt is built from messages</title>
+  <desc id="d">A ChatPromptTemplate built from messages. First a system message with the role, the four labels and the rule to answer with the label only. Then pairs of human and ai messages, namely a paper with a DOI that does not exist and HALLUCINATION, a document that told the model to ignore its rules and PROMPT_INJECTION, JSON asked but a paragraph returned and FORMAT_VIOLATION, and two more pairs. These pairs are the examples, the shots. Last, a human message with the placeholder query. The model copies the pattern of the examples and returns one label.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="20" y="20" width="560" height="380" rx="16" fill="#fbfaf6" stroke="#7a4fc2" stroke-width="1.5" stroke-dasharray="6 5"/>
+<text x="40" y="46" font-size="13" fill="#58378f" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">ChatPromptTemplate.from_messages([...])</text>
+<rect x="36" y="62" width="528" height="34" rx="8" fill="#f3f0fa" stroke="#7a4fc2" stroke-width="1.2"/>
+<text x="48" y="84" font-size="11.5" fill="#58378f" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">system</text>
+<text x="122" y="84" font-size="12" fill="#1c2230" text-anchor="start">Role, the four labels, answer with the label only</text>
+<rect x="36" y="99" width="528" height="34" rx="8" fill="#eef0f3" stroke="#5d6b7e" stroke-width="1.2"/>
+<text x="48" y="121" font-size="11.5" fill="#3f4a59" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">human</text>
+<text x="122" y="121" font-size="12" fill="#1c2230" text-anchor="start">A paper with a DOI that does not exist</text>
+<rect x="36" y="136" width="528" height="34" rx="8" fill="#e3f4ee" stroke="#0f8a6a" stroke-width="1.2"/>
+<text x="48" y="158" font-size="11.5" fill="#0b6650" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">ai</text>
+<text x="122" y="158" font-size="12" fill="#1c2230" text-anchor="start">HALLUCINATION</text>
+<rect x="36" y="173" width="528" height="34" rx="8" fill="#eef0f3" stroke="#5d6b7e" stroke-width="1.2"/>
+<text x="48" y="195" font-size="11.5" fill="#3f4a59" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">human</text>
+<text x="122" y="195" font-size="12" fill="#1c2230" text-anchor="start">A document told the model to ignore its rules</text>
+<rect x="36" y="210" width="528" height="34" rx="8" fill="#e3f4ee" stroke="#0f8a6a" stroke-width="1.2"/>
+<text x="48" y="232" font-size="11.5" fill="#0b6650" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">ai</text>
+<text x="122" y="232" font-size="12" fill="#1c2230" text-anchor="start">PROMPT_INJECTION</text>
+<rect x="36" y="247" width="528" height="34" rx="8" fill="#eef0f3" stroke="#5d6b7e" stroke-width="1.2"/>
+<text x="48" y="269" font-size="11.5" fill="#3f4a59" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">human</text>
+<text x="122" y="269" font-size="12" fill="#1c2230" text-anchor="start">JSON was asked, a paragraph came back</text>
+<rect x="36" y="284" width="528" height="34" rx="8" fill="#e3f4ee" stroke="#0f8a6a" stroke-width="1.2"/>
+<text x="48" y="306" font-size="11.5" fill="#0b6650" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">ai</text>
+<text x="122" y="306" font-size="12" fill="#1c2230" text-anchor="start">FORMAT_VIOLATION</text>
+<rect x="36" y="321" width="528" height="34" rx="8" fill="#eef0f3" stroke="#5d6b7e" stroke-width="1.2"/>
+<text x="48" y="343" font-size="11.5" fill="#3f4a59" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">human</text>
+<text x="122" y="343" font-size="12" fill="#1c2230" text-anchor="start">... two more example pairs ...</text>
+<rect x="36" y="358" width="528" height="34" rx="8" fill="#eef3fb" stroke="#2f62c8" stroke-width="1.2"/>
+<text x="48" y="380" font-size="11.5" fill="#1f4a9e" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">human</text>
+<text x="122" y="380" font-size="12" fill="#1c2230" text-anchor="start">{query}</text>
+<text x="574" y="136" font-size="12" fill="#1c2230" text-anchor="start"></text>
+<path d="M572 100 h8 v212 h-8" fill="none" stroke="#0f8a6a" stroke-width="1.6"/>
+<text x="592" y="200" font-size="12.5" fill="#0b6650" text-anchor="start" font-weight="700">Examples</text>
+<text x="592" y="218" font-size="12" fill="#4a5263" text-anchor="start">the shots</text>
+<path d="M564 375 C 640 375, 640 300, 680 300" fill="none" stroke="#2f62c8" stroke-width="1.8" marker-end="url(#m3)"/>
+<rect x="684" y="250" width="176" height="100" rx="12" fill="#fff" stroke="#b7791f" stroke-width="1.7"/>
+<text x="700" y="277" font-size="14" fill="#8a5a12" text-anchor="start" font-weight="700">Model</text>
+<text x="700" y="300" font-size="12" fill="#4a5263" text-anchor="start">Copies the pattern</text>
+<text x="700" y="318" font-size="12" fill="#4a5263" text-anchor="start">of the examples</text>
+<path d="M772 350 L 772 380" fill="none" stroke="#b7791f" stroke-width="1.6" marker-end="url(#m6)"/>
+<rect x="684" y="384" width="176" height="40" rx="10" fill="#0f8a6a"/>
+<text x="772" y="410" font-size="13.5" fill="#fff" text-anchor="middle" font-weight="700">One label</text>
+<text x="300" y="432" font-size="12.3" fill="#4a5263" text-anchor="middle" font-style="italic">Each pair of a human and an ai message shows one input and the wanted answer.</text>
+</svg>

@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 370" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">How a program talks to a model</title>
+  <desc id="d">The .env file holds the API keys, and the program loads them. Inside your program, a model object holds the model name, the temperature and the maximum number of output tokens. llm.invoke with a question sends an HTTPS request with the key to the model service, which is Google for Gemini or OpenRouter for Qwen. The service writes tokens one by one. An AIMessage comes back, and the program prints the answer. Each invoke is one trip to the service and back.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="20" y="40" width="170" height="120" rx="12" fill="#fff" stroke="#5d6b7e" stroke-width="1.7"/>
+<text x="36" y="67" font-size="14" fill="#3f4a59" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">.env file</text>
+<text x="36" y="90" font-size="11.5" fill="#4a5263" text-anchor="start">GOOGLE_API_KEY</text>
+<text x="36" y="108" font-size="11.5" fill="#4a5263" text-anchor="start">OPENROUTER_API_KEY</text>
+<path d="M190 100 L 236 100" fill="none" stroke="#5d6b7e" stroke-width="1.6" marker-end="url(#m8)"/>
+<text x="213" y="90" font-size="11.5" fill="#4a5263" text-anchor="middle" font-weight="600">load</text>
+<rect x="240" y="24" width="290" height="300" rx="16" fill="#fbfaf6" stroke="#7a4fc2" stroke-width="1.5" stroke-dasharray="6 5"/>
+<text x="385" y="50" font-size="14" fill="#58378f" text-anchor="middle" font-weight="700">Your program</text>
+<rect x="258" y="66" width="254" height="110" rx="12" fill="#fff" stroke="#7a4fc2" stroke-width="1.7"/>
+<text x="274" y="93" font-size="14" fill="#58378f" text-anchor="start" font-weight="700">The model object</text>
+<text x="274" y="116" font-size="12.3" fill="#4a5263" text-anchor="start">model name</text>
+<text x="274" y="134" font-size="12.3" fill="#4a5263" text-anchor="start">temperature</text>
+<text x="274" y="152" font-size="12.3" fill="#4a5263" text-anchor="start">maximum output tokens</text>
+<rect x="258" y="192" width="254" height="56" rx="12" fill="#fff" stroke="#2f62c8" stroke-width="1.7"/>
+<text x="274" y="219" font-size="12.5" fill="#1f4a9e" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">llm.invoke(&quot;question&quot;)</text>
+<rect x="258" y="262" width="254" height="50" rx="12" fill="#fff" stroke="#0f8a6a" stroke-width="1.7"/>
+<text x="274" y="289" font-size="13" fill="#0b6650" text-anchor="start" font-weight="700">print the answer</text>
+<path d="M385 176 L 385 188" fill="none" stroke="#1c2230" stroke-width="1.6" marker-end="url(#m0)"/>
+<path d="M512 220 C 585 220, 585 120, 636 120" fill="none" stroke="#2f62c8" stroke-width="1.8" marker-end="url(#m3)"/>
+<text x="585" y="100" font-size="11.5" fill="#1f4a9e" text-anchor="middle" font-weight="600">HTTPS request</text>
+<text x="585" y="115" font-size="11.5" fill="#1f4a9e" text-anchor="middle" font-weight="600">with the key</text>
+<rect x="640" y="60" width="220" height="120" rx="12" fill="#fff" stroke="#b7791f" stroke-width="1.7"/>
+<text x="656" y="87" font-size="14" fill="#8a5a12" text-anchor="start" font-weight="700">Model service</text>
+<text x="656" y="110" font-size="12.3" fill="#4a5263" text-anchor="start">Google (Gemini) or</text>
+<text x="656" y="128" font-size="12.3" fill="#4a5263" text-anchor="start">OpenRouter (Qwen)</text>
+<text x="656" y="146" font-size="12.3" fill="#4a5263" text-anchor="start">writes tokens one by one</text>
+<path d="M750 180 L 750 210" fill="none" stroke="#0f8a6a" stroke-width="1.8" marker-end="url(#m4)"/>
+<rect x="640" y="214" width="220" height="56" rx="12" fill="#fff" stroke="#0f8a6a" stroke-width="1.7"/>
+<text x="656" y="241" font-size="13" fill="#0b6650" text-anchor="start" font-weight="700">AIMessage comes back</text>
+<path d="M640 250 C 590 250, 570 287, 516 287" fill="none" stroke="#0f8a6a" stroke-width="1.8" marker-end="url(#m4)"/>
+<text x="440" y="350" font-size="12.3" fill="#4a5263" text-anchor="middle" font-style="italic">Each invoke() is one trip to the service and back. Nothing runs on your computer except your program.</text>
+</svg>

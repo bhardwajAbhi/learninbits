@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 762" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">Inside one run of Example 2</title>
+  <desc id="d">A sequence diagram with the lanes Your code, self_consistency, chain, OpenRouter API, Counter. Step 1, Your code to self_consistency, self_consistency(chain, problem, n_samples=5). Step 2, self_consistency to chain, chain.invoke({&quot;problem&quot; problem}), the same problem in every round. Step 3, chain to OpenRouter API, Request with the reasoning prompt, temperature=0.7, so each run differs. Step 4, OpenRouter API to chain, Reply, reasoning, then one FINAL ANSWER line. Step 5, chain to self_consistency, response, a plain string. Step 6, self_consistency to self_consistency, extract_final_answer(response), the cleaned answer, or UNKNOWN. Step 7, self_consistency to self_consistency, answers.append(answer), prints Sample i and the answer. Step 8, self_consistency to Counter, answers, the list of all five answers. Step 9, Counter to Counter, Counter(answers).most_common(1), counts and finds the top answer in one call. Step 10, Counter to self_consistency, winner and its count, confidence = count / n_samples. Step 11, self_consistency to Your code, result, final_answer, confidence and vote_distribution. Steps 2 to 7 repeat, Repeated for each of the 5 samples.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="15" y="18" width="150" height="42" rx="10" fill="#eef0f3" stroke="#5d6b7e" stroke-width="1.4"/>
+<text x="90" y="44" font-size="12.3" fill="#3f4a59" text-anchor="middle" font-weight="700">Your code</text>
+<line x1="90" y1="60" x2="90" y2="746" stroke="#d9d4c7" stroke-width="1.6" stroke-dasharray="5 5"/>
+<rect x="190" y="18" width="150" height="42" rx="10" fill="#e3f4ee" stroke="#0f8a6a" stroke-width="1.4"/>
+<text x="265" y="44" font-size="11.8" fill="#0b6650" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="700">self_consistency</text>
+<line x1="265" y1="60" x2="265" y2="746" stroke="#d9d4c7" stroke-width="1.6" stroke-dasharray="5 5"/>
+<rect x="365" y="18" width="150" height="42" rx="10" fill="#f3f0fa" stroke="#7a4fc2" stroke-width="1.4"/>
+<text x="440" y="44" font-size="11.8" fill="#58378f" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="700">chain</text>
+<line x1="440" y1="60" x2="440" y2="746" stroke="#d9d4c7" stroke-width="1.6" stroke-dasharray="5 5"/>
+<rect x="540" y="18" width="150" height="42" rx="10" fill="#fdf4e3" stroke="#b7791f" stroke-width="1.4"/>
+<text x="615" y="44" font-size="12.3" fill="#8a5a12" text-anchor="middle" font-weight="700">OpenRouter API</text>
+<line x1="615" y1="60" x2="615" y2="746" stroke="#d9d4c7" stroke-width="1.6" stroke-dasharray="5 5"/>
+<rect x="715" y="18" width="150" height="42" rx="10" fill="#e6f3f4" stroke="#0e7c86" stroke-width="1.4"/>
+<text x="790" y="44" font-size="12.3" fill="#095a61" text-anchor="middle" font-weight="700">Counter</text>
+<line x1="790" y1="60" x2="790" y2="746" stroke="#d9d4c7" stroke-width="1.6" stroke-dasharray="5 5"/>
+<rect x="14" y="134" width="852" height="360" rx="10" fill="none" stroke="#5d6b7e" stroke-width="1.2" stroke-dasharray="6 4"/>
+<rect x="14" y="134" width="264" height="22" rx="10" fill="#5d6b7e"/>
+<text x="26" y="149" font-size="11.5" fill="#fff" text-anchor="start" font-weight="700">Repeated for each of the 5 samples</text>
+<path d="M94 98 L 259 98" fill="none" stroke="#5d6b7e" stroke-width="1.7" marker-end="url(#m8)"/>
+<circle cx="108" cy="85" r="10" fill="#5d6b7e"/>
+<text x="108" y="88.96" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">1</text>
+<text x="124" y="90" font-size="12" fill="#3f4a59" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">self_consistency(chain, problem, n_samples=5)</text>
+<path d="M269 184 L 434 184" fill="none" stroke="#0f8a6a" stroke-width="1.7" marker-end="url(#m4)"/>
+<circle cx="283" cy="171" r="10" fill="#0f8a6a"/>
+<text x="283" y="174.96" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">2</text>
+<text x="299" y="176" font-size="12" fill="#0b6650" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">chain.invoke({&quot;problem&quot;: problem})</text>
+<text x="299" y="200" font-size="11.3" fill="#4a5263" text-anchor="start">the same problem in every round</text>
+<path d="M444 240 L 609 240" fill="none" stroke="#7a4fc2" stroke-width="1.7" marker-end="url(#m5)"/>
+<circle cx="458" cy="227" r="10" fill="#7a4fc2"/>
+<text x="458" y="230.96" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">3</text>
+<text x="474" y="232" font-size="12" fill="#58378f" text-anchor="start" font-weight="700">Request with the reasoning prompt</text>
+<text x="474" y="256" font-size="11.3" fill="#4a5263" text-anchor="start">temperature=0.7, so each run differs</text>
+<path d="M611 296 L 446 296" fill="none" stroke="#b7791f" stroke-width="1.7" stroke-dasharray="6 4" marker-end="url(#m6)"/>
+<circle cx="458" cy="283" r="10" fill="#b7791f"/>
+<text x="458" y="286.96" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">4</text>
+<text x="474" y="288" font-size="12" fill="#8a5a12" text-anchor="start" font-weight="700">Reply</text>
+<text x="474" y="312" font-size="11.3" fill="#4a5263" text-anchor="start">reasoning, then one FINAL ANSWER line</text>
+<path d="M436 352 L 271 352" fill="none" stroke="#7a4fc2" stroke-width="1.7" stroke-dasharray="6 4" marker-end="url(#m5)"/>
+<circle cx="283" cy="339" r="10" fill="#7a4fc2"/>
+<text x="283" y="342.96" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">5</text>
+<text x="299" y="344" font-size="12" fill="#58378f" text-anchor="start" font-weight="700">response</text>
+<text x="299" y="368" font-size="11.3" fill="#4a5263" text-anchor="start">a plain string</text>
+<path d="M265 398 h34 v18 h-30" fill="none" stroke="#0f8a6a" stroke-width="1.6"/>
+<path d="M273 416 L 267 416" fill="none" stroke="#0f8a6a" stroke-width="1.6" marker-end="url(#m4)"/>
+<circle cx="321" cy="407" r="10" fill="#0f8a6a"/>
+<text x="321" y="410.96" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">6</text>
+<text x="337" y="411" font-size="12" fill="#0b6650" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">extract_final_answer(response)</text>
+<text x="337" y="427" font-size="11.3" fill="#4a5263" text-anchor="start">the cleaned answer, or UNKNOWN</text>
+<path d="M265 454 h34 v18 h-30" fill="none" stroke="#0f8a6a" stroke-width="1.6"/>
+<path d="M273 472 L 267 472" fill="none" stroke="#0f8a6a" stroke-width="1.6" marker-end="url(#m4)"/>
+<circle cx="321" cy="463" r="10" fill="#0f8a6a"/>
+<text x="321" y="466.96" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">7</text>
+<text x="337" y="467" font-size="12" fill="#0b6650" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">answers.append(answer)</text>
+<text x="337" y="483" font-size="11.3" fill="#4a5263" text-anchor="start">prints Sample i and the answer</text>
+<path d="M269 532 L 784 532" fill="none" stroke="#0f8a6a" stroke-width="1.7" marker-end="url(#m4)"/>
+<circle cx="283" cy="519" r="10" fill="#0f8a6a"/>
+<text x="283" y="522.96" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">8</text>
+<text x="299" y="524" font-size="12" fill="#0b6650" text-anchor="start" font-weight="700">answers</text>
+<text x="299" y="548" font-size="11.3" fill="#4a5263" text-anchor="start">the list of all five answers</text>
+<path d="M790 578 h-34 v18 h30" fill="none" stroke="#0e7c86" stroke-width="1.6"/>
+<path d="M782 596 L 788 596" fill="none" stroke="#0e7c86" stroke-width="1.6" marker-end="url(#m0)"/>
+<circle cx="734" cy="587" r="10" fill="#0e7c86"/>
+<text x="734" y="590.96" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">9</text>
+<text x="718" y="591" font-size="12" fill="#095a61" text-anchor="end" font-family="JetBrains Mono, monospace" font-weight="700">Counter(answers).most_common(1)</text>
+<text x="718" y="607" font-size="11.3" fill="#4a5263" text-anchor="end">counts and finds the top answer in one call</text>
+<path d="M786 644 L 271 644" fill="none" stroke="#0e7c86" stroke-width="1.7" stroke-dasharray="6 4" marker-end="url(#m0)"/>
+<circle cx="283" cy="631" r="10" fill="#0e7c86"/>
+<text x="283" y="634.96" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">10</text>
+<text x="299" y="636" font-size="12" fill="#095a61" text-anchor="start" font-weight="700">winner and its count</text>
+<text x="299" y="660" font-size="11.3" fill="#4a5263" text-anchor="start">confidence = count / n_samples</text>
+<path d="M261 700 L 96 700" fill="none" stroke="#0f8a6a" stroke-width="1.7" stroke-dasharray="6 4" marker-end="url(#m4)"/>
+<circle cx="108" cy="687" r="10" fill="#0f8a6a"/>
+<text x="108" y="690.96" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">11</text>
+<text x="124" y="692" font-size="12" fill="#0b6650" text-anchor="start" font-weight="700">result</text>
+<text x="124" y="716" font-size="11.3" fill="#4a5263" text-anchor="start">final_answer, confidence and vote_distribution</text>
+</svg>

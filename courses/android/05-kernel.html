@@ -1,0 +1,1197 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>The kernel · Inside Android · LearnInBits</title>
+  <meta name="description" content="How Android uses the Linux kernel, from the Android Common Kernel and GKI to the device tree, configuration fragments, the build and kernel debugging.">
+  <link rel="icon" href="../../assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,500;0,8..60,600;1,8..60,500&display=swap">
+  <link rel="stylesheet" href="../../assets/css/style.css?v=20261029d">
+  <script>try{var t=localStorage.getItem("lib-theme");t=t?JSON.parse(t):(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+</head>
+<body data-root="../../" data-page="chapter" data-course="android" data-id="05-kernel">
+
+<main id="main">
+<article>
+
+  <div class="block oneline">
+    <div class="label">In one line</div>
+    <p>Android runs upstream Linux plus a small set of extensions. GKI splits it into one shared core and vendor modules behind a stable interface.</p>
+  </div>
+
+  <p>The Linux kernel is the base of every Android device. It manages the hardware, schedules processes and enforces the security boundaries. It also provides the low-level tools on which the framework rests, such as Binder and shared memory. Yet an Android device does not run a stock kernel from kernel.org. Over more than fifteen years, Android added drivers, changed policies and set strict configuration rules.</p>
+  <p>In chapter 4, you followed the boot until <code>init</code> took over. In this chapter, you look at the kernel itself. You learn what Android adds to upstream Linux and how the Generic Kernel Image (GKI) ended a decade of fragmentation. You then study the Android subsystems in the kernel, the device tree, the configuration rules, the build integration and the tools for kernel debugging. The chapter is current for Android 17, whose kernel branch is <code>android17-6.18</code>.</p>
+
+  <h2>Android kernel and upstream Linux</h2>
+  <p>Android does not keep a permanent fork of Linux. Google maintains a set of <strong>Android Common Kernel</strong> (ACK) branches. Each branch starts from an upstream Long-Term Support (LTS) release, such as 6.12 or 6.18, and adds a curated set of patches. The patches fall into five groups.</p>
+  <ol>
+    <li><strong>Android drivers</strong> for core platform features, such as Binder, ashmem and Incremental FS.</li>
+    <li><strong>Scheduler and memory changes</strong> that improve interactive performance on phones.</li>
+    <li><strong>Security hardening</strong> beyond the upstream defaults.</li>
+    <li><strong>Vendor hook points</strong> that let System on Chip (SoC) vendors adapt behavior without a change to the core code.</li>
+    <li><strong>Test and debug support</strong> for the Android test pipeline.</li>
+  </ol>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../../assets/img/diagrams/kn-ack-layers.svg" alt="On the left, an upstream Linux LTS release forms the base. Five layers of Android patches sit on it. They are Android drivers such as Binder, binderfs, ashmem and incremental-fs, scheduler and memory changes for interactive phones, security hardening such as CFI and shadow call stack, vendor hook points and test and debug support. Together they form an Android Common Kernel branch such as android17-6.18. On the right, five Android ideas that converge with upstream. Wakelocks are now PM_WAKELOCKS, Pressure Stall Information is a standard feature, the in-kernel low memory killer is replaced by lmkd and PSI, ashmem gives way to memfd_create and ION is replaced by DMA-BUF heaps." loading="lazy"></div>
+    <figcaption>An ACK branch is an LTS release with five layers of Android patches. Several Android ideas already moved upstream.</figcaption>
+  </figure>
+
+  <p>The goal is a small difference from upstream. Many patches that started in the Android tree are now part of Linux. Wakelocks became <code>PM_WAKELOCKS</code>. Pressure Stall Information (PSI) began as a tool for Android memory management and is now a standard kernel feature. The old in-kernel low memory killer is gone, and a daemon in user space does its work. The base configuration even disables the old option explicitly.</p>
+<pre class="code" data-lang="text" data-file="kernel/configs/b/android-6.12/android-base.config"><code># CONFIG_ANDROID_LOW_MEMORY_KILLER is not set</code></pre>
+  <p>Some features remain Android-specific. These are the Binder driver, Incremental FS, the vendor hooks and the accounting of CPU and input and output for each user ID (UID). The next table lists the most important kernel features that Android adds or requires.</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Feature</th><th>Option</th><th>Purpose</th></tr></thead>
+      <tbody>
+        <tr><td>Binder IPC</td><td><code>CONFIG_ANDROID_BINDER_IPC</code></td><td>Communication between all framework processes</td></tr>
+        <tr><td>Binderfs</td><td><code>CONFIG_ANDROID_BINDERFS</code></td><td>Binder device nodes that a mount creates</td></tr>
+        <tr><td>Ashmem</td><td><code>CONFIG_ASHMEM</code></td><td>Anonymous shared memory, moving to <code>memfd</code></td></tr>
+        <tr><td>Wakelocks</td><td><code>CONFIG_PM_WAKELOCKS</code></td><td>Keep the system awake during critical work</td></tr>
+        <tr><td>PSI</td><td><code>CONFIG_PSI</code></td><td>Memory pressure signals for <code>lmkd</code></td></tr>
+        <tr><td>DMA-BUF heaps</td><td><code>CONFIG_DMABUF_HEAPS_SYSTEM</code></td><td>Buffers for graphics and cameras, the successor of ION</td></tr>
+        <tr><td>FUSE</td><td><code>CONFIG_FUSE_FS</code></td><td>Shared storage through MediaProvider</td></tr>
+        <tr><td>Incremental FS</td><td><code>CONFIG_INCREMENTAL_FS</code></td><td>Start an app before its APK fully arrives</td></tr>
+        <tr><td>dm-verity</td><td><code>CONFIG_DM_VERITY</code></td><td>Integrity of the system partitions</td></tr>
+        <tr><td>File encryption and fs-verity</td><td><code>CONFIG_FS_ENCRYPTION</code>, <code>CONFIG_FS_VERITY</code></td><td>Encryption of user data and integrity of single files</td></tr>
+        <tr><td>Accounting for each UID</td><td><code>CONFIG_UID_SYS_STATS</code>, <code>CONFIG_CPU_FREQ_TIMES</code></td><td>Battery and data usage for each app</td></tr>
+        <tr><td>GPU memory tracing</td><td><code>CONFIG_TRACE_GPU_MEM</code></td><td>Trace events for GPU memory</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Most of these options are mandatory in the Android base configuration under <code>kernel/configs/</code>. Two exceptions are <code>CONFIG_INCREMENTAL_FS</code> and <code>CONFIG_DMABUF_HEAPS_SYSTEM</code>. The GKI defconfig turns them on instead.</p>
+
+  <div class="block analogy">
+    <div class="label">Real-life analogy</div>
+    <p>Think of a car maker that sells many brands. In the past, each brand changed the engine for each model. A recall for one engine fault then needed a separate fix for hundreds of engines.</p>
+    <p>Today the maker builds one standard engine. It has a standard connector with fixed pins. Each brand adds its own parts, such as seats, lights and sensors, through that connector only. The maker can now replace the engine in every car, and the parts of each brand still fit.</p>
+    <p>The standard engine is the GKI core kernel. The connector is the Kernel Module Interface (KMI). The parts of each brand are the vendor modules.</p>
+  </div>
+
+  <h2>The Generic Kernel Image</h2>
+  <h3>The problem of fragmentation</h3>
+  <p>Before GKI, every Android device shipped its own kernel. A SoC vendor such as Qualcomm or MediaTek took an ACK branch and added hundreds of patches. The device maker then added more patches for its board. The result was a deeply split ecosystem.</p>
+  <ul>
+    <li>A security fix reached a device only with the help of every vendor in the chain.</li>
+    <li>Each device ran a unique kernel binary that nobody could update on its own.</li>
+    <li>A kernel bug needed a fix in many separate trees.</li>
+    <li>Testing at scale was not possible, because no two devices ran the same kernel.</li>
+  </ul>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../../assets/img/diagrams/kn-gki-before-after.svg" alt="Before GKI, the Android Common Kernel forked into a kernel for each SoC vendor, and each of those forked again for each device. Every device ran its own kernel binary, a security fix needed every vendor tree, and no two devices could be tested the same way. With GKI, one core kernel built by Google sits on top of a stable Kernel Module Interface. Each SoC vendor ships only modules. The same core runs on every device, Google can ship a kernel fix directly, and vendor code lives only in modules." loading="lazy"></div>
+    <figcaption>A tree of forks became one shared core with modules on a stable interface.</figcaption>
+  </figure>
+
+  <h3>One core, many modules</h3>
+  <p>GKI, introduced with kernel 5.10 for Android 12, splits the kernel into two parts.</p>
+  <ul>
+    <li>The <strong>GKI core kernel</strong> is a single binary that Google builds from the ACK source. It is identical on all devices with the same kernel version.</li>
+    <li><strong>Vendor modules</strong> are loadable kernel modules (<code>.ko</code> files) with all code for the SoC and the device. Vendors build them against a stable Kernel Module Interface (KMI).</li>
+  </ul>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../../assets/img/diagrams/kn-gki-split.svg" alt="On the left, built by Google, the GKI core kernel ships in boot.img and about 100 GKI modules ship in system_dlkm.img. On the right, built by the vendor, vendor modules with SoC and board drivers ship in vendor or vendor_boot, and optional extra modules ship in vendor_dlkm.img. In the middle, the KMI consists of the symbol list abi_symbollist, the ABI description abi.stg and a CRC for each symbol from CONFIG_MODVERSIONS. The KMI freezes for a branch, so both sides can update without each other." loading="lazy"></div>
+    <figcaption>Google builds the left side, the vendor builds the right side, and the KMI joins them.</figcaption>
+  </figure>
+
+  <p>Google also ships GKI modules for common features, such as networking, Universal Serial Bus (USB) and file systems. They live in the <code>system_dlkm</code> partition. Vendor modules live in the vendor ramdisk, the <code>vendor</code> partition or <code>vendor_dlkm</code>. Here, DLKM stands for dynamically loadable kernel module.</p>
+
+  <h3>The Kernel Module Interface</h3>
+  <p>The KMI is the contract between the core kernel and the vendor modules. It has three parts.</p>
+  <ol>
+    <li><strong>A symbol list.</strong> It names the kernel functions and variables that vendor modules can use. The list for kernel 6.6 has about 38,840 entries. The newer 6.18 branch ships a tighter list of about 22,961 entries.</li>
+    <li><strong>An Application Binary Interface (ABI) description.</strong> The file <code>abi.stg</code> describes every exported type, structure and function signature in a form that tools can compare. It is about 7.7 MB for 6.18.</li>
+    <li><strong>Module versioning.</strong> With <code>CONFIG_MODVERSIONS=y</code>, the build computes a cyclic redundancy check (CRC) for each exported symbol from its prototype.</li>
+  </ol>
+<pre class="code" data-lang="text" data-file="kernel/prebuilts/6.6/arm64/abi_symbollist (start)"><code>[abi_symbol_list]
+# commonly used symbols
+    module_layout
+    __put_task_struct
+    utf8_data_table
+
+[abi_symbol_list]
+    add_cpu
+    add_device_randomness
+    add_timer
+    ...</code></pre>
+  <p>Google freezes the KMI for each GKI branch. After the freeze, the symbol list and the ABI never change in an incompatible way for the life of that branch. The kernel enforces this rule each time a module loads.</p>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../../assets/img/diagrams/kn-kmi-crc.svg" alt="A vendor module vendor_cam.ko needs the symbol dma_buf_get with a given CRC. The running GKI kernel exports dma_buf_get with its own CRC. If the CRC matches for every symbol, the module loads. If not, the load is refused with the message disagrees about version of symbol. The CRC comes from the full prototype of the symbol, so a changed type gives a new CRC even with the same name." loading="lazy"></div>
+    <figcaption>The CRC check catches a changed type even when the name of the symbol stays the same.</figcaption>
+  </figure>
+
+  <p>If a CRC in the module does not match the CRC in the running kernel, the load fails with the message <code>disagrees about version of symbol</code>. A vendor therefore cannot load a module that expects an older or newer form of a structure.</p>
+
+  <h3>Vendor hooks</h3>
+  <p>Vendors cannot change the core kernel. Some still need to adapt it, for example the scheduler for the layout of their central processing units (CPUs). GKI offers <strong>vendor hooks</strong> for this purpose. A hook is a tracepoint at a fixed place in the core code. A vendor module registers a callback for it.</p>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../../assets/img/diagrams/kn-vendor-hooks.svg" alt="Two kinds of hooks. android_vh_* vendor hooks are normal tracepoint hooks that a module can attach and detach at run time, not from atomic context, for example for a memory policy. android_rvh_* restricted vendor hooks sit in hot or atomic paths, are registered once at boot and can never be detached, for example in the scheduler or for interrupts. Below, a simplified pattern. The GKI core calls a trace_android_rvh function at a fixed point, and a vendor module registers its callback once at boot." loading="lazy"></div>
+    <figcaption>Normal hooks can come and go. Restricted hooks stay for the whole boot.</figcaption>
+  </figure>
+
+  <p>The symbol list includes the registration functions, for example <code>android_rvh_probe_register</code>. Typical uses are scheduler policies for big.LITTLE or DynamIQ CPU clusters, thermal logic for specific sensors, memory policies and power decisions.</p>
+
+  <h3>GKI prebuilts in AOSP</h3>
+  <p>The Android Open Source Project (AOSP) tree ships prebuilt GKI kernels for the emulator and for reference devices under <code>kernel/prebuilts/</code>. There is one folder for each kernel version and architecture.</p>
+<pre class="code" data-lang="text" data-file="kernel/prebuilts/ (shortened)"><code>kernel/prebuilts/
+    6.6/arm64/
+        kernel-6.6, kernel-6.6-gz, kernel-6.6-lz4
+        kernel-6.6-allsyms ...     # debug images with all symbols
+        System.map
+        abi_symbollist, abi.stg   # the KMI
+        kernel_version.mk
+        *.ko                      # about 96 GKI modules
+    6.12/  ...
+    6.18/arm64/                   # Android 17
+        *.ko                      # about 104 GKI modules
+        16k/                      # the same kernel for 16 KB pages
+    common-modules/virtual-device/  # modules of the emulator</code></pre>
+  <p>Each prebuilt carries a version string in <code>kernel_version.mk</code>. The string tells the whole story of the build.</p>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../../assets/img/diagrams/kn-version-string.svg" alt="The string 6.18.16-android17-1-gb61cd7ae4209-ab15097451-4k from kernel_version.mk splits into six parts. 6.18.16 is LTS 6.18 at patch level 16. android17 is the ACK branch for Android 17. 1 is the first release of the branch. gb61cd7ae4209 is the git commit. ab15097451 is the Android build ID. 4k means 4 KB pages, and a 16 KB build has no suffix." loading="lazy"></div>
+    <figcaption>Six parts identify the LTS base, the branch, the release, the commit, the build and the page size.</figcaption>
+  </figure>
+
+  <h3>Release lifecycle</h3>
+  <p>Each GKI branch has a launch date and an end-of-life (EOL) date. The file <code>kernel/configs/kernel-lifetimes.xml</code> records them, together with the quarterly GKI releases inside each branch.</p>
+<pre class="code" data-lang="xml" data-file="kernel/configs/kernel-lifetimes.xml"><code>&lt;branch name="android16-6.12"
+        min_android_release="16"
+        version="6.12"
+        launch="2024-11-17"
+        eol="2029-07-01"&gt;
+    &lt;lts-versions&gt;
+        &lt;release version="6.12.23" launch="2025-06-12" eol="2026-10-01"/&gt;
+        &lt;release version="6.12.30" launch="2025-07-11" eol="2026-11-01"/&gt;
+        &lt;release version="6.12.38" launch="2025-08-11" eol="2027-01-01"/&gt;
+        &lt;release version="6.12.58" launch="2025-12-11" eol="2027-04-01"/&gt;
+    &lt;/lts-versions&gt;
+&lt;/branch&gt;
+&lt;branch name="android17-6.18"
+        min_android_release="17"
+        version="6.18"
+        launch="2025-11-30"
+        eol="2030-07-01"&gt;
+    &lt;no-releases reason="branch in pre-release phase"/&gt;
+&lt;/branch&gt;</code></pre>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../../assets/img/diagrams/kn-lifetimes.svg" alt="A timeline from 2020 to 2030 with one bar for each branch. android12-5.10 and android13-5.10 run from December 2020 to July 2027. android13-5.15 and android14-5.15 run from October 2021 to July 2028. android14-6.1 runs from December 2022 to July 2029. android15-6.6 runs from October 2023 to July 2028. android16-6.12 runs from November 2024 to July 2029. android17-6.18 runs from November 2025 to July 2030 and had no quarterly release yet when Android 17 was cut." loading="lazy"></div>
+    <figcaption>Each branch gets several years of support. Each quarterly release inside it gets about 15 months.</figcaption>
+  </figure>
+
+  <p>A branch lives for four to six years. Each quarterly release inside it has a shorter window of about 14 to 17 months. Branches before 5.10 count as non-GKI kernels.</p>
+  <p>The Vendor Test Suite (VTS), the framework compatibility matrix and the build read this file. Together they make sure that new devices ship with a supported kernel. A second file, <code>approved-ogki-builds.xml</code>, lists the exact Original Equipment Manufacturer (OEM) GKI builds, called OGKI builds, that device makers can ship. Each entry holds a SHA-256 hash of the build and a bug number for the approval.</p>
+
+  <h3>Extend without a fork</h3>
+  <ol class="steps">
+    <li><strong>Google builds the core.</strong> Google builds the GKI kernel from the ACK branch and freezes the KMI.</li>
+    <li><strong>Google publishes the interface.</strong> The kernel, the symbol list and the headers become available to vendors.</li>
+    <li><strong>The vendor builds modules.</strong> The SoC vendor compiles its drivers against the KMI and registers callbacks for vendor hooks.</li>
+    <li><strong>The device maker assembles images.</strong> The GKI kernel goes into <code>boot.img</code>, and the vendor modules go into <code>vendor_boot</code>, <code>vendor</code> or <code>vendor_dlkm</code>.</li>
+    <li><strong>Google ships a fix.</strong> Later, Google releases a kernel with a security fix and the same KMI. An over-the-air (OTA) update replaces <code>boot.img</code>.</li>
+    <li><strong>The modules keep working.</strong> The vendor modules load without a rebuild, because the KMI did not change.</li>
+  </ol>
+  <p>This separation lets Google fix the kernel without the vendors. It also lets vendors update their modules without a new kernel. Device makers can combine any kernel and module versions of the same KMI generation.</p>
+
+  <h2>Android subsystems in the kernel</h2>
+  <p>Android builds on the Linux kernel but relies on several specialized subsystems to support its application framework, hardware, storage and security architecture. These subsystems provide the low-level mechanisms that Android services use to communicate, share memory, manage power and control resources.</p>
+  <p>This section examines twelve important kernel features. Each topic explains the underlying problem, the mechanism involved, the relevant kernel configuration and the interaction between kernel components and Android userspace. The configuration examples refer to the Android 16 branch <code>b</code> and kernel 6.12 where the source identifies those versions. Kernel configurations and implementation details vary across Android releases and device vendors.</p>
+
+  <h3>Binder driver</h3>
+  <p>Binder is Android's primary inter-process communication (IPC) mechanism. It allows applications and system services to exchange requests and responses across process boundaries. Operations such as launching an activity, binding to a service and querying a content provider typically involve Binder communication.</p>
+  <p>Binder implements a synchronous remote procedure call (RPC) model. A client packages a request into a Parcel and submits it through the Binder device using the <code>ioctl()</code> system call. The kernel driver routes the transaction to the target process, manages its buffers and wakes an appropriate server thread. The server processes the request and returns a response through another transaction.</p>
+  <p>Binder optimizes data transfer by mapping a buffer into the server process's address space. When a client sends a transaction, the driver copies the payload directly from the client userspace buffer into the server's mapped Binder buffer. This design requires one data copy for the request rather than the two copies associated with a conventional kernel-mediated IPC path. The server then reads the data from its mapped region.</p>
+  <p>The driver also manages remote object references, thread-pool coordination and process-death notifications. It translates Binder object handles when transactions cross process boundaries. Each transaction carries caller identity information, including the process identifier (PID) and user identifier (UID), together with the caller's SELinux security context. Services use this information when making access-control decisions.</p>
+  <h4>Kernel configuration</h4>
+<pre class="code" data-lang="text" data-file="Excerpt"><code>CONFIG_ANDROID_BINDER_IPC=y
+CONFIG_ANDROID_BINDERFS=y</code></pre>
+  <p>Source. <code>kernel/configs/b/android-6.12/android-base.config</code>, lines 18–19.</p>
+  <h4>Transaction flow</h4>
+  <ol class="steps">
+    <li><strong>Prepare the request.</strong> The client constructs a Parcel containing the transaction code, arguments and any Binder object references.</li>
+    <li><strong>Submit the transaction.</strong> The client invokes <code>ioctl(BINDER_WRITE_READ)</code> on its Binder device. The outgoing command contains a transaction request.</li>
+    <li><strong>Resolve the destination.</strong> The driver identifies the target Binder node and associated process. It validates references and transaction state.</li>
+    <li><strong>Transfer the payload.</strong> The driver allocates space in the server's mapped Binder region and copies the request into that region.</li>
+    <li><strong>Wake a server thread.</strong> The driver makes the transaction available to a waiting Binder thread. The server unmarshals the Parcel and executes the requested operation.</li>
+    <li><strong>Return the response.</strong> The server submits a reply through the driver. Binder delivers the result to the client and wakes its waiting thread.</li>
+  </ol>
+  <h4>Memory mapping and transaction limits</h4>
+  <p>Each process maps a region of memory when it opens the Binder device. The server's mapped region holds incoming transaction data. The source describes a default mapping size of 1 MiB minus two pages. With 4 KiB pages, this equals 1,040,384 bytes.</p>
+  <p>This region limits the amount of incoming transaction data that a process can accommodate at one time. Large transactions can exhaust available Binder buffer space even when the device has sufficient total memory. Applications and services therefore need to avoid unnecessarily large Parcels.</p>
+  <p>Binder also manages transaction threads. A process registers its thread pool and sets a maximum thread count through Binder commands. If existing threads cannot handle incoming work, the driver can request additional threads using <code>BR_SPAWN_LOOPER</code>. Threads enter the driver through <code>ioctl(BINDER_WRITE_READ)</code> and wait for transactions or replies.</p>
+  <h4>Binder domains</h4>
+  <p>Modern Android uses separate Binder domains to maintain architectural boundaries between framework and vendor components.</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Domain</th><th>Device node</th><th>Primary purpose</th></tr></thead>
+      <tbody><tr><td>Framework Binder</td><td><code>/dev/binder</code></td><td>Application-to-framework communication</td></tr><tr><td>Hardware Binder</td><td><code>/dev/hwbinder</code></td><td>Framework-to-hardware abstraction layer communication</td></tr><tr><td>Vendor Binder</td><td><code>/dev/vndbinder</code></td><td>Vendor-internal communication</td></tr></tbody>
+    </table>
+  </div>
+  <p>The hardware abstraction layer (HAL) exposes interfaces between Android framework services and hardware-specific implementations. The separate Binder domains support the separation introduced by Project Treble. The exact services using each domain depend on the Android release and device implementation.</p>
+  <p>The <code>binderfs</code> filesystem allows Binder device nodes to be created dynamically. This replaces the need to create every Binder device as a static device node. Separate <code>binderfs</code> mounts also support isolated Binder device namespaces for containerized Android environments.</p>
+  <h4>Code excerpt</h4>
+<pre class="code" data-lang="text" data-file="Excerpt"><code>// frameworks/native/libs/binder/IPCThreadState.cpp
+#include &lt;binder/IPCThreadState.h&gt;
+#include &lt;sys/ioctl.h&gt;
+#include "binder_module.h"</code></pre>
+  <p>Source. <code>frameworks/native/libs/binder/IPCThreadState.cpp</code>.</p>
+  <div class="block analogy">
+    <div class="label">Real-life analogy</div>
+    <p>Binder works like a dispatch office connecting different departments. A client submits a request, the dispatcher routes it to the correct department and the department returns a response. The kernel also tracks the identities of the participants and handles the communication buffers.</p>
+  </div>
+
+  <h3>DMA-BUF heap system</h3>
+  <p>Android's camera, graphics, video and display pipelines frequently exchange large memory buffers. A camera produces image frames, a graphics processor modifies surfaces and a display controller consumes the resulting image data. Copying each buffer between components increases memory bandwidth consumption, latency and processor overhead.</p>
+  <p>The Direct Memory Access Buffer (DMA-BUF) framework provides a standard Linux mechanism for sharing buffers between userspace and kernel drivers. Android uses DMA-BUF heaps to allocate buffers with properties suitable for particular hardware and memory requirements. Processes and device drivers can share the resulting buffers without requiring every component to allocate a separate copy.</p>
+  <p>Android previously relied on the ION allocator for many of these operations. ION was an Android-specific allocator that supported different heap types, including system memory and specially constrained memory. Starting with Linux kernel 5.10, Android moved to the upstream DMA-BUF heap framework. The newer interface standardizes allocation while allowing platform-specific heaps where required.</p>
+  <h4>Heap registration and allocation</h4>
+  <p>Kernel drivers register heaps with the DMA-BUF heap framework. Userspace accesses registered heaps through character devices under <code>/dev/dma_heap/</code>. Common examples include <code>/dev/dma_heap/system</code> and, on supported systems, <code>/dev/dma_heap/linux,cma</code>. The available devices depend on the kernel and device configuration.</p>
+  <p>An application or native service opens the appropriate heap device and calls <code>ioctl(DMA_HEAP_IOCTL_ALLOC)</code>. The kernel allocates a buffer and returns a DMA-BUF file descriptor. This descriptor refers to the shared buffer rather than a separate copy of its contents.</p>
+  <p>A process can pass the descriptor to another process through Binder or a Unix domain socket. A recipient can map the buffer into its address space or pass the descriptor to a compatible hardware driver. The relevant drivers then access the same underlying allocation.</p>
+  <h4>Kernel configuration</h4>
+<pre class="code" data-lang="text" data-file="Excerpt"><code>CONFIG_SYNC_FILE=y</code></pre>
+  <p>Source. <code>kernel/configs/b/android-6.12/android-base.config</code>, line 238.</p>
+  <p>The source identifies <code>CONFIG_SYNC_FILE</code> as the required base configuration for the userspace-facing synchronization-fence interface. DMA-BUF heap support itself is enabled through the kernel configuration used by the relevant build, including the GKI configuration. <code>CONFIG_DMABUF_HEAPS_SYSTEM</code> is not listed in the cited <code>android-base.config</code> fragment because the GKI defconfig enables it separately.</p>
+  <h4>Allocation and sharing flow</h4>
+  <ol class="steps">
+    <li><strong>Register a heap.</strong> A kernel driver registers a heap with the DMA-BUF heap framework. The framework exposes the heap through a device node.</li>
+    <li><strong>Request a buffer.</strong> Userspace opens the heap and issues <code>DMA_HEAP_IOCTL_ALLOC</code> with the required allocation parameters.</li>
+    <li><strong>Return a descriptor.</strong> The kernel returns a DMA-BUF file descriptor representing the allocated buffer.</li>
+    <li><strong>Transfer ownership of the reference.</strong> The application passes the descriptor to another process or subsystem. Both processes can then reference the same underlying allocation.</li>
+    <li><strong>Connect hardware components.</strong> Compatible camera, graphics and display drivers import or reference the buffer.</li>
+    <li><strong>Coordinate access.</strong> Synchronization mechanisms ensure that consumers do not use data before producers finish writing it.</li>
+  </ol>
+  <h4>Zero-copy operation and synchronization</h4>
+  <p>A shared DMA-BUF does not automatically guarantee a zero-copy pipeline. Each participating component must support the buffer's memory layout and import requirements. Some hardware also requires specific alignment, memory placement or mapping constraints.</p>
+  <p>When the pipeline supports shared-buffer access, the camera can write a frame into a buffer that the graphics processor and display later consume. This avoids copying the complete frame between separate allocations. The performance benefit is especially important for high-resolution images and video.</p>
+  <p>Hardware components often operate asynchronously. A producer can submit work before the consumer is ready to access the resulting buffer. Synchronization fences represent completion conditions and coordinate these operations. The synchronization-file interface provides userspace with a mechanism to work with such fences.</p>
+  <p>The emulator's Goldfish modules include <code>system_heap.ko</code>, which provides a DMA-BUF system heap for the virtual device. This illustrates how virtual Android hardware uses the same general allocation model.</p>
+  <p>Source. <code>prebuilts/qemu-kernel/arm64/6.12/goldfish_modules/system_heap.ko</code>.</p>
+  <div class="block analogy">
+    <div class="label">Real-life analogy</div>
+    <p>Consider several workers sharing one work surface. The camera places an image on the surface, the graphics processor modifies it and the display reads the final result. They do not need separate copies of the same image. Synchronization signals indicate when each worker can safely use the surface.</p>
+  </div>
+
+  <h3>FUSE passthrough and storage access</h3>
+  <p>Android's shared-storage architecture must balance application compatibility, access control and file-operation performance. Applications use familiar paths such as <code>/storage/emulated/0/Download/</code> to access shared files. However, different applications must receive appropriate access to those files.</p>
+  <p>Android's storage implementation changed over time. Through Android 10, SDCardFS provided application-specific views of shared storage. Android 11 moved away from SDCardFS toward Filesystem in Userspace (FUSE), with MediaProvider handling important storage operations. Android 12 introduced FUSE passthrough to reduce the overhead of routing every file operation through userspace.</p>
+  <p>FUSE separates the filesystem interface presented to applications from the underlying storage implementation. The kernel's Virtual Filesystem (VFS) layer directs file operations to the appropriate mounted filesystem. For a FUSE mount, the kernel communicates with a userspace daemon when an operation requires userspace handling. In Android's shared-storage architecture, MediaProvider performs the relevant permission checks and storage management.</p>
+  <p>Ordinary FUSE operation can introduce additional context switches and data-transfer overhead. Each operation that requires userspace mediation can involve a request to MediaProvider and a corresponding response. Passthrough reduces this overhead for eligible files by allowing the kernel to direct subsequent data operations to the underlying filesystem.</p>
+  <h4>Kernel configuration</h4>
+<pre class="code" data-lang="text" data-file="Excerpt"><code>CONFIG_FUSE_FS=y</code></pre>
+  <p>Source. <code>kernel/configs/b/android-6.12/android-base.config</code>, line 69.</p>
+  <h4>Passthrough open and read flow</h4>
+  <ol class="steps">
+    <li><strong>Open the shared file.</strong> An application calls <code>open()</code> on a path such as <code>/storage/emulated/0/Download/photo.jpg</code>.</li>
+    <li><strong>Route through the VFS.</strong> The VFS identifies the FUSE mount and forwards the open request to the FUSE kernel module.</li>
+    <li><strong>Send the open request.</strong> The FUSE module sends an <code>OPEN</code> request to the userspace daemon.</li>
+    <li><strong>Check access permissions.</strong> MediaProvider evaluates whether the application can access the requested file. It opens the corresponding file on the underlying filesystem when access is permitted.</li>
+    <li><strong>Configure passthrough.</strong> MediaProvider supplies the information required for the kernel to associate the FUSE file with the underlying file.</li>
+    <li><strong>Perform data operations.</strong> Eligible <code>read()</code> and <code>write()</code> operations proceed through the kernel to the underlying filesystem without routing each operation through MediaProvider.</li>
+  </ol>
+  <h4>The lower filesystem and the slow path</h4>
+  <p>The underlying filesystem is commonly ext4 or F2FS, depending on the device and partition configuration. Passthrough allows eligible operations to reach this lower filesystem directly. Operations that require additional userspace handling continue through the ordinary FUSE path.</p>
+  <p>Passthrough does not eliminate the need for authorization. MediaProvider still checks access during the initial open operation. The optimization reduces repeated userspace involvement after the kernel establishes the authorized passthrough association.</p>
+  <p>The mechanism also does not mean that every operation bypasses userspace. Eligibility depends on the FUSE implementation and the operation involved. Metadata changes, unsupported operations and other requests requiring userspace processing continue to use the relevant FUSE handling path.</p>
+  <p>This distinction is important when analyzing performance. The largest benefit comes from reducing overhead during repeated data transfers. Permission checks and other operations retain the behavior required by the storage implementation.</p>
+  <div class="block analogy">
+    <div class="label">Real-life analogy</div>
+    <p>Imagine a security officer checking a visitor's authorization before granting entry to a storage room. After verification, the visitor can collect approved items directly instead of requesting assistance for every item. FUSE passthrough follows a similar model, while operations requiring further checks remain under userspace mediation.</p>
+  </div>
+
+  <h3>Incremental FS</h3>
+  <p>Incremental Filesystem (IncFS) allows Android to begin using an application package before all its data arrives. Large applications can contain substantial assets, including textures, audio, video and other resources. Downloading the entire package before installation or execution delays the point at which the application becomes usable.</p>
+  <p>IncFS supports Android's incremental application installation and data-delivery mechanisms. It presents files through a filesystem interface while allowing their contents to arrive progressively. The kernel tracks which blocks are available and coordinates reads that require data that has not yet been delivered.</p>
+  <p>The filesystem divides file data into blocks. The source identifies a data block size of 4,096 bytes. Each block can be available independently of other blocks in the same file. This allows the system to supply essential application data first and deliver additional content as execution demands it.</p>
+  <p>When a process reads an available block, the kernel returns its data. When a requested block is missing, the kernel waits for the userspace data loader to provide it. The loader discovers outstanding requests through the <code>.pending_reads</code> interface, retrieves the required data and fills the missing blocks. The waiting read then completes.</p>
+  <h4>Kernel interface and configuration</h4>
+  <p>The userspace interface is defined in the Incremental FS kernel header. The following excerpt shows the filesystem name, block size and two important control operations.</p>
+<pre class="code" data-lang="text" data-file="Excerpt"><code>#define INCFS_NAME "incremental-fs"
+#define INCFS_MAGIC_NUMBER (0x5346434e49ul &amp; ULONG_MAX)
+#define INCFS_DATA_FILE_BLOCK_SIZE 4096
+
+#define INCFS_IOC_CREATE_FILE \
+    _IOWR(INCFS_IOCTL_BASE_CODE, 30, struct incfs_new_file_args)
+#define INCFS_IOC_FILL_BLOCKS \
+    _IOR(INCFS_IOCTL_BASE_CODE, 32, struct incfs_fill_blocks)</code></pre>
+  <p>Source. <code>system/incremental_delivery/incfs/kernel-headers/linux/incrementalfs.h</code>.</p>
+  <p>The interface also defines <code>INCFS_IOC_GET_FILLED_BLOCKS</code>, which allows userspace to retrieve information about blocks already present. These operations let the data loader create files, supply data and track delivery progress.</p>
+  <p>The kernel option <code>CONFIG_INCREMENTAL_FS</code> enables IncFS support. The source identifies this option as part of the GKI defconfig rather than the cited <code>android-base.config</code> fragment.</p>
+  <p>Source. <code>kernel/configs/</code> and the kernel's GKI defconfig for the relevant branch.</p>
+  <h4>Missing-block read flow</h4>
+  <ol class="steps">
+    <li><strong>Prepare the mount.</strong> Android's package-management and incremental-delivery components prepare an IncFS mount for the application package.</li>
+    <li><strong>Create files and supply initial data.</strong> Userspace creates the required filesystem entries and fills the blocks needed for initial startup.</li>
+    <li><strong>Read a file.</strong> The application accesses a file through normal filesystem operations.</li>
+    <li><strong>Check block availability.</strong> IncFS returns a block immediately when its contents are already present.</li>
+    <li><strong>Register a pending read.</strong> If the block is missing, the kernel waits for the data loader and exposes the outstanding request through <code>.pending_reads</code>.</li>
+    <li><strong>Fill the missing block.</strong> The loader retrieves the required data and supplies it through the IncFS interface. The kernel completes the blocked read.</li>
+  </ol>
+  <h4>Supporting files and integrity</h4>
+  <p>IncFS exposes special files for monitoring and coordination. <code>.pending_reads</code> identifies blocks that userspace needs to supply. <code>.log</code> records filesystem activity for debugging. <code>.blocks_written</code> tracks writing progress, while <code>.index</code> maps file identifiers to filesystem inodes. The <code>.incomplete</code> interface identifies files that are not yet fully available.</p>
+  <p>The filesystem also supports compression. Its interface identifies LZ4 and Zstandard (Zstd) as supported compression algorithms, alongside uncompressed data. Compression reduces transferred or stored data where the relevant implementation uses it, although decompression introduces processing overhead.</p>
+  <p>Integrity checking is important because blocks arrive over time. IncFS supports per-file hash trees and integration with Filesystem Verity (fs-verity). These mechanisms help detect data that does not match the expected integrity information.</p>
+  <p>The userspace implementation resides under <code>system/incremental_delivery/incfs/</code>. Its components include the core IncFS library, native development kit interfaces, mount tracking and kernel interface headers. The broader incremental-delivery implementation also contains the data-loader service interface.</p>
+
+  <h3>Ashmem and shared memory</h3>
+  <p>Android shared memory (ashmem) provides a mechanism for multiple processes to access the same memory region. Shared memory is useful when components need to exchange large amounts of data without repeatedly copying it between process address spaces. Examples include native libraries and framework components that exchange data through shared buffers.</p>
+  <p>Ashmem provides named, reference-counted shared memory regions. Userspace creates a region and receives a file descriptor that represents it. The process can share the descriptor with other processes, which can map the same region into their address spaces. The kernel maintains the region's lifecycle through its references.</p>
+  <p>Ashmem includes memory-reclamation controls that distinguish it from ordinary shared-memory interfaces. Processes can pin and unpin pages to indicate which pages must remain available. The kernel can reclaim eligible unpinned pages under memory pressure. Components must account for the possibility that reclaimed pages no longer contain the original contents.</p>
+  <p>Ashmem also restricts changes to memory protection. The <code>ASHMEM_SET_PROT_MASK</code> ioctl allows the permitted protection mask to be narrowed. Once restrictions are applied, the interface does not allow permissions to be expanded beyond the established mask.</p>
+  <h4>Kernel configuration</h4>
+<pre class="code" data-lang="text" data-file="Excerpt"><code>CONFIG_ASHMEM=y</code></pre>
+  <p>Source. <code>kernel/configs/b/android-6.12/android-base.config</code>, line 20.</p>
+  <h4>Shared-memory lifecycle</h4>
+  <ol class="steps">
+    <li><strong>Create a region.</strong> A process requests an ashmem region and receives a file descriptor.</li>
+    <li><strong>Set region properties.</strong> The process configures relevant size and protection properties.</li>
+    <li><strong>Share the descriptor.</strong> The process transfers the descriptor to another process through a supported descriptor-passing mechanism.</li>
+    <li><strong>Map the region.</strong> Both processes map the same underlying region into their virtual address spaces.</li>
+    <li><strong>Manage page availability.</strong> Components pin pages that require retention and unpin pages that are eligible for reclamation.</li>
+    <li><strong>Release the region.</strong> When the last reference closes, the kernel releases the region and its associated resources.</li>
+  </ol>
+  <h4>Ashmem and memfd</h4>
+  <p>Ashmem remains available for compatibility with existing Android components. Newer implementations increasingly use the standard Linux <code>memfd_create()</code> interface. This interface creates an anonymous file descriptor that supports shared memory and works with standard file-sealing mechanisms.</p>
+  <p>The distinction matters when developing native code that runs across different Android releases. Existing code can rely on ashmem-specific operations, while newer code can use <code>memfd</code> where the required behavior and compatibility requirements permit it.</p>
+  <p>File sealing through <code>F_ADD_SEALS</code> belongs to the <code>memfd</code> mechanism. It provides controls over operations such as modifying file contents or changing file size. These seals are distinct from ashmem's protection-mask mechanism.</p>
+  <p>The source identifies the compatibility implementation in <code>system/core/libcutils/ashmem-dev.cpp</code>. This implementation provides the userspace path associated with ashmem compatibility and <code>memfd</code>.</p>
+  <p>Source. <code>system/core/libcutils/ashmem-dev.cpp</code>.</p>
+
+  <h3>Wakelocks and power management</h3>
+  <p>Mobile devices must conserve battery power without interrupting important operations. Android needs to suspend the system during idle periods but keep it awake while critical work remains unfinished. Wakelocks provide a mechanism for coordinating this behavior between kernel power management and Android userspace.</p>
+  <p>A wakelock represents a requirement that prevents the system from entering suspend. Android's PowerManager service, running inside <code>system_server</code>, coordinates power-related requests and manages wakelock usage. The kernel exposes interfaces that allow userspace to acquire and release named wakelocks.</p>
+  <p>Android follows an opportunistic suspend model. The system attempts to suspend when active requirements no longer prevent it. A component that requires continued execution holds a wakelock while the operation remains active. Once the work finishes, the component releases the wakelock, allowing suspend when no other blockers remain.</p>
+  <p>Wakelocks do not force the processor to remain active indefinitely under every condition. Their purpose is to prevent system suspend while a protected requirement exists. Actual power behavior also depends on hardware capabilities, device power states and other kernel or platform conditions.</p>
+  <h4>Kernel configuration</h4>
+<pre class="code" data-lang="text" data-file="Excerpt"><code>CONFIG_PM_WAKELOCKS=y
+# CONFIG_PM_AUTOSLEEP is not set</code></pre>
+  <p>Source. <code>kernel/configs/b/android-6.12/android-base.config</code>, lines 12 and 210.</p>
+  <p>The first option enables the kernel wakelock interface. The second disables the kernel autosleep mechanism because Android coordinates the sleep and wake cycle from userspace through PowerManager.</p>
+  <h4>Wakelock interfaces</h4>
+  <p>The kernel exposes two relevant sysfs paths.</p>
+  <ul>
+    <li><code>/sys/power/wake_lock</code> accepts a wakelock name to acquire.</li>
+    <li><code>/sys/power/wake_unlock</code> accepts a wakelock name to release.</li>
+  </ul>
+  <p>The userspace power-management implementation uses these interfaces to maintain active wake requirements. The system configuration and permissions control access.</p>
+  <h4>Suspend coordination flow</h4>
+  <ol class="steps">
+    <li><strong>Identify required work.</strong> An application or system component begins an operation that requires the device to remain awake.</li>
+    <li><strong>Request a wakelock.</strong> The relevant framework or native component requests a wake requirement through Android's power-management mechanisms.</li>
+    <li><strong>Acquire the kernel wakelock.</strong> PowerManager or its associated implementation establishes the corresponding kernel state.</li>
+    <li><strong>Perform the operation.</strong> The system remains protected from suspend while the active wakelock blocks it.</li>
+    <li><strong>Release the wakelock.</strong> The component releases the requirement when the protected work finishes.</li>
+    <li><strong>Evaluate suspend eligibility.</strong> The system can enter suspend when no remaining wakelock or other condition prevents it.</li>
+  </ol>
+  <h4>Power-management implications</h4>
+  <p>Wakelocks affect battery consumption because they can delay suspend. A wakelock held longer than necessary prevents the system from reaching an appropriate low-power state. Developers therefore need to acquire wakelocks only for work that requires continued execution and release them promptly.</p>
+  <p>The framework can coordinate multiple independent requirements. Releasing one wakelock does not necessarily cause suspend if another component still holds a wakelock. This allows different services to protect their operations without directly coordinating every activity with one another.</p>
+
+  <h3>Low Memory Killer Daemon (lmkd)</h3>
+  <p>Android applications compete for a limited amount of physical memory. The system must preserve foreground responsiveness while reclaiming memory from less important processes. When memory pressure becomes severe, Android needs a mechanism to select processes for termination.</p>
+  <p>Older Android kernels included an in-kernel low-memory killer. Modern Android replaces this mechanism with the userspace Low Memory Killer Daemon (<code>lmkd</code>). The daemon combines kernel memory-pressure information with process-importance data from ActivityManager. This allows it to make termination decisions based on both system conditions and the relative importance of applications.</p>
+  <p><code>lmkd</code> monitors Pressure Stall Information (PSI), which measures the time tasks spend stalled because of resource contention. It also reads statistics from <code>/proc/meminfo</code>, <code>/proc/vmstat</code> and <code>/proc/zoneinfo</code>. On supported configurations, it monitors memory pressure through cgroup interfaces as well.</p>
+  <p>ActivityManager, running inside <code>system_server</code>, supplies process information and out-of-memory adjustment scores. These scores represent the relative importance of processes. The daemon combines this information with current memory conditions to decide when and which processes to terminate.</p>
+  <h4>Kernel configuration and interfaces</h4>
+  <p>The Android 16 base configuration explicitly disables the older in-kernel low-memory killer. Modern Android instead uses the userspace daemon and kernel pressure-monitoring interfaces.</p>
+<pre class="code" data-lang="text" data-file="Excerpt"><code># CONFIG_ANDROID_LOW_MEMORY_KILLER is not set</code></pre>
+  <p>Source. <code>kernel/configs/b/android-6.12/android-base.config</code>, line 2.</p>
+  <p>The PSI interface is essential to the pressure-based design. The following settings from <code>lmkd</code> define its default monitoring window and polling intervals.</p>
+<pre class="code" data-lang="text" data-file="Excerpt"><code>#define DEFAULT_PSI_WINDOW_SIZE_MS 1000
+#define PSI_POLL_PERIOD_SHORT_MS 10
+#define PSI_POLL_PERIOD_LONG_MS 100</code></pre>
+  <p>Source. <code>system/memory/lmkd/lmkd.cpp</code>, lines 122–126.</p>
+  <h4>Memory-pressure and process-selection flow</h4>
+  <ol class="steps">
+    <li><strong>Monitor memory conditions.</strong> <code>lmkd</code> observes PSI events and reads kernel memory statistics. These inputs indicate whether memory pressure increases.</li>
+    <li><strong>Receive process priorities.</strong> ActivityManager supplies the process list and corresponding adjustment scores through the daemon's communication interface.</li>
+    <li><strong>Evaluate pressure.</strong> The daemon processes pressure events and estimates whether the system needs to reclaim additional memory.</li>
+    <li><strong>Select a victim.</strong> It considers process importance and current memory conditions. Processes with higher adjustment scores generally have lower importance.</li>
+    <li><strong>Terminate the selected process.</strong> The daemon uses supported mechanisms such as <code>pidfd_send_signal()</code> or cgroup-based termination, depending on the path.</li>
+    <li><strong>Record the outcome.</strong> The daemon records relevant statistics and continues monitoring the system for further pressure.</li>
+  </ol>
+  <h4>Understanding PSI</h4>
+  <p>PSI reports the proportion of time that tasks are delayed because resources are unavailable. Memory PSI focuses on stalls associated with memory pressure. This provides information about the effect of memory shortages on running workloads, rather than only reporting the amount of free memory.</p>
+  <p>A system with little free memory does not always require an immediate process kill. Reclaimable caches and other memory-management mechanisms can free memory without terminating applications. PSI helps <code>lmkd</code> detect situations in which memory pressure affects execution.</p>
+  <p>The daemon monitors PSI through interfaces such as <code>/proc/pressure/memory</code>. Its implementation uses an event loop to coordinate pressure notifications, process information and termination work. The source also includes reaper threads, statistics reporting and a watchdog.</p>
+  <h4>Understanding adjustment scores</h4>
+  <p>The source defines example adjustment values for different process categories.</p>
+<pre class="code" data-lang="text" data-file="Excerpt"><code>#define SYSTEM_ADJ (-900)
+#define PERCEPTIBLE_APP_ADJ 200
+#define PREVIOUS_APP_ADJ 700</code></pre>
+  <p>Source. <code>system/memory/lmkd/lmkd.cpp</code>, lines 84–85 and 103.</p>
+  <p>These values illustrate how Android distinguishes process importance. System processes receive highly protected scores, while a previously foreground application has a higher score. Higher adjustment scores generally make a process a stronger candidate for termination when memory pressure requires it.</p>
+  <p>The exact decision also depends on the current daemon implementation and memory-pressure state. <code>lmkd</code> does not simply terminate the process with the highest score whenever memory becomes low. It evaluates the situation and determines whether termination is necessary.</p>
+  <h4>Important implementation files</h4>
+  <p>The daemon's implementation resides under <code>system/memory/lmkd/</code>. <code>lmkd.cpp</code> contains the main logic. <code>reaper.cpp</code> implements process-termination operations, while <code>watchdog.cpp</code> handles watchdog functionality. <code>statslog.cpp</code> records statistics, and <code>libpsi/psi.cpp</code> provides the PSI-monitoring interface.</p>
+  <div class="block analogy">
+    <div class="label">Real-life analogy</div>
+    <p>Imagine a building with limited emergency power. When demand exceeds capacity, the manager first reduces power to less essential activities while preserving critical services. <code>lmkd</code> follows a comparable prioritization approach. It considers both the severity of the shortage and the importance of each process.</p>
+  </div>
+
+  <h3>dm-verity and verified boot</h3>
+  <p>Android must detect unauthorized modifications to operating system software. If an attacker changes system files or executable code, the device can no longer rely on the integrity of its installed software. Verified boot and filesystem integrity mechanisms help establish and maintain trust in the software loaded by the device.</p>
+  <p>Device Mapper Verity (<code>dm-verity</code>) is a kernel device-mapper target that verifies the integrity of block-device data. Android uses it to protect verified partitions, including important operating system partitions. The kernel checks data as it is read, rather than trusting that stored blocks remain unchanged after startup.</p>
+  <p><code>dm-verity</code> uses a Merkle tree to organize hashes of the partition's data blocks. Each leaf represents the hash of a data block. Higher levels contain hashes of lower-level hash values. The resulting root hash represents the integrity of the complete protected data set.</p>
+  <p>The verified boot chain establishes trust in the root hash and associated boot metadata. The bootloader verifies the relevant signed information before transferring control to the kernel. The kernel then uses the trusted integrity information when validating protected partition reads. A mismatch indicates that the read data does not match the expected contents.</p>
+  <h4>Kernel configuration</h4>
+<pre class="code" data-lang="text" data-file="Excerpt"><code>CONFIG_DM_VERITY=y
+CONFIG_DM_DEFAULT_KEY=y
+CONFIG_DM_SNAPSHOT=y
+CONFIG_FS_ENCRYPTION=y
+CONFIG_FS_ENCRYPTION_INLINE_CRYPT=y
+CONFIG_FS_VERITY=y
+CONFIG_BLK_INLINE_ENCRYPTION=y</code></pre>
+  <p>Source. <code>kernel/configs/b/android-6.12/android-base.config</code>.</p>
+  <p>These options support different parts of the broader storage-security architecture. <code>CONFIG_DM_VERITY</code> enables block-level integrity verification. <code>CONFIG_DM_DEFAULT_KEY</code> supports the default-key device-mapper target. <code>CONFIG_DM_SNAPSHOT</code> supports snapshot functionality used in relevant update configurations. The filesystem-encryption and inline-encryption options support data confidentiality, while <code>CONFIG_FS_VERITY</code> enables per-file integrity verification.</p>
+  <h4>Merkle tree verification</h4>
+  <ol class="steps">
+    <li><strong>Establish trusted boot information.</strong> The bootloader verifies the signed boot metadata and the relevant root-hash information.</li>
+    <li><strong>Configure the protected partition.</strong> Android's storage initialization configures the device-mapper target with the expected integrity information.</li>
+    <li><strong>Request a block.</strong> A process reads data from the protected filesystem. The request reaches <code>dm-verity</code> through the block-device stack.</li>
+    <li><strong>Calculate the hash.</strong> The driver computes the hash of the requested data block and checks it against the corresponding hash-tree information.</li>
+    <li><strong>Validate the hash path.</strong> The driver verifies the relevant hierarchy of hashes against the trusted root hash.</li>
+    <li><strong>Return or reject the read.</strong> The kernel returns verified data or applies the configured error-handling policy when verification fails.</li>
+  </ol>
+  <h4>Error-handling modes</h4>
+  <p>Android supports different <code>dm-verity</code> error-handling modes. The mode is selected through boot configuration and translated by Android's filesystem initialization code.</p>
+  <ul>
+    <li>Enforcing. The <code>restart_on_corruption</code> mode restarts the device when a corrupted block is read.</li>
+    <li>Panicking. The <code>panic_on_corruption</code> mode causes a kernel panic when corruption is detected.</li>
+    <li>Logging. The <code>ignore_corruption</code> mode logs verification failures but allows the read to succeed. It is intended for development use.</li>
+    <li>EIO. The <code>androidboot.veritymode=eio</code> configuration allows the read to return an input/output error (<code>EIO</code>) while the device continues running.</li>
+  </ul>
+  <p>When <code>androidboot.veritymode</code> is absent, the source states that Android's <code>fs_mgr</code> defaults to enforcing behavior. The EIO behavior therefore does not apply automatically when the property is missing.</p>
+  <p>Source. <code>system/fs/fs_mgr/libfs_avb/avb_util.cpp</code>.</p>
+  <h4>File-based encryption</h4>
+  <p>File-Based Encryption (FBE) protects user data using encryption keys associated with files and user states. Unlike full-disk encryption with a single data-access boundary, FBE allows Android to protect different files using different keys. This supports Direct Boot, which allows selected system functions to operate before the user unlocks the device.</p>
+  <p>The source identifies the following encryption parameters in the emulator's filesystem table.</p>
+<pre class="code" data-lang="text" data-file="Excerpt"><code>/dev/block/vdc  /data  ext4  ... fileencryption=aes-256-xts:aes-256-cts,...</code></pre>
+  <p>Source. <code>device/generic/goldfish/board/fstab/arm</code>.</p>
+  <p>In this example, <code>aes-256-xts</code> provides file-content encryption. <code>aes-256-cts</code> provides filename encryption. These mechanisms protect data confidentiality and limit exposure of sensitive file information when the relevant keys are unavailable.</p>
+  <h4>Filesystem Verity</h4>
+  <p>Filesystem Verity (<code>fs-verity</code>) applies integrity verification to individual files. <code>dm-verity</code> protects a block-device view of an entire partition, whereas <code>fs-verity</code> protects selected files within a filesystem.</p>
+  <p>Like <code>dm-verity</code>, <code>fs-verity</code> uses a Merkle tree to verify file contents. Once enabled for a file, the mechanism detects content changes that do not match the expected integrity information. Android can use it to protect selected installed packages, system files and downloaded content.</p>
+  <p>APK signature verification operates at a different layer. It verifies application package signatures, while <code>fs-verity</code> verifies file contents through the filesystem. These mechanisms serve complementary purposes.</p>
+
+  <h3>eBPF integration</h3>
+  <p>Android uses extended Berkeley Packet Filter (eBPF) programs to implement networking, resource accounting, monitoring and security-related functions. These programs execute inside the kernel at supported attachment points. They let Android apply policies and collect information without requiring a separate custom kernel implementation for every use case.</p>
+  <p>The eBPF architecture separates program loading from program execution. Android's <code>bpfloader</code> service loads supported BPF objects during boot. The kernel verifier checks whether each program satisfies the rules required for safe execution. On supported configurations, the Just-In-Time (JIT) compiler translates verified programs into native machine instructions.</p>
+  <p>BPF programs interact with kernel events and data through maps and hook points. Maps store information such as per-UID traffic counters and network-policy entries. Hook points allow programs to run when relevant events occur, including packet processing, socket activity and selected kernel tracepoints.</p>
+  <p>Android uses these mechanisms for per-UID network traffic accounting, per-application network restrictions, tethering packet processing and CPU-frequency tracking. These functions support system features such as the Settings app's data-usage displays and per-application data controls.</p>
+  <h4>Kernel configuration</h4>
+<pre class="code" data-lang="text" data-file="Excerpt"><code>CONFIG_BPF_JIT=y
+CONFIG_BPF_SYSCALL=y
+CONFIG_CGROUP_BPF=y
+CONFIG_NETFILTER_XT_MATCH_BPF=y
+CONFIG_NET_ACT_BPF=y
+CONFIG_NET_CLS_BPF=y
+CONFIG_BPF_JIT_ALWAYS_ON=y</code></pre>
+  <p>Source. <code>kernel/configs/b/android-6.12/android-base.config</code>.</p>
+  <p>The source identifies <code>CONFIG_BPF_JIT_ALWAYS_ON=y</code> as an additional requirement in the Android 16 kernel 6.12 configuration. This configuration keeps JIT compilation enabled for the relevant BPF execution path.</p>
+  <h4>Program loading and execution flow</h4>
+  <ol class="steps">
+    <li><strong>Prepare the BPF objects.</strong> Android supplies BPF program objects under <code>/system/etc/bpf/</code> and can also provide vendor objects under <code>/vendor/etc/bpf/</code>.</li>
+    <li><strong>Load the programs.</strong> The <code>bpfloader</code> service submits supported programs to the kernel through the <code>bpf()</code> system call.</li>
+    <li><strong>Verify safety.</strong> The kernel verifier checks program instructions, memory accesses and permitted operations.</li>
+    <li><strong>Prepare execution.</strong> The kernel uses the configured BPF execution mechanism, including JIT compilation where applicable.</li>
+    <li><strong>Attach to a hook.</strong> Android services attach programs to supported networking, control-group or tracing points.</li>
+    <li><strong>Process events.</strong> Programs evaluate events, update maps or return decisions. Userspace services read or update relevant map entries as required.</li>
+  </ol>
+  <h4>Loader integration and pinned objects</h4>
+  <p>The source identifies <code>system/bpf/loader/bpfloader.rs</code> as part of the BPF loader implementation. The loader handles a defined set of system BPF objects. It also supports loading vendor-supplied objects through the relevant loader implementation.</p>
+  <p>The loader can pin programs and maps in the BPF filesystem at <code>/sys/fs/bpf/</code>. Pinning provides stable filesystem references that other services can use. Networking services such as <code>netd</code> and the tethering service can then attach programs or interact with the associated maps.</p>
+  <h4>Networking and accounting</h4>
+  <p>Per-UID traffic accounting uses BPF programs attached to appropriate socket or control-group hooks. These programs count bytes sent and received by network identity. Android uses the resulting data for traffic statistics and per-application data controls.</p>
+  <p>BPF-based firewall functions apply network policies to application traffic. The relevant programs evaluate packets or socket events against policy information. This can provide efficient per-application control without routing every decision through a userspace networking daemon.</p>
+  <p>Tethering uses BPF programs to process packet forwarding for supported USB and Wi-Fi configurations. Moving eligible packet-processing work into the kernel reduces userspace involvement in the forwarding path.</p>
+  <h4>CPU-frequency tracking</h4>
+  <p>Android also uses BPF programs attached to scheduler tracepoints to track time spent by processes at different CPU frequencies. This information supports per-UID resource accounting and battery-use attribution. The data helps the system distinguish workloads that consume different amounts of CPU time at different operating frequencies.</p>
+  <h4>Important distinctions</h4>
+  <p>eBPF is not a replacement for every kernel driver or every security mechanism. Programs run only at supported hook points and within the capabilities permitted by the verifier. Their behavior also depends on the maps, permissions and attachment configuration supplied by Android.</p>
+  <p>The BPF verifier is a key safety boundary. It checks programs before execution, but a verified program still needs correct policy logic and suitable permissions. Incorrect policy data can produce incorrect results even when the program itself passes verification.</p>
+
+  <h3>SELinux enforcement</h3>
+  <p>Security-Enhanced Linux (SELinux) provides mandatory access control (MAC) in Android. It supplements traditional Linux user, group and file-permission checks with a policy that governs interactions between processes and protected objects. Android uses SELinux to confine applications, isolate system services and limit the effects of compromised components.</p>
+  <p>SELinux assigns security contexts to processes and objects. A process context identifies the domain in which the process operates. File, socket and other object contexts identify the security labels that apply to those resources. The active policy defines which operations are permitted between the relevant contexts.</p>
+  <p>The kernel enforces this policy through the Linux Security Module (LSM) framework. When a process attempts a protected operation, the relevant kernel path invokes an LSM security hook. SELinux evaluates the request against the loaded policy and denies operations that the policy does not authorize. Production Android devices run SELinux in enforcing mode.</p>
+  <p>SELinux policy is developed in the Android source tree and compiled into a form that the kernel can load. Policy rules describe permitted interactions between domains and object types. Android's policy also accounts for distinctions between platform components, applications and vendor components. This separation helps maintain security boundaries across the system architecture.</p>
+  <h4>Kernel configuration</h4>
+<pre class="code" data-lang="text" data-file="Excerpt"><code>CONFIG_SECURITY=y
+CONFIG_SECURITY_NETWORK=y
+CONFIG_SECURITY_SELINUX=y
+CONFIG_DEFAULT_SECURITY_SELINUX=y
+CONFIG_AUDIT=y</code></pre>
+  <p>Source. <code>kernel/configs/b/android-6.12/android-base.config</code>, lines 57 and 224–226 for the SELinux options. <code>CONFIG_AUDIT=y</code> enables the audit subsystem used to record relevant security events.</p>
+  <h4>Access-control flow</h4>
+  <ol class="steps">
+    <li><strong>Label the participants.</strong> Android associates the process and target object with their security contexts.</li>
+    <li><strong>Attempt an operation.</strong> A process requests access to a file, socket, IPC object or another protected resource.</li>
+    <li><strong>Invoke the security hook.</strong> The kernel reaches an LSM hook associated with the operation.</li>
+    <li><strong>Evaluate the policy.</strong> SELinux checks the source context, target context, object class and requested permission against the loaded policy.</li>
+    <li><strong>Enforce the decision.</strong> The kernel permits the operation when authorized and denies it when the policy does not permit it.</li>
+    <li><strong>Record relevant events.</strong> The audit subsystem records applicable denials and other security events according to the active audit configuration.</li>
+  </ol>
+  <h4>SELinux and application isolation</h4>
+  <p>Android applications run within security domains that restrict their access to system resources. A compromised application remains subject to the kernel's SELinux checks. The application cannot gain unrestricted access to protected resources simply because it exploited a vulnerability within its own process.</p>
+  <p>System services also run under designated domains. A service that needs access to a protected file, device or socket requires an appropriate policy rule. This reduces the authority available to individual components and helps contain compromise.</p>
+  <p>SELinux complements other security mechanisms rather than replacing them. Traditional discretionary access control (DAC) still applies. Android application permissions, process isolation, seccomp filters and hardware-backed protections address different parts of the security model.</p>
+  <h4>Audit and policy debugging</h4>
+  <p>When SELinux denies an operation, the kernel can generate an audit record containing details about the attempted access. Engineers can use these records to identify the source domain, target context, object class and denied permission.</p>
+  <p>An audit denial does not automatically indicate a kernel defect. It can reflect a legitimate policy restriction, an incorrect service configuration or an incomplete policy rule. Engineers need to determine the intended access pattern before modifying the policy. Broadly allowing a denied operation weakens isolation and can expose resources unnecessarily.</p>
+
+  <h3>Seccomp filter</h3>
+  <p>Secure computing mode (seccomp) restricts the system calls a process can invoke. System calls form the interface through which userspace requests kernel operations, including file access, process management, memory mapping and network communication. Restricting this interface reduces the kernel functionality available to a compromised process.</p>
+  <p>Android uses seccomp filters based on classic Berkeley Packet Filter (BPF) programs. These filters inspect system-call numbers and, where required, their arguments. The filter returns an action that determines how the kernel handles the request. Depending on the policy, an operation can proceed, return an error or trigger a signal.</p>
+  <p>Seccomp complements SELinux. SELinux controls access to resources and interactions between security contexts. Seccomp limits the system-call interface available to a process. A process can therefore face both resource-level restrictions and restrictions on the kernel operations it can invoke.</p>
+  <p>Android maintains architecture-specific seccomp policies. During application process specialization, Android installs an appropriate filter in the child process created by Zygote. The policy selected depends on the process type and the applicable Android implementation.</p>
+  <h4>Kernel configuration</h4>
+<pre class="code" data-lang="text" data-file="Excerpt"><code>CONFIG_SECCOMP=y
+CONFIG_SECCOMP_FILTER=y</code></pre>
+  <p>Source. <code>kernel/configs/b/android-6.12/android-base.config</code>, lines 222–223.</p>
+  <h4>Filter installation and execution flow</h4>
+  <ol class="steps">
+    <li><strong>Create the process.</strong> Zygote forks a child process for an application or another supported process type.</li>
+    <li><strong>Select the policy.</strong> Android determines the applicable seccomp filter for the process architecture and role.</li>
+    <li><strong>Install the filter.</strong> Process-specialization code installs the filter before normal application execution continues.</li>
+    <li><strong>Issue a system call.</strong> The process requests a kernel operation through the system-call interface.</li>
+    <li><strong>Evaluate the request.</strong> The kernel executes the seccomp filter against the system-call number and any relevant arguments.</li>
+    <li><strong>Apply the filter action.</strong> The kernel permits the call or applies the configured restriction. A policy that returns a kill action can terminate the process with <code>SIGSYS</code>.</li>
+  </ol>
+  <h4>Android process integration</h4>
+  <p>The source identifies <code>SpecializeCommon()</code> in <code>frameworks/base/core/jni/com_android_internal_os_Zygote.cpp</code> as part of the process-specialization path. This code calls <code>SetUpSeccompFilter()</code> after the fork. The implementation selects the relevant filter for the process being created.</p>
+  <p>The filters differ according to architecture and process role. Android can use distinct policies for application processes, application Zygotes and system processes. This allows the permitted system-call interface to reflect the requirements of each process category.</p>
+  <h4>Code excerpt</h4>
+<pre class="code" data-lang="text" data-file="Excerpt"><code>// frameworks/base/core/jni/com_android_internal_os_Zygote.cpp
+SetUpSeccompFilter();</code></pre>
+  <p>Source. <code>frameworks/base/core/jni/com_android_internal_os_Zygote.cpp</code>.</p>
+  <h4>Filter actions and failure behavior</h4>
+  <p>A seccomp policy does not have to terminate a process for every disallowed call. The filter's return action determines the outcome. Depending on the configured action, the kernel can deny the request with an error, generate a notification or terminate the process.</p>
+  <p>The Android source describes policies that terminate a process with <code>SIGSYS</code> when a system call violates the applicable allowlist. Engineers must inspect the actual filter to determine which system calls and actions apply. The behavior is not identical for every denied operation.</p>
+  <p>Seccomp filters also have limitations. They cannot replace access-control checks on files and other resources. A permitted system call can still fail because of ordinary permissions or other kernel restrictions. Conversely, restricting a system call does not establish authorization for operations performed through other permitted interfaces.</p>
+  <div class="block analogy">
+    <div class="label">Real-life analogy</div>
+    <p>Imagine a worker who has permission to enter a laboratory but can use only a fixed set of tools. SELinux governs access to the laboratory and its resources. Seccomp restricts the operations the worker can request from the underlying system, even after entering the laboratory.</p>
+  </div>
+
+  <h3>Cgroups and resource control</h3>
+  <p>Linux control groups (cgroups) organize processes so the kernel can account for and control resource usage. Android uses cgroups to support process scheduling, CPU accounting, background-process management and selected network controls. These mechanisms help the system allocate resources according to application importance and current device activity.</p>
+  <p>The <code>init</code> process establishes the cgroup hierarchy of Android, and system services help to manage it. Processes are assigned to groups based on their roles and states. The system can update these assignments as applications move between foreground and background states.</p>
+  <p>Different cgroup controllers address different resource-management requirements. CPU accounting tracks CPU consumption. The CPU scheduler controller supports scheduling policies and priorities. The freezer controller allows processes in a group to be frozen and resumed. The BPF controller permits eBPF programs to attach to relevant control-group hooks.</p>
+  <p>Android uses groups such as <code>top-app</code>, <code>foreground</code>, <code>background</code> and <code>rt</code> to distinguish scheduling requirements. These names reflect Android's process-management design, although exact group layouts and controller configurations vary across kernel versions and devices.</p>
+  <h4>Kernel configuration</h4>
+<pre class="code" data-lang="text" data-file="Excerpt"><code>CONFIG_CGROUPS=y
+CONFIG_CGROUP_BPF=y
+CONFIG_CGROUP_CPUACCT=y
+CONFIG_CGROUP_FREEZER=y
+CONFIG_CGROUP_SCHED=y</code></pre>
+  <p>Source. <code>kernel/configs/b/android-6.12/android-base.config</code>, lines 34–38.</p>
+  <h4>Controllers and Android use cases</h4>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Controller</th><th>Kernel option</th><th>Android use</th></tr></thead>
+      <tbody><tr><td>CPU accounting</td><td><code>CONFIG_CGROUP_CPUACCT</code></td><td>Tracks CPU time for resource accounting</td></tr><tr><td>Freezer</td><td><code>CONFIG_CGROUP_FREEZER</code></td><td>Freezes and resumes eligible background processes</td></tr><tr><td>CPU scheduler</td><td><code>CONFIG_CGROUP_SCHED</code></td><td>Supports scheduling policies for application groups</td></tr><tr><td>BPF</td><td><code>CONFIG_CGROUP_BPF</code></td><td>Enables eBPF attachment and policy enforcement at cgroup hooks</td></tr></tbody>
+    </table>
+  </div>
+  <p>These controllers do not all perform the same operation. CPU accounting measures resource consumption, while scheduling and freezing affect process execution. The BPF controller provides a mechanism for attaching eBPF programs to supported cgroup operations.</p>
+  <h4>Cgroup initialization</h4>
+  <p>The Android emulator's initialization script provides an example of CPU scheduling-group setup.</p>
+<pre class="code" data-lang="text" data-file="Excerpt"><code>on init
+    mkdir /dev/cpuctl/foreground
+    mkdir /dev/cpuctl/background
+    mkdir /dev/cpuctl/top-app
+    mkdir /dev/cpuctl/rt</code></pre>
+  <p>Source. <code>device/generic/goldfish/init/init.ranchu.rc</code>, lines 49–52.</p>
+  <p>These directories represent scheduling groups in the emulator's configuration. Their exact names and locations are implementation details. Production devices can use different cgroup mounts and hierarchies, depending on the kernel and Android release.</p>
+  <h4>Process assignment and resource-control flow</h4>
+  <ol class="steps">
+    <li><strong>Initialize the hierarchy.</strong> Android's <code>init</code> process creates the required cgroup hierarchy and configures the available controllers.</li>
+    <li><strong>Classify the process.</strong> Android identifies the process's role and current state, using information from system services.</li>
+    <li><strong>Assign group membership.</strong> The system places the process in an appropriate cgroup.</li>
+    <li><strong>Apply controller settings.</strong> The kernel applies the relevant scheduling, accounting, freezing or BPF configuration.</li>
+    <li><strong>Update the assignment.</strong> Android moves the process when its importance or activity state changes.</li>
+    <li><strong>Enforce resource control.</strong> The kernel applies the active controller behavior to processes in the group.</li>
+  </ol>
+  <h4>Android process groups</h4>
+  <ul>
+    <li><code>top-app</code>. Represents the application receiving top-level foreground treatment.</li>
+    <li><code>foreground</code>. Contains processes that require foreground-related scheduling treatment.</li>
+    <li><code>background</code>. Contains processes running in the background.</li>
+    <li><code>rt</code>. Represents a real-time scheduling group for eligible workloads, including certain audio or sensor-processing paths.</li>
+  </ul>
+  <p>Group membership is not a substitute for application permissions. It affects resource management rather than granting access to protected data. Similarly, a process's scheduling group does not, by itself, determine whether the system terminates it under memory pressure.</p>
+  <h4>Resource accounting and scheduling</h4>
+  <p>CPU accounting helps Android attribute processor consumption to processes or groups. Scheduling controls influence how the processor allocates execution time among workloads. These mechanisms contribute to responsiveness when a foreground application competes with background tasks.</p>
+  <p>The freezer controller provides another form of resource management. Freezing a process stops its execution without terminating it. Android can use this behavior for eligible background processes, subject to the platform's process-management policy and controller configuration.</p>
+  <p>Cgroups also integrate with eBPF. A BPF program attached to a cgroup hook can apply network-related policies or collect traffic statistics. This lets Android associate certain network operations with application identities and enforce policies at kernel hook points.</p>
+
+  <h2>Device tree and board support</h2>
+  <p>On ARM and RISC-V systems, the kernel cannot ask the hardware which devices exist. The bootloader therefore passes a <strong>device tree</strong>, a data structure that describes the hardware of the board. Systems with x86 processors use the Advanced Configuration and Power Interface (ACPI) instead. The Android configuration requires one of the two.</p>
+<pre class="code" data-lang="xml" data-file="kernel/configs/b/android-6.12/android-base-conditional.xml"><code>&lt;!-- CONFIG_ACPI || CONFIG_OF --&gt;
+&lt;group&gt;
+    &lt;conditions&gt;
+        &lt;config&gt;
+            &lt;key&gt;CONFIG_ACPI&lt;/key&gt;
+            &lt;value type="bool"&gt;n&lt;/value&gt;
+        &lt;/config&gt;
+    &lt;/conditions&gt;
+    &lt;config&gt;
+        &lt;key&gt;CONFIG_OF&lt;/key&gt;
+        &lt;value type="bool"&gt;y&lt;/value&gt;
+    &lt;/config&gt;
+&lt;/group&gt;</code></pre>
+  <p>If ACPI is off, Open Firmware (<code>CONFIG_OF</code>), the device tree support of the kernel, must be on.</p>
+
+  <h3>From source to a bound driver</h3>
+  <p>Device tree data passes through several formats.</p>
+  <ul>
+    <li><strong>DTS</strong> (Device Tree Source) is a readable text file for one board.</li>
+    <li><strong>DTSI</strong> is an include file with shared parts, usually the definition of the SoC.</li>
+    <li><strong>DTB</strong> (Device Tree Blob) is the compiled binary that the kernel reads.</li>
+    <li><strong>DTBO</strong> (Device Tree Blob Overlay) is a compiled overlay that the bootloader applies on top of a base DTB.</li>
+  </ul>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../../assets/img/diagrams/kn-device-tree.svg" alt="A shared soc.dtsi, a board.dts that includes it and an overlay source panel.dts go into the compiler dtc. It produces a base .dtb and .dtbo overlays that live in the dtbo partition. The bootloader picks the overlays by board ID, merges them with the base and passes the tree to the kernel, which parses it. Below, a node virtio_mmio with compatible virtio,mmio, a reg range and interrupts. The kernel registers a platform device for the node and looks for a driver whose of_match_table lists the same compatible string. Its probe function reads reg and interrupts from the node." loading="lazy"></div>
+    <figcaption>The compiler turns sources into blobs, the bootloader merges them and the kernel binds drivers by name.</figcaption>
+  </figure>
+
+  <p>Overlays separate the SoC from the board. The SoC vendor provides a base DTB with the processors, the memory controller, the interrupt controller and the buses. The device maker adds overlays for the display panel, the camera sensor, the audio codec and the touch controller. The bootloader reads the overlays from the <code>dtbo</code> partition, applies them with the <code>libufdt</code> library and passes the result to the kernel.</p>
+  <p>The <code>dtbo</code> partition has its own format. A header with the magic value <code>0xd7b7ab1e</code> holds the total size and the number of entries. Each entry holds the size and the offset of one overlay, plus an ID, a revision and four custom values. The bootloader uses these values to pick the overlays for the exact hardware variant, so one partition can serve several board versions.</p>
+
+  <h3>The syntax of a device tree</h3>
+<pre class="code" data-lang="text" data-file="A simplified device tree"><code>/dts-v1/;
+
+/ {
+    compatible = "android,goldfish";
+    #address-cells = &lt;2&gt;;
+    #size-cells = &lt;2&gt;;
+
+    chosen {
+        bootargs = "8250.nr_uarts=1";
+    };
+
+    memory@80000000 {
+        device_type = "memory";
+        reg = &lt;0x0 0x80000000 0x0 0x80000000&gt;;   /* 2 GB */
+    };
+
+    virtio_mmio@a003c00 {
+        compatible = "virtio,mmio";
+        reg = &lt;0x0 0xa003c00 0x0 0x200&gt;;
+        interrupts = &lt;0 43 4&gt;;
+    };
+};</code></pre>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Property</th><th>Example</th><th>Purpose</th></tr></thead>
+      <tbody>
+        <tr><td><code>compatible</code></td><td><code>"virtio,mmio"</code></td><td>Selects the driver</td></tr>
+        <tr><td><code>reg</code></td><td><code>&lt;0x0 0xa003c00 0x0 0x200&gt;</code></td><td>Address and size of the registers</td></tr>
+        <tr><td><code>interrupts</code></td><td><code>&lt;0 43 4&gt;</code></td><td>Interrupt number and type</td></tr>
+        <tr><td><code>clocks</code></td><td><code>&lt;&amp;cru CLK_UART0&gt;</code></td><td>Clock sources</td></tr>
+        <tr><td><code>status</code></td><td><code>"okay"</code> or <code>"disabled"</code></td><td>Turns a node on or off</td></tr>
+        <tr><td><code>#address-cells</code>, <code>#size-cells</code></td><td><code>&lt;2&gt;</code></td><td>Width of addresses and sizes in child nodes</td></tr>
+        <tr><td><code>chosen/bootargs</code></td><td><code>"8250.nr_uarts=1"</code></td><td>Kernel command-line arguments</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>The kernel matches each node to a driver through <code>compatible</code>. It registers a platform device for the node and searches the registered drivers for an <code>of_match_table</code> with the same string. The <code>probe()</code> function of that driver then reads <code>reg</code>, <code>interrupts</code> and <code>clocks</code> from the node and starts the hardware. For example, the virtio MMIO driver binds to <code>"virtio,mmio"</code> and then discovers the network, block and GPU devices behind it.</p>
+
+  <h3>The emulator board</h3>
+  <p>The emulator does not ship a device tree of its own in the boot image.</p>
+<pre class="code" data-lang="makefile" data-file="device/generic/goldfish/board/BoardConfigCommon.mk"><code>BOARD_INCLUDE_DTB_IN_BOOTIMG := false</code></pre>
+  <p>QEMU, the host program behind the emulator, passes the tree to the virtual machine. Virtio negotiation finds the virtual devices. Goldfish drivers register the rest, for example <code>goldfish_pipe.ko</code> for fast host communication and <code>goldfish_battery.ko</code> for a battery that the host controls. The only precompiled DTB next to the virtual-device modules belongs to another target, the Arm Fixed Virtual Platform (FVP).</p>
+  <p>To check a device tree, compile and decompile it with <code>dtc</code>, print a blob with <code>fdtdump</code> or read the live tree on a device under <code>/proc/device-tree/</code>. VTS also checks that the properties match the compatibility matrix.</p>
+
+  <h2>Kernel configuration</h2>
+  <p>Android does not keep one large <code>defconfig</code> file. It combines <strong>configuration fragments</strong> on top of the Kconfig system of Linux. The script <code>scripts/kconfig/merge_config.sh</code> merges them into the final <code>.config</code>.</p>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../../assets/img/diagrams/kn-config.svg" alt="Six fragments merge into one .config through merge_config.sh. They are gki_defconfig as the architecture base, android-base.config with the options that Android must have, android-base-conditional.xml with options per architecture, recommended fragments, vendor fragments and board fragments. The result is checked three times, at build time against the VINTF compatibility matrix, at test time by VtsKernelConfig on a device and at update time by checkvintf for the OTA package. For 6.18 the base fragment is empty on purpose, because the GKI tests already prove that a GKI kernel runs." loading="lazy"></div>
+    <figcaption>Fragments merge into one configuration, and three checks guard it during the life of a device.</figcaption>
+  </figure>
+
+  <h3>The kernel/configs repository</h3>
+<pre class="code" data-lang="text" data-file="kernel/configs/ (shortened)"><code>kernel/configs/
+    README.md
+    kernel-lifetimes.xml          # branches with launch and EOL dates
+    approved-ogki-builds.xml      # approved OEM GKI builds
+    build/kernel_config.go        # turns fragments into matrix rules
+    tools/
+        bump.py                   # creates the folder for the next release
+        check_fragments.sh        # checks fragments against a kernel tree
+    b/android-6.12/               # Android 16
+        android-base.config
+        android-base-conditional.xml
+        android-tv-base.config
+        android-tv-base-conditional.xml
+    c/android-6.18/               # Android 17
+    d/android-6.18/               # placeholder for the next release letter
+    v/android-6.6/                # Android 15
+    u/  t/  s/                    # Android 14, 13 and 12</code></pre>
+  <p>The folder names follow release letters, which roughly match the dessert names of the releases. For example, <code>v</code> stands for Vanilla Ice Cream (Android 15) and <code>b</code> for Baklava (Android 16).</p>
+
+  <h3>The base fragment</h3>
+  <p>The file <code>android-base.config</code> lists every option that Android needs. It starts with options that must stay off.</p>
+<pre class="code" data-lang="text" data-file="kernel/configs/b/android-6.12/android-base.config (start)"><code># CONFIG_ANDROID_LOW_MEMORY_KILLER is not set
+# CONFIG_ANDROID_PARANOID_NETWORK is not set
+# CONFIG_BPFILTER is not set
+# CONFIG_DEVMEM is not set
+# CONFIG_FHANDLE is not set
+# CONFIG_FW_CACHE is not set
+# CONFIG_IP6_NF_NAT is not set
+# CONFIG_MODULE_FORCE_UNLOAD is not set
+# CONFIG_NFSD is not set
+# CONFIG_NFS_FS is not set
+# CONFIG_PM_AUTOSLEEP is not set
+# CONFIG_RT_GROUP_SCHED is not set
+# CONFIG_SYSVIPC is not set
+# CONFIG_USELIB is not set</code></pre>
+  <ul>
+    <li><code>CONFIG_DEVMEM</code> stays off, so no process can read raw physical memory through <code>/dev/mem</code>.</li>
+    <li><code>CONFIG_MODULE_FORCE_UNLOAD</code> stays off, because a forced unload can crash the kernel.</li>
+    <li><code>CONFIG_SYSVIPC</code> stays off, because Binder replaces System V IPC on Android.</li>
+    <li><code>CONFIG_PM_AUTOSLEEP</code> stays off, because the framework controls sleep from user space.</li>
+  </ul>
+  <p>The rest of the file lists the options that must be on. They cover Binder, shared memory, FUSE, file encryption, fs-verity, SELinux, seccomp, the stack protector, wakelocks and PSI. More than 80 options cover the network filter. The toolchain options require Clang and the LLVM linker.</p>
+
+  <h3>The conditional fragment</h3>
+  <p>The file <code>android-base-conditional.xml</code> holds rules that depend on other options, mostly on the architecture. It also sets the minimum LTS version, for example <code>&lt;kernel minlts="6.12.0" /&gt;</code>.</p>
+<pre class="code" data-lang="xml" data-file="kernel/configs/b/android-6.12/android-base-conditional.xml (ARM64 part)"><code>&lt;group&gt;
+    &lt;conditions&gt;
+        &lt;config&gt;
+            &lt;key&gt;CONFIG_ARM64&lt;/key&gt;
+            &lt;value type="bool"&gt;y&lt;/value&gt;
+        &lt;/config&gt;
+    &lt;/conditions&gt;
+    &lt;config&gt;&lt;key&gt;CONFIG_ARM64_PAN&lt;/key&gt;&lt;value type="bool"&gt;y&lt;/value&gt;&lt;/config&gt;
+    &lt;config&gt;&lt;key&gt;CONFIG_CFI_CLANG&lt;/key&gt;&lt;value type="bool"&gt;y&lt;/value&gt;&lt;/config&gt;
+    &lt;config&gt;&lt;key&gt;CONFIG_SHADOW_CALL_STACK&lt;/key&gt;&lt;value type="bool"&gt;y&lt;/value&gt;&lt;/config&gt;
+    &lt;config&gt;&lt;key&gt;CONFIG_RANDOMIZE_BASE&lt;/key&gt;&lt;value type="bool"&gt;y&lt;/value&gt;&lt;/config&gt;
+    &lt;config&gt;&lt;key&gt;CONFIG_KFENCE&lt;/key&gt;&lt;value type="bool"&gt;y&lt;/value&gt;&lt;/config&gt;
+    &lt;config&gt;&lt;key&gt;CONFIG_USERFAULTFD&lt;/key&gt;&lt;value type="bool"&gt;y&lt;/value&gt;&lt;/config&gt;
+&lt;/group&gt;</code></pre>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Option</th><th>Protection</th></tr></thead>
+      <tbody>
+        <tr><td><code>CONFIG_CFI_CLANG</code></td><td>Control Flow Integrity (CFI). Indirect calls can only reach functions of the right type.</td></tr>
+        <tr><td><code>CONFIG_SHADOW_CALL_STACK</code></td><td>Return addresses live on a separate stack, out of reach of normal buffer bugs.</td></tr>
+        <tr><td><code>CONFIG_ARM64_PAN</code></td><td>Privileged Access Never (PAN). The kernel cannot touch user memory by accident.</td></tr>
+        <tr><td><code>CONFIG_RANDOMIZE_BASE</code></td><td>Kernel address space layout randomization (KASLR).</td></tr>
+        <tr><td><code>CONFIG_KFENCE</code></td><td>Kernel Electric Fence, a low-cost detector for memory errors.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>For x86, the conditional fragment requires page table isolation, retpoline and address randomization. These options protect against the Meltdown and Spectre classes of processor flaws.</p>
+  <p>The fragments change from release to release. For example, the 6.12 fragment adds <code>CONFIG_BPF_JIT_ALWAYS_ON</code> and the reverse-path filter for IPv4, and it no longer requires the Wacom tablet driver.</p>
+  <p>Android TV has its own fragments, <code>android-tv-base.config</code> and <code>android-tv-base-conditional.xml</code>. They are almost identical to the phone fragments. The TV version asks for scheduler debug output only when <code>CONFIG_DEBUG_FS</code> is on, and it drops the shadow call stack rule for ARM64.</p>
+
+  <div class="block changed">
+    <div class="label">What changed in Android 17</div>
+    <p>The new folders <code>c/android-6.18</code> and <code>d/android-6.18</code> hold an empty <code>android-base.config</code>. This is deliberate. For the 6.18 branch, AOSP declares no option requirements, because the GKI tests already prove that a GKI kernel runs on the device. The TV requirements are gone as well. Only the conditional pin <code>&lt;kernel minlts="6.18.0" /&gt;</code> remains. The oldest folder, <code>r/</code> with the Android 11 fragments, was removed in the same cycle.</p>
+  </div>
+
+  <h3>Three checks</h3>
+  <ol class="steps">
+    <li><strong>Build time.</strong> The build checks the kernel configuration against the Vendor Interface (VINTF) compatibility matrix. <code>kernel_config.go</code> turns the fragments into matrix rules.</li>
+    <li><strong>Test time.</strong> The test <code>VtsKernelConfig</code> reads the configuration of the running kernel and checks every option for the launch level of the device.</li>
+    <li><strong>Update time.</strong> <code>checkvintf</code> checks the configuration when an OTA package is built and installed. No check at boot time stops a device with a wrong configuration.</li>
+  </ol>
+  <p>A fourth tool helps the maintainers. <code>check_fragments.sh</code> merges the fragments into an <code>allnoconfig</code> build of an ACK tree for each architecture. It then verifies that every option survives in the resulting <code>.config</code>.</p>
+
+  <h2>The kernel in the AOSP build</h2>
+  <p>The AOSP build can take the kernel from two places. By default, it copies <strong>prebuilt</strong> kernels and modules from <code>kernel/prebuilts/</code>, <code>kernel/prebuilts/common-modules/virtual-device/</code> and <code>prebuilts/qemu-kernel/</code>. A device maker who builds the kernel from source uses <strong>Kleaf</strong>, the build system for kernels based on Bazel from chapter 2. Kleaf builds the kernel apart from the platform and leaves the image and the modules in a staging folder. The platform build then picks them up when it creates the images.</p>
+  <p>The emulator selects its kernel version in its board files.</p>
+<pre class="code" data-lang="makefile" data-file="device/generic/goldfish/board/kernel/arm64.mk"><code>TARGET_KERNEL_USE ?= 6.12
+KERNEL_ARTIFACTS_PATH := prebuilts/qemu-kernel/arm64/$(TARGET_KERNEL_USE)
+EMULATOR_KERNEL_FILE := $(KERNEL_ARTIFACTS_PATH)/kernel-$(TARGET_KERNEL_USE)-gz</code></pre>
+  <p>The <code>?=</code> allows an override on the command line. Today, <code>prebuilts/qemu-kernel/arm64/</code> holds only 6.12, so the override helps only after another version arrives there. The script <code>update_emu_kernels.sh</code> fetches a new kernel and its modules from a CI build ID and records a bug number for tracking.</p>
+
+  <h3>Where modules live</h3>
+  <p>Modules sit in different partitions, depending on when the boot needs them.</p>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../../assets/img/diagrams/kn-module-placement.svg" alt="Three places in load order. One, the vendor ramdisk holds modules such as virtio_blk, virtio_pci and virtio_mmio, which first-stage init loads to reach storage. Two, system_dlkm is a read-only erofs partition with about 100 GKI modules for networking, USB, file systems, crypto and zram, built by Google. Three, the vendor partition or vendor_dlkm holds device drivers such as goldfish_pipe, goldfish_battery and virtio-gpu, which the dlkm_loader service loads. A blocklist keeps vkms.ko and snd-aloop.ko from loading, because virtio drivers do the same job." loading="lazy"></div>
+    <figcaption>Modules that reach storage load first. GKI and vendor modules follow later.</figcaption>
+  </figure>
+
+<pre class="code" data-lang="makefile" data-file="device/generic/goldfish/board/kernel/arm64.mk (shortened)"><code># Boot-critical modules from the goldfish device modules
+RAMDISK_KERNEL_MODULES := \
+    virtio_dma_buf.ko \
+    virtio_mmio.ko \
+    virtio-rng.ko \
+
+# Boot-critical modules from the GKI modules
+RAMDISK_SYSTEM_KERNEL_MODULES := \
+    virtio_blk.ko \
+    virtio_console.ko \
+    virtio_pci.ko \
+    virtio_pci_legacy_dev.ko \
+    virtio_pci_modern_dev.ko \
+    vmw_vsock_virtio_transport.ko \
+
+# All GKI modules go to system_dlkm
+BOARD_SYSTEM_KERNEL_MODULES := \
+    $(wildcard $(KERNEL_MODULES_ARTIFACTS_PATH)/*.ko)
+
+# Both ramdisk lists go into the vendor ramdisk
+BOARD_VENDOR_RAMDISK_KERNEL_MODULES := \
+    $(wildcard $(patsubst %,$(VIRTUAL_DEVICE_KERNEL_MODULES_PATH)/%,$(RAMDISK_KERNEL_MODULES))) \
+    $(wildcard $(patsubst %,$(KERNEL_MODULES_ARTIFACTS_PATH)/%,$(RAMDISK_SYSTEM_KERNEL_MODULES)))
+
+# The other device modules go to vendor
+BOARD_VENDOR_KERNEL_MODULES := \
+    $(filter-out $(BOARD_VENDOR_RAMDISK_KERNEL_MODULES) \
+                 $(EMULATOR_EXCLUDE_KERNEL_MODULES), \
+                 $(wildcard $(VIRTUAL_DEVICE_KERNEL_MODULES_PATH)/*.ko))</code></pre>
+  <p>Both ramdisk lists end up in the vendor ramdisk, because first-stage <code>init</code> needs them to reach storage. A blocklist stops two modules that get in the way.</p>
+<pre class="code" data-lang="text" data-file="device/generic/goldfish/board/kernel/kernel_modules.blocklist"><code>blocklist vkms.ko
+# When enabled, hijacks the first audio device that's expected to be backed by
+# virtio-snd. See also: aosp/3391025
+blocklist snd-aloop.ko</code></pre>
+  <p>The emulator uses <code>virtio-gpu.ko</code> for the display instead of <code>vkms.ko</code>, and <code>virtio_snd.ko</code> for audio instead of the loopback driver.</p>
+
+  <h3>Boot image and command line</h3>
+<pre class="code" data-lang="makefile" data-file="device/generic/goldfish/board/BoardConfigCommon.mk"><code>BOARD_BOOT_HEADER_VERSION := 4
+BOARD_MKBOOTIMG_ARGS += --header_version $(BOARD_BOOT_HEADER_VERSION)
+BOARD_VENDOR_BOOTIMAGE_PARTITION_SIZE := 0x06000000
+BOARD_RAMDISK_USE_LZ4 := true</code></pre>
+  <p>Header version 4 supports a separate <code>vendor_boot.img</code>, a generic ramdisk, a vendor ramdisk and a separate bootconfig section. The emulator passes its kernel command line through a file, not through the header. For arm64, the line is only <code>8250.nr_uarts=1</code>. For x86_64, it adds <code>clocksource=pit</code>.</p>
+
+  <h3>16 KB pages</h3>
+  <p>A kernel with 16 KB pages uses the Translation Lookaside Buffer (TLB) of the processor better and helps memory-heavy work. The emulator has separate board files for it, such as <code>arm64_16k.mk</code>, which point to <code>prebuilts/qemu-kernel/arm64_16k/</code>. Every loadable module must match the page size of its kernel, so a 16 KB kernel needs its own full module set. The version string of a 4 KB build ends in <code>-4k</code>, and a 16 KB build has no suffix.</p>
+
+  <h3>The GSI and dynamic partitions</h3>
+  <p>The Generic System Image (GSI) contains no kernel at all.</p>
+<pre class="code" data-lang="makefile" data-file="build/make/target/board/BoardConfigGsiCommon.mk"><code>TARGET_NO_KERNEL := true
+
+BOARD_USES_SYSTEM_DLKMIMAGE := true
+BOARD_SYSTEM_DLKMIMAGE_FILE_SYSTEM_TYPE := ext4
+TARGET_COPY_OUT_SYSTEM_DLKM := system_dlkm</code></pre>
+  <p>The GSI runs with the kernel that the device already has in its boot partition. This separation lets one system image run on any GKI device. The emulator puts <code>system_dlkm</code> into the <code>super</code> partition, next to <code>system</code>, <code>system_ext</code>, <code>product</code> and <code>vendor</code>. It formats it as erofs, the Enhanced Read-Only File System, with the comment "we never write here". The kernel loads modules from it but never changes them.</p>
+
+  <h2>Kernel debugging</h2>
+  <p>Linux has several ways to observe the kernel, and Android connects them to its own tools.</p>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../../assets/img/diagrams/kn-tracing.svg" alt="Four kernel sources feed tracing. ftrace under /sys/kernel/tracing, tracepoints for the scheduler, Binder and power, kprobes if the defconfig enables them and programmable eBPF probes. traced_probes reads the per-CPU ring buffers, also for atrace categories, and writes a Perfetto trace as a protobuf file for the Perfetto UI. simpleperf separately produces CPU profiles and flame graphs." loading="lazy"></div>
+    <figcaption>Four kernel sources feed one trace format that the Perfetto UI can open.</figcaption>
+  </figure>
+
+  <h3>ftrace and tracepoints</h3>
+  <p>ftrace is the built-in tracer of the kernel. It can trace function calls, record function entry and exit with times and log selected events. User space can also add its own marks through <code>trace_marker</code>. Its control files live under <code>/sys/kernel/tracing/</code>.</p>
+<pre class="code" data-lang="text" data-file="/sys/kernel/tracing/ (shortened)"><code>available_tracers    # tracers that this kernel offers
+current_tracer       # the active tracer
+trace                # readable output
+trace_pipe           # streaming output
+tracing_on           # on or off
+buffer_size_kb       # buffer size for each CPU
+events/
+    sched/           # scheduler events
+    block/  ext4/  f2fs/
+    power/           # frequency and idle events</code></pre>
+  <p>Tracepoints are fixed probe points in the kernel code. Android relies on them for the scheduler, memory, power and GPU memory. The option <code>CONFIG_TRACE_GPU_MEM=y</code> in the base configuration adds the event <code>gpu_mem_total</code>.</p>
+
+  <h3>Perfetto</h3>
+  <p>Perfetto is the tracing system of Android. Its daemon <code>traced_probes</code> turns on the requested events, reads the binary ring buffer of each CPU and encodes the events in the protobuf format of Perfetto. The code lives in <code>external/perfetto/src/traced/probes/ftrace/</code>.</p>
+<pre class="code" data-lang="bash" data-file="Terminal"><code># Record a 10-second trace of scheduler and power events
+adb shell perfetto --txt -c - \
+    -o /data/misc/perfetto-traces/trace.perfetto-trace &lt;&lt;EOF
+buffers { size_kb: 63488 }
+data_sources {
+    config {
+        name: "linux.ftrace"
+        ftrace_config {
+            ftrace_events: "sched/sched_switch"
+            ftrace_events: "sched/sched_wakeup"
+            ftrace_events: "power/cpu_frequency"
+            ftrace_events: "power/cpu_idle"
+        }
+    }
+}
+duration_ms: 10000
+EOF
+
+adb pull /data/misc/perfetto-traces/trace.perfetto-trace .
+# Open the file at https://ui.perfetto.dev</code></pre>
+  <p>kprobes can add a probe to almost any kernel function while the system runs. The base configuration does not require <code>CONFIG_KPROBES</code>, so its presence depends on the defconfig. Together with eBPF, kprobes allow custom measurements without a new kernel build.</p>
+
+  <h3>Kernel logs and crashes</h3>
+  <p>The kernel ring buffer is the first place to look. On <code>userdebug</code> and <code>eng</code> builds, Android also forwards kernel messages into a log buffer of its own.</p>
+<pre class="code" data-lang="bash" data-file="Terminal"><code>adb shell dmesg          # the kernel ring buffer
+adb shell dmesg -w       # follow new messages
+adb logcat -b kernel     # kernel messages through logcat
+adb shell dmesg | grep -i "dm_verity"</code></pre>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Message start</th><th>Source</th></tr></thead>
+      <tbody>
+        <tr><td><code>audit:</code></td><td>An SELinux denial</td></tr>
+        <tr><td><code>init:</code></td><td>Service events from <code>init</code></td></tr>
+        <tr><td><code>dm_verity:</code></td><td>Integrity checks of a partition</td></tr>
+        <tr><td><code>oom_reaper:</code></td><td>The kernel frees memory after an out-of-memory kill</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>When a process in user space crashes, <code>debuggerd</code> writes a tombstone. Its code lives in <code>system/core/debuggerd/</code>. A signal handler in the crashing process starts <code>crash_dump</code>. This helper attaches with <code>ptrace</code>, reads the registers and the memory maps, unwinds the stacks and writes the report to <code>/data/tombstones/</code>. It also writes a summary to logcat. The kernel supplies much of the input through files such as <code>/proc/&lt;pid&gt;/maps</code>, <code>/proc/&lt;pid&gt;/task/</code> and <code>/proc/&lt;pid&gt;/cmdline</code>.</p>
+  <p>When the kernel itself panics, its last log needs a place that survives the reboot. <strong>pstore</strong> provides it.</p>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../../assets/img/diagrams/kn-pstore.svg" alt="Before the panic, the kernel log goes to the ramoops writer, a pstore backend, which stores it in reserved RAM that a reboot does not clear. After the reboot, the files appear under /sys/fs/pstore/. dmesg-ramoops-0 holds the last kernel log, console-ramoops-0 the last console output and pmsg-ramoops-0 the last user-space messages." loading="lazy"></div>
+    <figcaption>A reserved area of RAM carries the last log across the reboot.</figcaption>
+  </figure>
+
+<pre class="code" data-lang="bash" data-file="Terminal"><code>adb shell ls /sys/fs/pstore/
+adb shell cat /sys/fs/pstore/dmesg-ramoops-0</code></pre>
+  <p>Some SoCs can also save a full memory dump after a panic. Developers analyze it with <code>crash</code> or <code>gdb</code> and the symbol file of the kernel.</p>
+
+  <h3>Power and memory</h3>
+<pre class="code" data-lang="bash" data-file="Terminal"><code># CPU frequency and idle states
+adb shell cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_cur_freq
+adb shell cat /sys/devices/system/cpu/cpu0/cpuidle/state0/name
+
+# Temperature of a thermal zone
+adb shell cat /sys/class/thermal/thermal_zone0/type
+adb shell cat /sys/class/thermal/thermal_zone0/temp
+
+# Memory pressure, statistics and input/output for each UID
+adb shell cat /proc/pressure/memory
+adb shell cat /proc/meminfo
+adb shell cat /proc/uid_io/stats</code></pre>
+  <p>KFENCE, which the conditional fragment requires on ARM64 and x86, also watches for memory errors. It places a small pool of objects between guard pages and reports any access outside of them.</p>
+
+  <h2>What changed in Android 17</h2>
+  <p>Android 17 brings a new GKI branch, a mature 16 KB story and a new home for the storage libraries.</p>
+  <ul>
+    <li><strong>A new branch.</strong> <code>android17-6.18</code> tracks LTS 6.18 and runs until July 2030. When Android 17 was cut, it had no quarterly release yet. Its prebuilt ships about 104 GKI modules and a trimmed KMI of about 22,961 symbols.</li>
+    <li><strong>16 KB pages.</strong> <code>kernel/prebuilts/6.18/arm64/16k/</code> holds a full kernel and module set for 16 KB pages next to the 4 KB set.</li>
+    <li><strong>Empty base fragments.</strong> The 6.18 fragments declare no option requirements, and the Android 11 fragments are gone.</li>
+  </ul>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../../assets/img/diagrams/kn-a17-changes.svg" alt="Before Android 17, fs_mgr, liblp, libsnapshot, libdm and helper libraries lived in system/core. In Android 17 they moved to system/fs, with fs_mgr for fstab and first-stage mounts, liblp for super partition metadata, libsnapshot for Virtual A/B updates, libdm for device-mapper ioctls and a new Rust tool casefolding_remover. The new mmd daemon sets up zram devices, calls swapon, runs writeback and recompression and takes Binder calls from system_server through IMmd. Module names stay the same, so dependent code builds without changes." loading="lazy"></div>
+    <figcaption>The storage libraries moved as a whole, and zram got its own daemon.</figcaption>
+  </figure>
+
+  <p>The family of storage libraries moved from <code>system/core</code> to the new tree <code>system/fs/</code>. It includes <code>fs_mgr</code> for the fstab and first-stage mounts, <code>liblp</code> for the metadata of the <code>super</code> partition, <code>libsnapshot</code> for Virtual A/B updates and <code>libdm</code> for device mapper calls. The move changed no code and no module names, so all users still build. To follow a mount or an update in the Android 17 source, look under <code>system/fs/fs_mgr/</code>.</p>
+  <p>The new daemon <strong>mmd</strong>, the Android Memory Management Daemon in <code>system/memory/mmd/</code>, now owns zram, the compressed swap in RAM. At boot, <code>mmd_setup</code> creates the zram devices and calls <code>swapon</code>, based on properties such as <code>mmd.zram.enabled</code>. Later it runs writeback and recompression on its own schedule. <code>system_server</code> talks to it through the AIDL interface <code>IMmd</code> instead of the sysfs files of zram. The old <code>swapon_all</code> path in <code>fs_mgr</code> skips zram when mmd owns it. The emulator still sets up zram the old way in <code>init.ranchu.rc</code>.</p>
+  <p>A small new Rust tool, <code>casefolding_remover</code>, migrates <code>/data/media</code> between layouts with and without case folding. Case folding is an ext4 and f2fs feature that makes name lookups ignore case. The tool works together with file-based encryption and runs as a one-shot <code>init</code> service.</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Area</th><th>Android 16</th><th>Android 17</th></tr></thead>
+      <tbody>
+        <tr><td>GKI branch</td><td><code>android16-6.12</code></td><td>Adds <code>android17-6.18</code></td></tr>
+        <tr><td>Prebuilt</td><td><code>kernel/prebuilts/6.12/</code></td><td>Adds <code>kernel/prebuilts/6.18/</code>, about 104 modules</td></tr>
+        <tr><td>KMI symbols</td><td>About 38,840 (6.6)</td><td>About 22,961 (6.18)</td></tr>
+        <tr><td>Config folders</td><td><code>b/android-6.12</code></td><td>Adds <code>c/</code> and <code>d/android-6.18</code>, removes <code>r/</code></td></tr>
+        <tr><td>Storage libraries</td><td><code>system/core</code></td><td><code>system/fs/fs_mgr/</code></td></tr>
+        <tr><td>zram setup</td><td><code>init</code> and <code>swapon_all</code></td><td>The new <code>mmd</code> daemon</td></tr>
+        <tr><td>New tool</td><td>None</td><td><code>casefolding_remover</code></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="block remember">
+    <div class="label">Worth remembering</div>
+    <ul>
+      <li>An ACK branch is an upstream LTS release plus a small set of Android patches, and the difference keeps shrinking.</li>
+      <li>GKI splits the kernel into one core from Google and vendor modules. The frozen KMI connects them.</li>
+      <li>A CRC for each symbol stops a module from loading against an incompatible kernel.</li>
+      <li>Configuration lives in fragments, and three checks guard it at build, test and update time.</li>
+      <li>The device tree describes ARM boards, and overlays separate the board from the SoC.</li>
+    </ul>
+  </div>
+
+  <div class="block security">
+    <div class="label">Security lens</div>
+    <p>The kernel is the foundation of the security model of Android, so its update path and its configuration matter as much as its code.</p>
+    <ul>
+      <li><strong>Fast fixes.</strong> GKI lets Google ship a kernel fix in <code>boot.img</code> without waiting for each vendor. Before GKI, many devices never received kernel fixes.</li>
+      <li><strong>A narrow interface.</strong> The KMI limits what vendor code can reach. A smaller symbol list, such as the one of 6.18, also means fewer ways for a faulty module to misuse the core.</li>
+      <li><strong>Hardened defaults.</strong> The fragments require CFI, shadow call stacks, PAN, KASLR and KFENCE on ARM64. They also require the processor flaw protections on x86.</li>
+      <li><strong>Closed doors.</strong> <code>/dev/mem</code>, forced module unloading and old system calls stay off.</li>
+      <li><strong>Approved builds only.</strong> <code>approved-ogki-builds.xml</code> lists the exact kernel builds that device makers can ship.</li>
+      <li><strong>Read-only modules.</strong> <code>system_dlkm</code> is a read-only file system, so nothing on the device can swap a module.</li>
+    </ul>
+  </div>
+
+  <details class="deep">
+    <summary>For the curious, source files <small>Optional</small></summary>
+    <div class="inner">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Path</th><th>What it holds</th></tr></thead>
+          <tbody>
+            <tr><td><code>kernel/configs/</code></td><td>Configuration fragments and lifecycle data</td></tr>
+            <tr><td><code>kernel/configs/b/android-6.12/</code></td><td>The full Android 16 fragments</td></tr>
+            <tr><td><code>kernel/configs/c/android-6.18/</code></td><td>The Android 17 fragments</td></tr>
+            <tr><td><code>kernel/configs/kernel-lifetimes.xml</code></td><td>Launch and EOL dates of each branch</td></tr>
+            <tr><td><code>kernel/configs/approved-ogki-builds.xml</code></td><td>Approved OEM GKI builds</td></tr>
+            <tr><td><code>kernel/prebuilts/6.18/arm64/</code></td><td>The Android 17 GKI prebuilt, with <code>16k/</code></td></tr>
+            <tr><td><code>kernel/prebuilts/6.6/arm64/abi_symbollist</code></td><td>A KMI symbol list</td></tr>
+            <tr><td><code>kernel/prebuilts/common-modules/virtual-device/</code></td><td>Modules of the virtual devices</td></tr>
+            <tr><td><code>prebuilts/qemu-kernel/</code></td><td>Kernels of the emulator</td></tr>
+            <tr><td><code>device/generic/goldfish/board/</code></td><td>Board files of the emulator</td></tr>
+            <tr><td><code>device/generic/goldfish/init/init.ranchu.rc</code></td><td>The init script of the emulator</td></tr>
+            <tr><td><code>system/fs/fs_mgr/</code></td><td>The storage libraries in Android 17</td></tr>
+            <tr><td><code>system/memory/mmd/</code></td><td>The memory management daemon</td></tr>
+            <tr><td><code>system/core/debuggerd/</code></td><td>The crash handler</td></tr>
+            <tr><td><code>external/perfetto/src/traced/probes/ftrace/</code></td><td>The kernel trace reader of Perfetto</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>In the emulator, two lines of <code>init.ranchu.rc</code> show module loading and zram in practice.</p>
+<pre class="code" data-lang="text" data-file="device/generic/goldfish/init/init.ranchu.rc"><code>on early-init
+    start vendor.dlkm_loader
+    exec u:r:modprobe:s0 -- /system/bin/modprobe -a -d /system/lib/modules zram.ko
+
+on init
+    write /sys/block/zram0/comp_algorithm lz4
+    write /proc/sys/vm/page-cluster 0</code></pre>
+      <p>The service <code>vendor.dlkm_loader</code> loads the modules from <code>modules.load</code> in <code>/vendor/lib/modules</code>. The <code>modprobe</code> command runs in its own SELinux domain.</p>
+    </div>
+  </details>
+
+  <div class="block try">
+    <div class="label">Try it yourself</div>
+    <p><strong>In an AOSP source tree.</strong> Look at the prebuilt kernels, the KMI and the configuration.</p>
+<pre class="code" data-lang="bash" data-file="Terminal"><code>ls kernel/prebuilts/
+cat kernel/prebuilts/6.18/arm64/kernel_version.mk
+ls kernel/prebuilts/6.18/arm64/*.ko | wc -l
+
+wc -l kernel/prebuilts/6.6/arm64/abi_symbollist
+grep android_rvh kernel/prebuilts/6.6/arm64/abi_symbollist | head
+
+grep -c "=y" kernel/configs/b/android-6.12/android-base.config
+grep -c "is not set" kernel/configs/b/android-6.12/android-base.config
+diff kernel/configs/v/android-6.6/android-base.config \
+     kernel/configs/b/android-6.12/android-base.config
+
+cat device/generic/goldfish/board/kernel/kernel_modules.blocklist</code></pre>
+    <p><strong>On an emulator.</strong> Read the running kernel.</p>
+<pre class="code" data-lang="bash" data-file="Terminal"><code>adb shell cat /proc/version
+adb shell "zcat /proc/config.gz" &gt; emulator_kernel_config.txt
+adb shell lsmod
+adb shell cat /proc/pressure/memory
+adb shell ls /proc/device-tree/</code></pre>
+    <p>The base fragment turns on <code>CONFIG_IKCONFIG_PROC</code>, so <code>/proc/config.gz</code> always shows the configuration of the running kernel. Compare it with the fragments in the source tree.</p>
+  </div>
+
+  <h2>Key terms</h2>
+  <dl class="terms">
+    <dt>ACK</dt><dd>Android Common Kernel, an LTS release plus Android patches.</dd>
+    <dt>LTS</dt><dd>Long-Term Support, an upstream Linux release with years of fixes.</dd>
+    <dt>GKI</dt><dd>Generic Kernel Image, the one core kernel that Google builds for all devices.</dd>
+    <dt>KMI</dt><dd>Kernel Module Interface, the frozen set of symbols that vendor modules can use.</dd>
+    <dt>ABI</dt><dd>Application Binary Interface.</dd>
+    <dt>CRC</dt><dd>Cyclic redundancy check, here a checksum of the prototype of a symbol.</dd>
+    <dt>Vendor hook</dt><dd>A tracepoint in the core kernel where a vendor module can add a callback.</dd>
+    <dt>DLKM</dt><dd>Dynamically loadable kernel module, and the partitions that hold them.</dd>
+    <dt>OGKI</dt><dd>An OEM GKI build that Google approved for shipping.</dd>
+    <dt>Configuration fragment</dt><dd>A partial kernel configuration that the build merges with others.</dd>
+    <dt>VINTF</dt><dd>Vendor Interface, the compatibility rules between framework and vendor parts.</dd>
+    <dt>Device tree</dt><dd>A data structure that describes the hardware of a board.</dd>
+    <dt>DTB and DTBO</dt><dd>A compiled device tree and a compiled overlay.</dd>
+    <dt>compatible</dt><dd>The device tree property that selects the driver of a node.</dd>
+    <dt>Kleaf</dt><dd>The kernel build system based on Bazel.</dd>
+    <dt>erofs</dt><dd>Enhanced Read-Only File System.</dd>
+    <dt>ftrace</dt><dd>The built-in tracer of the Linux kernel.</dd>
+    <dt>Tracepoint</dt><dd>A fixed probe point in the kernel code.</dd>
+    <dt>pstore</dt><dd>Persistent storage that keeps kernel logs across a reboot.</dd>
+    <dt>Tombstone</dt><dd>The crash report that debuggerd writes.</dd>
+    <dt>zram</dt><dd>Compressed swap space in RAM.</dd>
+    <dt>mmd</dt><dd>The Android Memory Management Daemon, new in Android 17.</dd>
+    <dt>Binder</dt><dd>Android's kernel-supported inter-process communication mechanism for exchanging requests and responses.</dd>
+    <dt>IPC</dt><dd>Inter-process communication, which allows separate processes to exchange data and coordinate operations.</dd>
+    <dt>RPC</dt><dd>Remote procedure call, a communication model in which a client requests an operation from another process.</dd>
+    <dt>Parcel</dt><dd>Android's serialization container for data transferred through Binder.</dd>
+    <dt>Binder transaction</dt><dd>A request or reply delivered through the Binder driver.</dd>
+    <dt>Binder node</dt><dd>A kernel-tracked representation of a Binder object hosted by a process.</dd>
+    <dt>Binder handle</dt><dd>A process-local reference used to identify a remote Binder object.</dd>
+    <dt>binderfs</dt><dd>A filesystem that supports dynamic creation and isolation of Binder device nodes.</dd>
+    <dt>Binder domain</dt><dd>A separate Binder communication namespace used for framework, hardware or vendor communication.</dd>
+    <dt>DMA-BUF</dt><dd>A Linux framework for sharing memory buffers between userspace and kernel drivers.</dd>
+    <dt>DMA-BUF file descriptor</dt><dd>A descriptor that references a shared buffer and allows eligible processes or drivers to access it.</dd>
+    <dt>DMA-BUF heap</dt><dd>A kernel interface for allocating shareable buffers with suitable memory properties.</dd>
+    <dt>ION</dt><dd>The former Android-specific buffer allocator replaced by the upstream DMA-BUF heap framework in modern kernels.</dd>
+    <dt>Zero-copy pipeline</dt><dd>A data path that avoids copying complete buffers between separate allocations when all components support shared-buffer access.</dd>
+    <dt>Synchronization fence</dt><dd>A mechanism that represents completion or readiness and coordinates asynchronous buffer operations.</dd>
+    <dt>FUSE</dt><dd>Filesystem in Userspace, a framework that allows userspace components to handle filesystem operations.</dd>
+    <dt>VFS</dt><dd>Virtual Filesystem, the Linux layer that provides a common interface to different filesystem implementations.</dd>
+    <dt>SDCardFS</dt><dd>A former Android shared-storage filesystem implementation.</dd>
+    <dt>MediaProvider</dt><dd>An Android component responsible for media-related storage management and relevant access checks.</dd>
+    <dt>Passthrough</dt><dd>A FUSE mode that allows eligible operations to reach the underlying filesystem without repeated userspace data handling.</dd>
+    <dt>Lower filesystem</dt><dd>The underlying filesystem accessed through another filesystem layer, such as FUSE.</dd>
+    <dt>IncFS</dt><dd>Incremental Filesystem, which supports access to application data while file contents are delivered progressively.</dd>
+    <dt>Pending reads</dt><dd>IncFS requests that wait until the userspace data loader supplies the missing blocks.</dd>
+    <dt>Data loader</dt><dd>A userspace component that retrieves and supplies missing IncFS blocks.</dd>
+    <dt>Ashmem</dt><dd>Android's shared-memory mechanism with reference tracking and support for reclaiming eligible unpinned pages.</dd>
+    <dt>memfd</dt><dd>A Linux anonymous-file mechanism that supports shared memory and file seals.</dd>
+    <dt>File seal</dt><dd>A restriction on certain operations against a <code>memfd</code> file, such as changing its size.</dd>
+    <dt>Wakelock</dt><dd>A mechanism that prevents system suspend while a protected operation requires the device to remain awake.</dd>
+    <dt>Opportunistic suspend</dt><dd>A power-management model in which the system attempts to suspend when no active requirement prevents it.</dd>
+    <dt>lmkd</dt><dd>Android's userspace daemon for responding to memory pressure and selecting processes for termination.</dd>
+    <dt>OOM adjustment score</dt><dd>A score representing a process's relative importance during memory-management decisions.</dd>
+    <dt>Reaper</dt><dd>A component in <code>lmkd</code> that carries out process-termination operations.</dd>
+    <dt>dm-verity</dt><dd>A device-mapper target that verifies block-device data against a trusted hash tree.</dd>
+    <dt>Merkle tree</dt><dd>A hierarchy of hashes used to verify data integrity from individual blocks to a root hash.</dd>
+    <dt>Verified boot</dt><dd>A chain of verification steps that establishes trust in software loaded during device startup.</dd>
+    <dt>Root hash</dt><dd>The top-level hash representing the expected contents of a protected data set.</dd>
+    <dt>FBE</dt><dd>File-Based Encryption, which protects files using keys associated with the relevant data and user states.</dd>
+    <dt>Direct Boot</dt><dd>Android functionality that allows selected operations before the user unlocks the device.</dd>
+    <dt>fs-verity</dt><dd>A Linux mechanism that verifies the integrity of individual files.</dd>
+    <dt>eBPF</dt><dd>Extended Berkeley Packet Filter, a kernel execution technology used for networking, monitoring and policy enforcement.</dd>
+    <dt>BPF verifier</dt><dd>The kernel component that validates BPF programs before execution.</dd>
+    <dt>BPF map</dt><dd>A kernel-managed data structure used by BPF programs to store and exchange information.</dd>
+    <dt>BPF hook</dt><dd>A supported kernel attachment point at which a BPF program executes.</dd>
+    <dt>BPF JIT compiler</dt><dd>A component that translates eligible BPF programs into native machine instructions.</dd>
+    <dt>SELinux</dt><dd>Security-Enhanced Linux, which enforces mandatory access-control policies in the kernel.</dd>
+    <dt>MAC</dt><dd>Mandatory access control, a security model in which policy determines permitted access between labeled subjects and objects.</dd>
+    <dt>Security context</dt><dd>A label that identifies the security domain or type associated with a process or object.</dd>
+    <dt>SELinux domain</dt><dd>A security context used to apply policy restrictions to a process.</dd>
+    <dt>LSM hook</dt><dd>A kernel interception point used by security modules to evaluate protected operations.</dd>
+    <dt>Audit record</dt><dd>A record of a relevant security event, such as an SELinux access denial.</dd>
+    <dt>Seccomp</dt><dd>Secure computing mode, which restricts the system calls available to a process.</dd>
+    <dt>Seccomp-BPF</dt><dd>System-call filtering using classic BPF programs.</dd>
+    <dt>Classic BPF</dt><dd>The earlier BPF instruction model used by seccomp filters, distinct from extended BPF.</dd>
+    <dt>SIGSYS</dt><dd>A signal associated with certain disallowed system-call actions, including process termination under a configured seccomp policy.</dd>
+    <dt>Cgroup</dt><dd>A Linux control group that organizes processes for resource accounting and control.</dd>
+    <dt>Cgroup controller</dt><dd>A kernel component that applies a particular type of resource-management behavior to a group.</dd>
+    <dt>Cgroup freezer</dt><dd>A controller that freezes and resumes processes in a selected group.</dd>
+    <dt>CPU accounting</dt><dd>Tracking processor time consumed by processes or groups.</dd>
+    <dt>CPU scheduler controller</dt><dd>A cgroup controller that supports scheduling policies for grouped processes.</dd>
+    <dt>Cgroup BPF</dt><dd>A mechanism for attaching BPF programs to supported cgroup operations.</dd>
+    <dt>top-app</dt><dd>An Android process group associated with the application receiving top-level foreground treatment.</dd>
+    <dt>ACPI</dt><dd>Advanced Configuration and Power Interface.</dd>
+    <dt>AOSP</dt><dd>Android Open Source Project.</dd>
+    <dt>CFI</dt><dd>Control Flow Integrity.</dd>
+    <dt>CPU</dt><dd>Central processing unit.</dd>
+    <dt>EOL</dt><dd>End of life.</dd>
+    <dt>GPU</dt><dd>Graphics processing unit.</dd>
+    <dt>GSI</dt><dd>Generic System Image.</dd>
+    <dt>KASLR</dt><dd>Kernel address space layout randomization.</dd>
+    <dt>OEM</dt><dd>Original Equipment Manufacturer.</dd>
+    <dt>OTA</dt><dd>Over-the-air update.</dd>
+    <dt>PAN</dt><dd>Privileged Access Never.</dd>
+    <dt>PSI</dt><dd>Pressure Stall Information.</dd>
+    <dt>SoC</dt><dd>System on Chip.</dd>
+    <dt>TLB</dt><dd>Translation Lookaside Buffer.</dd>
+    <dt>UID</dt><dd>User ID.</dd>
+    <dt>VTS</dt><dd>Vendor Test Suite.</dd>
+  </dl>
+
+</article>
+</main>
+
+<script src="../../assets/js/site.js?v=20261029d"></script>
+</body>
+</html>

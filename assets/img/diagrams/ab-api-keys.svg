@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 290" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">Three places for an API key and the restrictions for a public key</title>
+  <desc id="d">On the left, three places for a key, from weak to strong. A key in Java or Kotlin code shows up in a decompiler in seconds. A key in native code is still found with the strings tool or a runtime hook. A key only on your server never reaches the app, and the server calls the API. On the right, a key that must ship in the app, such as a Maps key, gets restrictions in the console. These are an application restriction to Android apps, the package name, the SHA-1 certificate fingerprint of the signing key, an API restriction to only the APIs in use, and quotas with alerts.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="20" y="30" width="280" height="56" rx="10" fill="#fbecec" stroke="#c2552d" stroke-width="1.5"/>
+<text x="36" y="53" font-size="13" fill="#963f1f" text-anchor="start" font-weight="700">Key in Java or Kotlin code</text>
+<text x="36" y="72" font-size="11.6" fill="#4a5263" text-anchor="start">A decompiler shows it in seconds.</text>
+<rect x="20" y="100" width="340" height="56" rx="10" fill="#fdf4e3" stroke="#b7791f" stroke-width="1.5"/>
+<text x="36" y="123" font-size="13" fill="#8a5a12" text-anchor="start" font-weight="700">Key in native code (NDK)</text>
+<text x="36" y="142" font-size="11.6" fill="#4a5263" text-anchor="start">The strings tool or a runtime hook still finds it.</text>
+<rect x="20" y="170" width="400" height="56" rx="10" fill="#e3f4ee" stroke="#0f8a6a" stroke-width="1.5"/>
+<text x="36" y="193" font-size="13" fill="#0b6650" text-anchor="start" font-weight="700">Key only on your server</text>
+<text x="36" y="212" font-size="11.6" fill="#4a5263" text-anchor="start">The app never holds it. The server calls the API.</text>
+<path d="M30 250 L 420 250" fill="none" stroke="#0f8a6a" stroke-width="2" marker-end="url(#m4)"/>
+<text x="30" y="270" font-size="11.6" fill="#0b6650" text-anchor="start" font-weight="700">Stronger protection</text>
+<rect x="480" y="30" width="380" height="226" rx="12" fill="#fff" stroke="#2f62c8" stroke-width="1.6"/>
+<text x="496" y="56" font-size="13.5" fill="#1f4a9e" text-anchor="start" font-weight="700">A key that must ship in the app</text>
+<text x="496" y="76" font-size="11.6" fill="#4a5263" text-anchor="start">For example a Maps key. Restrict it in the console.</text>
+<rect x="496" y="92" width="348" height="26" rx="6" fill="#eef3fb"/>
+<text x="508" y="109" font-size="11.6" fill="#1f4a9e" text-anchor="start" font-weight="700">Application restriction</text>
+<text x="832" y="109" font-size="11.4" fill="#4a5263" text-anchor="end">Android apps only</text>
+<rect x="496" y="124" width="348" height="26" rx="6" fill="#eef3fb"/>
+<text x="508" y="141" font-size="11.6" fill="#1f4a9e" text-anchor="start" font-weight="700">Package name</text>
+<text x="832" y="141" font-size="11.4" fill="#4a5263" text-anchor="end">com.example.shop</text>
+<rect x="496" y="156" width="348" height="26" rx="6" fill="#eef3fb"/>
+<text x="508" y="173" font-size="11.6" fill="#1f4a9e" text-anchor="start" font-weight="700">Certificate fingerprint</text>
+<text x="832" y="173" font-size="11.4" fill="#4a5263" text-anchor="end">SHA-1 of your signing key</text>
+<rect x="496" y="188" width="348" height="26" rx="6" fill="#eef3fb"/>
+<text x="508" y="205" font-size="11.6" fill="#1f4a9e" text-anchor="start" font-weight="700">API restriction</text>
+<text x="832" y="205" font-size="11.4" fill="#4a5263" text-anchor="end">Only the APIs the app uses</text>
+<rect x="496" y="220" width="348" height="26" rx="6" fill="#eef3fb"/>
+<text x="508" y="237" font-size="11.6" fill="#1f4a9e" text-anchor="start" font-weight="700">Quota and alerts</text>
+<text x="832" y="237" font-size="11.4" fill="#4a5263" text-anchor="end">Limits and warnings on misuse</text>
+</svg>

@@ -1,0 +1,1060 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Self-consistency · AI Engineering · LearnInBits</title>
+  <meta name="description" content="Ask a model the same question several times and let the answers vote. Two guided builds, two ways to count the votes and what a vote can count.">
+  <!-- og:start -->
+  <meta property="og:site_name" content="LearnInBits">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Self-consistency · AI Engineering">
+  <meta property="og:description" content="Ask a model the same question several times and let the answers vote. Two guided builds, two ways to count the votes and what a vote can count.">
+  <meta property="og:url" content="https://learninbits.in/courses/ai-engineering/14-self-consistency.html">
+  <meta property="og:image" content="https://learninbits.in/assets/img/og/courses-ai-engineering-14-self-consistency.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Self-consistency · AI Engineering">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Self-consistency · AI Engineering">
+  <meta name="twitter:description" content="Ask a model the same question several times and let the answers vote. Two guided builds, two ways to count the votes and what a vote can count.">
+  <meta name="twitter:image" content="https://learninbits.in/assets/img/og/courses-ai-engineering-14-self-consistency.png">
+  <link rel="canonical" href="https://learninbits.in/courses/ai-engineering/14-self-consistency.html">
+  <!-- og:end -->
+  <link rel="icon" href="../../assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,500;0,8..60,600;1,8..60,500&display=swap">
+  <link rel="stylesheet" href="../../assets/css/style.css?v=20261029d">
+  <script>try{var t=localStorage.getItem("lib-theme");t=t?JSON.parse(t):(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+</head>
+<body data-root="../../" data-page="chapter" data-course="ai-engineering" data-id="14-self-consistency">
+
+<main id="main">
+<article>
+
+  <div class="block oneline">
+    <div class="label">In one line</div>
+    <p>Self-consistency lets the model work through a problem several times and takes a vote on the final answers. The most common answer wins.</p>
+  </div>
+
+  <section class="learn">
+    <h2>What you will learn</h2>
+    <ul>
+      <li>Why one run of a model can take a wrong turn, and why several runs rarely take the same wrong turn</li>
+      <li>Why self-consistency needs a temperature above 0</li>
+      <li>How to find the final answer in a long reply and clean it, so that equal answers count as one vote</li>
+      <li>Two ways to count votes in Python, a dictionary with loops and <code>Counter</code></li>
+      <li>What a vote can count and what it cannot, and what the confidence value really tells you</li>
+    </ul>
+    <p class="needs">Read <a href="08-chain-of-thought.html">chapter 8</a> first. Self-consistency runs the same kind of step-by-step prompt, only several times.</p>
+  </section>
+
+  <h2>The idea</h2>
+  <p>In chapter 8, the model wrote its steps before the answer. That made a task with several steps more reliable. It still left one weak point. The model follows one line of reasoning, and if it takes a wrong turn early, every later step builds on that mistake. One run gives you one answer and no way to tell whether that run went wrong.</p>
+  <p><strong>Self-consistency</strong> asks the same question several times. With a temperature above 0, each run picks slightly different words, and so it reasons along a slightly different path. Most paths lead to the correct answer. The wrong paths usually go wrong in different ways, so they end in different wrong answers. A vote then picks the answer that most runs reach.</p>
+  <p>The method comes from research in 2022. The paper <a href="https://arxiv.org/abs/2203.11171">"Self-Consistency Improves Chain of Thought Reasoning in Language Models"</a> by Wang and others showed clear gains on arithmetic and reasoning tests over a single chain of thought.</p>
+
+  <div class="block analogy">
+    <div class="label">Real-life analogy</div>
+    <p>A bank in Pune receives a complicated loan application. Instead of trusting one officer, it gives the file to five officers, who each work through it alone. Four of them approve a loan of ₹12 lakh. One approves ₹18 lakh, because he read a monthly figure as a yearly one. The bank goes with ₹12 lakh, because the odd one out made a slip that nobody else made. Self-consistency treats each run of the model as one of those officers.</p>
+  </div>
+
+  <h2>The idea in one picture</h2>
+  <p>One problem goes to the model several times, here say five. Each run reasons in its own way and gives its own answer. The answers go into a vote, and the winner is the answer with the most votes.</p>
+  <figure class="diagram">
+      <div class="frame"><img src="../../assets/img/diagrams/ai-14-idea.svg" alt="One problem is asked several times, here say five runs. Each run reasons in its own way and gives its own answer, namely 2000, 2600, 2000, 900 and 2000. The answers go into a vote. 2000 gets 3 votes, 2600 gets 1 vote and 900 gets 1 vote. The winner is 2000, with 3 of 5 votes. Most wrong paths end in different wrong answers, so they split their votes." loading="lazy"></div>
+      <figcaption>Several runs reason on their own. The vote keeps the answer that most of them reach.</figcaption>
+    </figure>
+  <p>The number of runs is your choice. More runs give a steadier vote, but each run is a full call to the model. An odd number, such as 3, 5 or 7, makes a tie less likely.</p>
+
+  <h3>Why the temperature matters</h3>
+  <p>Chapter 8 used <code>temperature=0</code>, so that the model always picked its most likely next word. For self-consistency, that setting defeats the purpose. At 0, five runs follow almost the same path and give almost the same answer, including the same mistake. The vote then only counts one opinion five times.</p>
+  <p>Both examples of this chapter use <code>temperature=0.7</code>. That value adds enough randomness for different paths, and it keeps the reasoning sensible. A much higher value makes the runs wander, and the answers get worse.</p>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th></th><th>Chain of thought (chapter 8)</th><th>Self-consistency (this chapter)</th></tr></thead>
+      <tbody>
+        <tr><td>Calls to the model</td><td>One</td><td>One for each sample</td></tr>
+        <tr><td>Temperature</td><td>0</td><td>Above 0, here 0.7</td></tr>
+        <tr><td>The answer comes from</td><td>One line of reasoning</td><td>A vote over several lines of reasoning</td></tr>
+        <tr><td>You also get</td><td>The steps</td><td>The steps of every run and a confidence value</td></tr>
+        <tr><td>Your program needs</td><td>Nothing extra</td><td>Code that finds, cleans and counts the answers</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>What we build in this chapter</h2>
+  <p>Both programs use the same method on two different problems. They differ in how they find the final answer in a reply and how they count the votes.</p>
+
+  <div class="build-cards">
+    <div class="build-card" style="--ex:#2f62c8">
+      <span class="ex-tag"><b>1</b>Example 1</span>
+      <h3>Data protection with Gemini</h3>
+      <dl>
+        <dt>Aim</dt><dd>Ask Gemini a counting question about the DPDP Act five times and vote on the number.</dd>
+        <dt>Problem</dt><dd>How many users of an app need verifiable parental consent.</dd>
+        <dt>Input</dt><dd>One word problem with a trap in it.</dd>
+        <dt>Expected output</dt><dd>The vote and its result, for example<code class="expect">FINAL ANSWER: <b>2000</b></code></dd>
+        <dt>Votes counted with</dt><dd>A dictionary and two loops</dd>
+        <dt>Model</dt><dd><span class="model-chip">Gemini 3.1 Flash Lite</span></dd>
+      </dl>
+    </div>
+    <div class="build-card" style="--ex:#0f8a6a">
+      <span class="ex-tag"><b>2</b>Example 2</span>
+      <h3>App security with Qwen</h3>
+      <dl>
+        <dt>Aim</dt><dd>Ask Qwen to label an app five times and vote on the label.</dd>
+        <dt>Problem</dt><dd>An app with SMS permissions and no messaging feature.</dd>
+        <dt>Input</dt><dd>One app description and three labeling rules.</dd>
+        <dt>Expected output</dt><dd>The vote and its result, for example<code class="expect">FINAL ANSWER: <b>SUSPICIOUS</b></code></dd>
+        <dt>Votes counted with</dt><dd><code>Counter</code> from the standard library</dd>
+        <dt>Model</dt><dd><span class="model-chip">Qwen 2.5 7B, through OpenRouter</span></dd>
+      </dl>
+    </div>
+  </div>
+  <p>DPDP stands for the Digital Personal Data Protection Act of India, from 2023. A data fiduciary is the company that decides why and how personal data is processed.</p>
+
+  <!-- ================= EXAMPLE 1 ================= -->
+  <section class="example" style="--ex:#2f62c8">
+
+    <div class="example-banner">
+      <div class="eb-tag">Example 1 · Guided build</div>
+      <h2 data-toc="Example 1, data protection with Gemini">Data protection with Gemini</h2>
+      <p>Ask Gemini the same DPDP question five times, find the number in each reply and count the votes by hand.</p>
+      <div class="eb-row">
+        <span class="eb-chip">Gemini 3.1 Flash Lite</span>
+        <span class="eb-chip">src/13_self_consistency_google.py</span>
+        <a class="gh-btn" href="https://github.com/bhardwajAbhi/ai-engineering/blob/main/src/13_self_consistency_google.py"><svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M12 .5a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2.1c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1.1-.8.1-.8.1-.8 1.2.1 1.9 1.3 1.9 1.3 1.1 1.9 2.9 1.3 3.6 1 .1-.8.4-1.3.8-1.6-2.7-.3-5.5-1.3-5.5-6a4.7 4.7 0 0 1 1.3-3.2c-.1-.3-.6-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.7 1.7.2 2.9.1 3.2a4.7 4.7 0 0 1 1.3 3.2c0 4.6-2.8 5.6-5.5 6 .4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .5z"/></svg>View on GitHub</a>
+      </div>
+    </div>
+
+    <figure class="diagram">
+      <div class="frame"><img src="../../assets/img/diagrams/ai-14-ex1-flow.svg" alt="Setup, llm = ChatGoogleGenerativeAI(..., temperature=0.7), Some randomness, so that each run reasons in its own way. Chain, chain = cot_prompt | llm | parser, Think step by step, then one line FINAL ANSWER &lt;answer&gt;, {problem}. Loop, for i in range(n_samples), The same DPDP problem, sent once for each sample. Extract, extract_final_answer(response), Reads from the last line up, then removes the stars and the commas. Vote, vote_counts = {} and two loops, Counts each answer by hand, then keeps the highest count. Output, FINAL ANSWER, CONFIDENCE and VOTE DISTRIBUTION, 2000, with 5 of 5 votes in the real run. A loop goes back from stage 4 to stage 3, next sample." loading="lazy"></div>
+      <figcaption>The program of Example 1, from the problem to the vote.</figcaption>
+    </figure>
+
+    <h3 class="step"><span class="sn">Step 1</span>Create the file</h3>
+    <p>In your project folder, create the file <code>src/13_self_consistency_google.py</code>. The docstring at the top states the method in a few sentences and names the design choice of this version, counting by hand.</p>
+<pre class="code" data-lang="python" data-file="src/13_self_consistency_google.py"><code>"""
+Title: Self-Consistency Prompting (Google Generative AI)
+
+Self-consistency prompting asks the model the same question several
+times with some randomness, so each run reasons a little differently,
+then picks the answer that appears most often (a majority vote).
+This version counts the votes by hand with a dictionary and loops.
+
+uv run python src/13_self_consistency_google.py
+"""</code></pre>
+
+    <h3 class="step"><span class="sn">Step 2</span>Import what you need</h3>
+<pre class="code" data-lang="python"><code>from dotenv import load_dotenv
+from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.output_parsers import StrOutputParser</code></pre>
+    <ul class="explain">
+      <li><code>load_dotenv</code> reads your API key from the <code>.env</code> file, as in every chapter.</li>
+      <li><code>ChatGoogleGenerativeAI</code>, <code>ChatPromptTemplate</code> and <code>StrOutputParser</code> are the model, the prompt and the parser of chapter 2.</li>
+      <li>Nothing else is needed. The counting in this version uses only plain Python.</li>
+    </ul>
+
+    <h3 class="step"><span class="sn">Step 3</span>Find the final answer in a reply</h3>
+    <p>Each reply is a few paragraphs of reasoning with one line at the end, such as <code>FINAL ANSWER: 2000</code>. Before your program can count anything, it must cut that answer out of the reply. It must also make sure that two replies with the same answer give exactly the same text.</p>
+<pre class="code" data-lang="python"><code>def extract_final_answer(response: str) -&gt; str:
+    """Find the last line that has "FINAL ANSWER:" and return the text after it."""
+
+    # Look from the last line backwards
+    for line in reversed(response.splitlines()):
+        line = line.upper()
+        if "FINAL ANSWER:" in line:
+            answer = line.split("FINAL ANSWER:")[-1]
+
+            # Remove bold markers and commas, then trim spaces and dots
+            answer = answer.replace("*", "").replace(",", "")
+            return answer.strip(" .")
+
+    # No "FINAL ANSWER:" line was found
+    return "UNKNOWN"</code></pre>
+    <ul class="explain">
+      <li><code>response.splitlines()</code> splits the reply into a list of lines.</li>
+      <li><code>reversed(...)</code> walks through that list from the last line to the first. The answer line sits at the end of the reply, so the loop finds it quickly. If the model mentions the format earlier, for example while it repeats the instruction, the loop still takes the line at the end.</li>
+      <li><code>line.upper()</code> turns the line into capital letters. <code>Final Answer:</code> and <code>final answer:</code> then match the same marker.</li>
+      <li><code>line.split("FINAL ANSWER:")[-1]</code> cuts the line at the marker and keeps the part after it. <code>[-1]</code> takes the last part, so a line such as <code>**FINAL ANSWER:** 2000</code> works too.</li>
+      <li><code>.replace("*", "")</code> removes the stars of bold text. Models like to write <code>**2000**</code>.</li>
+      <li><code>.replace(",", "")</code> removes commas, so that <code>2,000</code> and <code>2000</code> become the same vote.</li>
+      <li><code>.strip(" .")</code> removes spaces and dots at both ends, such as the full stop in <code>2000.</code>.</li>
+      <li>If no line has the marker, the function returns <code>"UNKNOWN"</code>. The run still gives a vote, and you can see that something went wrong.</li>
+    </ul>
+    <div class="block note">
+      <div class="label">Why the cleaning matters</div>
+      <p>Python compares text exactly. For Python, <code>"2,000"</code>, <code>"**2000**"</code> and <code>"2000"</code> are three different answers, and they split the votes. The cleaning turns all three into <code>"2000"</code>, so the vote counts what the answer means, not how the model wrote it.</p>
+    </div>
+
+    <h3 class="step"><span class="sn">Step 4</span>Ask the same problem several times</h3>
+    <p>The function <code>self_consistency()</code> does the actual work of the method. Its first part collects the answers.</p>
+<pre class="code" data-lang="python"><code>def self_consistency(chain, problem: str, n_samples: int = 5) -&gt; dict:
+    """Ask the same problem several times and return the most common answer."""
+
+    answers = []
+    reasoning_samples = []
+
+    for i in range(n_samples):
+        response = chain.invoke({"problem": problem})
+        answer = extract_final_answer(response)
+
+        answers.append(answer)
+        reasoning_samples.append(response)
+        print(f"Sample {i + 1}: {answer}")</code></pre>
+    <ul class="explain">
+      <li><code>n_samples: int = 5</code> sets the number of runs. The default is 5, and you can pass another number.</li>
+      <li><code>answers</code> collects the cleaned answers, one for each run. <code>reasoning_samples</code> keeps the full replies.</li>
+      <li><code>chain.invoke({"problem": problem})</code> sends exactly the same problem in every round. Only the randomness of the model makes the replies differ.</li>
+      <li><code>print(f"Sample {i + 1}: {answer}")</code> shows each answer as soon as it arrives, so that you can watch the votes come in.</li>
+    </ul>
+    <p>After the loop, <code>answers</code> is a plain list, for example <code>['2000', '2600', '2000', '900', '2000']</code>. The next three parts turn that list into one result.</p>
+
+    <h3 class="step"><span class="sn">Step 5</span>Count the votes by hand</h3>
+    <figure class="diagram">
+      <div class="frame"><img src="../../assets/img/diagrams/ai-14-vote.svg" alt="Four columns from left to right. The answers of five samples are 2000, 2600, 2000, 900 and 2000. Step 1 counts each answer, so 2000 has 3, 2600 has 1 and 900 has 1. Step 2 keeps the answer with the highest count, 2000. Step 3 works out the confidence, 3 of 5, which is 60 percent. Below, a tie. With the counts 2600 two times, 2000 two times and 900 once, both files keep the answer that appeared first, so 2600 wins. The confidence is only 40 percent, and a low value warns you that the runs did not agree." loading="lazy"></div>
+      <figcaption>From a list of answers to one answer and its confidence.</figcaption>
+    </figure>
+<pre class="code" data-lang="python"><code>    # Step 1: count how many times each answer appears
+    vote_counts = {}
+    for answer in answers:
+        if answer in vote_counts:
+            vote_counts[answer] += 1
+        else:
+            vote_counts[answer] = 1</code></pre>
+    <ul class="explain">
+      <li><code>vote_counts = {}</code> creates an empty dictionary. Each key will be an answer, and each value will be the number of votes for it.</li>
+      <li>The loop takes the answers one by one.</li>
+      <li>If the answer is already a key, <code>vote_counts[answer] += 1</code> adds one vote to it.</li>
+      <li>If the answer is new, <code>vote_counts[answer] = 1</code> adds it with its first vote.</li>
+      <li>For the list above, the result is <code>{'2000': 3, '2600': 1, '900': 1}</code>. A Python dictionary keeps its keys in the order of their first appearance, and the next step depends on that.</li>
+    </ul>
+
+    <h3 class="step"><span class="sn">Step 6</span>Find the answer with the most votes</h3>
+<pre class="code" data-lang="python"><code>    # Step 2: find the answer with the highest count
+    # (if two answers tie, the one that appeared first wins)
+    winner = None
+    highest_count = 0
+    for answer, count in vote_counts.items():
+        if count &gt; highest_count:
+            highest_count = count
+            winner = answer</code></pre>
+    <ul class="explain">
+      <li><code>winner</code> starts empty and <code>highest_count</code> starts at 0.</li>
+      <li><code>vote_counts.items()</code> gives each answer together with its count.</li>
+      <li><code>if count &gt; highest_count</code> replaces the winner only when an answer has <em>more</em> votes than the best one so far.</li>
+      <li>With <code>{'2000': 3, '2600': 1, '900': 1}</code>, the loop takes <code>2000</code> first, with 3 votes. The other two answers have fewer votes, so <code>2000</code> stays the winner.</li>
+    </ul>
+    <p>The comment in the code mentions ties. Suppose the counts are <code>{'2600': 2, '2000': 2, '900': 1}</code>. The loop takes <code>2600</code> first, with 2 votes. Then it reaches <code>2000</code>, also with 2 votes. 2 is not greater than 2, so the winner does not change. The answer that appeared first in the samples wins the tie.</p>
+    <p>That is a rule of the code, not a judgment about which answer is better. A tie is a sign that the runs did not agree, and the confidence of the next step shows it.</p>
+
+    <h3 class="step"><span class="sn">Step 7</span>Work out the confidence and return the result</h3>
+<pre class="code" data-lang="python"><code>    # Step 3: confidence is the share of votes the winner got
+    confidence = highest_count / n_samples
+
+    return {
+        "final_answer": winner,
+        "confidence": confidence,
+        "vote_distribution": vote_counts,
+        "samples": reasoning_samples,
+    }</code></pre>
+    <ul class="explain">
+      <li><code>highest_count / n_samples</code> is the share of runs that gave the winning answer. With 3 votes out of 5, it is 0.6.</li>
+      <li>The function returns a dictionary with four keys. <code>final_answer</code> is the winner, <code>confidence</code> its share, <code>vote_distribution</code> the full count and <code>samples</code> the full replies.</li>
+      <li><code>main()</code> prints only the first three. The replies stay available, so that you can read the reasoning of an odd answer and see where that run went wrong.</li>
+    </ul>
+
+    <h3 class="step"><span class="sn">Step 8</span>Create the model with some randomness</h3>
+<pre class="code" data-lang="python"><code>def main():
+    load_dotenv()
+
+    # Initialize the model
+    # A temperature above 0 gives each sample a different reasoning path.
+    # At 0 every sample would be almost the same and voting would add nothing.
+    llm = ChatGoogleGenerativeAI(
+        model="gemini-3.1-flash-lite",
+        temperature=0.7,
+    )
+
+    # Parser to extract the text from the model response
+    parser = StrOutputParser()</code></pre>
+    <ul class="explain">
+      <li><code>temperature=0.7</code> is the key setting of this chapter. The comment in the code repeats why. At 0, every sample is almost the same, and the vote adds nothing.</li>
+      <li>The parser returns the reply as a plain string, which <code>extract_final_answer()</code> needs.</li>
+    </ul>
+
+    <h3 class="step"><span class="sn">Step 9</span>Write the prompt</h3>
+<pre class="code" data-lang="python"><code>    # Create the reasoning prompt
+    cot_prompt = ChatPromptTemplate.from_template("""
+        You are a mobile app security and data protection expert.
+
+        Solve this problem step by step.
+        Show your reasoning, then give the final answer.
+
+        PROBLEM: {problem}
+
+        Let's think step by step:
+
+        [After reasoning, state your final answer on its own line as:
+        FINAL ANSWER: &lt;answer&gt;]
+    """)</code></pre>
+    <ul class="explain">
+      <li>The first lines are the chain-of-thought prompt of chapter 8. The model shows its reasoning before the answer.</li>
+      <li>The last two lines fix the form of the answer. Every reply ends with one line that starts with <code>FINAL ANSWER:</code>. Step 3 looks for exactly this marker.</li>
+      <li>Without that fixed line, each reply puts the number somewhere else in its text, and your program cannot find it reliably.</li>
+    </ul>
+
+    <h3 class="step"><span class="sn">Step 10</span>Build the chain and write the problem</h3>
+<pre class="code" data-lang="python"><code>    # Create the chain
+    chain = cot_prompt | llm | parser
+
+    # A tricky problem: people aged exactly 18 are adults, so not counted
+    problem = """
+        Under India's DPDP Act, 2023, a child is a person who has not
+        completed 18 years of age, and a data fiduciary needs verifiable
+        parental consent to process a child's personal data. An app has
+        5,000 users: 900 are under 13, 1,100 are between 13 and 17, 600
+        are 18 years old and 2,400 are 19 or older. How many users need
+        verifiable parental consent?
+        Answer with a number only.
+    """</code></pre>
+    <ul class="explain">
+      <li><code>cot_prompt | llm | parser</code> is the same three-part chain as in chapter 2.</li>
+      <li>The problem has a trap. A child under the DPDP Act is a person who has not completed 18 years. A user who is exactly 18 is past that point and is an adult.</li>
+      <li>The correct answer is therefore 900 + 1,100 = 2,000. The 600 users of 18 years do not count.</li>
+      <li>"Answer with a number only" keeps the final answer short and countable.</li>
+    </ul>
+    <p>The trap is on purpose. A problem that every run solves easily does not show the value of a vote. A problem with one tempting wrong turn does.</p>
+
+    <h3 class="step"><span class="sn">Step 11</span>Run the vote and print the result</h3>
+<pre class="code" data-lang="python"><code>    print("=" * 60)
+    print("PROBLEM")
+    print("=" * 60)
+    print(f"\n{problem.strip()}\n")
+
+    print("=" * 60)
+    print("Generating multiple reasoning paths...\n")
+
+    result = self_consistency(chain, problem, n_samples=5)
+
+    print("\n" + "=" * 60)
+    print(f"FINAL ANSWER: {result['final_answer']}")
+    print(f"CONFIDENCE: {result['confidence']:.0%}")
+    print(f"VOTE DISTRIBUTION: {result['vote_distribution']}")</code></pre>
+    <ul class="explain">
+      <li><code>self_consistency(chain, problem, n_samples=5)</code> runs the five samples and the vote.</li>
+      <li><code>{result['confidence']:.0%}</code> prints the share as a percentage without decimals, so 0.6 becomes <code>60%</code>.</li>
+    </ul>
+<pre class="code" data-lang="python"><code>if __name__ == "__main__":
+    main()</code></pre>
+<pre class="code" data-lang="bash"><code>uv run python src/13_self_consistency_google.py</code></pre>
+<details class="fold">
+      <summary><span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m16 18 6-6-6-6M8 6l-6 6 6 6"/></svg></span><span class="ft">Show the full output<small>25 lines</small></span></summary>
+      <div class="fold-body">
+<pre class="code" data-lang="output"><code>============================================================
+PROBLEM
+============================================================
+
+Under India's DPDP Act, 2023, a child is a person who has not
+        completed 18 years of age, and a data fiduciary needs verifiable
+        parental consent to process a child's personal data. An app has
+        5,000 users: 900 are under 13, 1,100 are between 13 and 17, 600
+        are 18 years old and 2,400 are 19 or older. How many users need
+        verifiable parental consent?
+        Answer with a number only.
+
+============================================================
+Generating multiple reasoning paths...
+
+Sample 1: 2000
+Sample 2: 2000
+Sample 3: 2000
+Sample 4: 2000
+Sample 5: 2000
+
+============================================================
+FINAL ANSWER: 2000
+CONFIDENCE: 100%
+VOTE DISTRIBUTION: {'2000': 5}</code></pre>
+      </div>
+    </details>
+
+    <div class="block look">
+      <div class="label">Look closely</div>
+      <p>All five runs gave 2000, the correct answer. The confidence is 100%, and the distribution has one key. For this model and this problem, one run alone was enough. The vote still did its job, because it confirmed the answer five times. It also cost five calls instead of one.</p>
+    </div>
+
+    <h3 class="step"><span class="sn">Another run</span>A run can also look like this</h3>
+    <p>The real run above is the common case for a strong model on a short problem. With a harder problem or a smaller model, the runs disagree. The output below is an illustration for this chapter and not a real run. It shows what a split vote looks like.</p>
+<pre class="code" data-lang="output"><code>Generating multiple reasoning paths...
+
+Sample 1: 2000
+Sample 2: 2600
+Sample 3: 2000
+Sample 4: 900
+Sample 5: 2000
+
+============================================================
+FINAL ANSWER: 2000
+CONFIDENCE: 60%
+VOTE DISTRIBUTION: {'2000': 3, '2600': 1, '900': 1}</code></pre>
+    <ul class="explain">
+      <li>Samples 1, 3 and 5 found 2000.</li>
+      <li>Sample 2 found 2600. That run counted the 600 users of 18 years as children, so it fell for the trap.</li>
+      <li>Sample 4 found 900. That run counted only the users under 13, an age limit that some other laws use.</li>
+      <li>The two wrong runs made different mistakes, so they did not support each other. 2000 won with 3 of 5 votes.</li>
+    </ul>
+    <p>This is the case that self-consistency is for. With one run alone, you can get sample 2 or sample 4. The vote turns two unlucky runs into a confidence of 60% instead of a wrong answer. A confidence well below 100% also tells you to read the samples before you trust the result.</p>
+
+    <h3 class="step"><span class="sn">Inside</span>What happens inside one run</h3>
+    <p>The loop calls the model once for each sample. The vote happens only after the last reply, inside your own program.</p>
+    <figure class="diagram">
+      <div class="frame"><img src="../../assets/img/diagrams/ai-14-ex1-seq.svg" alt="A sequence diagram with the lanes Your code, self_consistency, chain, Gemini API, vote loops. Step 1, Your code to self_consistency, self_consistency(chain, problem, n_samples=5). Step 2, self_consistency to chain, chain.invoke({&quot;problem&quot; problem}), the same problem in every round. Step 3, chain to Gemini API, Request with the reasoning prompt, temperature=0.7, so each run differs. Step 4, Gemini API to chain, Reply, reasoning, then one FINAL ANSWER line. Step 5, chain to self_consistency, response, a plain string. Step 6, self_consistency to self_consistency, extract_final_answer(response), the cleaned answer, or UNKNOWN. Step 7, self_consistency to self_consistency, answers.append(answer), prints Sample i and the answer. Step 8, self_consistency to vote loops, answers, the list of all five answers. Step 9, vote loops to vote loops, vote_counts[answer] += 1, then the loop with count &gt; highest_count. Step 10, vote loops to self_consistency, winner and its count, confidence = count / n_samples. Step 11, self_consistency to Your code, result, final_answer, confidence and vote_distribution. Steps 2 to 7 repeat, Repeated for each of the 5 samples." loading="lazy"></div>
+      <figcaption>Inside one run of Example 1, step by step.</figcaption>
+    </figure>
+
+    <details class="fold">
+      <summary><span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m16 18 6-6-6-6M8 6l-6 6 6 6"/></svg></span><span class="ft">Full code of Example 1<small>src/13_self_consistency_google.py</small></span><a class="gh-btn" href="https://github.com/bhardwajAbhi/ai-engineering/blob/main/src/13_self_consistency_google.py"><svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M12 .5a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2.1c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1.1-.8.1-.8.1-.8 1.2.1 1.9 1.3 1.9 1.3 1.1 1.9 2.9 1.3 3.6 1 .1-.8.4-1.3.8-1.6-2.7-.3-5.5-1.3-5.5-6a4.7 4.7 0 0 1 1.3-3.2c-.1-.3-.6-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.7 1.7.2 2.9.1 3.2a4.7 4.7 0 0 1 1.3 3.2c0 4.6-2.8 5.6-5.5 6 .4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .5z"/></svg>GitHub</a></summary>
+      <div class="fold-body">
+<pre class="code" data-lang="python" data-file="src/13_self_consistency_google.py"><code>"""
+Title: Self-Consistency Prompting (Google Generative AI)
+
+Self-consistency prompting asks the model the same question several
+times with some randomness, so each run reasons a little differently,
+then picks the answer that appears most often (a majority vote).
+This version counts the votes by hand with a dictionary and loops.
+
+uv run python src/13_self_consistency_google.py
+"""
+
+from dotenv import load_dotenv
+from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.output_parsers import StrOutputParser
+
+
+def extract_final_answer(response: str) -&gt; str:
+    """Find the last line that has "FINAL ANSWER:" and return the text after it."""
+
+    # Look from the last line backwards
+    for line in reversed(response.splitlines()):
+        line = line.upper()
+        if "FINAL ANSWER:" in line:
+            answer = line.split("FINAL ANSWER:")[-1]
+
+            # Remove bold markers and commas, then trim spaces and dots
+            answer = answer.replace("*", "").replace(",", "")
+            return answer.strip(" .")
+
+    # No "FINAL ANSWER:" line was found
+    return "UNKNOWN"
+
+
+def self_consistency(chain, problem: str, n_samples: int = 5) -&gt; dict:
+    """Ask the same problem several times and return the most common answer."""
+
+    answers = []
+    reasoning_samples = []
+
+    for i in range(n_samples):
+        response = chain.invoke({"problem": problem})
+        answer = extract_final_answer(response)
+
+        answers.append(answer)
+        reasoning_samples.append(response)
+        print(f"Sample {i + 1}: {answer}")
+
+    # Step 1: count how many times each answer appears
+    vote_counts = {}
+    for answer in answers:
+        if answer in vote_counts:
+            vote_counts[answer] += 1
+        else:
+            vote_counts[answer] = 1
+
+    # Step 2: find the answer with the highest count
+    # (if two answers tie, the one that appeared first wins)
+    winner = None
+    highest_count = 0
+    for answer, count in vote_counts.items():
+        if count &gt; highest_count:
+            highest_count = count
+            winner = answer
+
+    # Step 3: confidence is the share of votes the winner got
+    confidence = highest_count / n_samples
+
+    return {
+        "final_answer": winner,
+        "confidence": confidence,
+        "vote_distribution": vote_counts,
+        "samples": reasoning_samples,
+    }
+
+
+def main():
+    load_dotenv()
+
+    # Initialize the model
+    # A temperature above 0 gives each sample a different reasoning path.
+    # At 0 every sample would be almost the same and voting would add nothing.
+    llm = ChatGoogleGenerativeAI(
+        model="gemini-3.1-flash-lite",
+        temperature=0.7,
+    )
+
+    # Parser to extract the text from the model response
+    parser = StrOutputParser()
+
+    # Create the reasoning prompt
+    cot_prompt = ChatPromptTemplate.from_template("""
+        You are a mobile app security and data protection expert.
+
+        Solve this problem step by step.
+        Show your reasoning, then give the final answer.
+
+        PROBLEM: {problem}
+
+        Let's think step by step:
+
+        [After reasoning, state your final answer on its own line as:
+        FINAL ANSWER: &lt;answer&gt;]
+    """)
+
+    # Create the chain
+    chain = cot_prompt | llm | parser
+
+    # A tricky problem: people aged exactly 18 are adults, so not counted
+    problem = """
+        Under India's DPDP Act, 2023, a child is a person who has not
+        completed 18 years of age, and a data fiduciary needs verifiable
+        parental consent to process a child's personal data. An app has
+        5,000 users: 900 are under 13, 1,100 are between 13 and 17, 600
+        are 18 years old and 2,400 are 19 or older. How many users need
+        verifiable parental consent?
+        Answer with a number only.
+    """
+
+    print("=" * 60)
+    print("PROBLEM")
+    print("=" * 60)
+    print(f"\n{problem.strip()}\n")
+
+    print("=" * 60)
+    print("Generating multiple reasoning paths...\n")
+
+    result = self_consistency(chain, problem, n_samples=5)
+
+    print("\n" + "=" * 60)
+    print(f"FINAL ANSWER: {result['final_answer']}")
+    print(f"CONFIDENCE: {result['confidence']:.0%}")
+    print(f"VOTE DISTRIBUTION: {result['vote_distribution']}")
+
+
+if __name__ == "__main__":
+    main()
+</code></pre>
+      </div>
+    </details>
+  </section>
+
+  <!-- ================= EXAMPLE 2 ================= -->
+  <section class="example" style="--ex:#0f8a6a">
+
+    <div class="example-banner">
+      <div class="eb-tag">Example 2 · Guided build</div>
+      <h2 data-toc="Example 2, app security with Qwen">App security with Qwen</h2>
+      <p>Ask Qwen to label an app five times, find the label with a regular expression and count the votes with Counter.</p>
+      <div class="eb-row">
+        <span class="eb-chip">Qwen 2.5 7B, through OpenRouter</span>
+        <span class="eb-chip">src/13_self_consistency_openrouter.py</span>
+        <a class="gh-btn" href="https://github.com/bhardwajAbhi/ai-engineering/blob/main/src/13_self_consistency_openrouter.py"><svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M12 .5a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2.1c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1.1-.8.1-.8.1-.8 1.2.1 1.9 1.3 1.9 1.3 1.1 1.9 2.9 1.3 3.6 1 .1-.8.4-1.3.8-1.6-2.7-.3-5.5-1.3-5.5-6a4.7 4.7 0 0 1 1.3-3.2c-.1-.3-.6-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.7 1.7.2 2.9.1 3.2a4.7 4.7 0 0 1 1.3 3.2c0 4.6-2.8 5.6-5.5 6 .4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .5z"/></svg>View on GitHub</a>
+      </div>
+    </div>
+
+    <figure class="diagram">
+      <div class="frame"><img src="../../assets/img/diagrams/ai-14-ex2-flow.svg" alt="Setup, llm = ChatOpenRouter(..., temperature=0.7), Qwen through OpenRouter, with the same randomness. Chain, chain = cot_prompt | llm | parser, Think step by step, then one line FINAL ANSWER &lt;answer&gt;, {problem}. Loop, for i in range(n_samples), The same labeling problem, sent once for each sample. Extract, re.search(r&quot;FINAL ANSWER\s*(.+?)(?\n|$)&quot;, ...), Takes the first match, then upper case without stars and dots. Vote, Counter(answers).most_common(1), Counts in one line and returns the top answer with its count. Output, FINAL ANSWER, CONFIDENCE and VOTE DISTRIBUTION, SUSPICIOUS, with 5 of 5 votes in the real run. A loop goes back from stage 4 to stage 3, next sample." loading="lazy"></div>
+      <figcaption>The program of Example 2, from the problem to the vote.</figcaption>
+    </figure>
+
+    <p>A <span class="same">Same</span> mark tells you that a part has the same job as in Example 1. A <span class="new">New</span> mark tells you what is different.</p>
+
+    <h3 class="step"><span class="sn">Steps 1 and 2</span>File and imports</h3>
+<pre class="code" data-lang="python" data-file="src/13_self_consistency_openrouter.py"><code>import re
+from collections import Counter
+
+from dotenv import load_dotenv
+from langchain_openrouter import ChatOpenRouter
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.output_parsers import StrOutputParser</code></pre>
+    <ul class="explain">
+      <li><span class="new">New</span><code>re</code> is the module for regular expressions, which chapter 13 used to find code blocks. Here, it finds the final answer.</li>
+      <li><span class="new">New</span><code>Counter</code> from the <code>collections</code> module counts the items of a list for you.</li>
+      <li><span class="new">New</span><code>ChatOpenRouter</code> instead of <code>ChatGoogleGenerativeAI</code>.</li>
+      <li><span class="same">Same</span><code>load_dotenv</code>, the prompt template and the parser.</li>
+    </ul>
+
+    <h3 class="step"><span class="sn">Step 3</span>Find the final answer with a regular expression</h3>
+<pre class="code" data-lang="python"><code>def extract_final_answer(response: str) -&gt; str:
+    """Extract the final answer (a label) from the response."""
+
+    match = re.search(r"FINAL ANSWER:\s*(.+?)(?:\n|$)", response, re.IGNORECASE)
+    if match:
+        # Remove bold markers and dots, and ignore letter case
+        # so that equal labels count as the same vote
+        return match.group(1).strip("*. ").upper()
+
+    # No "FINAL ANSWER:" line was found
+    return "UNKNOWN"</code></pre>
+    <p>The pattern <code>FINAL ANSWER:\s*(.+?)(?:\n|$)</code> does in one line what the loop of Example 1 does in several. Read it from left to right.</p>
+    <ul class="explain">
+      <li><code>FINAL ANSWER:</code> matches the marker itself.</li>
+      <li><code>\s*</code> matches any spaces after the colon, also none.</li>
+      <li><code>(.+?)</code> is the group that you keep. <code>.+</code> means one or more characters, and the <code>?</code> makes it stop as early as it can.</li>
+      <li><code>(?:\n|$)</code> tells it where to stop, at the next line break or at the end of the reply. The <code>?:</code> means that this group only marks the end and is not kept.</li>
+      <li><code>re.IGNORECASE</code> lets the pattern match <code>Final Answer:</code> and <code>final answer:</code> too.</li>
+      <li><code>re.search()</code> scans the reply from the top and returns the <em>first</em> place where the pattern fits.</li>
+      <li><code>match.group(1)</code> returns the kept group, for example <code>**SUSPICIOUS**</code>.</li>
+      <li><code>.strip("*. ")</code> removes stars, dots and spaces at both ends. <code>.upper()</code> turns the label into capital letters. <code>**Suspicious.**</code> and <code>SUSPICIOUS</code> then become the same vote.</li>
+    </ul>
+    <div class="block note">
+      <div class="label">First match or last line</div>
+      <p>The two examples look for the answer from opposite ends. Example 1 starts at the last line and moves up, and Example 2 takes the first match from the top. For these prompts, both find the same line, because each model writes the marker once, at the end of its reply. Suppose a model writes the marker twice, once while it repeats the instruction and once with its real answer. Example 1 then takes the real answer, and Example 2 takes the earlier one. Keep this in mind when you reuse one of the functions with another model or prompt.</p>
+    </div>
+
+    <h3 class="step"><span class="sn">Step 4</span>Ask the same problem several times</h3>
+    <ul class="explain">
+      <li><span class="same">Same</span>The same loop as in Example 1. It sends the problem <code>n_samples</code> times, cleans each answer and keeps the full replies.</li>
+    </ul>
+
+    <h3 class="step"><span class="sn">Step 5</span>Count the votes with Counter</h3>
+<pre class="code" data-lang="python"><code>    # Count the votes and take the answer with the most votes
+    vote_counts = Counter(answers)
+    winner, count = vote_counts.most_common(1)[0]
+    confidence = count / n_samples
+
+    return {
+        "final_answer": winner,
+        "confidence": confidence,
+        "vote_distribution": dict(vote_counts),
+        "samples": reasoning_samples,
+    }</code></pre>
+    <ul class="explain">
+      <li><span class="new">New</span><code>Counter(answers)</code> does the work of Step 5 of Example 1 in one call. For <code>['SUSPICIOUS', 'MALICIOUS', 'SUSPICIOUS', 'UNKNOWN', 'SUSPICIOUS']</code>, it gives <code>Counter({'SUSPICIOUS': 3, 'MALICIOUS': 1, 'UNKNOWN': 1})</code>.</li>
+      <li><span class="new">New</span><code>.most_common(1)</code> does the work of Step 6. It returns a list with the top answer and its count, <code>[('SUSPICIOUS', 3)]</code>.</li>
+      <li><span class="new">New</span><code>[0]</code> takes the first and only pair from that list, and <code>winner, count = ...</code> unpacks it into two variables.</li>
+      <li><span class="new">New</span><code>dict(vote_counts)</code> turns the counter into a plain dictionary for the printout.</li>
+      <li><span class="same">Same</span><code>count / n_samples</code> is the confidence, and the result has the same four keys as in Example 1.</li>
+    </ul>
+    <p>Ties behave the same way. The Python documentation states that <code>most_common()</code> orders answers with equal counts by their first appearance. The answer that came first wins, exactly as with the loop of Example 1. The two files differ in how much code they need, not in the result.</p>
+
+    <h3 class="step"><span class="sn">Steps 6 and 7</span>Model and prompt</h3>
+<pre class="code" data-lang="python"><code>    # Initialize the model
+    # A temperature above 0 gives each sample a different reasoning path.
+    # At 0 every sample would be almost the same and voting would add nothing.
+    llm = ChatOpenRouter(
+        model="qwen/qwen-2.5-7b-instruct",
+        temperature=0.7,
+    )</code></pre>
+<pre class="code" data-lang="python"><code>    # Create the reasoning prompt
+    cot_prompt = ChatPromptTemplate.from_template("""
+        You are a mobile app security expert.
+
+        Solve this problem step by step.
+        Show your reasoning, then give the final answer.
+
+        PROBLEM: {problem}
+
+        Let's think step by step:
+
+        [After reasoning, state your final answer on its own line as:
+        FINAL ANSWER: &lt;answer&gt;]
+    """)</code></pre>
+    <ul class="explain">
+      <li><span class="new">New</span>The Qwen model through OpenRouter, with the same <code>temperature=0.7</code>.</li>
+      <li><span class="new">New</span>The role is "a mobile app security expert".</li>
+      <li><span class="same">Same</span>The step-by-step instruction and the fixed <code>FINAL ANSWER:</code> line.</li>
+    </ul>
+
+    <h3 class="step"><span class="sn">Step 8</span>Write a labeling problem</h3>
+<pre class="code" data-lang="python"><code>    # A tricky labeling problem: permissions alone are not proof of harm,
+    # but permissions that do not match the app's features are suspicious
+    problem = """
+        An app requests the READ_SMS and SEND_SMS permissions but has no
+        messaging feature. No harmful behavior has been confirmed.
+        Rules: label an app MALICIOUS only when harmful behavior is
+        confirmed. Label it SUSPICIOUS when its permissions do not match
+        its features. Otherwise label it BENIGN.
+        Answer with exactly one of: BENIGN, SUSPICIOUS or MALICIOUS.
+    """</code></pre>
+    <ul class="explain">
+      <li><span class="new">New</span>The answer is a label, not a number. The rules define three labels and when each one applies.</li>
+      <li>The trap is the word "SMS". Permissions to read and send SMS messages suggest fraud, and a model can jump to <code>MALICIOUS</code>. The rules say <code>MALICIOUS</code> only for confirmed harm, and no harm is confirmed.</li>
+      <li>The permissions do not match the features of the app, so the correct label is <code>SUSPICIOUS</code>.</li>
+      <li>"Answer with exactly one of" keeps the answer to three possible values, so that the votes can only fall on those three.</li>
+    </ul>
+<pre class="code" data-lang="bash"><code>uv run python src/13_self_consistency_openrouter.py</code></pre>
+<details class="fold">
+      <summary><span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m16 18 6-6-6-6M8 6l-6 6 6 6"/></svg></span><span class="ft">Show the full output<small>24 lines</small></span></summary>
+      <div class="fold-body">
+<pre class="code" data-lang="output"><code>============================================================
+PROBLEM
+============================================================
+
+An app requests the READ_SMS and SEND_SMS permissions but has no
+        messaging feature. No harmful behavior has been confirmed.
+        Rules: label an app MALICIOUS only when harmful behavior is
+        confirmed. Label it SUSPICIOUS when its permissions do not match
+        its features. Otherwise label it BENIGN.
+        Answer with exactly one of: BENIGN, SUSPICIOUS or MALICIOUS.
+
+============================================================
+Generating multiple reasoning paths...
+
+Sample 1: SUSPICIOUS
+Sample 2: SUSPICIOUS
+Sample 3: SUSPICIOUS
+Sample 4: SUSPICIOUS
+Sample 5: SUSPICIOUS
+
+============================================================
+FINAL ANSWER: SUSPICIOUS
+CONFIDENCE: 100%
+VOTE DISTRIBUTION: {'SUSPICIOUS': 5}</code></pre>
+      </div>
+    </details>
+
+    <div class="block look">
+      <div class="label">Look closely</div>
+      <p>All five runs gave <code>SUSPICIOUS</code>, the correct label, with a confidence of 100%. Qwen did not fall for the SMS trap in any run.</p>
+    </div>
+
+    <h3 class="step"><span class="sn">Another run</span>A run can also look like this</h3>
+    <p>Again, the output below is an illustration and not a real run. It shows two other things that can happen with labels.</p>
+<pre class="code" data-lang="output"><code>Generating multiple reasoning paths...
+
+Sample 1: SUSPICIOUS
+Sample 2: MALICIOUS
+Sample 3: SUSPICIOUS
+Sample 4: UNKNOWN
+Sample 5: SUSPICIOUS
+
+============================================================
+FINAL ANSWER: SUSPICIOUS
+CONFIDENCE: 60%
+VOTE DISTRIBUTION: {'SUSPICIOUS': 3, 'MALICIOUS': 1, 'UNKNOWN': 1}</code></pre>
+    <ul class="explain">
+      <li>Sample 2 gave <code>MALICIOUS</code>. That run fell for the SMS trap and ignored the rule about confirmed harm.</li>
+      <li>Sample 4 gave <code>UNKNOWN</code>. That run never wrote the <code>FINAL ANSWER:</code> line, so <code>extract_final_answer()</code> found nothing.</li>
+      <li><code>SUSPICIOUS</code> still won with 3 of 5 votes.</li>
+    </ul>
+    <p>Look at <code>UNKNOWN</code> in the distribution. It is not an answer, but the code counts it as a vote. It also lowers the confidence, because the code divides by all five samples. If three of five runs miss the format, <code>UNKNOWN</code> even wins the vote. The section "When it works and when it does not" comes back to this, and the task at the end of the chapter fixes it.</p>
+
+    <h3 class="step"><span class="sn">Inside</span>What happens inside one run</h3>
+    <p>The calls to the model are the same as in Example 1. Only step 9 changes, where <code>Counter</code> replaces the two loops.</p>
+    <figure class="diagram">
+      <div class="frame"><img src="../../assets/img/diagrams/ai-14-ex2-seq.svg" alt="A sequence diagram with the lanes Your code, self_consistency, chain, OpenRouter API, Counter. Step 1, Your code to self_consistency, self_consistency(chain, problem, n_samples=5). Step 2, self_consistency to chain, chain.invoke({&quot;problem&quot; problem}), the same problem in every round. Step 3, chain to OpenRouter API, Request with the reasoning prompt, temperature=0.7, so each run differs. Step 4, OpenRouter API to chain, Reply, reasoning, then one FINAL ANSWER line. Step 5, chain to self_consistency, response, a plain string. Step 6, self_consistency to self_consistency, extract_final_answer(response), the cleaned answer, or UNKNOWN. Step 7, self_consistency to self_consistency, answers.append(answer), prints Sample i and the answer. Step 8, self_consistency to Counter, answers, the list of all five answers. Step 9, Counter to Counter, Counter(answers).most_common(1), counts and finds the top answer in one call. Step 10, Counter to self_consistency, winner and its count, confidence = count / n_samples. Step 11, self_consistency to Your code, result, final_answer, confidence and vote_distribution. Steps 2 to 7 repeat, Repeated for each of the 5 samples." loading="lazy"></div>
+      <figcaption>Inside one run of Example 2, step by step.</figcaption>
+    </figure>
+
+    <details class="fold">
+      <summary><span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m16 18 6-6-6-6M8 6l-6 6 6 6"/></svg></span><span class="ft">Full code of Example 2<small>src/13_self_consistency_openrouter.py</small></span><a class="gh-btn" href="https://github.com/bhardwajAbhi/ai-engineering/blob/main/src/13_self_consistency_openrouter.py"><svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M12 .5a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2.1c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1.1-.8.1-.8.1-.8 1.2.1 1.9 1.3 1.9 1.3 1.1 1.9 2.9 1.3 3.6 1 .1-.8.4-1.3.8-1.6-2.7-.3-5.5-1.3-5.5-6a4.7 4.7 0 0 1 1.3-3.2c-.1-.3-.6-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.7 1.7.2 2.9.1 3.2a4.7 4.7 0 0 1 1.3 3.2c0 4.6-2.8 5.6-5.5 6 .4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .5z"/></svg>GitHub</a></summary>
+      <div class="fold-body">
+<pre class="code" data-lang="python" data-file="src/13_self_consistency_openrouter.py"><code>"""
+Title: Self-Consistency Prompting (OpenRouter)
+
+Self-consistency prompting asks the model the same question several
+times with some randomness, so each run reasons a little differently,
+then picks the answer that appears most often (a majority vote).
+This version uses a regex to find the answer and Counter to count votes.
+
+Note: voting does not need a number. Any short answer of a fixed form
+works, such as a label or a yes or no. This version votes on a label.
+Long written answers do not work, because no two runs word them alike.
+
+uv run python src/13_self_consistency_openrouter.py
+"""
+
+import re
+from collections import Counter
+
+from dotenv import load_dotenv
+from langchain_openrouter import ChatOpenRouter
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.output_parsers import StrOutputParser
+
+
+def extract_final_answer(response: str) -&gt; str:
+    """Extract the final answer (a label) from the response."""
+
+    match = re.search(r"FINAL ANSWER:\s*(.+?)(?:\n|$)", response, re.IGNORECASE)
+    if match:
+        # Remove bold markers and dots, and ignore letter case
+        # so that equal labels count as the same vote
+        return match.group(1).strip("*. ").upper()
+
+    # No "FINAL ANSWER:" line was found
+    return "UNKNOWN"
+
+
+def self_consistency(chain, problem: str, n_samples: int = 5) -&gt; dict:
+    """Ask the same problem several times and return the most common answer."""
+
+    answers = []
+    reasoning_samples = []
+
+    for i in range(n_samples):
+        response = chain.invoke({"problem": problem})
+        answer = extract_final_answer(response)
+
+        answers.append(answer)
+        reasoning_samples.append(response)
+        print(f"Sample {i + 1}: {answer}")
+
+    # Count the votes and take the answer with the most votes
+    vote_counts = Counter(answers)
+    winner, count = vote_counts.most_common(1)[0]
+    confidence = count / n_samples
+
+    return {
+        "final_answer": winner,
+        "confidence": confidence,
+        "vote_distribution": dict(vote_counts),
+        "samples": reasoning_samples,
+    }
+
+
+def main():
+    load_dotenv()
+
+    # Initialize the model
+    # A temperature above 0 gives each sample a different reasoning path.
+    # At 0 every sample would be almost the same and voting would add nothing.
+    llm = ChatOpenRouter(
+        model="qwen/qwen-2.5-7b-instruct",
+        temperature=0.7,
+    )
+
+    # Parser to extract the text from the model response
+    parser = StrOutputParser()
+
+    # Create the reasoning prompt
+    cot_prompt = ChatPromptTemplate.from_template("""
+        You are a mobile app security expert.
+
+        Solve this problem step by step.
+        Show your reasoning, then give the final answer.
+
+        PROBLEM: {problem}
+
+        Let's think step by step:
+
+        [After reasoning, state your final answer on its own line as:
+        FINAL ANSWER: &lt;answer&gt;]
+    """)
+
+    # Create the chain
+    chain = cot_prompt | llm | parser
+
+    # A tricky labeling problem: permissions alone are not proof of harm,
+    # but permissions that do not match the app's features are suspicious
+    problem = """
+        An app requests the READ_SMS and SEND_SMS permissions but has no
+        messaging feature. No harmful behavior has been confirmed.
+        Rules: label an app MALICIOUS only when harmful behavior is
+        confirmed. Label it SUSPICIOUS when its permissions do not match
+        its features. Otherwise label it BENIGN.
+        Answer with exactly one of: BENIGN, SUSPICIOUS or MALICIOUS.
+    """
+
+    print("=" * 60)
+    print("PROBLEM")
+    print("=" * 60)
+    print(f"\n{problem.strip()}\n")
+
+    print("=" * 60)
+    print("Generating multiple reasoning paths...\n")
+
+    result = self_consistency(chain, problem, n_samples=5)
+
+    print("\n" + "=" * 60)
+    print(f"FINAL ANSWER: {result['final_answer']}")
+    print(f"CONFIDENCE: {result['confidence']:.0%}")
+    print(f"VOTE DISTRIBUTION: {result['vote_distribution']}")
+
+
+if __name__ == "__main__":
+    main()
+</code></pre>
+      </div>
+    </details>
+  </section>
+
+  <h2>What a vote can count</h2>
+  <p>The docstring of the OpenRouter file ends with a note. Voting does not need a number. Any short answer of a fixed form works, such as a label or a yes or no. Long written answers do not work, because no two runs word them alike. This note is the most important limit of the method, so it deserves a closer look.</p>
+  <p>A vote can only add up answers that are exactly the same text. A number, a label or a yes or no has only a few possible forms, and the cleaning of Step 3 brings them together. A paragraph has endless forms. Two runs can say the same thing in different words, and the counter sees two different answers.</p>
+  <figure class="diagram">
+      <div class="frame"><img src="../../assets/img/diagrams/ai-14-countable.svg" alt="Left, a short answer of a fixed form. Three replies write FINAL ANSWER 2,000, FINAL ANSWER 2000 in bold stars and Final Answer 2000 with a dot. After the code cleans up the case, the stars, the commas and the dot, the three answers become one vote for 2000. This works for numbers, labels and yes or no. Right, a long written answer. Two replies say that the app looks suspicious, because its SMS permissions do not fit its features, and that its permissions do not match what it does, so treat it as suspicious. They mean the same, but the counter sees two different texts, so each gets one vote." loading="lazy"></div>
+      <figcaption>Short answers of a fixed form merge into one vote. Long answers with the same meaning do not.</figcaption>
+    </figure>
+  <p>Both examples make their answers countable in two steps.</p>
+  <ol>
+    <li><strong>Fix the form in the prompt.</strong> Example 1 asks for "a number only". Example 2 asks for "exactly one of BENIGN, SUSPICIOUS or MALICIOUS". Both prompts end with the fixed <code>FINAL ANSWER:</code> line.</li>
+    <li><strong>Clean the answer in code.</strong> Example 1 removes commas, because its answers are numbers. Example 2 does not need that, but it uses capital letters, because its answers are labels. The cleaning fits the kind of answer.</li>
+  </ol>
+  <p>A vote can count the number of affected users or a severity level such as <code>LOW</code>, <code>MEDIUM</code> or <code>HIGH</code>. It can also count an ID such as <code>CVE-2024-3094</code>, a yes or no and the letter of a multiple-choice answer. Examples of answers that it cannot count are a summary, an email draft or an explanation of a vulnerability.</p>
+  <p>For long answers, research offers other ways. <a href="https://arxiv.org/abs/2311.17311">Universal self-consistency</a> by Chen and others gives all the long answers back to the model and asks it which answer agrees most with the others. The model then does the comparison that a counter cannot do. The next chapters of this course show more ways to check a long answer, such as verification questions in chapter 15.</p>
+
+  <h2>Two ways to count the votes</h2>
+  <p>Both examples follow the same method. They differ in how they find the answer and how they count it.</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th></th><th>Example 1, Gemini</th><th>Example 2, Qwen</th></tr></thead>
+      <tbody>
+        <tr><td>Finds the answer with</td><td>A loop over the lines, from the last line up</td><td>A regular expression, from the top</td></tr>
+        <tr><td>If the marker appears twice</td><td>Takes the last one</td><td>Takes the first one</td></tr>
+        <tr><td>Cleans</td><td>Stars and commas anywhere, spaces and dots at the ends</td><td>Stars, dots and spaces at the ends</td></tr>
+        <tr><td>Letter case</td><td>Capital letters</td><td>Capital letters</td></tr>
+        <tr><td>Counts with</td><td>A dictionary and a loop</td><td><code>Counter(answers)</code></td></tr>
+        <tr><td>Finds the winner with</td><td>A second loop and <code>&gt;</code></td><td><code>most_common(1)</code></td></tr>
+        <tr><td>On a tie</td><td colspan="2">The answer that appeared first wins</td></tr>
+        <tr><td>No marker found</td><td colspan="2"><code>UNKNOWN</code>, which counts as a vote</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>The hand-written loops show every step of a vote, so that you understand what happens. <code>Counter</code> is shorter and harder to get wrong, so it suits real programs. Choose the extraction by the kind of reply you expect. Reading from the end is safer when a model tends to repeat the instruction.</p>
+
+  <h2>Two examples, side by side</h2>
+  <div class="table-wrap">
+    <table class="compare" style="--e1:#2f62c8;--e2:#0f8a6a">
+      <thead><tr><th></th><th class="e1">Example 1</th><th class="e2">Example 2</th></tr></thead>
+      <tbody>
+        <tr><td>Domain</td><td>Data protection, the DPDP Act</td><td>Mobile app security</td></tr>
+        <tr><td>Model</td><td>Gemini 3.1 Flash Lite</td><td>Qwen 2.5 7B, through OpenRouter</td></tr>
+        <tr><td>Kind of answer</td><td>A number</td><td>A label</td></tr>
+        <tr><td>The trap</td><td>Users of exactly 18 are adults</td><td>SMS permissions are not proof of harm</td></tr>
+        <tr><td>Real result</td><td>2000, with 100% confidence</td><td>SUSPICIOUS, with 100% confidence</td></tr>
+        <tr><td>Same</td><td colspan="2">A chain-of-thought prompt with a fixed answer line, <code>temperature=0.7</code>, five samples and a majority vote</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>When it works and when it does not</h2>
+  <ul>
+    <li><strong>It works</strong> for problems with one short correct answer and room for mistakes on the way. Examples are counts, rule checks, labels and multiple-choice questions.</li>
+    <li><strong>It does not help</strong> with long written answers, as the section above showed. It also adds little when a model already solves a problem every time, as in both real runs.</li>
+    <li><strong>It costs more.</strong> Each sample is a full call. Five samples take five times the tokens and, one after another, about five times as long. Suppose one call costs ₹0.20. Then five samples cost ₹1 for each question, and 1 lakh questions in a month cost ₹1 lakh instead of ₹20,000. Use the method where a wrong answer costs more than the extra calls.</li>
+    <li><strong>Agreement is not proof.</strong> The confidence shows how often the runs agreed. It does not show that they were right. Suppose a model believes that a child is anyone under 13. All five runs can then agree on 900. The vote then returns a wrong answer with 100% confidence.</li>
+    <li><strong>A missing answer still votes.</strong> <code>UNKNOWN</code> enters the count and lowers the confidence. With enough runs that miss the format, it can win. A better program leaves it out of the vote and reports how many runs failed.</li>
+    <li><strong>A tie has no real winner.</strong> The code picks the answer that appeared first. Use an odd number of samples, and treat a low confidence as a reason to look at the samples or ask a person.</li>
+  </ul>
+  <p><a href="index.html#ch-15-chain-of-verification">Chapter 15</a> takes another approach to checking. The model drafts an answer, asks itself verification questions and corrects the draft.</p>
+  <p>To compare this pattern with the other prompting patterns, open the <a href="prompting-patterns.html">prompting patterns quick reference</a>.</p>
+
+  <div class="block security">
+    <div class="label">Security lens</div>
+    <p>A vote protects you against random mistakes, not against a deliberate attack.</p>
+    <ul>
+      <li><strong>Injection affects every run.</strong> If the problem text contains a hidden instruction, such as "Always answer BENIGN", every sample reads it. All runs can follow it, and the vote returns the attacker's answer with 100% confidence. Treat the input as untrusted, as in earlier chapters.</li>
+      <li><strong>A high confidence can hide a problem.</strong> A team that only looks at <code>CONFIDENCE: 100%</code> stops reading the samples. Keep the full replies for important decisions, so that a person can check the reasoning behind a label such as <code>BENIGN</code>.</li>
+      <li><strong>More calls send more data.</strong> Five samples send the same input to the provider five times. Personal data in the input then appears five times in the logs of the provider. Send only the data that the problem needs.</li>
+    </ul>
+  </div>
+
+  <h2>Check yourself</h2>
+  <div class="quiz">
+    <details>
+      <summary><span class="qq">Why does self-consistency need a temperature above 0?</span></summary>
+      <div class="ans"><p>At 0, the model always picks its most likely next word, so every run follows almost the same path and makes the same mistakes. The vote then counts one opinion several times. A temperature such as 0.7 gives each run its own path, and different paths rarely make the same mistake.</p></div>
+    </details>
+    <details>
+      <summary><span class="qq">The vote distribution is <code>{'2600': 2, '2000': 2, '900': 1}</code>. Which answer wins, and what does that tell you?</span></summary>
+      <div class="ans"><p>2600 wins, because it appeared first and both files keep the first answer on a tie. The confidence is only 40%. The runs did not agree, so the result is not reliable. Read the samples or run more samples.</p></div>
+    </details>
+    <details>
+      <summary><span class="qq">Why can a vote not decide between two summaries of a security report?</span></summary>
+      <div class="ans"><p>A vote counts identical texts. Two summaries with the same meaning use different words, so each one gets its own single vote. Voting works only for short answers of a fixed form, such as a number, a label or a yes or no.</p></div>
+    </details>
+  </div>
+
+  <section class="yourturn">
+    <span class="yt-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>Your turn</span>
+    <h2 data-toc="Your turn">Leave failed runs out of the vote</h2>
+    <p>In the illustration of Example 2, <code>UNKNOWN</code> received a vote and lowered the confidence. Change <code>self_consistency()</code> so that runs without an answer do not vote. The confidence will then be the share of the valid answers, and the result will report how many runs failed.</p>
+
+    <div class="hint">
+      <b>Hint. Filter the list before you count it</b>
+      <ul class="explain" style="--ex:var(--accent)">
+        <li>A list comprehension such as <code>[a for a in answers if a != "UNKNOWN"]</code> keeps only the real answers.</li>
+        <li>Handle the case where no run gave an answer, so that <code>most_common(1)[0]</code> does not fail on an empty counter.</li>
+      </ul>
+    </div>
+
+<details class="fold">
+      <summary><span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m16 18 6-6-6-6M8 6l-6 6 6 6"/></svg></span><span class="ft">Show one solution<small>a new self_consistency()</small></span></summary>
+      <div class="fold-body">
+<pre class="code" data-lang="python"><code>from collections import Counter
+
+
+def self_consistency(chain, problem: str, n_samples: int = 5) -&gt; dict:
+    """Ask the same problem several times and vote only on real answers."""
+
+    answers = []
+    for i in range(n_samples):
+        response = chain.invoke({"problem": problem})
+        answer = extract_final_answer(response)
+        answers.append(answer)
+        print(f"Sample {i + 1}: {answer}")
+
+    # Keep only the runs that gave an answer
+    valid = [a for a in answers if a != "UNKNOWN"]
+    failed = n_samples - len(valid)
+
+    if not valid:
+        return {"final_answer": "UNKNOWN", "confidence": 0.0,
+                "vote_distribution": {}, "failed_runs": failed}
+
+    vote_counts = Counter(valid)
+    winner, count = vote_counts.most_common(1)[0]
+
+    return {
+        "final_answer": winner,
+        "confidence": count / len(valid),
+        "vote_distribution": dict(vote_counts),
+        "failed_runs": failed,
+    }</code></pre>
+      </div>
+    </details>
+  </section>
+
+  <h2>Key terms at a glance</h2>
+  <div class="table-wrap">
+    <table class="kw">
+      <thead><tr><th>Term</th><th>Meaning</th></tr></thead>
+      <tbody>
+        <tr><td>Self-consistency</td><td>A prompting method that runs the same problem several times and keeps the most common final answer.</td></tr>
+        <tr><td>Sample</td><td>One run of the model on the problem, with its own reasoning and answer.</td></tr>
+        <tr><td>Majority vote</td><td>Picking the answer that most samples gave.</td></tr>
+        <tr><td>Temperature</td><td>A setting for how much randomness the model uses when it picks the next word.</td></tr>
+        <tr><td>Vote distribution</td><td>The count of votes for each answer.</td></tr>
+        <tr><td>Confidence</td><td>Here, the share of samples that gave the winning answer. It measures agreement, not truth.</td></tr>
+        <tr><td>Answer marker</td><td>A fixed text such as <code>FINAL ANSWER:</code> that shows the program where the answer is.</td></tr>
+        <tr><td>Normalization</td><td>Cleaning an answer, so that answers with the same meaning become the same text.</td></tr>
+        <tr><td><code>Counter</code></td><td>A class from the <code>collections</code> module that counts the items of a list.</td></tr>
+        <tr><td>Universal self-consistency</td><td>A related method where the model itself picks the most consistent of several long answers.</td></tr>
+        <tr><td>DPDP Act</td><td>The Digital Personal Data Protection Act of India, from 2023.</td></tr>
+        <tr><td>Data fiduciary</td><td>The company that decides why and how personal data is processed.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+</article>
+</main>
+
+<script src="../../assets/js/site.js?v=20261029d"></script>
+</body>
+</html>

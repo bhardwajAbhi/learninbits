@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 296" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">The augmented DPIA in three stages</title>
+  <desc id="d">A classic DPIA is a questionnaire. An augmented DPIA adds a measured risk of the real data. In stage one, teams give the business context, nature, purpose, scope, necessity and proportionality. Stage two gives a technical risk score, a recommendation and a regulatory mapping. In stage three, the DPO evaluates the risk and approves or rejects.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="20" y="16" width="840" height="58" rx="12" fill="#f2efe8"/>
+<text x="40" y="40" font-size="13" fill="#3f4a59" text-anchor="start" font-weight="700">A classic DPIA</text>
+<text x="40" y="58" font-size="11.5" fill="#4a5263" text-anchor="start">people fill in a questionnaire and guess the risk</text>
+<text x="470" y="40" font-size="13" fill="#0b6650" text-anchor="start" font-weight="700">An augmented DPIA</text>
+<text x="470" y="58" font-size="11.5" fill="#4a5263" text-anchor="start">the same questions, plus a measured risk of the real data</text>
+<line x1="450" y1="26" x2="450" y2="64" stroke="#d9d4c7" stroke-width="1.5"/>
+<rect x="20" y="100" width="260" height="140" rx="12" fill="#fff" stroke="#2f62c8" stroke-width="1.6"/>
+<path d="M32 100 h236 a12 12 0 0 1 12 12 v22 h-260 v-22 a12 12 0 0 1 12 -12z" fill="#2f62c8"/>
+<text x="34" y="121.86" font-size="13.5" fill="#fff" text-anchor="start" font-weight="700">1  Teams</text>
+<text x="34" y="156" font-size="12.5" fill="#4a5263" text-anchor="start">Business context</text>
+<text x="34" y="175.375" font-size="12.5" fill="#4a5263" text-anchor="start">Nature and purpose</text>
+<text x="34" y="194.75" font-size="12.5" fill="#4a5263" text-anchor="start">Scope</text>
+<text x="34" y="214.125" font-size="12.5" fill="#4a5263" text-anchor="start">Necessity and proportionality</text>
+<path d="M282 170 H306" fill="none" stroke="#1c2230" stroke-width="2" marker-end="url(#m0)"/>
+<rect x="310" y="100" width="260" height="140" rx="12" fill="#fff" stroke="#0f8a6a" stroke-width="1.6"/>
+<path d="M322 100 h236 a12 12 0 0 1 12 12 v22 h-260 v-22 a12 12 0 0 1 12 -12z" fill="#0f8a6a"/>
+<text x="324" y="121.86" font-size="13.5" fill="#fff" text-anchor="start" font-weight="700">2  Risk on the data</text>
+<text x="324" y="156" font-size="12.5" fill="#4a5263" text-anchor="start">Technical risk score</text>
+<text x="324" y="175.375" font-size="12.5" fill="#4a5263" text-anchor="start">Technical recommendation</text>
+<text x="324" y="194.75" font-size="12.5" fill="#4a5263" text-anchor="start">Regulatory mapping</text>
+<path d="M572 170 H596" fill="none" stroke="#1c2230" stroke-width="2" marker-end="url(#m0)"/>
+<rect x="600" y="100" width="260" height="140" rx="12" fill="#fff" stroke="#7a4fc2" stroke-width="1.6"/>
+<path d="M612 100 h236 a12 12 0 0 1 12 12 v22 h-260 v-22 a12 12 0 0 1 12 -12z" fill="#7a4fc2"/>
+<text x="614" y="121.86" font-size="13.5" fill="#fff" text-anchor="start" font-weight="700">3  DPO approval</text>
+<text x="614" y="156" font-size="12.5" fill="#4a5263" text-anchor="start">Risk evaluation</text>
+<text x="614" y="175.375" font-size="12.5" fill="#4a5263" text-anchor="start">Final recommendation</text>
+<text x="614" y="194.75" font-size="12.5" fill="#4a5263" text-anchor="start">Approve or reject</text>
+<rect x="310" y="252" width="260" height="30" rx="8" fill="#e3f4ee" stroke="#0f8a6a" stroke-width="1.5" stroke-dasharray="4 3"/>
+<text x="440" y="272" font-size="11.5" fill="#0b6650" text-anchor="middle" font-weight="700">the new part brings evidence, not opinion</text>
+</svg>

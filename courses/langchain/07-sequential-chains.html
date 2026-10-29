@@ -1,0 +1,564 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sequential chains with structured output · LangChain, Step by Step · LearnInBits</title>
+  <meta name="description" content="Return structured JSON from one chain, add a value from the user and pass both to the next chain, so that each step does one clear job.">
+  <link rel="icon" href="../../assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,500;0,8..60,600;1,8..60,500&display=swap">
+  <link rel="stylesheet" href="../../assets/css/style.css?v=20261029d">
+  <script>try{var t=localStorage.getItem("lib-theme");t=t?JSON.parse(t):(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+</head>
+<body data-root="../../" data-page="chapter" data-course="langchain" data-id="07-sequential-chains">
+
+<main id="main">
+<article>
+
+
+<div class="block oneline">
+  <div class="label">In one line</div>
+  <p>A sequential chain passes structured data from one step to the next, so that each step does one clear job with exact fields.</p>
+</div>
+
+<section class="learn">
+  <h2>What you will learn</h2>
+  <ul>
+    <li>Why structured data, such as JSON, is a better input for the next step than free text</li>
+    <li>How <code>JsonOutputParser</code> turns the answer of a model into a Python dictionary</li>
+    <li>How to add a value from the user between two chains</li>
+    <li>Why a local model is a good choice for data that contains personal information</li>
+  </ul>
+  <p class="needs">Read <a href="06-lcel.html">chapter 6</a> first. This chapter builds on the two joined chains from there.</p>
+</section>
+
+<h2>The idea</h2>
+<p>In chapter 6, the first chain returned free text, and the second chain had to read it. Free text is easy for a person to read, but hard for a program to use. A program cannot easily find "the severity of the third finding" in a paragraph.</p>
+<p>Structured data solves this problem. If the first chain returns JSON, each finding gets the same named fields, such as <code>type</code>, <code>value</code> and <code>severity</code>. An output parser turns the JSON text into a Python dictionary, so that your code and the next chain can use each field directly.</p>
+<p>The second step often needs more than the output of the first step. In this chapter, it also needs the standard that the user selected, such as GDPR. A small function between the two chains adds that value, so that the second chain receives both.</p>
+
+
+<div class="block analogy">
+  <div class="label">Real-life analogy</div>
+  <p>An auditor first fills in a fixed checklist for each finding, with the same columns every time. A manager then reads the checklist and writes a report for the regulation that the client named. The checklist makes the work of the manager faster and more exact than a long letter.</p>
+</div>
+
+<figure class="diagram">
+  <div class="frame"><img src="../../assets/img/diagrams/lc-07-structured.svg" alt="The app logs from the text box go into audit_chain, which finds the sensitive data. The model returns JSON text with a list of findings, each with type, value, activity, widget and severity, and a consent review. JsonOutputParser turns this text into a Python dictionary. A lambda function adds the compliance standard that the user selected in the drop-down list, such as GDPR. The result goes into report_chain, which writes the assessment. The report is shown on the page." loading="lazy"></div>
+  <figcaption>The first chain returns JSON. A small function adds the selected standard. The second chain writes the report.</figcaption>
+</figure>
+
+<h2>What you will build</h2>
+<p>You will build a page that checks app logs for privacy problems. The user pastes logs that record what was typed into an app, and selects a compliance standard. The first chain lists the sensitive data in the logs as JSON. The second chain writes a privacy assessment report for the selected standard.</p>
+<p>The same pattern works for other reviews, such as checking a contract against a policy. The first step extracts facts in a fixed form, and the second step judges them.</p>
+
+
+<figure class="diagram">
+  <div class="frame"><img src="../../assets/img/diagrams/lc-07-flow.svg" alt="Chain 1, audit_chain = audit_prompt | llm | JsonOutputParser(), Finds the sensitive data in the logs and returns a dictionary. Chain 2, report_chain = report_prompt | llm, Two slots, {findings} and {compliance}. Join, audit_chain | (lambda findings {...}) | report_chain, The lambda adds the selected standard to the findings. Form, st.text_area and st.selectbox, The logs and one of GDPR, DPDP, HIPAA or PCI DSS. Call, compliance_check_chain.invoke({&quot;logs&quot; logs}), Runs after a click on Analyze. Page, st.write(response.content), The Privacy Assessment Report." loading="lazy"></div>
+  <figcaption>The first chain returns a dictionary. The lambda adds the standard. The second chain writes the report.</figcaption>
+</figure>
+
+<h2>Build it step by step</h2>
+
+<h3 class="step"><span class="sn">Step 1</span>Create the file</h3>
+
+<p>In the <code>code</code> folder, create the folder <code>07_sequential_chain</code> and in it the file <code>app_ollama.py</code>.</p>
+
+<h3 class="step"><span class="sn">Step 2</span>Import the libraries and load the model</h3>
+
+<pre class="code" data-lang="python" data-file="code/07_sequential_chain/app_ollama.py"><code>from langchain_ollama.chat_models import ChatOllama
+from langchain_core.prompts import PromptTemplate
+from langchain_core.output_parsers import JsonOutputParser
+from langchain_core.globals import set_debug
+
+import streamlit as st
+
+set_debug(True)
+
+llm = ChatOllama(model="gemma:2b")</code></pre>
+
+<ul class="explain">
+  <li><code>JsonOutputParser</code> is new. It reads the answer of the model as JSON and returns a Python dictionary or list.</li>
+  <li><code>set_debug(True)</code> prints each step to the terminal, as in chapter 6. Here, it lets you see the JSON from the first chain.</li>
+</ul>
+
+<h3 class="step"><span class="sn">Step 3</span>Write the template that finds the data</h3>
+
+<pre class="code" data-lang="python" data-file="code/07_sequential_chain/app_ollama.py"><code>audit_prompt = PromptTemplate(
+    input_variables=["logs"],
+    template="""
+    You are an Android Privacy Auditor.
+
+    Analyze the following Android Input Monitoring logs.
+
+    Your responsibility is ONLY to identify privacy related findings.
+
+    Review the logs and identify:
+        1. Personal Information
+        2. Financial Information
+        3. Authentication Secrets
+        4. Device/User Identifiers
+        5. User Generated Content
+        6. Consent &amp; Privacy Events
+
+    For every finding extract:
+        - type
+        - value
+        - activity
+        - widget
+        - severity
+
+    For Consent Review determine:
+        - Was a consent dialog available?
+        - Which consent dialogs were shown?
+        - Was a Privacy Policy shown?
+        - Were Terms of Service shown?
+        - Was the consent viewed?
+        - Was consent accepted?
+        - Was consent declined?
+
+    Return ONLY valid JSON.
+
+    Logs:
+
+    {logs}
+
+    """
+)</code></pre>
+
+<ul class="explain">
+  <li>The six numbered categories tell the model which kinds of data to look for, such as financial information and authentication secrets.</li>
+  <li>The five fields under "For every finding extract" give each finding the same form. The second chain can then compare the findings easily.</li>
+  <li>"Return ONLY valid JSON." is important, because <code>JsonOutputParser</code> fails if the answer contains anything else, such as an introduction in words.</li>
+</ul>
+
+<h3 class="step"><span class="sn">Step 4</span>Write the template for the report</h3>
+
+<pre class="code" data-lang="python" data-file="code/07_sequential_chain/app_ollama.py"><code>report_prompt = PromptTemplate(
+    input_variables=["findings", "compliance"],
+    template="""
+    You are a Privacy Compliance Officer.
+
+    The following privacy findings were extracted from Android application logs.
+
+    Compliance Standard:
+
+    {compliance}
+
+    Privacy Findings:
+
+    {findings}
+
+    Generate a concise Privacy Assessment Report.
+
+    Include:
+        1. Executive Summary
+        2. Overall Risk
+        3. Sensitive Information Summary
+        4. Exposed Sensitive Information (values)
+        5. Consent Review
+        6. Release Recommendation
+        7. Developer Recommendations
+    
+    """
+)</code></pre>
+
+<ul class="explain">
+  <li>The template has two slots, <code>{compliance}</code> for the standard and <code>{findings}</code> for the result of the first chain.</li>
+  <li>The seven numbered sections fix the structure of the report. Section 4 asks for the exposed values, so that a reader sees exactly which data leaked.</li>
+</ul>
+
+<h3 class="step"><span class="sn">Step 5</span>Build the chains</h3>
+
+<pre class="code" data-lang="python" data-file="code/07_sequential_chain/app_ollama.py"><code>audit_chain = audit_prompt | llm | JsonOutputParser()
+report_chain = report_prompt | llm 
+
+compliance_check_chain = (
+    audit_chain
+    | (lambda findings: {"findings": findings, "compliance": compliance}) 
+    | report_chain
+)</code></pre>
+
+<ul class="explain">
+  <li><code>audit_chain</code> ends with <code>JsonOutputParser()</code>, so it returns a dictionary and not text.</li>
+  <li><code>lambda findings: {...}</code> is a small function without a name. It takes the dictionary and returns a new dictionary with two keys, one for each slot of the second template.</li>
+  <li>The pipe symbol turns the lambda into a step of the chain, so that it runs between the two chains.</li>
+  <li>The lambda uses <code>compliance</code>, a variable that the page creates later in the script. This works, because the lambda reads the variable only when the chain runs, after the user clicks Analyze.</li>
+</ul>
+
+<h3 class="step"><span class="sn">Step 6</span>Build the page</h3>
+
+<pre class="code" data-lang="python" data-file="code/07_sequential_chain/app_ollama.py"><code>st.set_page_config(page_title="Android Privacy Auditor")
+st.title("Android App Privacy Compliance Check")
+
+st.info(
+    """
+    This application analyzes logs to identify privacy related findings 
+    such as:
+    - Personal Information (PII)
+    - Financial Information
+    - Authentication Secrets
+    - Device Identifiers
+    - User Generated Content
+    - Consent &amp; Privacy Events
+
+    The extracted findings are then reviewed against the selected
+    compliance standard to generate a Privacy Assessment Report.
+    """
+)
+
+logs = st.text_area(
+    label="Add logs here",
+    height=300, 
+    placeholder="""
+    Sample Logs:
+
+    07-01 10:15:25 INPUT_MONITOR_EDITTEXT window=FormLogin view=email text=[john.doe@gmail.com]
+
+    07-01 10:15:31 INPUT_MONITOR_EDITTEXT window=FormLogin view=password text=[MyPassword123]
+    """
+)
+
+compliance = st.selectbox(
+    "Compliance Standard",
+    [
+        "GDPR",
+        "DPDP",
+        "HIPAA",
+        "PCI DSS",
+    ],
+)
+
+analyze_button = st.button(label="Analyze", use_container_width=True)</code></pre>
+
+<ul class="explain">
+  <li><code>st.title</code> and <code>st.info</code> show a heading and a blue box that explains what the app does.</li>
+  <li><code>st.text_area</code> is the box for the logs, with a short example as placeholder.</li>
+  <li><code>st.selectbox</code> lists four standards. Without <code>index=None</code>, the first choice, GDPR, is selected at the start, so the value is never empty.</li>
+  <li><code>use_container_width=True</code> makes the button as wide as the page.</li>
+</ul>
+
+<h3 class="step"><span class="sn">Step 7</span>Run the chain and show the report</h3>
+
+<pre class="code" data-lang="python" data-file="code/07_sequential_chain/app_ollama.py"><code>if analyze_button:
+    if logs.strip():
+        with st.spinner(text="Analyzing Android logs..."):
+            response = compliance_check_chain.invoke({"logs":logs})
+            
+        st.success("Analysis completed successfully.")
+
+        st.subheader("Privacy Assessment Report")
+        st.write(response.content)
+    else:
+        st.warning("Please enter the logs to continue...")</code></pre>
+
+<ul class="explain">
+  <li><code>compliance_check_chain.invoke({"logs": logs})</code> runs all three steps with one call.</li>
+  <li><code>st.success</code> shows a green message, so that the user knows that the analysis finished.</li>
+  <li>The end of the file adds an expander with sample logs, made with <code>st.expander</code> and <code>st.code</code>. The user can copy them into the box to test the app. The full code below shows them.</li>
+</ul>
+
+<h2>Run it</h2>
+<p>Make sure that Ollama runs and that the <code>langchain</code> environment is active. Then start the app from the root folder of the project.</p>
+
+<pre class="code" data-lang="bash"><code>streamlit run code/07_sequential_chain/app_ollama.py</code></pre>
+
+<p>Streamlit will start a small web server and print its address.</p>
+
+<pre class="code" data-lang="output"><code>  You can now view your Streamlit app in your browser.
+
+  Local URL: http://localhost:8501
+  Network URL: http://192.168.1.20:8501</code></pre>
+
+<p>Open the Local URL in your browser. Open "View Sample Logs" at the bottom, copy the logs into the box and select GDPR. Then click Analyze. The two chains run one after the other, so the report can take a while.</p>
+
+<figure class="shot">
+  <div class="browser"><div class="bar"><i></i><i></i><i></i><span>localhost:8501</span></div><img src="https://raw.githubusercontent.com/bhardwajAbhi/learning-langchain/master/code/07_sequential_chain/app_ollama_output.png" alt="The Streamlit page Android App Privacy Compliance Check. The logs box shows log lines from a payment screen with a CVV, a name on the card and a continue button. GDPR is selected. Below the Analyze button, a green message says Analysis completed successfully. The Privacy Assessment Report says that the logs contain no sensitive personal or financial information, and lists None for authentication secrets, device identifiers, personal information and financial information." loading="lazy"></div>
+  <figcaption>The report for the sample logs, checked against GDPR.</figcaption>
+</figure>
+
+<div class="block note">
+  <div class="label">Your output can be different</div>
+  <p>A language model does not always give the same answer. Your report can list other findings. Its seven sections will be the same, because the second template asks for them.</p>
+</div>
+
+<h2>Look closely</h2>
+<p>The report says that the logs contain no financial information and lists "None" for every category. This is wrong. The sample logs contain a card number, an expiry date, a CVV and the name on the card, all typed on a payment screen.</p>
+<p>The mistake starts in the first chain. The model returned valid JSON, so the parser did not fail, but the JSON missed the findings. The second chain then wrote a calm report from an empty list. The debug output in the terminal shows the JSON of the first chain, so that you can see where the findings got lost.</p>
+<p>Two changes usually help. Give the template an example of the exact JSON that you expect, and use a larger model for the extraction step. Valid JSON only proves the form of the answer, not that its content is correct.</p>
+
+
+<details class="fold">
+  <summary><span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m16 18 6-6-6-6M8 6l-6 6 6 6"/></svg></span><span class="ft">Full code of chapter 7<small>code/07_sequential_chain/app_ollama.py</small></span><a class="gh-btn" href="https://github.com/bhardwajAbhi/learning-langchain/blob/master/code/07_sequential_chain/app_ollama.py"><svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M12 .5a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2.1c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1.1-.8.1-.8.1-.8 1.2.1 1.9 1.3 1.9 1.3 1.1 1.9 2.9 1.3 3.6 1 .1-.8.4-1.3.8-1.6-2.7-.3-5.5-1.3-5.5-6a4.7 4.7 0 0 1 1.3-3.2c-.1-.3-.6-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.7 1.7.2 2.9.1 3.2a4.7 4.7 0 0 1 1.3 3.2c0 4.6-2.8 5.6-5.5 6 .4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .5z"/></svg>View on GitHub</a></summary>
+  <div class="fold-body">
+<pre class="code" data-lang="python" data-file="code/07_sequential_chain/app_ollama.py"><code>from langchain_ollama.chat_models import ChatOllama
+from langchain_core.prompts import PromptTemplate
+from langchain_core.output_parsers import JsonOutputParser
+from langchain_core.globals import set_debug
+
+import streamlit as st
+
+# ----------------------------------------------------------
+# Enable LCEL Debug Logs
+# ----------------------------------------------------------
+set_debug(True)
+
+# ----------------------------------------------------------
+# Loading Ollama Model
+# ----------------------------------------------------------
+llm = ChatOllama(model="gemma:2b")
+
+# ----------------------------------------------------------
+# Prompt 1
+# Extract structured privacy findings from Android logs
+# ----------------------------------------------------------
+audit_prompt = PromptTemplate(
+    input_variables=["logs"],
+    template="""
+    You are an Android Privacy Auditor.
+
+    Analyze the following Android Input Monitoring logs.
+
+    Your responsibility is ONLY to identify privacy related findings.
+
+    Review the logs and identify:
+        1. Personal Information
+        2. Financial Information
+        3. Authentication Secrets
+        4. Device/User Identifiers
+        5. User Generated Content
+        6. Consent &amp; Privacy Events
+
+    For every finding extract:
+        - type
+        - value
+        - activity
+        - widget
+        - severity
+
+    For Consent Review determine:
+        - Was a consent dialog available?
+        - Which consent dialogs were shown?
+        - Was a Privacy Policy shown?
+        - Were Terms of Service shown?
+        - Was the consent viewed?
+        - Was consent accepted?
+        - Was consent declined?
+
+    Return ONLY valid JSON.
+
+    Logs:
+
+    {logs}
+
+    """
+)
+
+# ----------------------------------------------------------
+# Prompt 2
+# Generate a privacy assessment report using the extracted
+# findings from prompt 1 and selected compliance standard
+# ----------------------------------------------------------
+report_prompt = PromptTemplate(
+    input_variables=["findings", "compliance"],
+    template="""
+    You are a Privacy Compliance Officer.
+
+    The following privacy findings were extracted from Android application logs.
+
+    Compliance Standard:
+
+    {compliance}
+
+    Privacy Findings:
+
+    {findings}
+
+    Generate a concise Privacy Assessment Report.
+
+    Include:
+        1. Executive Summary
+        2. Overall Risk
+        3. Sensitive Information Summary
+        4. Exposed Sensitive Information (values)
+        5. Consent Review
+        6. Release Recommendation
+        7. Developer Recommendations
+    
+    """
+)
+
+# ----------------------------------------------------------
+# LCEL Chains
+# ----------------------------------------------------------
+audit_chain = audit_prompt | llm | JsonOutputParser()
+report_chain = report_prompt | llm 
+
+compliance_check_chain = (
+    audit_chain
+    | (lambda findings: {"findings": findings, "compliance": compliance}) 
+    | report_chain
+)
+
+# ----------------------------------------------------------
+# Building Streamlit UI
+# ----------------------------------------------------------
+st.set_page_config(page_title="Android Privacy Auditor")
+st.title("Android App Privacy Compliance Check")
+
+st.info(
+    """
+    This application analyzes logs to identify privacy related findings 
+    such as:
+    - Personal Information (PII)
+    - Financial Information
+    - Authentication Secrets
+    - Device Identifiers
+    - User Generated Content
+    - Consent &amp; Privacy Events
+
+    The extracted findings are then reviewed against the selected
+    compliance standard to generate a Privacy Assessment Report.
+    """
+)
+
+logs = st.text_area(
+    label="Add logs here",
+    height=300, 
+    placeholder="""
+    Sample Logs:
+
+    07-01 10:15:25 INPUT_MONITOR_EDITTEXT window=FormLogin view=email text=[john.doe@gmail.com]
+
+    07-01 10:15:31 INPUT_MONITOR_EDITTEXT window=FormLogin view=password text=[MyPassword123]
+    """
+)
+
+compliance = st.selectbox(
+    "Compliance Standard",
+    [
+        "GDPR",
+        "DPDP",
+        "HIPAA",
+        "PCI DSS",
+    ],
+)
+
+analyze_button = st.button(label="Analyze", use_container_width=True)
+# ----------------------------------------------------------
+# Generating Response
+# ----------------------------------------------------------
+if analyze_button:
+    if logs.strip():
+        with st.spinner(text="Analyzing Android logs..."):
+            response = compliance_check_chain.invoke({"logs":logs})
+            
+        st.success("Analysis completed successfully.")
+
+        st.subheader("Privacy Assessment Report")
+        st.write(response.content)
+    else:
+        st.warning("Please enter the logs to continue...")
+
+
+
+with st.expander("View Sample Logs (Copy and paste into the logs input box to test)"):
+
+    st.code(
+        """
+        06-30 14:07:52.982  9398  9398 D INPUT_MONITOR_CLICK: pkg=com.material.components | window=com.material.components/code.ActivityMainMenu | widget=android.widget.LinearLayout | id=? | text=Dialogs | desc=&lt;none&gt;
+
+        06-30 14:07:57.586  9398  9398 D INPUT_MONITOR_CLICK: pkg=com.material.components | window=com.material.components/code.ActivityMainMenu | widget=android.widget.LinearLayout | id=? | text=Term of Services | desc=&lt;none&gt;
+
+        06-30 14:08:06.899  9398  9398 D INPUT_MONITOR_CLICK: pkg=com.material.components | window=com.material.components/com.screens.activity.dialog.DialogTermOfServices | widget=androidx.appcompat.widget.AppCompatButton | id=bt_accept | text=Accept | desc=&lt;none&gt;
+
+        06-30 14:08:17.064  9398  9398 D INPUT_MONITOR_CLICK: pkg=com.material.components | window=com.material.components/code.ActivityMainMenu | widget=android.widget.LinearLayout | id=? | text=GDPR Basic | desc=&lt;none&gt;
+
+        06-30 14:08:22.403  9398  9398 D INPUT_MONITOR_CLICK: pkg=com.material.components | window=com.material.components/com.screens.activity.dialog.DialogGDPRBasic | widget=androidx.appcompat.widget.AppCompatTextView | id=tv_content | text=By using this App, you agree to the Terms-Conditions, Cookies-Policy and Privacy-Policy and consent to having your personal data transferred and processed outside EU. | desc=&lt;none&gt;
+
+        06-30 14:08:29.298  9398  9398 D INPUT_MONITOR_CLICK: pkg=com.material.components | window=com.material.components/com.screens.activity.dialog.DialogGDPRBasic | widget=androidx.appcompat.widget.AppCompatButton | id=bt_accept | text=ACCEPT | desc=&lt;none&gt;
+
+        06-30 14:08:58.886  9398  9398 D INPUT_MONITOR_EDITTEXT: pkg=com.material.components | window=com.material.components/com.screens.activity.form.FormLogin | view=email | hint=Email | inputType=TEXT/EMAIL_ADDRESS | text=[abhi@email.com]
+
+        06-30 14:09:16.488  9398  9398 D INPUT_MONITOR_EDITTEXT: pkg=com.material.components | window=com.material.components/com.screens.activity.form.FormLogin | view=password | hint=Password | inputType=TEXT/PASSWORD | text=[Abcd1234]
+
+        06-30 14:09:19.280  9398  9398 D INPUT_MONITOR_COMPOUND_BUTTON: pkg=com.material.components | window=com.material.components/com.screens.activity.form.FormLogin | widget=AppCompatCheckBox | label=Remember me | old_state=UNCHECKED | new_state=CHECKED
+
+        06-30 14:09:21.553  9398  9398 D INPUT_MONITOR_CLICK: pkg=com.material.components | window=com.material.components/com.screens.activity.form.FormLogin | widget=androidx.appcompat.widget.AppCompatButton | id=email_sign_in_button | text=LOGIN
+
+        06-30 14:09:55.124  9398  9398 D INPUT_MONITOR_EDITTEXT: pkg=com.material.components | window=com.material.components/com.screens.activity.chat.ChatWhatsapp | view=text_content | hint=Write a message... | inputType=TEXT/NORMAL | text=[hello]
+
+        06-30 14:10:05.452  9398  9398 D INPUT_MONITOR_CLICK: pkg=com.material.components | window=com.material.components/com.screens.activity.chat.ChatWhatsapp | widget=FloatingActionButton | id=btn_send | text=&lt;none&gt;
+
+        06-30 14:10:17.325  9398  9398 D INPUT_MONITOR_EDITTEXT: pkg=com.material.components | window=com.material.components/com.screens.activity.chat.ChatWhatsapp | view=text_content | hint=Write a message... | inputType=TEXT/NORMAL | text=[how are you]
+
+        06-30 14:10:19.046  9398  9398 D INPUT_MONITOR_CLICK: pkg=com.material.components | window=com.material.components/com.screens.activity.chat.ChatWhatsapp | widget=FloatingActionButton | id=btn_send | text=&lt;none&gt;
+
+        06-30 14:10:40.509  9398  9398 D INPUT_MONITOR_EDITTEXT: pkg=com.material.components | window=com.material.components/com.screens.activity.chat.ChatWhatsapp | view=text_content | hint=Write a message... | inputType=TEXT/NORMAL | text=[I'm good]
+
+        06-30 14:10:42.714  9398  9398 D INPUT_MONITOR_CLICK: pkg=com.material.components | window=com.material.components/com.screens.activity.chat.ChatWhatsapp | widget=FloatingActionButton | id=btn_send | text=&lt;none&gt;
+
+        06-30 14:10:57.600  9398  9398 D INPUT_MONITOR_EDITTEXT: pkg=com.material.components | window=com.material.components/com.screens.activity.payment.PaymentCardDetails | view=et_card_number | hint=Credit Card Number | inputType=NUMBER | text=[123456789874]
+
+        06-30 14:11:04.975  9398  9398 D INPUT_MONITOR_EDITTEXT: pkg=com.material.components | window=com.material.components/com.screens.activity.payment.PaymentCardDetails | view=et_expire | hint=MMYY | inputType=NUMBER | text=[0866]
+
+        06-30 14:11:08.953  9398  9398 D INPUT_MONITOR_EDITTEXT: pkg=com.material.components | window=com.material.components/com.screens.activity.payment.PaymentCardDetails | view=et_cvv | hint=CVV | inputType=NUMBER | text=[302]
+
+        06-30 14:11:22.104  9398  9398 D INPUT_MONITOR_EDITTEXT: pkg=com.material.components | window=com.material.components/com.screens.activity.payment.PaymentCardDetails | view=et_name | hint=Name on Card | inputType=TEXT | text=[testName]
+
+        06-30 14:11:24.655  9398  9398 D INPUT_MONITOR_CLICK: pkg=com.material.components | window=com.material.components/com.screens.activity.payment.PaymentCardDetails | widget=androidx.appcompat.widget.AppCompatButton | id=btn_continue | text=CONTINUE
+
+        """,
+        language="text",
+    )</code></pre>
+  </div>
+</details>
+
+<div class="block security">
+  <div class="label">Security lens</div>
+  <p>Logs like these contain real personal data, such as card numbers and passwords. A local model keeps that data on your computer, and that is the main reason why this app uses Ollama. With a cloud model, every log line goes to the provider. The debug mode also prints the logs and the findings in the terminal, so turn it off when the app handles real data. Finally, a report that says "no sensitive data" is not proof. Check the findings yourself before you approve a release.</p>
+</div>
+
+<h2>Check yourself</h2>
+<div class="quiz">
+  <details>
+    <summary><span class="qq">Why does the first chain return JSON and not free text?</span></summary>
+    <div class="ans"><p>JSON gives each finding the same named fields, so that the next step can use them directly.</p></div>
+  </details>
+  <details>
+    <summary><span class="qq">What does the lambda between the two chains do?</span></summary>
+    <div class="ans"><p>It takes the findings and adds the selected standard, so that the second chain receives a value for each of its two slots.</p></div>
+  </details>
+  <details>
+    <summary><span class="qq">The parser did not fail, but the report is wrong. How is that possible?</span></summary>
+    <div class="ans"><p>The model returned valid JSON with missing findings. Valid JSON only proves the form, not the content.</p></div>
+  </details>
+</div>
+
+<h2>Key terms at a glance</h2>
+<div class="table-wrap">
+  <table class="kw">
+    <thead><tr><th>Term</th><th>Meaning</th></tr></thead>
+    <tbody>
+      <tr><td>Structured data</td><td>Data with named fields in a fixed form, such as JSON, so that a program can use each field</td></tr>
+      <tr><td>JSON</td><td>A text format for structured data with keys and values</td></tr>
+      <tr><td><code>JsonOutputParser</code></td><td>An output parser that turns JSON text from the model into a Python dictionary or list</td></tr>
+      <tr><td>Lambda</td><td>A small function without a name, used here as a step between two chains</td></tr>
+      <tr><td>Sequential chain</td><td>Chains that run one after the other, each with the output of the one before</td></tr>
+      <tr><td>Compliance standard</td><td>A set of rules that an app must follow, such as GDPR or the DPDP Act</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<p>For more on structured output, see <a href="../ai-engineering/07-structured-output.html">AI Engineering chapter 7</a>.</p>
+
+<h2>Next</h2>
+<p>Each app so far forgot everything after one answer. In <a href="08-memory.html">chapter 8</a>, you will give your app a chat history, so that it can answer follow-up questions.</p>
+</article>
+</main>
+
+<script src="../../assets/js/site.js?v=20261029d"></script>
+</body>
+</html>

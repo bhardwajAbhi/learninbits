@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 300" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">Pseudonymization with a key vault</title>
+  <desc id="d">Names and phone numbers are replaced with pseudonyms such as P001 and encrypted values. A key vault keeps the mapping. Analytics works on the pseudonyms. An authorized user can reverse them with the key, so the result is still personal data.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="20" y="30" width="200" height="120" rx="12" fill="#fff" stroke="#d9d4c7" stroke-width="1.5"/>
+<text x="36" y="54" font-size="12.5" fill="#1c2230" text-anchor="start" font-weight="700">Original</text>
+<text x="36" y="80" font-size="12" fill="#1c2230" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="600">John</text>
+<text x="96" y="80" font-size="12" fill="#4a5263" text-anchor="start" font-family="JetBrains Mono, monospace">9098765432</text>
+<text x="36" y="102" font-size="12" fill="#1c2230" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="600">Asha</text>
+<text x="96" y="102" font-size="12" fill="#4a5263" text-anchor="start" font-family="JetBrains Mono, monospace">9123456780</text>
+<text x="36" y="124" font-size="12" fill="#1c2230" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="600">Ravi</text>
+<text x="96" y="124" font-size="12" fill="#4a5263" text-anchor="start" font-family="JetBrains Mono, monospace">9988776655</text>
+<path d="M220 90 H284" fill="none" stroke="#1c2230" stroke-width="2" marker-end="url(#m0)"/>
+<rect x="290" y="50" width="140" height="80" rx="12" fill="#1c2230"/>
+<text x="360" y="84" font-size="13" fill="#fff" text-anchor="middle" font-weight="700">Replace</text>
+<text x="360" y="102" font-size="10.5" fill="#ffffffcc" text-anchor="middle">with a pseudonym</text>
+<path d="M430 90 H494" fill="none" stroke="#1c2230" stroke-width="2" marker-end="url(#m0)"/>
+<rect x="500" y="30" width="200" height="120" rx="12" fill="#fff" stroke="#2f62c8" stroke-width="1.6"/>
+<text x="516" y="54" font-size="12.5" fill="#1f4a9e" text-anchor="start" font-weight="700">Pseudonymized</text>
+<text x="516" y="80" font-size="12" fill="#1c2230" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="600">P001</text>
+<text x="576" y="80" font-size="12" fill="#4a5263" text-anchor="start" font-family="JetBrains Mono, monospace">7f3a…</text>
+<text x="516" y="102" font-size="12" fill="#1c2230" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="600">P002</text>
+<text x="576" y="102" font-size="12" fill="#4a5263" text-anchor="start" font-family="JetBrains Mono, monospace">c91e…</text>
+<text x="516" y="124" font-size="12" fill="#1c2230" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="600">P003</text>
+<text x="576" y="124" font-size="12" fill="#4a5263" text-anchor="start" font-family="JetBrains Mono, monospace">08bd…</text>
+<rect x="290" y="190" width="140" height="70" rx="12" fill="#fdf4e3" stroke="#b7791f" stroke-width="1.5"/>
+<text x="360" y="220" font-size="13" fill="#8a5a12" text-anchor="middle" font-weight="700">Key vault</text>
+<text x="360" y="238" font-size="11" fill="#4a5263" text-anchor="middle" font-family="JetBrains Mono, monospace">P001 = John</text>
+<path d="M360 130 V184" fill="none" stroke="#b7791f" stroke-width="1.6" stroke-dasharray="4 4" marker-end="url(#m6)"/>
+<rect x="730" y="30" width="130" height="52" rx="10" fill="#e3f4ee" stroke="#0f8a6a" stroke-width="1.5"/>
+<text x="795" y="52" font-size="12" fill="#0b6650" text-anchor="middle" font-weight="700">Analytics</text>
+<text x="795" y="68" font-size="10.5" fill="#4a5263" text-anchor="middle">works on P001</text>
+<rect x="730" y="98" width="130" height="52" rx="10" fill="#fbecec" stroke="#c2552d" stroke-width="1.5"/>
+<text x="795" y="120" font-size="12" fill="#963f1f" text-anchor="middle" font-weight="700">Authorized user</text>
+<text x="795" y="136" font-size="10.5" fill="#4a5263" text-anchor="middle">can reverse it</text>
+<path d="M700 70 H724" fill="none" stroke="#0f8a6a" stroke-width="2" marker-end="url(#m4)"/>
+<path d="M700 120 H724" fill="none" stroke="#c2552d" stroke-width="2" marker-end="url(#m7)"/>
+<path d="M795 150 V225 H436" fill="none" stroke="#c2552d" stroke-width="1.6" stroke-dasharray="4 4" marker-end="url(#m7)"/>
+<text x="560" y="286" font-size="12.5" fill="#1c2230" text-anchor="middle" font-weight="700">Reversible with the key, so the result is still personal data.</text>
+</svg>

@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 340" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">A chain of steps and a chain of chains</title>
+  <desc id="d">Top, one chain with three steps. The input is a dictionary with the behavior. The prompt step fills the template, the model ChatOllama writes the answer, and the parser StrOutputParser keeps only the text, so the output is a plain string. The code is first_chain equals mitre_prompt pipe llm pipe StrOutputParser. Bottom, two chains joined into one. The behavior text from the user goes into first_chain, which maps it to techniques as a plain string. The string goes into second_chain, which writes the report as an AIMessage. The code is overall_chain equals first_chain pipe second_chain.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<text x="20" y="32" font-size="12.6" fill="#1c2230" text-anchor="start" font-weight="700">One chain, three steps</text>
+<rect x="20" y="46" width="150" height="76" rx="10" fill="#eef0f3" stroke="#5d6b7e" stroke-width="1.4"/>
+<text x="95" y="70" font-size="13" fill="#3f4a59" text-anchor="middle" font-weight="700">Input</text>
+<text x="95" y="88" font-size="11" fill="#4a5263" text-anchor="middle">a dictionary</text>
+<text x="95" y="108" font-size="10.6" fill="#1c2230" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="600">{&quot;behavior&quot;: ...}</text>
+<path d="M172 84 L 190 84" fill="none" stroke="#1c2230" stroke-width="1.5" marker-end="url(#m0)"/>
+<rect x="192" y="46" width="150" height="76" rx="10" fill="#f3f0fa" stroke="#7a4fc2" stroke-width="1.4"/>
+<text x="267" y="70" font-size="13" fill="#58378f" text-anchor="middle" font-weight="700">Prompt</text>
+<text x="267" y="88" font-size="11" fill="#4a5263" text-anchor="middle">fills the template</text>
+<text x="267" y="108" font-size="10.6" fill="#1c2230" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="600">PromptTemplate</text>
+<path d="M344 84 L 362 84" fill="none" stroke="#1c2230" stroke-width="1.5" marker-end="url(#m0)"/>
+<rect x="364" y="46" width="150" height="76" rx="10" fill="#eef3fb" stroke="#2f62c8" stroke-width="1.4"/>
+<text x="439" y="70" font-size="13" fill="#1f4a9e" text-anchor="middle" font-weight="700">Model</text>
+<text x="439" y="88" font-size="11" fill="#4a5263" text-anchor="middle">writes the answer</text>
+<text x="439" y="108" font-size="10.6" fill="#1c2230" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="600">ChatOllama</text>
+<path d="M516 84 L 534 84" fill="none" stroke="#1c2230" stroke-width="1.5" marker-end="url(#m0)"/>
+<rect x="536" y="46" width="150" height="76" rx="10" fill="#fdf4e3" stroke="#b7791f" stroke-width="1.4"/>
+<text x="611" y="70" font-size="13" fill="#8a5a12" text-anchor="middle" font-weight="700">Parser</text>
+<text x="611" y="88" font-size="11" fill="#4a5263" text-anchor="middle">keeps only the text</text>
+<text x="611" y="108" font-size="10.6" fill="#1c2230" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="600">StrOutputParser</text>
+<path d="M688 84 L 706 84" fill="none" stroke="#1c2230" stroke-width="1.5" marker-end="url(#m0)"/>
+<rect x="708" y="46" width="150" height="76" rx="10" fill="#e3f4ee" stroke="#0f8a6a" stroke-width="1.4"/>
+<text x="783" y="70" font-size="13" fill="#0b6650" text-anchor="middle" font-weight="700">Output</text>
+<text x="783" y="88" font-size="11" fill="#4a5263" text-anchor="middle">a plain string</text>
+<text x="783" y="108" font-size="10.6" fill="#1c2230" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="600">&quot;T1636.004 ...&quot;</text>
+<rect x="20" y="134" width="840" height="34" rx="8" fill="#1f2633"/>
+<text x="440" y="156" font-size="12.4" fill="#e8ecf3" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="600">first_chain = mitre_prompt | llm | StrOutputParser()</text>
+<text x="20" y="206" font-size="12.6" fill="#1c2230" text-anchor="start" font-weight="700">Two chains joined into one</text>
+<rect x="20" y="220" width="150" height="60" rx="10" fill="#eef0f3" stroke="#5d6b7e" stroke-width="1.4"/>
+<text x="95" y="245" font-size="12.6" fill="#3f4a59" text-anchor="middle" font-weight="700">Behavior</text>
+<text x="95" y="265" font-size="11" fill="#4a5263" text-anchor="middle">text from the user</text>
+<path d="M172 250 L 190 250" fill="none" stroke="#1c2230" stroke-width="1.5" marker-end="url(#m0)"/>
+<rect x="192" y="220" width="150" height="60" rx="10" fill="#f3f0fa" stroke="#7a4fc2" stroke-width="1.4"/>
+<text x="267" y="245" font-size="12.6" fill="#58378f" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="700">first_chain</text>
+<text x="267" y="265" font-size="11" fill="#4a5263" text-anchor="middle">maps to techniques</text>
+<path d="M344 250 L 362 250" fill="none" stroke="#1c2230" stroke-width="1.5" marker-end="url(#m0)"/>
+<rect x="364" y="220" width="150" height="60" rx="10" fill="#fdf4e3" stroke="#b7791f" stroke-width="1.4"/>
+<text x="439" y="245" font-size="12.6" fill="#8a5a12" text-anchor="middle" font-weight="700">Techniques</text>
+<text x="439" y="265" font-size="11" fill="#4a5263" text-anchor="middle">a plain string</text>
+<path d="M516 250 L 534 250" fill="none" stroke="#1c2230" stroke-width="1.5" marker-end="url(#m0)"/>
+<rect x="536" y="220" width="150" height="60" rx="10" fill="#eef3fb" stroke="#2f62c8" stroke-width="1.4"/>
+<text x="611" y="245" font-size="12.6" fill="#1f4a9e" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="700">second_chain</text>
+<text x="611" y="265" font-size="11" fill="#4a5263" text-anchor="middle">writes the report</text>
+<path d="M688 250 L 706 250" fill="none" stroke="#1c2230" stroke-width="1.5" marker-end="url(#m0)"/>
+<rect x="708" y="220" width="150" height="60" rx="10" fill="#e3f4ee" stroke="#0f8a6a" stroke-width="1.4"/>
+<text x="783" y="245" font-size="12.6" fill="#0b6650" text-anchor="middle" font-weight="700">Report</text>
+<text x="783" y="265" font-size="11" fill="#4a5263" text-anchor="middle">an AIMessage</text>
+<rect x="20" y="292" width="840" height="34" rx="8" fill="#1f2633"/>
+<text x="440" y="314" font-size="12.4" fill="#e8ecf3" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="600">overall_chain = first_chain | second_chain</text>
+</svg>

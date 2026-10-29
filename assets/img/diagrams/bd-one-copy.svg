@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 266" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">Two copies with a socket and one copy with Binder</title>
+  <desc id="d">Left, a Unix socket. Data goes from the sender buffer to a kernel buffer and then to the receiver buffer, two copies. Right, Binder. Data goes from the sender Parcel straight into a region that the receiver has mapped, one copy. The region is read-only for the receiver, so only the kernel can write into it.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="20" y="20" width="400" height="230" rx="14" fill="#fff" stroke="#5d6b7e" stroke-width="1.6"/>
+<text x="220" y="46" font-size="13.5" fill="#3f4a59" text-anchor="middle" font-weight="700">A Unix socket</text>
+<rect x="64.6667" y="90" width="84" height="60" rx="10" fill="#eef0f3" stroke="#5d6b7e" stroke-width="1.3"/>
+<text x="106.667" y="116" font-size="11.6" fill="#3f4a59" text-anchor="middle" font-weight="700">Sender</text>
+<text x="106.667" y="133" font-size="11.6" fill="#3f4a59" text-anchor="middle" font-weight="700">buffer</text>
+<path d="M150.667 120 L 176 120" fill="none" stroke="#1c2230" stroke-width="1.6" marker-end="url(#m0)"/>
+<text x="163.333" y="82" font-size="10.6" fill="#c2552d" text-anchor="middle" font-weight="700">copy</text>
+<rect x="178" y="90" width="84" height="60" rx="10" fill="#eef0f3" stroke="#5d6b7e" stroke-width="1.3"/>
+<text x="220" y="116" font-size="11.6" fill="#3f4a59" text-anchor="middle" font-weight="700">Kernel</text>
+<text x="220" y="133" font-size="11.6" fill="#3f4a59" text-anchor="middle" font-weight="700">buffer</text>
+<path d="M264 120 L 289.333 120" fill="none" stroke="#1c2230" stroke-width="1.6" marker-end="url(#m0)"/>
+<text x="276.667" y="82" font-size="10.6" fill="#c2552d" text-anchor="middle" font-weight="700">copy</text>
+<rect x="291.333" y="90" width="84" height="60" rx="10" fill="#eef0f3" stroke="#5d6b7e" stroke-width="1.3"/>
+<text x="333.333" y="116" font-size="11.6" fill="#3f4a59" text-anchor="middle" font-weight="700">Receiver</text>
+<text x="333.333" y="133" font-size="11.6" fill="#3f4a59" text-anchor="middle" font-weight="700">buffer</text>
+<text x="220" y="190" font-size="11.4" fill="#1c2230" text-anchor="middle" font-weight="600">Two copies, sender to kernel and kernel to receiver</text>
+<rect x="460" y="20" width="400" height="230" rx="14" fill="#fff" stroke="#0f8a6a" stroke-width="1.6"/>
+<text x="660" y="46" font-size="13.5" fill="#0b6650" text-anchor="middle" font-weight="700">Binder</text>
+<rect x="523" y="90" width="104" height="60" rx="10" fill="#e3f4ee" stroke="#0f8a6a" stroke-width="1.3"/>
+<text x="575" y="116" font-size="11.6" fill="#0b6650" text-anchor="middle" font-weight="700">Sender</text>
+<text x="575" y="133" font-size="11.6" fill="#0b6650" text-anchor="middle" font-weight="700">Parcel</text>
+<path d="M629 120 L 691 120" fill="none" stroke="#1c2230" stroke-width="1.6" marker-end="url(#m0)"/>
+<text x="660" y="82" font-size="10.6" fill="#c2552d" text-anchor="middle" font-weight="700">copy</text>
+<rect x="693" y="90" width="104" height="60" rx="10" fill="#e3f4ee" stroke="#0f8a6a" stroke-width="1.3"/>
+<text x="745" y="116" font-size="11.6" fill="#0b6650" text-anchor="middle" font-weight="700">Receiver</text>
+<text x="745" y="133" font-size="11.6" fill="#0b6650" text-anchor="middle" font-weight="700">region</text>
+<text x="660" y="190" font-size="11.4" fill="#1c2230" text-anchor="middle" font-weight="600">One copy into memory that the receiver has mapped</text>
+<text x="660" y="214" font-size="11" fill="#4a5263" text-anchor="middle">The region is read-only for the receiver,</text>
+<text x="660" y="232" font-size="11" fill="#4a5263" text-anchor="middle">so only the kernel can write into it.</text>
+</svg>

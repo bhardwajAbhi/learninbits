@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 304" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">Encoding, encryption and signing compared</title>
+  <desc id="d">Encoding such as Base64 or hex turns Hello into SGVsbG8 equals. Anyone can reverse it, it has no key, and it only changes the format, so it is not protection. Encryption such as AES-GCM or TLS lets only a key holder read the data, GCM also finds changes, and the keys come from the Keystore. Signing such as HMAC or ECDSA leaves the data readable, but any change breaks the check, and it proves the sender. For Bluetooth, MQTT and QR codes, encrypt and sign the payload.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="20" y="30" width="270" height="230" rx="12" fill="#fff" stroke="#c2552d" stroke-width="1.6"/>
+<text x="34" y="56" font-size="14" fill="#963f1f" text-anchor="start" font-weight="700">Encoding</text>
+<text x="276" y="56" font-size="11" fill="#4a5263" text-anchor="end" font-weight="600">Base64, hex</text>
+<rect x="34" y="70" width="242" height="32" rx="6" fill="#fbecec"/>
+<text x="155" y="91" font-size="12" fill="#1c2230" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="600">SGVsbG8=</text>
+<circle cx="40" cy="124" r="3" fill="#c2552d"/>
+<text x="50" y="128" font-size="11.6" fill="#4a5263" text-anchor="start">Anyone can reverse it</text>
+<circle cx="40" cy="148" r="3" fill="#c2552d"/>
+<text x="50" y="152" font-size="11.6" fill="#4a5263" text-anchor="start">No key, no secret</text>
+<circle cx="40" cy="172" r="3" fill="#c2552d"/>
+<text x="50" y="176" font-size="11.6" fill="#4a5263" text-anchor="start">Only a format change</text>
+<rect x="34" y="206" width="242" height="36" rx="8" fill="#c2552d"/>
+<text x="155" y="229" font-size="12.4" fill="#fff" text-anchor="middle" font-weight="700">Not protection</text>
+<rect x="306" y="30" width="270" height="230" rx="12" fill="#fff" stroke="#0f8a6a" stroke-width="1.6"/>
+<text x="320" y="56" font-size="14" fill="#0b6650" text-anchor="start" font-weight="700">Encryption</text>
+<text x="562" y="56" font-size="11" fill="#4a5263" text-anchor="end" font-weight="600">AES-GCM, TLS</text>
+<rect x="320" y="70" width="242" height="32" rx="6" fill="#e3f4ee"/>
+<text x="441" y="91" font-size="12" fill="#1c2230" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="600">9f3a...c1e2</text>
+<circle cx="326" cy="124" r="3" fill="#0f8a6a"/>
+<text x="336" y="128" font-size="11.6" fill="#4a5263" text-anchor="start">Only a key holder reads it</text>
+<circle cx="326" cy="148" r="3" fill="#0f8a6a"/>
+<text x="336" y="152" font-size="11.6" fill="#4a5263" text-anchor="start">GCM also finds changes</text>
+<circle cx="326" cy="172" r="3" fill="#0f8a6a"/>
+<text x="336" y="176" font-size="11.6" fill="#4a5263" text-anchor="start">Keys from the Keystore</text>
+<rect x="320" y="206" width="242" height="36" rx="8" fill="#0f8a6a"/>
+<text x="441" y="229" font-size="12.4" fill="#fff" text-anchor="middle" font-weight="700">Keeps data secret</text>
+<rect x="592" y="30" width="270" height="230" rx="12" fill="#fff" stroke="#2f62c8" stroke-width="1.6"/>
+<text x="606" y="56" font-size="14" fill="#1f4a9e" text-anchor="start" font-weight="700">Signing</text>
+<text x="848" y="56" font-size="11" fill="#4a5263" text-anchor="end" font-weight="600">HMAC, ECDSA</text>
+<rect x="606" y="70" width="242" height="32" rx="6" fill="#eef3fb"/>
+<text x="727" y="91" font-size="12" fill="#1c2230" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="600">data + signature</text>
+<circle cx="612" cy="124" r="3" fill="#2f62c8"/>
+<text x="622" y="128" font-size="11.6" fill="#4a5263" text-anchor="start">Anyone can read it</text>
+<circle cx="612" cy="148" r="3" fill="#2f62c8"/>
+<text x="622" y="152" font-size="11.6" fill="#4a5263" text-anchor="start">Any change breaks the check</text>
+<circle cx="612" cy="172" r="3" fill="#2f62c8"/>
+<text x="622" y="176" font-size="11.6" fill="#4a5263" text-anchor="start">Proves the sender</text>
+<rect x="606" y="206" width="242" height="36" rx="8" fill="#2f62c8"/>
+<text x="727" y="229" font-size="12.4" fill="#fff" text-anchor="middle" font-weight="700">Proves it is genuine</text>
+<text x="440" y="288" font-size="11.8" fill="#4a5263" text-anchor="middle" font-style="italic">For Bluetooth, MQTT and QR codes, encrypt and sign the payload. Encoding alone hides nothing.</text>
+</svg>

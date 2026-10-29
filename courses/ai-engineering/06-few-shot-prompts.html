@@ -1,0 +1,759 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Few-shot prompts · AI Engineering · LearnInBits</title>
+  <meta name="description" content="Teach a model your own labels with a few examples. Two guided builds that sort failures of AI applications and privacy risks of mobile apps.">
+  <link rel="icon" href="../../assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,500;0,8..60,600;1,8..60,500&display=swap">
+  <link rel="stylesheet" href="../../assets/css/style.css?v=20261029d">
+  <script>try{var t=localStorage.getItem("lib-theme");t=t?JSON.parse(t):(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+</head>
+<body data-root="../../" data-page="chapter" data-course="ai-engineering" data-id="06-few-shot-prompts">
+
+<main id="main">
+<article>
+
+  <div class="block oneline">
+    <div class="label">In one line</div>
+    <p>A few-shot prompt shows the model some solved examples first, so it learns your labels and your rules from them.</p>
+  </div>
+
+  <section class="learn">
+    <h2>What you will learn</h2>
+    <ul>
+      <li>Why examples help when your labels have a special meaning</li>
+      <li>How to build a prompt from system, human and ai messages with <code>from_messages()</code></li>
+      <li>How each pair of messages acts as one example, one "shot"</li>
+      <li>How to select good examples, and where few-shot still fails</li>
+    </ul>
+    <p class="needs">Read <a href="05-zero-shot-prompts.html">chapter 5</a> first. This chapter builds on the zero-shot classifier and its chain. <a href="04-system-messages.html">Chapter 4</a> explains message roles.</p>
+  </section>
+
+  <h2>The idea</h2>
+  <p>In chapter 5, the model sorted text with an instruction only. This works when the labels are common, for example POSITIVE and NEGATIVE. Your own labels are different. A label such as CONTEXT_LOSS or PURPOSE_CONCERN has a meaning that only your team knows exactly.</p>
+  <p>A <strong>few-shot prompt</strong> adds solved examples to the prompt. Each example is one input and its correct label. The model sees the pattern and continues it for the new input. "Few-shot" means a few examples, often three to ten.</p>
+  <p>In a chat model, the best way to show an example is a fake short conversation. A human message holds the example input, and an ai message holds the correct answer. To the model, it looks as if it already answered these questions correctly. Then the real question comes as the last human message.</p>
+
+  <div class="block analogy">
+    <div class="label">Real-life analogy</div>
+    <p>A new member of a security team must sort incident reports. The team lead does not give a long definition of each category. Instead, the lead shows five old reports with the category already written on them. After these examples, the new member sorts the next report in the same way. The examples teach the rules faster than a definition.</p>
+  </div>
+
+  <h2>What we build in this chapter</h2>
+  <p>You build two classifiers with the same few-shot pattern. The first one sorts failures of applications that use language models. The second one sorts privacy risks in mobile apps. Both use labels that a model does not know from general text.</p>
+
+  <div class="build-cards">
+    <div class="build-card" style="--ex:#2f62c8">
+      <span class="ex-tag"><b>1</b>Example 1</span>
+      <h3>What went wrong with the AI app?</h3>
+      <dl>
+        <dt>Aim</dt><dd>An AI team collects problem reports. It wants each report sorted by the type of failure.</dd>
+        <dt>Problem</dt><dd>Sort each observation into HALLUCINATION, PROMPT_INJECTION, FORMAT_VIOLATION or CONTEXT_LOSS.</dd>
+        <dt>Input</dt><dd>Five new observations, after five solved examples.</dd>
+        <dt>Expected output</dt><dd>One label for each observation, for example<code class="expect">The application requested a CSV row, but the model returned a Markdown table.<br>Failure Type: <b>FORMAT_VIOLATION</b></code></dd>
+        <dt>Model</dt><dd><span class="model-chip">Gemini 3.1 Flash Lite</span></dd>
+      </dl>
+    </div>
+    <div class="build-card" style="--ex:#0f8a6a">
+      <span class="ex-tag"><b>2</b>Example 2</span>
+      <h3>Is this a privacy risk?</h3>
+      <dl>
+        <dt>Aim</dt><dd>A mobile security analyst wants a first sort of privacy findings.</dd>
+        <dt>Problem</dt><dd>Sort each finding into CONSENT_CONCERN, PURPOSE_CONCERN, SECURITY_CONCERN or EXPECTED_USE.</dd>
+        <dt>Input</dt><dd>Five new findings, after five solved examples.</dd>
+        <dt>Expected output</dt><dd>One label for each finding, for example<code class="expect">A weather app uses location data for marketing without informing the user.<br>Classification: <b>PURPOSE_CONCERN</b></code></dd>
+        <dt>Model</dt><dd><span class="model-chip">Qwen 2.5 7B, through OpenRouter</span></dd>
+      </dl>
+    </div>
+  </div>
+
+  <!-- ================= EXAMPLE 1 ================= -->
+  <section class="example" style="--ex:#2f62c8">
+
+    <div class="example-banner">
+      <div class="eb-tag">Example 1 · Guided build</div>
+      <h2 data-toc="Example 1, what went wrong with the AI app">What went wrong with the AI app?</h2>
+      <p>Teach a Gemini model four failure labels with five examples, then sort five new observations.</p>
+      <div class="eb-row">
+        <span class="eb-chip">Gemini 3.1 Flash Lite</span>
+        <span class="eb-chip">src/05_few_shot_google.py</span>
+        <a class="gh-btn" href="https://github.com/bhardwajAbhi/ai-engineering/blob/main/src/05_few_shot_google.py"><svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M12 .5a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2.1c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1.1-.8.1-.8.1-.8 1.2.1 1.9 1.3 1.9 1.3 1.1 1.9 2.9 1.3 3.6 1 .1-.8.4-1.3.8-1.6-2.7-.3-5.5-1.3-5.5-6a4.7 4.7 0 0 1 1.3-3.2c-.1-.3-.6-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.7 1.7.2 2.9.1 3.2a4.7 4.7 0 0 1 1.3 3.2c0 4.6-2.8 5.6-5.5 6 .4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .5z"/></svg>View on GitHub</a>
+      </div>
+    </div>
+
+    <figure class="diagram">
+      <div class="frame"><img src="../../assets/img/diagrams/ai-06-ex1-flow.svg" alt="Data, for observation in sample_observations, 5 observations of AI applications, one at a time. Template, llm_failure_analysis_prompt = from_messages([...]), 1 system message with the role and four labels, HALLUCINATION, PROMPT_INJECTION, FORMAT_VIOLATION, CONTEXT_LOSS, 5 example pairs, (&quot;human&quot;, ...) and (&quot;ai&quot;, label), 1 last human message with {query}. Model, llm = ChatGoogleGenerativeAI(model=&quot;gemini-3.1-flash-lite&quot;, temperature=0), Sees 12 messages and continues the pattern. Parser, StrOutputParser(), Keeps only the label. Output, print(... result.strip()), One label for each item, for example FORMAT_VIOLATION for the Markdown table. A loop goes back from stage 5 to stage 1, next item." loading="lazy"></div>
+      <figcaption>The program of Example 1, from the input to the printed result.</figcaption>
+    </figure>
+
+    <h3 class="step"><span class="sn">Step 1</span>Create the file</h3>
+    <p>In your project folder, create the file <code>src/05_few_shot_google.py</code> and open it in your editor.</p>
+
+    <h3 class="step"><span class="sn">Step 2</span>Import what you need</h3>
+<pre class="code" data-lang="python" data-file="src/05_few_shot_google.py"><code>from dotenv import load_dotenv
+from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.output_parsers import StrOutputParser</code></pre>
+    <p>These are the same four imports as in chapter 5, the <code>.env</code> reader, the Gemini class, the prompt template and the string parser.</p>
+
+    <h3 class="step"><span class="sn">Step 3</span>Create the model and the parser</h3>
+<pre class="code" data-lang="python"><code>def main():
+    load_dotenv()
+
+    # Initialize the model
+    llm = ChatGoogleGenerativeAI(
+        model="gemini-3.1-flash-lite",
+        temperature=0,
+    )
+
+    # Parser to extract the text from the model response
+    parser = StrOutputParser()</code></pre>
+    <ul class="explain">
+      <li><code>temperature=0</code> keeps the labels stable. The same observation must get the same label each time.</li>
+      <li><code>StrOutputParser()</code> keeps only the text of the reply, so <code>result</code> is a plain string.</li>
+    </ul>
+
+    <h3 class="step"><span class="sn">Step 4</span>Print a title</h3>
+<pre class="code" data-lang="python"><code>    print("=" * 80)
+    print("FEW-SHOT LLM FAILURE CLASSIFICATION")
+    print("=" * 80)</code></pre>
+
+    <h3 class="step"><span class="sn">Step 5</span>Write the few-shot prompt</h3>
+    <p>This is the most important step. The prompt is a list of messages.</p>
+<pre class="code" data-lang="python"><code>    # Few-shot prompt with examples of common LLM failures
+    llm_failure_analysis_prompt = ChatPromptTemplate.from_messages(
+        [
+            # "system", "human", and "ai" are predefined message roles.
+            (
+                "system",
+                """You are an experienced AI engineer who analyses failures
+                    in applications powered by large language models.
+
+                    Classify each observation using exactly one label:
+
+                    HALLUCINATION
+                    PROMPT_INJECTION
+                    FORMAT_VIOLATION
+                    CONTEXT_LOSS
+
+                    Respond with only the classification label.""",
+            ),
+
+            # Few-shot Example 1: Hallucination
+            ("human", """The model provided the title and DOI of a research paper, but the paper does not exist."""), # "human" provides the example input.
+            ("ai", "HALLUCINATION"), # "ai" provides the expected response for the example.
+
+            # Few-shot Example 2: Prompt injection
+            ("human", """A document told the model to ignore its original instructions, and the model followed the document's command."""),
+            ("ai", "PROMPT_INJECTION"),
+
+            # Few-shot Example 3: Format violation
+            ("human", """The model was instructed to return valid JSON, but it returned a normal paragraph instead."""),
+            ("ai", "FORMAT_VIOLATION"),
+
+            # Few-shot Example 4: Context loss
+            ("human", """The user specified Python at the beginning of the conversation, but the model later generated Java code."""),
+            ("ai", "CONTEXT_LOSS"),
+
+            # Few-shot Example 5: Hallucination
+            ("human", """The model described a software library function that is not present in the official documentation."""),
+            ("ai", "HALLUCINATION"),
+
+            # Actual query supplied during invocation
+            ("human", "{query}"),
+        ]
+    )</code></pre>
+    <ul class="explain">
+      <li><code>ChatPromptTemplate.from_messages([...])</code> builds a template from a list of messages. Chapter 5 used <code>from_template()</code>, which makes only one human message.</li>
+      <li>Each message is a pair in brackets, a <strong>tuple</strong>, with the role first and the text second. The roles are <code>"system"</code>, <code>"human"</code> and <code>"ai"</code>. LangChain turns each tuple into a message object.</li>
+      <li><strong>The system message.</strong> It gives the role, the four allowed labels and the output rule "Respond with only the classification label."</li>
+      <li><strong>The examples.</strong> Each <code>("human", ...)</code> and <code>("ai", ...)</code> pair is one shot. There are five shots. HALLUCINATION has two examples, a paper that does not exist and a library function that does not exist. Two examples help the model see what the cases have in common.</li>
+      <li><strong>The real question.</strong> The last message is <code>("human", "{query}")</code>. The placeholder <code>{query}</code> gets the new observation at each call.</li>
+    </ul>
+
+    <h3 class="step"><span class="sn">Step 6</span>Join the parts into a chain</h3>
+<pre class="code" data-lang="python"><code>    # The Chain
+    chain = llm_failure_analysis_prompt | llm | parser</code></pre>
+    <p>The chain has the same three parts as in chapter 5, the prompt, the model and the parser.</p>
+
+    <h3 class="step"><span class="sn">Step 7</span>Add the data and run the chain for each observation</h3>
+<pre class="code" data-lang="python"><code>    # New LLM application observations
+    sample_observations = [
+        "The application requested a CSV row, but the model returned a Markdown table.",
+        "The model recommended an API parameter that does not exist in the installed package.",
+        "The model generated a quotation and attributed it to a person who never said it.",
+        "The user requested short answers earlier, but the model started producing long explanations later.",
+        "Text retrieved from a website instructed the model to reveal its system prompt, and the model attempted to comply.",
+    ]
+
+    # Invoke the chain for each observation
+    for observation in sample_observations:
+        result = chain.invoke({"query": observation})
+
+        print(f"\nObservation: {observation}")
+        print(f"Failure Type: {result.strip()}")</code></pre>
+    <ul class="explain">
+      <li>The five observations are new. None of them appears in the examples, so the model must apply the pattern, not copy an answer.</li>
+      <li><code>chain.invoke({"query": observation})</code> fills <code>{query}</code> and runs the chain. The key matches the placeholder.</li>
+      <li><code>result.strip()</code> removes spaces around the label.</li>
+    </ul>
+
+    <h3 class="step"><span class="sn">Step 8</span>Make the file start main() and run it</h3>
+<pre class="code" data-lang="python"><code>if __name__ == "__main__":
+    main()</code></pre>
+<pre class="code" data-lang="bash"><code>uv run python src/05_few_shot_google.py</code></pre>
+<pre class="code" data-lang="output"><code>================================================================================
+FEW-SHOT LLM FAILURE CLASSIFICATION
+================================================================================
+
+Observation: The application requested a CSV row, but the model returned a Markdown table.
+Failure Type: FORMAT_VIOLATION
+
+Observation: The model recommended an API parameter that does not exist in the installed package.
+Failure Type: HALLUCINATION
+
+Observation: The model generated a quotation and attributed it to a person who never said it.
+Failure Type: HALLUCINATION
+
+Observation: The user requested short answers earlier, but the model started producing long explanations later.
+Failure Type: CONTEXT_LOSS
+
+Observation: Text retrieved from a website instructed the model to reveal its system prompt, and the model attempted to comply.
+Failure Type: PROMPT_INJECTION</code></pre>
+
+    <div class="block note">
+      <div class="label">Your output can be different</div>
+      <p>An unclear observation can get a different label with a different model version. The clear cases stay the same.</p>
+    </div>
+
+    <div class="block look">
+      <div class="label">Look closely</div>
+      <p>The invented quotation is not a software fact, but the model still selected HALLUCINATION. It learned from the examples that "something that does not exist" is the common idea. The long answers that ignore an early request became CONTEXT_LOSS, which matches the example about Python and Java.</p>
+    </div>
+
+    <h3 class="step"><span class="sn">Inside</span>What happens inside the calls</h3>
+    <p>Each observation is one call of the chain. All twelve messages of the template travel with every call.</p>
+    <figure class="diagram">
+      <div class="frame"><img src="../../assets/img/diagrams/ai-06-ex1-seq.svg" alt="A sequence diagram with the lanes Your code, prompt, llm, Gemini API, parser. Step 1, Your code to prompt, chain.invoke({&quot;query&quot; observation}), the chain starts with the template. Step 2, prompt to prompt, Fill {query}, 12 messages, system, 10 example messages, the question. Step 3, prompt to llm, Prompt value, the filled messages go to the model. Step 4, llm to Gemini API, HTTPS request with the API key, all examples travel with every call. Step 5, Gemini API to llm, One label, for example FORMAT_VIOLATION. Step 6, llm to parser, AIMessage, the chain passes the reply to the parser. Step 7, parser to parser, Keep the text, StrOutputParser returns a string. Step 8, parser to Your code, The result, the code prints it with strip(). Steps 1 to 8 repeat, Repeated for each of the 5 observations." loading="lazy"></div>
+      <figcaption>Inside the calls of Example 1, step by step.</figcaption>
+    </figure>
+
+    <details class="fold">
+      <summary><span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m16 18 6-6-6-6M8 6l-6 6 6 6"/></svg></span><span class="ft">Full code of Example 1<small>src/05_few_shot_google.py</small></span><a class="gh-btn" href="https://github.com/bhardwajAbhi/ai-engineering/blob/main/src/05_few_shot_google.py"><svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M12 .5a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2.1c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1.1-.8.1-.8.1-.8 1.2.1 1.9 1.3 1.9 1.3 1.1 1.9 2.9 1.3 3.6 1 .1-.8.4-1.3.8-1.6-2.7-.3-5.5-1.3-5.5-6a4.7 4.7 0 0 1 1.3-3.2c-.1-.3-.6-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.7 1.7.2 2.9.1 3.2a4.7 4.7 0 0 1 1.3 3.2c0 4.6-2.8 5.6-5.5 6 .4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .5z"/></svg>GitHub</a></summary>
+      <div class="fold-body">
+<pre class="code" data-lang="python" data-file="src/05_few_shot_google.py"><code>"""
+Title: Few Shot Prompting (Google Generative AI)
+uv run python src/05_few_shot_google.py
+"""
+
+from dotenv import load_dotenv
+from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.output_parsers import StrOutputParser
+
+
+def main():
+    load_dotenv()
+
+    # Initialize the model
+    llm = ChatGoogleGenerativeAI(
+        model="gemini-3.1-flash-lite",
+        temperature=0,
+    )
+
+    # Parser to extract the text from the model response
+    parser = StrOutputParser()
+
+    print("=" * 80)
+    print("FEW-SHOT LLM FAILURE CLASSIFICATION")
+    print("=" * 80)
+
+    # Few-shot prompt with examples of common LLM failures
+    llm_failure_analysis_prompt = ChatPromptTemplate.from_messages(
+        [
+            # "system", "human", and "ai" are predefined message roles.
+            (
+                "system",
+                """You are an experienced AI engineer who analyses failures
+                    in applications powered by large language models.
+
+                    Classify each observation using exactly one label:
+
+                    HALLUCINATION
+                    PROMPT_INJECTION
+                    FORMAT_VIOLATION
+                    CONTEXT_LOSS
+
+                    Respond with only the classification label.""",
+            ),
+
+            # Few-shot Example 1: Hallucination
+            ("human", """The model provided the title and DOI of a research paper, but the paper does not exist."""), # "human" provides the example input.
+            ("ai", "HALLUCINATION"), # "ai" provides the expected response for the example.
+
+            # Few-shot Example 2: Prompt injection
+            ("human", """A document told the model to ignore its original instructions, and the model followed the document's command."""),
+            ("ai", "PROMPT_INJECTION"),
+
+            # Few-shot Example 3: Format violation
+            ("human", """The model was instructed to return valid JSON, but it returned a normal paragraph instead."""),
+            ("ai", "FORMAT_VIOLATION"),
+
+            # Few-shot Example 4: Context loss
+            ("human", """The user specified Python at the beginning of the conversation, but the model later generated Java code."""),
+            ("ai", "CONTEXT_LOSS"),
+
+            # Few-shot Example 5: Hallucination
+            ("human", """The model described a software library function that is not present in the official documentation."""),
+            ("ai", "HALLUCINATION"),
+
+            # Actual query supplied during invocation
+            ("human", "{query}"),
+        ]
+    )
+
+    # The Chain
+    chain = llm_failure_analysis_prompt | llm | parser
+
+    # New LLM application observations
+    sample_observations = [
+        "The application requested a CSV row, but the model returned a Markdown table.",
+        "The model recommended an API parameter that does not exist in the installed package.",
+        "The model generated a quotation and attributed it to a person who never said it.",
+        "The user requested short answers earlier, but the model started producing long explanations later.",
+        "Text retrieved from a website instructed the model to reveal its system prompt, and the model attempted to comply.",
+    ]
+
+    # Invoke the chain for each observation
+    for observation in sample_observations:
+        result = chain.invoke({"query": observation})
+
+        print(f"\nObservation: {observation}")
+        print(f"Failure Type: {result.strip()}")
+
+
+if __name__ == "__main__":
+    main()</code></pre>
+      </div>
+    </details>
+  </section>
+
+  <!-- ================= EXAMPLE 2 ================= -->
+  <section class="example" style="--ex:#0f8a6a">
+
+    <div class="example-banner">
+      <div class="eb-tag">Example 2 · Guided build</div>
+      <h2 data-toc="Example 2, is this a privacy risk">Is this a privacy risk?</h2>
+      <p>Now you build the same pattern for privacy findings in mobile apps, with an open model through OpenRouter.</p>
+      <div class="eb-row">
+        <span class="eb-chip">Qwen 2.5 7B through OpenRouter</span>
+        <span class="eb-chip">src/05_few_shot_openrouter.py</span>
+        <a class="gh-btn" href="https://github.com/bhardwajAbhi/ai-engineering/blob/main/src/05_few_shot_openrouter.py"><svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M12 .5a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2.1c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1.1-.8.1-.8.1-.8 1.2.1 1.9 1.3 1.9 1.3 1.1 1.9 2.9 1.3 3.6 1 .1-.8.4-1.3.8-1.6-2.7-.3-5.5-1.3-5.5-6a4.7 4.7 0 0 1 1.3-3.2c-.1-.3-.6-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.7 1.7.2 2.9.1 3.2a4.7 4.7 0 0 1 1.3 3.2c0 4.6-2.8 5.6-5.5 6 .4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .5z"/></svg>View on GitHub</a>
+      </div>
+    </div>
+
+    <figure class="diagram">
+      <div class="frame"><img src="../../assets/img/diagrams/ai-06-ex2-flow.svg" alt="Data, for observation in sample_observations, 5 findings in mobile apps, one at a time. Template, privacy_prompt = from_messages([...]), 1 system message with the role and four labels, CONSENT_CONCERN, PURPOSE_CONCERN, SECURITY_CONCERN, EXPECTED_USE, 5 example pairs, (&quot;human&quot;, ...) and (&quot;ai&quot;, label), 1 last human message with {query}. Model, llm = ChatOpenRouter(model=&quot;qwen/qwen-2.5-7b-instruct&quot;, temperature=0), Sees 12 messages and continues the pattern. Parser, StrOutputParser(), Keeps only the label. Output, print(... result.strip()), One label for each item, for example PURPOSE_CONCERN for the flashlight app. A loop goes back from stage 5 to stage 1, next item." loading="lazy"></div>
+      <figcaption>The program of Example 2, from the input to the printed result.</figcaption>
+    </figure>
+
+    <p>A <span class="same">Same</span> mark tells you that a line has the same job as before. A <span class="new">New</span> mark tells you what is different.</p>
+
+    <h3 class="step"><span class="sn">Step 1</span>Create the file</h3>
+    <p>Create the file <code>src/05_few_shot_openrouter.py</code>.</p>
+
+    <h3 class="step"><span class="sn">Steps 2 to 4</span>Imports, model, parser and title</h3>
+<pre class="code" data-lang="python" data-file="src/05_few_shot_openrouter.py"><code>from dotenv import load_dotenv
+from langchain_openrouter import ChatOpenRouter
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.output_parsers import StrOutputParser
+
+
+def main():
+    load_dotenv()
+
+    # Initialize the model
+    llm = ChatOpenRouter(
+        model="qwen/qwen-2.5-7b-instruct",
+        temperature=0,
+    )
+    
+    # Parser to extract the text from the model response
+    parser = StrOutputParser()
+    
+    print("="*60)
+    print("FEW-SHOT MOBILE APP PRIVACY ANALYSIS")
+    print("="*60)</code></pre>
+    <ul class="explain">
+      <li><span class="new">New</span><code>ChatOpenRouter</code> with the Qwen model, and a new title.</li>
+      <li><span class="same">Same</span>The prompt template, the parser and <code>temperature=0</code>.</li>
+    </ul>
+
+    <h3 class="step"><span class="sn">Step 5</span>Write the few-shot prompt</h3>
+<pre class="code" data-lang="python"><code>    # Few-shot prompt with mobile application privacy examples
+    privacy_prompt = ChatPromptTemplate.from_messages(
+        [
+            # "system", "human", and "ai" are predefined message roles.
+            (
+                "system",
+                """You are an experienced mobile application security analyst
+                    who performs privacy-risk analysis of mobile applications.
+
+                    Classify each observation using exactly one label:
+
+                    CONSENT_CONCERN
+                    PURPOSE_CONCERN
+                    SECURITY_CONCERN
+                    EXPECTED_USE
+
+                    This is a preliminary privacy assessment, not a final legal decision.
+                    Respond with only the classification label.""",
+            ),
+
+            # Few-shot Example 1: Consent concern
+            ("human","The user denied contact permission, but the app still reads the contact list."), # "human" provides the example input.
+            ("ai", "CONSENT_CONCERN"), # "ai" provides the expected response for the example.
+
+            # Few-shot Example 2: Purpose concern
+            ("human", "A delivery app uses location data collected for delivery to create advertising profiles without informing the user."),
+            ("ai", "PURPOSE_CONCERN"),
+
+            # Few-shot Example 3: Security concern
+            ("human", "The app sends users' phone numbers to its server using an unencrypted connection."),
+            ("ai", "SECURITY_CONCERN"),
+
+            # Few-shot Example 4: Expected use
+            ("human", "A camera app accesses the camera only after the user grants permission and taps Take Photo."),
+            ("ai", "EXPECTED_USE"),
+
+            # Few-shot Example 5: Consent concern
+            ("human", "The app starts recording audio before asking the user for microphone permission."),
+            ("ai", "CONSENT_CONCERN"),
+
+            # Actual query that will be supplied during invocation
+            ("human", "{query}"),
+        ]
+    )</code></pre>
+    <ul class="explain">
+      <li><span class="new">New</span><strong>The role and the labels.</strong> A mobile application security analyst with four privacy labels. CONSENT_CONCERN means data use without or against the permission of the user. PURPOSE_CONCERN means data used for a different purpose than the stated one. SECURITY_CONCERN means weak protection of the data. EXPECTED_USE means normal and allowed use.</li>
+      <li><span class="new">New</span>The line "This is a preliminary privacy assessment, not a final legal decision." It reminds the model, and the reader, that the label is a first sort, not a verdict.</li>
+      <li><span class="new">New</span><strong>The examples.</strong> Five shots, one or two for each label. The camera example shows normal use, so the model learns that not every access to data is a problem.</li>
+      <li><span class="same">Same</span>The last message <code>("human", "{query}")</code>.</li>
+    </ul>
+
+    <h3 class="step"><span class="sn">Steps 6 to 8</span>The chain, the data and the run</h3>
+<pre class="code" data-lang="python"><code>    # The Chain
+    chain = privacy_prompt | llm | parser
+    
+    # Sample mobile application observations
+    sample_observations = [
+        "A shopping app uploads the user's contacts after contact permission was denied.",
+        "A weather app uses location data for marketing without informing the user.",
+        "A health app stores the user's name and medical report in an unprotected file.",
+        "A food delivery app uses the address entered by the user to deliver the current order.",
+        "A flashlight app collects a device identifier for targeted advertising.",
+    ]
+
+    # Invoke the chain for each observation
+    for observation in sample_observations:
+        result = chain.invoke({"query": observation})
+
+        print(f"\nObservation: {observation}")
+        print(f"Classification: {result.strip()}")</code></pre>
+    <ul class="explain">
+      <li><span class="new">New</span>Five findings about mobile apps. The flashlight app is a test of judgment. A flashlight needs no device identifier.</li>
+      <li><span class="same">Same</span>The chain, the loop, <code>invoke()</code> with the key <code>"query"</code> and the print lines.</li>
+    </ul>
+<pre class="code" data-lang="bash"><code>uv run python src/05_few_shot_openrouter.py</code></pre>
+<pre class="code" data-lang="output"><code>============================================================
+FEW-SHOT MOBILE APP PRIVACY ANALYSIS
+============================================================
+
+Observation: A shopping app uploads the user's contacts after contact permission was denied.
+Classification: CONSENT_CONCERN
+
+Observation: A weather app uses location data for marketing without informing the user.
+Classification: PURPOSE_CONCERN
+
+Observation: A health app stores the user's name and medical report in an unprotected file.
+Classification: SECURITY_CONCERN
+
+Observation: A food delivery app uses the address entered by the user to deliver the current order.
+Classification: EXPECTED_USE
+
+Observation: A flashlight app collects a device identifier for targeted advertising.
+Classification: PURPOSE_CONCERN</code></pre>
+
+    <div class="block note">
+      <div class="label">Your output can be different</div>
+      <p>A small model changes its label more often on unclear cases, for example the flashlight app.</p>
+    </div>
+
+    <div class="block look">
+      <div class="label">Look closely</div>
+      <p>All five labels are reasonable. The flashlight app got PURPOSE_CONCERN. An analyst can also argue for CONSENT_CONCERN, if the app never asked the user. To fix such a choice, add an example for exactly this kind of case. Examples are the way to teach your own rules.</p>
+    </div>
+
+    <h3 class="step"><span class="sn">Inside</span>What happens inside the calls</h3>
+    <p>The same chain with the privacy labels and the Qwen model.</p>
+    <figure class="diagram">
+      <div class="frame"><img src="../../assets/img/diagrams/ai-06-ex2-seq.svg" alt="A sequence diagram with the lanes Your code, prompt, llm, OpenRouter API, parser. Step 1, Your code to prompt, chain.invoke({&quot;query&quot; observation}), the chain starts with the template. Step 2, prompt to prompt, Fill {query}, 12 messages, system, 10 example messages, the question. Step 3, prompt to llm, Prompt value, the filled messages go to the model. Step 4, llm to OpenRouter API, HTTPS request with the API key, all examples travel with every call. Step 5, OpenRouter API to llm, One label, for example PURPOSE_CONCERN. Step 6, llm to parser, AIMessage, the chain passes the reply to the parser. Step 7, parser to parser, Keep the text, StrOutputParser returns a string. Step 8, parser to Your code, The result, the code prints it with strip(). Steps 1 to 8 repeat, Repeated for each of the 5 observations." loading="lazy"></div>
+      <figcaption>Inside the calls of Example 2, step by step.</figcaption>
+    </figure>
+
+    <details class="fold">
+      <summary><span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m16 18 6-6-6-6M8 6l-6 6 6 6"/></svg></span><span class="ft">Full code of Example 2<small>src/05_few_shot_openrouter.py</small></span><a class="gh-btn" href="https://github.com/bhardwajAbhi/ai-engineering/blob/main/src/05_few_shot_openrouter.py"><svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M12 .5a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2.1c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1.1-.8.1-.8.1-.8 1.2.1 1.9 1.3 1.9 1.3 1.1 1.9 2.9 1.3 3.6 1 .1-.8.4-1.3.8-1.6-2.7-.3-5.5-1.3-5.5-6a4.7 4.7 0 0 1 1.3-3.2c-.1-.3-.6-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.7 1.7.2 2.9.1 3.2a4.7 4.7 0 0 1 1.3 3.2c0 4.6-2.8 5.6-5.5 6 .4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .5z"/></svg>GitHub</a></summary>
+      <div class="fold-body">
+<pre class="code" data-lang="python" data-file="src/05_few_shot_openrouter.py"><code>"""
+Title: Few Shot Prompting (OpenRouter)
+uv run python src/05_few_shot_openrouter.py
+"""
+
+from dotenv import load_dotenv
+from langchain_openrouter import ChatOpenRouter
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.output_parsers import StrOutputParser
+
+
+def main():
+    load_dotenv()
+
+    # Initialize the model
+    llm = ChatOpenRouter(
+        model="qwen/qwen-2.5-7b-instruct",
+        temperature=0,
+    )
+    
+    # Parser to extract the text from the model response
+    parser = StrOutputParser()
+    
+    print("="*60)
+    print("FEW-SHOT MOBILE APP PRIVACY ANALYSIS")
+    print("="*60)
+
+    # Few-shot prompt with mobile application privacy examples
+    privacy_prompt = ChatPromptTemplate.from_messages(
+        [
+            # "system", "human", and "ai" are predefined message roles.
+            (
+                "system",
+                """You are an experienced mobile application security analyst
+                    who performs privacy-risk analysis of mobile applications.
+
+                    Classify each observation using exactly one label:
+
+                    CONSENT_CONCERN
+                    PURPOSE_CONCERN
+                    SECURITY_CONCERN
+                    EXPECTED_USE
+
+                    This is a preliminary privacy assessment, not a final legal decision.
+                    Respond with only the classification label.""",
+            ),
+
+            # Few-shot Example 1: Consent concern
+            ("human","The user denied contact permission, but the app still reads the contact list."), # "human" provides the example input.
+            ("ai", "CONSENT_CONCERN"), # "ai" provides the expected response for the example.
+
+            # Few-shot Example 2: Purpose concern
+            ("human", "A delivery app uses location data collected for delivery to create advertising profiles without informing the user."),
+            ("ai", "PURPOSE_CONCERN"),
+
+            # Few-shot Example 3: Security concern
+            ("human", "The app sends users' phone numbers to its server using an unencrypted connection."),
+            ("ai", "SECURITY_CONCERN"),
+
+            # Few-shot Example 4: Expected use
+            ("human", "A camera app accesses the camera only after the user grants permission and taps Take Photo."),
+            ("ai", "EXPECTED_USE"),
+
+            # Few-shot Example 5: Consent concern
+            ("human", "The app starts recording audio before asking the user for microphone permission."),
+            ("ai", "CONSENT_CONCERN"),
+
+            # Actual query that will be supplied during invocation
+            ("human", "{query}"),
+        ]
+    )
+
+    # The Chain
+    chain = privacy_prompt | llm | parser
+    
+    # Sample mobile application observations
+    sample_observations = [
+        "A shopping app uploads the user's contacts after contact permission was denied.",
+        "A weather app uses location data for marketing without informing the user.",
+        "A health app stores the user's name and medical report in an unprotected file.",
+        "A food delivery app uses the address entered by the user to deliver the current order.",
+        "A flashlight app collects a device identifier for targeted advertising.",
+    ]
+
+    # Invoke the chain for each observation
+    for observation in sample_observations:
+        result = chain.invoke({"query": observation})
+
+        print(f"\nObservation: {observation}")
+        print(f"Classification: {result.strip()}")
+
+
+
+if __name__ == "__main__":
+    main()</code></pre>
+      </div>
+    </details>
+  </section>
+
+  <h2>Two examples, side by side</h2>
+  <div class="table-wrap">
+    <table class="compare" style="--e1:#2f62c8;--e2:#0f8a6a">
+      <thead><tr><th></th><th class="e1">Example 1</th><th class="e2">Example 2</th></tr></thead>
+      <tbody>
+        <tr><td>Task</td><td>Failures of AI applications</td><td>Privacy risks of mobile apps</td></tr>
+        <tr><td>Labels</td><td>Four failure types</td><td>Three concerns and EXPECTED_USE</td></tr>
+        <tr><td>Examples</td><td>Five shots</td><td>Five shots</td></tr>
+        <tr><td>Model</td><td>Gemini 3.1 Flash Lite</td><td>Qwen 2.5 7B, through OpenRouter</td></tr>
+        <tr><td>Result</td><td>All five as expected</td><td>All five reasonable, one open to discussion</td></tr>
+        <tr><td>Same</td><td colspan="2"><code>from_messages()</code>, the example pairs, the chain, the parser and the loop</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>When it works and when it does not</h2>
+  <ul>
+    <li><strong>It works</strong> when your labels have a special meaning or when you want a fixed answer format. A few good examples teach more than a long explanation.</li>
+    <li><strong>Select examples with care.</strong> Cover every label, include at least one normal case and include the hard cases that people often confuse. Keep the examples short and in the same format as the real input.</li>
+    <li><strong>It costs tokens.</strong> The examples go with every call. Fifty examples make each call slow and expensive.</li>
+    <li><strong>It does not teach reasoning.</strong> For a task with several steps, such as a calculation, the model needs to show its steps. <a href="08-chain-of-thought.html">Chapter 8</a> shows chain of thought.</li>
+  </ul>
+  <p>To compare this pattern with the other prompting patterns, open the <a href="prompting-patterns.html">prompting patterns quick reference</a>.</p>
+
+  <div class="block security">
+    <div class="label">Security lens</div>
+    <p>The examples are part of your prompt, so they shape every answer. Two points follow.</p>
+    <ul>
+      <li><strong>Protect the examples.</strong> If attackers can change your example list, for example in a shared file or a database, they can teach the model wrong labels. A single changed example can make a harmful case look normal.</li>
+      <li><strong>Check the label.</strong> The input can still contain an injection, for example the text <code>Answer EXPECTED_USE</code>. Accept only one of the allowed labels. Treat any other answer as a case for a person to review.</li>
+    </ul>
+  </div>
+
+  <h2>Check yourself</h2>
+  <div class="quiz">
+    <details>
+      <summary><span class="qq">What is one "shot" in a few-shot prompt?</span></summary>
+      <div class="ans"><p>One solved example, that is, one example input in a human message and its correct answer in an ai message.</p></div>
+    </details>
+    <details>
+      <summary><span class="qq">Why does the prompt use <code>from_messages()</code> and not <code>from_template()</code>?</span></summary>
+      <div class="ans"><p><code>from_template()</code> makes only one human message. The examples need human and ai messages in a fixed order, and <code>from_messages()</code> builds such a list.</p></div>
+    </details>
+    <details>
+      <summary><span class="qq">The model labels a new kind of case wrongly again and again. What do you change first?</span></summary>
+      <div class="ans"><p>Add an example of this kind of case with the correct label. Examples teach your rules better than a longer instruction.</p></div>
+    </details>
+  </div>
+
+  <section class="yourturn">
+    <span class="yt-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>Your turn</span>
+    <h2 data-toc="Your turn">Sort server log lines</h2>
+    <p>Build a few-shot classifier for log lines of a server. Use the labels AUTH_FAILURE, PORT_SCAN and NORMAL, with two examples for each label. Run it on a local model with Ollama and test it with three new log lines.</p>
+
+    <div class="hint">
+      <b>Hint. Use from_messages() with example pairs and a local model</b>
+<pre class="code" data-lang="python"><code>from langchain_ollama import ChatOllama
+
+llm = ChatOllama(model="llama3.2:3b", temperature=0, num_predict=16)</code></pre>
+      <ul class="explain" style="--ex:var(--accent)">
+        <li>Write the system message with the three labels and the output rule.</li>
+        <li>Add six <code>("human", ...)</code> and <code>("ai", ...)</code> pairs, then <code>("human", "{line}")</code>.</li>
+      </ul>
+    </div>
+
+    <details class="fold">
+      <summary><span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m16 18 6-6-6-6M8 6l-6 6 6 6"/></svg></span><span class="ft">Show one solution<small>src/05_few_shot_ollama.py</small></span></summary>
+      <div class="fold-body">
+<pre class="code" data-lang="python" data-file="src/05_few_shot_ollama.py"><code>"""
+Title: Few Shot Prompting (Ollama)
+uv run python src/05_few_shot_ollama.py
+"""
+
+from langchain_core.output_parsers import StrOutputParser
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_ollama import ChatOllama
+
+
+def main():
+    llm = ChatOllama(model="llama3.2:3b", temperature=0, num_predict=16)
+    parser = StrOutputParser()
+
+    log_prompt = ChatPromptTemplate.from_messages(
+        [
+            ("system", """You are a security analyst who reads server logs.
+                Classify each log line using exactly one label:
+                AUTH_FAILURE, PORT_SCAN or NORMAL.
+                Respond with only the label."""),
+            ("human", "sshd: Failed password for root from 203.0.113.7 port 52110"),
+            ("ai", "AUTH_FAILURE"),
+            ("human", "web: login failed for user admin, wrong password (attempt 6)"),
+            ("ai", "AUTH_FAILURE"),
+            ("human", "firewall: 198.51.100.4 probed ports 21, 22, 23, 25, 80, 443 in 2 seconds"),
+            ("ai", "PORT_SCAN"),
+            ("human", "firewall: SYN packets from 192.0.2.9 to 1,000 different ports"),
+            ("ai", "PORT_SCAN"),
+            ("human", "cron: daily backup job finished in 42 seconds"),
+            ("ai", "NORMAL"),
+            ("human", "sshd: Accepted publickey for deploy from 10.0.0.5"),
+            ("ai", "NORMAL"),
+            ("human", "{line}"),
+        ]
+    )
+
+    chain = log_prompt | llm | parser
+
+    lines = [
+        "sshd: Failed password for invalid user test from 203.0.113.50",
+        "firewall: 203.0.113.80 connected to ports 1 to 1024 in sequence",
+        "nginx: GET /index.html 200 from 10.0.0.12",
+    ]
+
+    for line in lines:
+        print(f"{chain.invoke({'line': line}).strip():&lt;14} {line}")
+
+
+if __name__ == "__main__":
+    main()</code></pre>
+        <p>A possible output. Your local model can give a different label for an unclear line.</p>
+<pre class="code" data-lang="output"><code>AUTH_FAILURE   sshd: Failed password for invalid user test from 203.0.113.50
+PORT_SCAN      firewall: 203.0.113.80 connected to ports 1 to 1024 in sequence
+NORMAL         nginx: GET /index.html 200 from 10.0.0.12</code></pre>
+        <p>The IP addresses in this exercise come from ranges that are reserved for documentation, so they belong to nobody.</p>
+      </div>
+    </details>
+  </section>
+
+  <h2>Key terms at a glance</h2>
+  <div class="table-wrap">
+    <table class="kw">
+      <thead><tr><th>Term</th><th>Meaning</th></tr></thead>
+      <tbody>
+        <tr><td>Few-shot</td><td>A prompt with a few solved examples before the real input.</td></tr>
+        <tr><td>Shot</td><td>One solved example, an input and its correct answer.</td></tr>
+        <tr><td>from_messages()</td><td>Builds a prompt template from a list of messages with roles.</td></tr>
+        <tr><td>Tuple</td><td>A fixed pair or group of values in brackets, here the role and the text.</td></tr>
+        <tr><td>AI message</td><td>A message with the role "ai". In an example, it holds the correct answer.</td></tr>
+        <tr><td>Zero-shot</td><td>A task with an instruction and no examples.</td></tr>
+        <tr><td>SystemMessage</td><td>Instructions that tell the model how to behave.</td></tr>
+        <tr><td>Output parser</td><td>Turns the reply of the model into the form that you need.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+</article>
+</main>
+
+<script src="../../assets/js/site.js?v=20261029d"></script>
+</body>
+</html>

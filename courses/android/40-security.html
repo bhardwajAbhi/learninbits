@@ -1,0 +1,1079 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Security · Inside Android · LearnInBits</title>
+  <meta name="description" content="How Android protects a device in layers, from SELinux, verified boot and the app sandbox to the TEE, Keystore, user authentication and key and device attestation.">
+  <link rel="icon" href="../../assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,500;0,8..60,600;1,8..60,500&display=swap">
+  <link rel="stylesheet" href="../../assets/css/style.css?v=20261029d">
+  <script>try{var t=localStorage.getItem("lib-theme");t=t?JSON.parse(t):(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+</head>
+<body data-root="../../" data-page="chapter" data-course="android" data-id="40-security">
+
+<main id="main">
+<article>
+
+  <div class="block oneline">
+    <div class="label">In one line</div>
+    <p>Android protects a device with many independent layers, from fused keys in the chip to the app sandbox. Attestation lets the device prove the state of those layers to a server.</p>
+  </div>
+
+  <p>Security in Android is not one feature. It is a set of layers, and each layer works even when a neighbor fails. The boot chain checks every image before it runs. The kernel confines every process with Security-Enhanced Linux (SELinux) and the secure computing filter (seccomp). Each app lives in its own sandbox, and keys live in secure hardware that the main operating system cannot read.</p>
+  <p>This chapter walks through those layers in the order in which they build on each other. It starts with the security model and SELinux. It continues with verified boot, the app sandbox, the Trusted Execution Environment (TEE), Keystore and user authentication. A large section then covers attestation, the way a device proves its own state to someone else. The chapter ends with encryption, network security, security updates and the changes in Android 17.</p>
+  <p>Chapter 4 already explained verified boot and dm-verity in detail. Chapter 9 explained Binder. This chapter links to both where it needs them.</p>
+
+  <h2>The security model</h2>
+  <p>Four principles shape every security decision in the Android source.</p>
+  <ol>
+    <li><strong>App sandboxing.</strong> Each app runs with its own Linux user ID (UID), in its own process and with its own private data folder.</li>
+    <li><strong>Least privilege.</strong> An app starts with almost no permissions. The user or the system grants each extra right on its own.</li>
+    <li><strong>Defense in depth.</strong> No mechanism stands alone. The UID sandbox, SELinux, seccomp and the permission checks of the framework each block the same attack in a different way.</li>
+    <li><strong>Secure by default.</strong> New features ship locked down. A developer has to relax a rule on purpose.</li>
+  </ol>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../../assets/img/diagrams/se-layers.svg" alt="Five layers from top to bottom. Apps have APK signing, declared permissions and a per-app sandbox. The framework has runtime permissions, Keystore2, Gatekeeper, biometrics and the Network Security Config. The kernel has SELinux, seccomp-BPF, namespaces, dm-verity and file-based encryption. Boot has Android Verified Boot and rollback protection. Hardware has the boot ROM and fuses, the TEE on TrustZone and StrongBox. Each layer works on its own, so an attacker has to defeat all of them." loading="lazy"></div>
+    <figcaption>Five layers of defense, from the hardware at the bottom to the apps at the top.</figcaption>
+  </figure>
+
+  <h3>The chain of trust</h3>
+  <p>Trust in Android starts in hardware that nobody can change after the factory. The System on Chip (SoC) holds a public key in fuses, and its boot ROM uses that key to check the bootloader. The bootloader checks the kernel and the partitions. The kernel then loads the SELinux policy through <code>init</code>, and Zygote starts every app inside the sandbox.</p>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../../assets/img/diagrams/se-trust-chain.svg" alt="Six links from left to right. The boot ROM holds a fused public key in the SoC. The bootloader verifies vbmeta and the boot images. The kernel uses dm-verity to check every block that it reads. init loads the SELinux policy. Zygote forks and specializes apps. The app runs with its own UID, SELinux domain, seccomp filter and mount namespace. Each link checks the next one before it runs. A broken link stops the boot or shows a warning, and the boot state goes into every attestation record." loading="lazy"></div>
+    <figcaption>Each link checks the next one. The result reaches the attestation record of every key.</figcaption>
+  </figure>
+
+  <p>If any link fails its check, the device notices. Depending on the policy, it refuses to boot, shows a warning or wipes data. The state of this chain also goes into every key attestation, as later sections show.</p>
+
+  <h3>Security boundaries</h3>
+  <p>A boundary separates code that the system trusts from code that it does not trust. Android draws five of them, and a different mechanism enforces each one.</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Boundary</th><th>Trusted side</th><th>Untrusted side</th><th>Enforced by</th></tr></thead>
+      <tbody>
+        <tr><td>Hardware root of trust</td><td>Fused keys and the boot ROM</td><td>All software</td><td>Fuses and one-time programmable memory</td></tr>
+        <tr><td>TEE</td><td>The Trusty kernel and trusted apps</td><td>Linux and Android</td><td>ARM TrustZone and the secure monitor at EL3</td></tr>
+        <tr><td>Kernel</td><td>Kernel code and loaded modules</td><td>All user space processes</td><td>Processor privilege levels EL0 and EL1</td></tr>
+        <tr><td>System services</td><td><code>system_server</code> and privileged daemons</td><td>Apps and untrusted code</td><td>SELinux and Linux DAC</td></tr>
+        <tr><td>App sandbox</td><td>The process and data of one app</td><td>Other apps and the system</td><td>UID, SELinux, seccomp-BPF and mount namespaces</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>DAC stands for discretionary access control, the classic Linux model in which owners set file permissions. EL0 and EL1 are ARM exception levels, the privilege levels of user space and the kernel.</p>
+
+  <h3>The threat model</h3>
+  <p>Each layer answers a specific attacker. The model names five of them.</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Attacker</th><th>Goal</th><th>Main defense</th></tr></thead>
+      <tbody>
+        <tr><td>A malicious app</td><td>Steal data from other apps or gain privileges</td><td>App sandbox, SELinux and seccomp</td></tr>
+        <tr><td>A network attacker</td><td>Read or change traffic, for example on public Wi-Fi</td><td>Transport Layer Security (TLS), the Network Security Config and pinning</td></tr>
+        <tr><td>A physical attacker</td><td>Read data from a lost or stolen phone</td><td>File-based encryption, the lock screen and verified boot</td></tr>
+        <tr><td>A supply chain attacker</td><td>Plant code in the system image or bootloader</td><td>Verified boot, dm-verity and rollback protection</td></tr>
+        <tr><td>A compromised component</td><td>Abuse the privileges of a hardware abstraction layer (HAL) or vendor service</td><td>SELinux neverallow rules and narrow HAL domains</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>App signing</h3>
+  <p>Every Android Package (APK) carries a signature before it can install. The signature identifies the developer, and the package manager uses it in three ways. An update must carry the same key as the installed app. Two apps with the same key can share a UID. A permission with the <code>signature</code> level goes only to apps signed with the key of the app that declared it.</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Scheme</th><th>Since</th><th>Idea</th></tr></thead>
+      <tbody>
+        <tr><td>v1 (JAR)</td><td>Android 1.0</td><td>Signs each ZIP entry through <code>META-INF/</code></td></tr>
+        <tr><td>v2</td><td>Android 7.0</td><td>Signs the whole APK as one binary block</td></tr>
+        <tr><td>v3</td><td>Android 9</td><td>Adds key rotation</td></tr>
+        <tr><td>v4</td><td>Android 11</td><td>A separate <code>.idsig</code> file for incremental installs</td></tr>
+        <tr><td>v3.1</td><td>Android 13</td><td>Adds <code>rotation-min-sdk-version</code></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Permissions</h3>
+  <p>A permission has a protection level. A <code>normal</code> permission, such as <code>INTERNET</code>, comes at install time. A <code>dangerous</code> permission, such as <code>CAMERA</code> or <code>READ_CONTACTS</code>, needs the consent of the user at runtime. A <code>signature</code> permission goes only to apps with a matching signing key or to the platform.</p>
+  <p>The system checks permissions at three levels. The framework calls <code>Context.checkPermission()</code>. A Binder service checks the UID and process ID (PID) of its caller. The kernel then applies SELinux and DAC, so a bug in a framework check still meets a wall below it.</p>
+
+  <h3>Users and profiles</h3>
+  <p>Android supports several users on one device. Each user gets a user ID such as 0, 10 or 11, separate encryption keys and separate lock screen credentials. The UID of an app for a user is the app ID plus the user ID times 100000. SELinux adds Multi-Level Security (MLS) categories from the user ID, so the kernel itself keeps users apart.</p>
+  <p>A work profile uses the same machinery for companies. Work apps run under a separate user ID with a separate encryption key. An administrator can wipe the work profile without a change to the personal data. The device policy controller decides which data can cross between the two profiles.</p>
+
+  <div class="block analogy">
+    <div class="label">Real-life analogy</div>
+    <p>Think of a bank building. A guard checks badges at the door. Inside, each office has its own lock. The vault has a time lock, and only the vault itself can open it. Cameras record who goes where.</p>
+    <p>A thief who steals a badge still meets the office locks. A thief who picks an office lock still meets the vault. Android follows the same idea. Each layer assumes that the one in front of it can fail.</p>
+  </div>
+
+  <h2>SELinux on Android</h2>
+  <p>SELinux adds mandatory access control (MAC) to the kernel. In classic DAC, the owner of a file decides who can read it, and root can read everything. Under MAC, one central policy decides. Even a process with root rights cannot step outside it. Android runs SELinux in enforcing mode since Android 5.0, for every process on the device.</p>
+
+  <h3>The policy tree</h3>
+  <p>The policy lives in <code>system/sepolicy/</code>. The build compiles it into a binary policy, and <code>init</code> loads it early in the boot. The most important folders are these.</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Folder</th><th>Content</th></tr></thead>
+      <tbody>
+        <tr><td><code>public/</code></td><td>Types and attributes that vendor policy can use</td></tr>
+        <tr><td><code>private/</code></td><td>The allow and neverallow rules of the platform, plus the context files</td></tr>
+        <tr><td><code>vendor/</code></td><td>Policy for the default HAL implementations</td></tr>
+        <tr><td><code>compat/</code></td><td>Mappings of type names between platform versions</td></tr>
+        <tr><td><code>mac_permissions/</code></td><td>Maps app signing certificates to <code>seinfo</code> tags</td></tr>
+        <tr><td><code>microdroid/</code></td><td>Policy for the Microdroid protected virtual machine</td></tr>
+        <tr><td><code>tests/</code></td><td>Policy tests that also run in the Compatibility Test Suite (CTS)</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Types, domains and rules</h3>
+  <p>SELinux gives every process a <strong>domain</strong> and every object a <strong>type</strong>. An object means any item that a process can touch, such as a file, a socket, a Binder service or a property. Access happens only if an explicit rule allows it. Everything else is denied.</p>
+<pre class="code" data-lang="text" data-file="Rule syntax"><code>allow source_domain target_type:object_class permissions;</code></pre>
+  <p>An <strong>attribute</strong> groups many types, so one rule can cover them all. The attribute <code>domain</code> belongs to every process type, and <code>private/domain.te</code> holds the rules for all processes. Even these global rules stay narrow. Every process can open <code>/dev/binder</code>, but only an allowlist of Binder ioctls is permitted.</p>
+<pre class="code" data-lang="text" data-file="system/sepolicy/private/domain.te"><code># /dev/binder can be accessed by ... everyone! :)
+allow { domain -hwservicemanager -vndservicemanager }
+    binder_device:chr_file rw_file_perms;
+
+# Restrict binder ioctls to an allowlist.
+allowxperm domain binder_device:chr_file
+    ioctl { unpriv_binder_ioctls };</code></pre>
+
+  <h3>Domain transitions</h3>
+  <p>When a process runs a new binary, SELinux can move it into a new domain. This is how <code>init</code> starts each daemon in the right domain. The macro <code>domain_auto_trans</code> expands into three rules.</p>
+<pre class="code" data-lang="text" data-file="Macro expansion"><code># When init runs /system/bin/vold, it moves to the vold domain.
+domain_auto_trans(init, vold_exec, vold)
+
+# expands to
+type_transition init vold_exec:process vold;
+allow init vold:process transition;
+allow vold vold_exec:file { read getattr map execute entrypoint };</code></pre>
+
+  <h3>Domains for apps</h3>
+  <p>Apps do not start through <code>exec</code>, because Zygote forks them. So the file <code>private/seapp_contexts</code> maps each app to a domain from its properties. The selectors include <code>user</code>, <code>seinfo</code>, <code>isPrivApp</code> and <code>minTargetSdkVersion</code>.</p>
+<pre class="code" data-lang="text" data-file="system/sepolicy/private/seapp_contexts"><code>isSystemServer=true domain=system_server_startup
+user=_app minTargetSdkVersion=37 domain=untrusted_app type=app_data_file levelFrom=all
+user=_app minTargetSdkVersion=34 domain=untrusted_app_34 ...
+user=_app minTargetSdkVersion=32 domain=untrusted_app_32 ...
+user=_app minTargetSdkVersion=30 domain=untrusted_app_30 ...
+user=_isolated domain=isolated_app ...</code></pre>
+  <p>The versioned domains keep old apps working. An app that targets Android 17, application programming interface (API) level 37, gets the strictest domain, <code>untrusted_app</code>. An older app gets a domain with the rules of its own era. Each new release tightens the rules only for apps that opt in through their target API level.</p>
+
+  <h3>Neverallow rules</h3>
+  <p>A <strong>neverallow</strong> rule produces no runtime policy. It is an assertion that the build checks. If any rule, from Google or from a vendor, breaks it, the build fails. These rules protect the core promises of the platform.</p>
+<pre class="code" data-lang="text" data-file="system/sepolicy/private/app_neverallows.te"><code># Do not allow untrusted apps to register services.
+neverallow all_untrusted_apps service_manager_type:service_manager add;
+
+# Do not allow untrusted apps to use VendorBinder
+neverallow all_untrusted_apps vndbinder_device:chr_file *;
+
+# Do not allow untrusted apps to connect to the property service
+neverallow { all_untrusted_apps -mediaprovider } property_type:property_service set;
+
+# Block calling execve() on files in an apps home directory.
+neverallow { all_untrusted_apps -untrusted_app_25 -untrusted_app_27 -runas_app }
+    { app_data_file privapp_data_file }:file execute_no_trans;</code></pre>
+  <p>For untrusted apps, the neverallow rules forbid these actions.</p>
+  <ul>
+    <li>Registering a service with <code>servicemanager</code>.</li>
+    <li>Talking to vendor HALs directly through VendorBinder.</li>
+    <li>Setting system properties.</li>
+    <li>Reaching kernel interfaces such as uevent sockets, sysfs writes and debugfs.</li>
+    <li>Executing files from the own data folder, for apps that target API 29 or higher. This rule enforces W^X, which means that memory or files are writable or executable but never both.</li>
+    <li>Raw and netlink sockets. Only Transmission Control Protocol (TCP), User Datagram Protocol (UDP) and VSOCK sockets for virtual machines remain.</li>
+    <li>Tracing a process in another domain with <code>ptrace</code>.</li>
+  </ul>
+  <p>HALs get their own neverallow rules in <code>private/hal_neverallows.te</code>. For example, only network HALs such as Wi-Fi, Bluetooth and telephony hold the <code>net_admin</code> and <code>net_raw</code> capabilities. A compromised camera HAL therefore cannot take over the network.</p>
+
+  <h3>Platform and vendor policy</h3>
+  <p>Project Treble split the policy in two halves, so that Google can update the platform without a new vendor image. The <code>public/</code> types form the interface. Vendor policy can use them but cannot see <code>private/</code> at all. The <code>compat/</code> files keep old vendor policy valid after a type changes its name.</p>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../../assets/img/diagrams/se-sepolicy-split.svg" alt="On the left, the platform policy from Google. public/ holds exported types and attributes but no rules. private/ holds the allow and neverallow rules of the platform. compat/ maps old type names to new ones across platform versions. On the right, the vendor policy in vendor/, with files such as hal_keymint_default.te, hal_gatekeeper_default.te and file_contexts. Vendor policy can use the public types, but the private types are not visible to it, and compat feeds it the mappings. The build compiles both halves to CIL, merges them and checks every neverallow rule. init loads the result from /vendor/etc/selinux/precompiled_sepolicy and switches to enforcing." loading="lazy"></div>
+    <figcaption>Vendor policy sees only the public types. The build merges both halves and checks every neverallow rule.</figcaption>
+  </figure>
+
+  <p>The build runs in steps. First, m4 expands macros such as <code>domain_auto_trans</code>. Then both halves compile to the Common Intermediate Language (CIL), merge and pass the neverallow checks. At boot, <code>init</code> loads the result through <code>/sys/fs/selinux/load</code> and switches to enforcing mode. Chapter 4 shows this step inside the boot.</p>
+
+  <h3>Context files</h3>
+  <p>Labels come from context files. Each file maps one kind of name to a type.</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>File</th><th>Maps</th></tr></thead>
+      <tbody>
+        <tr><td><code>file_contexts</code></td><td>File paths to file types</td></tr>
+        <tr><td><code>property_contexts</code></td><td>System properties to property types</td></tr>
+        <tr><td><code>service_contexts</code></td><td>Binder service names to service types</td></tr>
+        <tr><td><code>seapp_contexts</code></td><td>Apps to domains and data types</td></tr>
+        <tr><td><code>mac_permissions.xml</code></td><td>Signing certificates to <code>seinfo</code> tags</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Fix a denial the right way</h3>
+  <p>When SELinux blocks an action, the kernel logs a denial with the tag <code>avc: denied</code>. The tool <code>audit2allow</code> turns denials into candidate rules. Its output is a starting point, not a fix, because it grants the broadest rule that matches.</p>
+<pre class="code" data-lang="text" data-file="A denial in the kernel log"><code>avc:  denied  { write } for  pid=2456 comm="my_service"
+  path="/data/misc/my_service/config"
+  scontext=u:r:my_service:s0
+  tcontext=u:object_r:system_data_file:s0
+  tclass=file permissive=0</code></pre>
+  <p>Read the denial in four parts. The source is <code>my_service</code>, the target type is <code>system_data_file</code>, the class is <code>file</code> and the permission is <code>write</code>. A rule that lets the service write every <code>system_data_file</code> opens far too much. The right fix gives the folder its own type.</p>
+<pre class="code" data-lang="text" data-file="A narrow fix"><code># file.te
+type my_service_data_file, file_type, data_file_type;
+
+# file_contexts
+/data/misc/my_service(/.*)? u:object_r:my_service_data_file:s0
+
+# my_service.te
+allow my_service my_service_data_file:file create_file_perms;
+allow my_service my_service_data_file:dir create_dir_perms;</code></pre>
+  <p>Rebuild the policy afterwards, and make sure that no neverallow rule breaks.</p>
+
+  <h3>Categories that separate apps and users</h3>
+  <p>The type <code>untrusted_app</code> is the same for every app. MLS categories keep two apps of that type apart. Each app process gets a set of categories from its UID and user ID.</p>
+<pre class="code" data-lang="text" data-file="The context of an app process"><code>u:r:untrusted_app:s0:c42,c256,c512,c768</code></pre>
+  <p>Two processes can share files only when their categories match. The <code>levelFrom</code> value in <code>seapp_contexts</code> decides the source. The value <code>all</code> uses both the app and the user, <code>user</code> uses the user only and <code>app</code> uses the app only. This keeps users, apps and work profiles apart inside the kernel, in addition to the UID.</p>
+
+  <div class="block analogy">
+    <div class="label">Real-life analogy</div>
+    <p>DAC is like a house where each owner holds the keys and can lend them to anyone. SELinux is like an airport. Each badge names the exact doors that its holder can open. Even the airport director cannot walk into the cockpit, because the rules of the airport, not the rank of the person, decide.</p>
+  </div>
+
+  <h2>Verified boot and the root of trust</h2>
+  <p><a href="04-boot-and-init.html">Chapter 4</a> followed Android Verified Boot (AVB) step by step. The bootloader checks the signature of <code>vbmeta</code>, compares each image with its hash and sets up dm-verity for the large partitions. This chapter looks at AVB from the security side. The result of the boot checks becomes a fact that the rest of the system can prove.</p>
+
+  <h3>Boot states</h3>
+  <p>The bootloader ends the checks in one of four states. It shows the state as a color and passes it to the kernel in <code>androidboot.verifiedbootstate</code>. Android exposes it as the property <code>ro.boot.verifiedbootstate</code>.</p>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../../assets/img/diagrams/se-boot-states.svg" alt="Four cards. GREEN means verified, with a locked bootloader and images signed with the key of the OEM, and appears in attestation as Verified (0). YELLOW means self-signed, with a locked bootloader and images signed with a key that the user set, and appears as SelfSigned (1). ORANGE means unverified, with an unlocked bootloader, no chain of trust and a warning at every boot, and appears as Unverified (2). RED means that verification failed, so the device does not boot or warns, and appears as Failed (3). The command adb shell getprop ro.boot.verifiedbootstate prints green, yellow, orange or red." loading="lazy"></div>
+    <figcaption>The four boot states. Each one appears in every key attestation as a value of VerifiedBootState.</figcaption>
+  </figure>
+
+  <p>A locked bootloader boots only images signed with the key of the device maker. The YELLOW state uses a key that the user installed instead. An unlocked bootloader still runs the checks but lets failures through. It shows an ORANGE warning at every boot, and the unlock itself wipes all user data. The unlock is visible to the outside world as well, because attestation records it.</p>
+
+  <h3>Rollback protection</h3>
+  <p>A signed but old image can still hold a known flaw. So each <code>vbmeta</code> carries a rollback index that only grows. The bootloader keeps the lowest allowed index in tamper-evident storage, such as Replay Protected Memory Block (RPMB). An older image with a lower index does not boot, and <code>avb_slot_verify()</code> returns <code>AVB_SLOT_VERIFY_RESULT_ERROR_ROLLBACK_INDEX</code>. AVB offers up to 32 rollback index locations, so separate partitions can move at their own pace.</p>
+
+  <h3>From the bootloader to KeyMint</h3>
+  <p>The bootloader does one more job that matters for attestation. Before it starts the kernel, it passes the boot facts to the TEE. These are the hash of the public key that verified the boot, the lock state, the boot state and a hash of the verified images. KeyMint stores them as the <strong>root of trust</strong>. This handover happens before Android starts, so a later compromise of Android cannot rewrite those facts.</p>
+  <div class="block key">
+    <div class="label">Key idea</div>
+    <p>Verified boot protects the device from tampered software. Attestation turns the result of verified boot into evidence that a server can check. The bridge between the two is the root of trust inside KeyMint.</p>
+  </div>
+
+  <h2>The app sandbox</h2>
+  <p>The sandbox is the oldest and most visible layer. It keeps one app away from the data and processes of every other app. Four independent walls build it.</p>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../../assets/img/diagrams/se-sandbox.svg" alt="On the left, four nested layers around an app process named com.example.a. From the outside in, a mount namespace gives a private view of storage, seccomp-BPF filters system calls, the SELinux domain untrusted_app with MLS categories confines the process, and the Linux UID 10042 owns a data folder with mode 0700. On the right, four attempts and the layer that blocks each one. Reading the files of another app is blocked by the UID and DAC. Talking to vendor HALs or setting properties is blocked by SELinux. Loading a kernel module or mounting is blocked by seccomp-BPF. Seeing the storage of other apps is blocked by the namespace." loading="lazy"></div>
+    <figcaption>Four walls around every app. Each wall blocks a different kind of attempt.</figcaption>
+  </figure>
+
+  <h3>One UID for each app</h3>
+  <p>The package manager gives every app a unique Linux UID at install time, and the UID never changes. The data folder of the app belongs to that UID with mode <code>0700</code>. No other process without root can read or write it. Linux DAC enforces this wall, so it works even without SELinux.</p>
+
+  <h3>SELinux domains for apps</h3>
+  <p>On top of the UID, each app runs in an SELinux domain such as <code>untrusted_app</code>. The domain decides what the app can reach beyond its own files. The base rules for all apps live in <code>private/app.te</code>. They let apps use Keystore and Binder, but they forbid writes to <code>/system</code>, access to block devices and transitions into other domains.</p>
+<pre class="code" data-lang="text" data-file="system/sepolicy/private/app.te"><code># ptrace access to non-app domains.
+neverallow appdomain { domain -appdomain }:process ptrace;
+
+# Write to /system.
+neverallow appdomain system_file_type:dir_file_class_set
+    { create write setattr relabelfrom relabelto append unlink link rename };
+
+# Transition to a non-app domain (prevent domain escalation).
+neverallow { appdomain -shell }
+    { domain -appdomain -crash_dump -rs -virtualizationmanager_domain }:process
+    { transition };</code></pre>
+
+  <h3>System call filtering</h3>
+  <p>Every app process also runs under a seccomp filter written in Berkeley Packet Filter (BPF) code, called seccomp-BPF. The filter checks each system call before the kernel runs it. Bionic generates the filters from text files in <code>bionic/libc/</code>, such as <code>SECCOMP_BLOCKLIST_APP.TXT</code>.</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Blocked group</th><th>Examples</th><th>Reason</th></tr></thead>
+      <tbody>
+        <tr><td>ID changes</td><td><code>setuid</code>, <code>setgid</code>, <code>setgroups</code></td><td>The identity is fixed after the start</td></tr>
+        <tr><td>Kernel modules</td><td><code>init_module</code>, <code>delete_module</code></td><td>A module runs with full kernel rights</td></tr>
+        <tr><td>Mounts</td><td><code>mount</code>, <code>umount2</code>, <code>chroot</code></td><td>A mount can bypass the storage view</td></tr>
+        <tr><td>Clocks</td><td><code>settimeofday</code>, <code>clock_settime</code></td><td>Time affects auth tokens and certificates</td></tr>
+        <tr><td>System control</td><td><code>reboot</code>, <code>swapon</code>, <code>acct</code>, <code>syslog</code></td><td>Denial of service or leaks of kernel logs</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>A blocked call raises the signal <code>SIGSYS</code>, which normally ends the process with a crash report. Some calls, such as <code>ptrace</code> and <code>unshare</code>, stay outside the seccomp list. SELinux and other kernel rules limit them instead. Each layer covers what the others leave open.</p>
+
+  <h3>Mount namespaces and process limits</h3>
+  <p>Since Android 10, each app runs in its own mount namespace. The Filesystem in Userspace (FUSE) layer shows each app only its own view of shared storage. Apps that target Android 10 or later also see a filtered <code>/proc/net</code>. In addition, each app process has address space layout randomization (ASLR), stack canaries and limits on resources such as file descriptors and core dumps.</p>
+
+  <h3>From Zygote to a sandboxed app</h3>
+  <p>Zygote builds the sandbox at the start of each app. After the fork, the child runs <code>SpecializeCommon</code> in <code>frameworks/base/core/jni/com_android_internal_os_Zygote.cpp</code>. The order of the steps matters.</p>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../../assets/img/diagrams/se-zygote.svg" alt="Seven steps in order. First, fork, where the child starts as a copy of Zygote with its preloaded classes. Second, drop the capability bounding set and set up the storage view. Third, setgroups and setresgid, which join groups such as inet with GID 3003 and switch to the app GID. Fourth, install the seccomp filter, before the UID change because it needs a capability. Fifth, setresuid to the app UID, after which no capabilities remain. Sixth, selinux_android_setcontext moves the process from the zygote domain to untrusted_app. Seventh, close the Zygote socket, then load and run the code of the app." loading="lazy"></div>
+    <figcaption>Zygote specializes each child in a fixed order. The seccomp filter goes in before the UID change.</figcaption>
+  </figure>
+
+  <p>The seccomp step comes before <code>setresuid</code> on purpose. Installing a filter needs a capability that the process loses with the UID change. At the end, the child holds no capabilities, sits in its own domain and cannot accept fork requests, because it closed the Zygote socket.</p>
+  <p>Some permissions still map to Linux groups during this step. <code>INTERNET</code> adds the group <code>inet</code> with group ID (GID) 3003. The socket decision itself now comes from an extended BPF (eBPF) program in the Connectivity module. The old kernel patch for paranoid networking is gone.</p>
+
+  <h3>Isolated processes</h3>
+  <p>An app can run part of its code in an isolated process with <code>android:isolatedProcess="true"</code>. Such a process runs in the <code>isolated_app</code> domain with a fresh UID from a reserved range. It cannot open files, create sockets or call most services. It works only with file descriptors and sockets that its parent passes to it. WebView renderers use this domain, so a flaw in web content reaches almost nothing.</p>
+
+  <h3>The SDK sandbox</h3>
+  <p>Android 13 added the SDK Runtime, a separate process for advertising and analytics software development kits (SDKs). The SDK sandbox has its own UID and the domain <code>sdk_sandbox</code>. It cannot read the files of the host app, read device identifiers or ask for location. The host app talks to it through <code>SdkSandboxManager</code> in <code>system_server</code>.</p>
+
+  <h3>Components and intents</h3>
+  <p>Apps talk to each other through intents, and <code>system_server</code> checks each delivery. The receiver can require a permission. A component with <code>android:exported="false"</code> is closed to other apps. SELinux must allow the Binder call. Since Android 11, an app sees other apps only when it declares them in <code>&lt;queries&gt;</code>. A content provider adds read and write permissions, permissions for single paths and temporary grants for single Uniform Resource Identifiers (URIs).</p>
+
+  <h2>The TEE and Trusty</h2>
+  <p>Some secrets are too valuable for the main operating system. A kernel bug in Linux gives an attacker the whole kernel, and with it every key in memory. So Android keeps keys, passwords and biometric templates in a Trusted Execution Environment (TEE). The TEE is a small, separate operating system that runs next to Android on the same chip, isolated by hardware.</p>
+
+  <h3>Two worlds on one chip</h3>
+  <p>On ARM chips, TrustZone splits the processor and the memory into a normal world and a secure world. Android runs in the normal world. The TEE runs in the secure world. The TrustZone Address Space Controller (TZASC) blocks every access from the normal world to secure memory, at the level of the bus.</p>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../../assets/img/diagrams/se-trustzone.svg" alt="On the left, the normal world with Android. The app runs at EL0 and calls the Keystore API. The KeyMint HAL and libtrusty run at EL0 and open /dev/trusty-ipc-dev0. The Linux kernel at EL1 holds the Trusty IPC driver, which writes the message to shared memory. On the right, the secure world with Trusty. Trusted apps such as the KeyMint TA, the Gatekeeper TA, the Storage TA and the Confirmation UI TA run at S-EL0 and are built into a signed image. The Trusty kernel, based on Little Kernel, runs at S-EL1. A shared ring buffer sits between the worlds. At the bottom, the secure monitor at EL3. The driver issues an SMC instruction, and the monitor dispatches to the Trusty kernel, which routes the message to the trusted app. The SMC instruction is the only door between the worlds, and the TZASC blocks normal-world access to secure memory." loading="lazy"></div>
+    <figcaption>A request leaves Android through the SMC instruction, and the secure monitor hands it to Trusty.</figcaption>
+  </figure>
+
+  <p>The only door between the worlds is the Secure Monitor Call (SMC) instruction. It traps into the secure monitor at exception level EL3, which hands the request to the TEE kernel. The TEE has its own page tables, so even the Linux kernel cannot map its memory.</p>
+
+  <h3>Trusty</h3>
+  <p>Trusty is the open source TEE of Google and the reference TEE for Android. Its kernel is based on Little Kernel (LK), a small real-time operating system. Trusted applications (TAs) run as user space processes above it. Trusty loads all TAs from one signed image at boot and allows no code loading at runtime. Its trusted computing base stays far smaller than Linux.</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Path</th><th>Content</th></tr></thead>
+      <tbody>
+        <tr><td><code>trusty/kernel/</code></td><td>The Trusty kernel, based on LK</td></tr>
+        <tr><td><code>trusty/user/</code></td><td>Trusted apps</td></tr>
+        <tr><td><code>trusty/device/</code></td><td>Configurations for each device</td></tr>
+        <tr><td><code>system/core/trusty/keymint/</code></td><td>The KeyMint HAL that talks to the KeyMint TA, in Rust</td></tr>
+        <tr><td><code>system/core/trusty/gatekeeper/</code></td><td>The Gatekeeper HAL</td></tr>
+        <tr><td><code>system/core/trusty/storage/</code></td><td>The proxy for secure storage</td></tr>
+        <tr><td><code>system/core/trusty/libtrusty/</code></td><td>The IPC library of the normal world</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Other TEEs exist as well. OP-TEE from Linaro is open source. QSEE from Qualcomm and Kinibi from Trustonic are proprietary. The Android HAL interfaces stay the same for all of them, so each vendor ships its own HAL that speaks to its own TEE.</p>
+
+  <h3>Talking to a trusted app</h3>
+  <p>The normal world reaches a TA through Trusty inter-process communication (TIPC). The library <code>libtrusty</code> opens the device <code>/dev/trusty-ipc-dev0</code> and connects to a named service. The kernel driver writes each message into a shared ring buffer and issues the SMC. The Trusty kernel knows the identity of the caller, so the channel is authenticated.</p>
+<pre class="code" data-lang="rust" data-file="system/core/trusty/keymint/src/keymint_hal_main.rs"><code>const TRUSTY_KEYMINT_RUST_SERVICE_NAME: &amp;str = "com.android.trusty.keymint";
+
+fn inner_main() -&gt; Result&lt;(), HalServiceError&gt; {
+    // Create connection to the TA
+    let connection =
+        trusty::TipcChannel::connect(args.dev.as_str(),
+                                     TRUSTY_KEYMINT_RUST_SERVICE_NAME)?;
+    let tipc_channel = Arc::new(Mutex::new(TipcChannel(connection)));
+
+    register_binder_services(&amp;tipc_channel, ALL_HALS, SERVICE_INSTANCE)?;
+    // Send the HAL service information to the TA
+    send_hal_info(tipc_channel.lock().unwrap().deref_mut())?;
+
+    binder::ProcessState::join_thread_pool();
+    Ok(())
+}</code></pre>
+  <p>A TIPC message holds at most 4000 bytes. The KeyMint HAL splits larger replies and joins them again. When Trusty runs in a virtual machine (VM) instead of TrustZone, <code>libtrusty</code> connects over a VSOCK socket.</p>
+
+  <h3>Secure storage</h3>
+  <p>The secure world usually cannot reach the file system. So a storage proxy in the normal world writes the files, for example under <code>/data/vendor/ss</code>. The storage TA encrypts each block and protects its integrity with a key that never leaves the TEE. The proxy only moves ciphertext. For counters that must survive tampering, the TA uses hardware such as RPMB.</p>
+
+  <h3>Protected Confirmation</h3>
+  <p>Protected Confirmation shows a prompt that the normal world cannot fake. The TA draws the prompt on the screen itself through a secure path, with the small rendering library <code>libteeui</code>. When the user confirms with a physical button, the TA signs the confirmed text. A server then knows that a human saw exactly that text, even if malware controls Android.</p>
+
+  <h3>StrongBox</h3>
+  <p>StrongBox goes one step further than the TEE. It is a separate secure element with its own processor, storage, true random number generator, clock and protection against physical tampering. It runs its own KeyMint instance. StrongBox supports fewer algorithms and runs slower than the TEE. It is optional, so an app asks for it with <code>setIsStrongBoxBacked(true)</code> and handles <code>StrongBoxUnavailableException</code>.</p>
+
+  <h2>Keystore and KeyMint</h2>
+  <p>The Android Keystore system lets apps create and use keys that never leave secure hardware. An app sees only an alias and a handle. The key material stays inside KeyMint, in the TEE or in StrongBox. Even an app that holds the key cannot export it.</p>
+
+  <h3>Generations of the interface</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Generation</th><th>Interface</th><th>Since</th></tr></thead>
+      <tbody>
+        <tr><td>Keymaster 0.x to 2.0</td><td>C HAL</td><td>Android 4.3 to 7.0</td></tr>
+        <tr><td>Keymaster 3.0 and 4.0</td><td>HIDL</td><td>Android 8.0 and 9</td></tr>
+        <tr><td>KeyMint 1.0</td><td>AIDL</td><td>Android 12</td></tr>
+        <tr><td>KeyMint 2.0</td><td>AIDL</td><td>Android 13</td></tr>
+        <tr><td>KeyMint 3.0</td><td>AIDL</td><td>Android 14</td></tr>
+        <tr><td>KeyMint 4.0 and 5.0</td><td>AIDL</td><td>Later releases, with ML-DSA in version 5.0 for Android 17</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>The move to KeyMint replaced the HAL Interface Definition Language (HIDL) with the Android Interface Definition Language (AIDL). It also improved attestation and key upgrades and added Remote Key Provisioning.</p>
+
+  <h3>The stack</h3>
+  <p>The Keystore service, <code>keystore2</code>, is written in Rust and lives in <code>system/security/keystore2/</code>. It sits between apps and the KeyMint HAL. It keeps a database of keys, checks every caller and manages the operations that run in secure hardware.</p>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../../assets/img/diagrams/se-keystore-stack.svg" alt="From top to bottom. An app uses KeyPairGenerator and KeyStore with the AndroidKeyStore provider and calls keystore2 over Binder. keystore2 is a Rust service in system/security/keystore2 with modules for SELinux checks, the key database, grants, enforcements, operations, super keys, the garbage collector and the RKP client. It calls the KeyMint HAL interfaces over Binder, namely IKeyMintDevice, ISharedSecret, ISecureClock and IRemotelyProvisionedComponent. These reach the KeyMint TA in the TEE at the TRUSTED_ENVIRONMENT level, or KeyMint on an optional StrongBox, through TIPC and SMC. On the right, the com.android.rkpd mainline module fills a pool of attestation keys signed by the Google RKP server and hands them to keystore2, and it talks to IRemotelyProvisionedComponent." loading="lazy"></div>
+    <figcaption>An app talks to keystore2, keystore2 talks to the KeyMint HAL and the HAL talks to the TA. The rkpd module supplies attestation keys.</figcaption>
+  </figure>
+
+  <p>The modules of <code>keystore2</code> show its jobs. <code>database</code> stores the keys, <code>permission</code> runs the SELinux checks and <code>enforcements</code> checks authentication. <code>operation</code> manages running operations, and <code>super_key</code> protects the keys of each user. <code>gc</code> deletes keys, and <code>remote_provisioning</code> fetches attestation keys.</p>
+
+  <h3>Security levels</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Level</th><th>Location of the key</th></tr></thead>
+      <tbody>
+        <tr><td><code>SOFTWARE</code></td><td>In software, only when no secure hardware exists</td></tr>
+        <tr><td><code>TRUSTED_ENVIRONMENT</code></td><td>In the TEE, for example Trusty on TrustZone</td></tr>
+        <tr><td><code>STRONGBOX</code></td><td>In a separate secure element</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>The key database</h3>
+  <p><code>keystore2</code> uses two SQLite databases. The persistent database holds the key entries in the table <code>keyentry</code>, with the key blobs in <code>blobentry</code> and the parameters in <code>keyparameter</code>. A key blob is the key material encrypted by KeyMint with a key that only KeyMint knows. The second database lives only for one boot and holds grants. A grant lets another UID use a key that it does not own.</p>
+
+  <h3>Checks on every call</h3>
+  <p>Each request passes several independent checks before a key does any work.</p>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../../assets/img/diagrams/se-key-auth.svg" alt="A call to begin or generateKey passes four checks from left to right. First, SELinux checks the keystore2_key class, and a failure returns PERMISSION_DENIED. Second, the caller must own the key or hold a grant, and a failure returns KEY_NOT_FOUND. Third, for keys that need user authentication, the auth token must be valid and fresh, and a failure returns KEY_USER_NOT_AUTHENTICATED. Fourth, the KeyMint TA runs its own checks, and a failure returns an error code from KeyMint. When all four pass, the operation runs in secure hardware and the result returns to the app." loading="lazy"></div>
+    <figcaption>Four checks guard every key operation. The last one runs inside secure hardware.</figcaption>
+  </figure>
+
+  <p>The first check uses SELinux. <code>keystore2</code> defines its own class <code>keystore2_key</code> with permissions such as <code>use</code>, <code>delete</code>, <code>grant</code> and <code>get_info</code>. A caller needs both the right UID and the right SELinux permission. For example, isolated processes and the SDK sandbox get no Keystore access at all.</p>
+<pre class="code" data-lang="text" data-file="system/sepolicy/private/app.te"><code>allow { appdomain -isolated_app_all -ephemeral_app -sdk_sandbox_all }
+    keystore:keystore2_key { delete use get_info grant rebind update };</code></pre>
+  <p>The enforcements module then applies the rules of each key. A key can require a recent unlock, a fresh authentication for every use or an authentication within a time window. A key can also be usable only during early boot. Finally, KeyMint checks the same rules again inside the TEE, independent of Android.</p>
+
+  <h3>Operations</h3>
+  <p>A cryptographic operation has a life cycle. It starts with <code>begin</code>, takes zero or more <code>update</code> calls and ends with <code>finish</code> or <code>abort</code>. The TEE has only a few operation slots. When all slots are busy, <code>keystore2</code> prunes the least recently used operation of another client to make room.</p>
+<pre class="code" data-lang="text" data-file="IKeyMintDevice.aidl, shortened"><code>interface IKeyMintDevice {
+    KeyMintHardwareInfo getHardwareInfo();
+    KeyCreationResult generateKey(in KeyParameter[] keyParams,
+                                  in AttestationKey attestationKey);
+    KeyCreationResult importKey(...);
+    KeyCreationResult importWrappedKey(...);
+    byte[] upgradeKey(in byte[] keyBlobToUpgrade, in KeyParameter[] upgradeParams);
+    void deleteKey(in byte[] keyBlob);
+    void destroyAttestationIds();
+    BeginResult begin(in KeyPurpose purpose, in byte[] keyBlob,
+                      in KeyParameter[] params, in HardwareAuthToken authToken);
+    void earlyBootEnded();
+    ...
+}</code></pre>
+  <p>Note the parameter <code>attestationKey</code> of <code>generateKey</code>. It selects the key that signs the attestation certificate of the new key, which the attestation section explains.</p>
+
+  <h3>Super keys, garbage collection and import</h3>
+  <p>A <strong>super key</strong> protects the Keystore data of one user. <code>keystore2</code> encrypts some keys again with it. It uses the Advanced Encryption Standard (AES) in Galois/Counter Mode (GCM) or Elliptic Curve Diffie-Hellman (ECDH) on the P-521 curve. When the device locks, <code>keystore2</code> wipes the plain super keys from memory. Keys that require an unlocked device then stop working until the next unlock.</p>
+  <p>When a key is deleted, the garbage collector asks KeyMint to delete the blob and then removes the database rows. A key can also enter Keystore from outside. A plain import sends the key material to the TEE for a short moment. A wrapped import encrypts the key for a transport key first, so the plain key never exists outside secure hardware.</p>
+
+  <div class="block analogy">
+    <div class="label">Real-life analogy</div>
+    <p>Think of a safe deposit box in a bank. You never take the gold home. You ask the clerk to stamp a document with your seal, and the clerk does it inside the vault. The clerk checks your identity every time, and the vault checks the clerk. Keystore is the clerk, KeyMint is the vault and your key never leaves it.</p>
+  </div>
+
+  <h2>User authentication</h2>
+  <p>A key can require that the user is present. The user proves it with a strong biometric or with a lock screen knowledge factor (LSKF). An LSKF is a personal identification number (PIN), pattern or password. Each path ends in the same object, a HardwareAuthToken (HAT) that secure hardware signs and KeyMint checks.</p>
+
+  <h3>Gatekeeper</h3>
+  <p>Gatekeeper checks the LSKF inside the TEE. At enrollment, the TA computes a hash-based message authentication code (HMAC) over the secret with a hardware-bound key. It returns the result as a password handle. Android stores only the handle, never the password. To change the password, the user must first enter the old one.</p>
+  <p>At unlock, <code>LockSettingsService</code> derives a secret from the PIN and calls <code>verify</code> on the Gatekeeper HAL. The TA compares the HMAC with the handle. On a match, it returns a HAT. On a mismatch, it raises a failure counter and returns a timeout.</p>
+<pre class="code" data-lang="cpp" data-file="system/core/trusty/gatekeeper/"><code>class TrustyGateKeeperDevice : public BnGatekeeper {
+  public:
+    ::ndk::ScopedAStatus enroll(int32_t uid,
+        const std::vector&lt;uint8_t&gt;&amp; currentPasswordHandle,
+        const std::vector&lt;uint8_t&gt;&amp; currentPassword,
+        const std::vector&lt;uint8_t&gt;&amp; desiredPassword,
+        GatekeeperEnrollResponse* _aidl_return) override;
+
+    ::ndk::ScopedAStatus verify(int32_t uid, int64_t challenge,
+        const std::vector&lt;uint8_t&gt;&amp; enrolledPasswordHandle,
+        const std::vector&lt;uint8_t&gt;&amp; providedPassword,
+        GatekeeperVerifyResponse* _aidl_return) override;
+    ...
+};</code></pre>
+  <p>The throttle lives in the TEE, so Android cannot skip it. The reference table in <code>system/gatekeeper/gatekeeper.cpp</code> allows five failures without delay. After that, the waits are 1, 5, 15, 30 and 90 minutes, then 4, 12 and 36 hours, then days and finally years. It is a fixed table, not a doubling.</p>
+
+  <h3>Weaver</h3>
+  <p>Weaver is an optional HAL that makes guessing even harder. It runs on a separate secure element and offers a fixed number of slots. Each slot holds a key and a value, and the value comes back only for the correct key. Android stores a secret derived from the synthetic password as the value, with a secret derived from the LSKF as the key.</p>
+  <p>The contract in <code>IWeaver.aidl</code> is strict. Each slot counts failures, and the count survives reboots. The count goes up before the key comparison and resets only on success, so no guess escapes the count. A read during a throttle reveals nothing. The reference TA in <code>system/weaver/</code> uses the same steep timeout table as Gatekeeper.</p>
+
+  <h3>Biometrics</h3>
+  <p>Fingerprint and face sensors have AIDL HALs under <code>hardware/interfaces/biometrics/</code>. A session interface covers enrollment, authentication, lockout and the callbacks of sensors under the display. The matching runs in the TEE, and the templates never leave it.</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Class</th><th>Meaning</th><th>Unlocks Keystore keys</th></tr></thead>
+      <tbody>
+        <tr><td><code>CONVENIENCE</code></td><td>Easy to fool, for comfort only</td><td>No</td></tr>
+        <tr><td><code>WEAK</code></td><td>Harder to fool, but no cryptographic proof</td><td>No</td></tr>
+        <tr><td><code>STRONG</code></td><td>Meets the CDD limits on spoof and false accept rates and produces a HAT</td><td>Yes</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>The Compatibility Definition Document (CDD) sets the rules for lockout. After five failures, a biometric locks for 30 seconds. After 20 failures in total, it locks until the user enters the LSKF. The lockout state survives reboots and crashes of the HAL.</p>
+
+  <h3>One token for all factors</h3>
+  <p>All factors produce the same HAT. It holds the user ID, the authenticator type, a timestamp and an HMAC. At boot, the TAs agree on the HMAC key through <code>ISharedSecret</code>. Each one adds a nonce, and each one derives the same key. KeyMint checks the HMAC of every token with that key.</p>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../../assets/img/diagrams/se-hat.svg" alt="At the top, at boot, ISharedSecret lets KeyMint, Gatekeeper and the biometric TAs each add a nonce and derive the same HMAC key. Below, three sources. A PIN, pattern or password goes through LockSettings to the Gatekeeper TA. A fingerprint goes through BiometricService to the Fingerprint TA. A face goes to the Face TA. Each TA produces a HardwareAuthToken with the user ID, the authenticator, the time and an HMAC. keystore2 and KeyMint check the HMAC with the shared key and then release auth-bound keys for the timeout of each key. All three factors produce the same token." loading="lazy"></div>
+    <figcaption>PIN, fingerprint and face all end in one HardwareAuthToken. KeyMint trusts the token, not the factor.</figcaption>
+  </figure>
+
+  <p>So an auth-bound key does not care which factor the user chose. It only checks that the token is valid, recent enough for its timeout and from an allowed authenticator type. An app asks for this with <code>setUserAuthenticationParameters</code> on <code>KeyGenParameterSpec</code>.</p>
+
+  <h3>BiometricPrompt</h3>
+  <p>Apps never talk to sensors. They call <code>BiometricPrompt</code>, which shows a system dialog, picks the available sensors, falls back to the LSKF and manages lockout. With a <code>CryptoObject</code>, the prompt binds the authentication to one cryptographic operation. The resulting token then unlocks exactly that operation in Keystore.</p>
+<pre class="code" data-lang="kotlin" data-file="An auth-bound key"><code>val spec = KeyGenParameterSpec.Builder("payment_key",
+        KeyProperties.PURPOSE_SIGN)
+    .setAlgorithmParameterSpec(ECGenParameterSpec("secp256r1"))
+    .setDigests(KeyProperties.DIGEST_SHA256)
+    .setUserAuthenticationRequired(true)
+    .setUserAuthenticationParameters(0, KeyProperties.AUTH_BIOMETRIC_STRONG)
+    .build()</code></pre>
+  <p>A timeout of 0 means that every signature needs its own authentication through <code>BiometricPrompt</code> with a <code>CryptoObject</code>.</p>
+
+  <h2>Attestation</h2>
+  <p>Every layer so far protects the device from the inside. Attestation answers a different question. A server talks to an app on a phone that it has never seen. The server wants to know whether the key of that app really lives in secure hardware. It also wants to know whether the phone runs a locked and verified system.</p>
+  <p>The app cannot simply say so. If the system is compromised, the app says whatever the attacker wants. So the statement has to come from a part of the device that the attacker cannot control. It also needs a signature that the server can check. In Android, that part is KeyMint. The statement is an X.509 certificate chain.</p>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../../assets/img/diagrams/se-attest-idea.svg" alt="Three areas. The device holds the app, keystore2 and KeyMint in the TEE or StrongBox. KeyMint creates the key pair, writes the key properties and the boot state and signs the certificate with an attestation key that never leaves the secure hardware. Your server makes a random challenge, checks the chain, the challenge and the properties and then decides to trust the key or not. Google publishes the attestation root keys and the revocation status list at android.googleapis.com/attestation. In step 1 the server sends the challenge to the app. In step 2 the app sends the certificate chain to the server. In step 3 the server uses the roots and the revocation list from Google." loading="lazy"></div>
+    <figcaption>The server sends a challenge, KeyMint signs a statement and the server checks it against the roots and the revocation list of Google.</figcaption>
+  </figure>
+
+  <div class="block key">
+    <div class="label">Key idea</div>
+    <p>Attestation is a signed statement from secure hardware about a key and about the device that holds it. The server checks the signature and the content. The app only carries the message and cannot change it.</p>
+  </div>
+
+  <p>Android offers two levels of attestation. <strong>Key attestation</strong> is the platform feature. KeyMint signs a certificate for one key, and your server checks it directly. <strong>Device attestation</strong> through the Play Integrity API builds on key attestation and other signals, and Google checks them for you. This section explains both, starting with the base.</p>
+
+  <h3>Key attestation in one request</h3>
+  <p>Key attestation arrived in Android 7.0 with Keymaster 2. An app asks for it with one extra line when it creates a key. The line passes a challenge, a random value that the server created for this request only.</p>
+<pre class="code" data-lang="kotlin" data-file="Create an attested key"><code>val challenge: ByteArray = serverChallenge   // random, from your server
+
+val spec = KeyGenParameterSpec.Builder("login_key",
+        KeyProperties.PURPOSE_SIGN)
+    .setAlgorithmParameterSpec(ECGenParameterSpec("secp256r1"))
+    .setDigests(KeyProperties.DIGEST_SHA256)
+    .setAttestationChallenge(challenge)      // turns on attestation
+    .build()
+
+KeyPairGenerator.getInstance(KeyProperties.KEY_ALGORITHM_EC, "AndroidKeyStore")
+    .apply { initialize(spec) }
+    .generateKeyPair()
+
+val chain = KeyStore.getInstance("AndroidKeyStore")
+    .apply { load(null) }
+    .getCertificateChain("login_key")        // send all of it to the server</code></pre>
+  <p>Inside KeyMint, three things happen. KeyMint creates the key pair. It writes a description of the key, the challenge and the state of the device into a certificate. It signs that certificate with an attestation key, a private key that lives only in secure hardware.</p>
+
+  <h3>The certificate chain</h3>
+  <p>The app receives a list of certificates. The first one describes the new key. Each following certificate signs the one before it, up to a root certificate of Google.</p>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../../assets/img/diagrams/se-attest-chain.svg" alt="Four certificates, leaf first. Index 0 is the leaf certificate with the subject CN=Android Keystore Key. It holds the public key of the new app key and the key attestation extension with OID 1.3.6.1.4.1.11129.2.1.17. Index 1 is the attestation key certificate, from a factory batch key or an RKP key. Its key signs the leaf inside KeyMint, and it belongs to one device or to a batch of at least 100,000 devices. Next come intermediate certificates, where an RKP chain carries the provisioning information extension with OID 1.3.6.1.4.1.11129.2.1.30, which holds the issued count and the TEE or StrongBox level. Last is a Google attestation root certificate, to compare with the published roots. A new root with the subject CN=Key Attestation CA1 signs chains from 1 February 2026. Each certificate is signed by the next one. KeyStore.getCertificateChain(alias) returns this list, leaf first." loading="lazy"></div>
+    <figcaption>The leaf describes the key. The chain links it to a Google root.</figcaption>
+  </figure>
+
+  <p>The leaf certificate looks the same on every device. Its subject is <code>CN=Android Keystore Key</code> and its serial number is 1. These fixed values keep the leaf from identifying the device. Its validity starts at the creation time of the key, unless the key sets an active date. The public key in the leaf is the public half of the new app key.</p>
+  <p>The second certificate belongs to the attestation key. With factory provisioning, the device maker installed this key in the factory. The same key went into a batch of at least 100,000 devices, so that the key does not single out one phone. With Remote Key Provisioning, the key comes from a Google server instead, as a later part explains.</p>
+
+  <h3>The attestation extension</h3>
+  <p>The facts live in one X.509 extension of the leaf, with the object identifier (OID) <code>1.3.6.1.4.1.11129.2.1.17</code>. Its value is a sequence in Abstract Syntax Notation One (ASN.1), encoded with the Distinguished Encoding Rules (DER), called <code>KeyDescription</code>.</p>
+<pre class="code" data-lang="text" data-file="KeyDescription, schema version 500"><code>KeyDescription ::= SEQUENCE {
+    attestationVersion         INTEGER,  # 500
+    attestationSecurityLevel   SecurityLevel,
+    keyMintVersion             INTEGER,
+    keyMintSecurityLevel       SecurityLevel,
+    attestationChallenge       OCTET_STRING,
+    uniqueId                   OCTET_STRING,
+    softwareEnforced           AuthorizationList,
+    hardwareEnforced           AuthorizationList,
+}
+
+SecurityLevel ::= ENUMERATED {
+    Software            (0),
+    TrustedEnvironment  (1),
+    StrongBox           (2),
+}</code></pre>
+  <p>The version tells the parser which fields to expect. Each version of Keymaster or KeyMint has its own number.</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>attestationVersion</th><th>Version of the HAL</th></tr></thead>
+      <tbody>
+        <tr><td>1, 2, 3, 4</td><td>Keymaster 2.0, 3.0, 4.0 and 4.1</td></tr>
+        <tr><td>100, 200, 300</td><td>KeyMint 1.0, 2.0 and 3.0</td></tr>
+        <tr><td>400</td><td>KeyMint 4.0, adds <code>moduleHash</code></td></tr>
+        <tr><td>500</td><td>KeyMint 5.0, adds <code>mlDsaVariant</code></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../../assets/img/diagrams/se-key-description.svg" alt="On the left, the KeyDescription sequence with eight fields. attestationVersion, for example 500. attestationSecurityLevel, for example TEE. keyMintVersion and keyMintSecurityLevel. attestationChallenge, which holds your nonce. uniqueId, which is usually empty. softwareEnforced and hardwareEnforced, which are two AuthorizationList records. On the right, selected tags of an AuthorizationList. Tag 1 purpose, such as SIGN or ATTEST_KEY. Tags 2 and 3 algorithm and keySize, such as EC, RSA or ML_DSA. Tag 503 noAuthRequired or tag 504 userAuthType. Tag 702 origin, GENERATED or IMPORTED. Tag 704 rootOfTrust with the boot key, the lock flag, the boot state and the boot hash. Tag 705 osVersion, for example 170000. Tag 706 osPatchLevel, for example 202610. Tag 709 attestationApplicationId with the package and its signer. Tags 710 to 717 attestationId values, present only with ID attestation. Tags 718 vendorPatchLevel and 719 bootPatchLevel, for example 20261005. Tag 724 moduleHash, from version 400. Trust the hardwareEnforced list, because the softwareEnforced list is only as good as the Android build." loading="lazy"></div>
+    <figcaption>The fields of KeyDescription and the most useful tags of an AuthorizationList.</figcaption>
+  </figure>
+
+  <h3>Two lists of properties</h3>
+  <p>The two <code>AuthorizationList</code> fields hold the properties of the key, such as its purpose, algorithm, size and authentication rules. They differ in who enforces them.</p>
+  <ul>
+    <li><strong><code>hardwareEnforced</code></strong> holds what the secure hardware itself collected or enforces. The Android system cannot change it.</li>
+    <li><strong><code>softwareEnforced</code></strong> holds what Android enforces. It is only as trustworthy as the Android build on the device.</li>
+  </ul>
+  <p>For any security decision, read the hardware list. One tag in the software list, however, deserves attention. The application ID usually sits there, as the next part shows.</p>
+  <p>The field <code>attestationSecurityLevel</code> tells you which component signed the statement. If it says <code>Software</code>, nothing in the record carries hardware weight. Treat such a key like any key that an app created in plain code.</p>
+
+  <h3>The root of trust</h3>
+  <p>Tag 704, <code>rootOfTrust</code>, carries the facts that the bootloader gave to KeyMint before Android started.</p>
+<pre class="code" data-lang="text" data-file="RootOfTrust"><code>RootOfTrust ::= SEQUENCE {
+    verifiedBootKey    OCTET_STRING,   # hash of the key that verified the boot
+    deviceLocked       BOOLEAN,
+    verifiedBootState  VerifiedBootState,
+    verifiedBootHash   OCTET_STRING,   # digest of the verified images
+}
+
+VerifiedBootState ::= ENUMERATED {
+    Verified    (0),   # GREEN
+    SelfSigned  (1),   # YELLOW
+    Unverified  (2),   # ORANGE, verifiedBootKey is 32 zero bytes
+    Failed      (3),   # RED
+}</code></pre>
+  <p>A typical server policy for sensitive actions accepts only <code>deviceLocked</code> true with <code>Verified</code>. The value <code>verifiedBootKey</code> also tells you whose key signed the system. Two phones of the same model with the stock system share this value. A phone with a custom system, locked with a personal key of the user, shows <code>SelfSigned</code> and a different key hash.</p>
+
+  <h3>Versions and patch levels</h3>
+  <p>Four tags show how current the device is. The secure hardware records them, so a compromised system cannot fake a newer patch.</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Tag</th><th>Field</th><th>Format and example</th></tr></thead>
+      <tbody>
+        <tr><td>705</td><td><code>osVersion</code></td><td>Six digits, 170000 for Android 17.0.0</td></tr>
+        <tr><td>706</td><td><code>osPatchLevel</code></td><td>Year and month, 202610 for the October 2026 patch</td></tr>
+        <tr><td>718</td><td><code>vendorPatchLevel</code></td><td>Date of the vendor image patch without dashes, such as 20261005</td></tr>
+        <tr><td>719</td><td><code>bootPatchLevel</code></td><td>Date of the kernel image patch without dashes</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>A server can therefore refuse a device whose patches are more than a year old. KeyMint also binds the patch levels to each key blob. After an update, <code>keystore2</code> calls <code>upgradeKey</code>. A key never moves back to an older system.</p>
+
+  <h3>The identity of the app</h3>
+  <p>Tag 709, <code>attestationApplicationId</code>, names the app that owns the key. It holds the package name and version code of each package in the UID. It also holds a Secure Hash Algorithm 256 (SHA-256) digest of each signing certificate. The Android system fills this field, so it usually appears in the software list.</p>
+  <p>Check the signing certificate digest on the server. A repackaged copy of your app carries a different signature. Its keys then show a different digest, even if the package name matches.</p>
+
+  <h3>ID attestation</h3>
+  <p>Since Android 8.0, KeyMint can also attest the hardware identifiers of a device. These are the brand, device, product, manufacturer, model, serial number, International Mobile Equipment Identity (IMEI) and Mobile Equipment Identifier (MEID). The device maker writes copies of them into secure storage in the factory. The user cannot change these copies, even with a modified system.</p>
+  <p>ID attestation is a privileged feature, because it identifies one device. A normal app cannot ask for it. Device owner apps and system apps with <code>READ_PRIVILEGED_PHONE_STATE</code> can. The attested values appear as tags 710 to 717, and tag 723 holds a second IMEI since Android 14. A device that supports the feature declares <code>android.software.device_id_attestation</code>. After <code>destroyAttestationIds()</code>, every such request fails with <code>CANNOT_ATTEST_IDS</code>.</p>
+
+  <h3>Attestation keys and their weak spot</h3>
+  <p>The whole scheme depends on the secrecy of the attestation keys. With factory provisioning, each batch key sat in the secure storage of 100,000 or more devices. One leaked key let an attacker sign false statements for any device. Google then had to revoke the whole batch, and every honest device in it lost its attestation at once.</p>
+  <p>Factory provisioning had other costs too. Each factory needed secure systems to inject keys. A key also stayed the same for the whole life of the device. Remote Key Provisioning addresses all three problems.</p>
+
+  <h3>Remote Key Provisioning</h3>
+  <p>Remote Key Provisioning (RKP) arrived with Android 12. The factory no longer installs any attestation key. It only uploads to Google a public key that identifies each device. That device key is the root of a chain built with the Device Identifier Composition Engine (DICE), which describes every boot stage.</p>
+  <p>Later, the device asks a Google server for attestation keys. The server checks that the request comes from a known device with a known boot chain and then signs short-lived certificates.</p>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../../assets/img/diagrams/se-rkp.svg" alt="Four lanes, keystore2, the rkpd app, the KeyMint HAL and TA and the RKP server. The rkpd app calls generateEcdsaP256KeyPair on KeyMint and gets MACed public keys. It calls fetchEekChain on the server and gets the GEEK chain and a challenge. It calls generateCertificateRequestV2 on KeyMint and gets a CSR in CBOR with the DICE chain. It sends the CSR to signCertificates on the server and gets an X.509 chain for each key. It stores the keys in the key pool. Later, keystore2 calls getKey for an app key and receives a pooled key and its chain. The pool refills on a schedule, so a new app key gets a chain without a network round trip." loading="lazy"></div>
+    <figcaption>The rkpd module asks KeyMint for key pairs, sends a signed request to the RKP server and stores the signed keys in a pool.</figcaption>
+  </figure>
+
+  <p>The work happens in the mainline module <code>com.android.rkpd</code>, in <code>packages/modules/RemoteKeyProvisioning</code>. It runs in steps.</p>
+  <ol class="steps">
+    <li><strong>Make key pairs.</strong> The rkpd app calls <code>generateEcdsaP256KeyPair</code> on <code>IRemotelyProvisionedComponent</code>. KeyMint returns public keys with a MAC from a secret of the device.</li>
+    <li><strong>Get the server key.</strong> The app fetches the Google Endpoint Encryption Key (GEEK) chain and a challenge from the server.</li>
+    <li><strong>Build the request.</strong> KeyMint builds a certificate signing request (CSR) in Concise Binary Object Representation (CBOR) with <code>generateCertificateRequestV2</code>. The DICE chain of the device signs it.</li>
+    <li><strong>Get the certificates.</strong> The server checks the device and returns an X.509 chain for each public key.</li>
+    <li><strong>Fill the pool.</strong> The app stores the keys in a database. A worker refills the pool on a schedule.</li>
+    <li><strong>Use a key.</strong> When an app asks for attestation, <code>keystore2</code> takes a key from the pool. KeyMint signs the new leaf with it, and the RKP chain follows the leaf.</li>
+  </ol>
+  <p>The gains are large. Each certificate lives for a short time, so a leaked key soon stops mattering. Google can revoke a single device instead of a batch. Devices that launch with Android 16 support only RKP. An RKP chain also carries the provisioning information extension, OID <code>1.3.6.1.4.1.11129.2.1.30</code>, with an approximate count of recent certificates and the attested component, TEE or StrongBox.</p>
+  <p>Inside <code>keystore2</code>, the function <code>RemProvState::get_rkpd_attestation_key_and_certs</code> in <code>remote_provisioning.rs</code> decides the route. It uses RKP for asymmetric keys of apps when RKP is on for the device.</p>
+
+  <h3>Attestation keys of your own</h3>
+  <p>Since Android 12, an app can create its own attestation key. The app gives a key the purpose <code>PURPOSE_ATTEST_KEY</code>. It then names that key with <code>setAttestKeyAlias</code> when it creates further keys. KeyMint signs their leaves with the app key instead of a batch key or an RKP key, and the chain of the app key follows. This lets one server check attestation once and then trust a family of keys.</p>
+
+  <h3>Verify on a server</h3>
+  <p>The verification belongs on a server that you control. The device that you want to judge cannot judge itself, because a compromised system can fake the result of any local check. The Android developer guide lists the steps.</p>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../../assets/img/diagrams/se-attest-verify.svg" alt="Seven steps. First, send a fresh challenge that is random, single use and kept on the server with a short lifetime. Second, receive the whole chain, and never verify on the device that you want to trust. Third, check each signature up to the root, so that each certificate signs the one before it, and check that the dates are valid. Fourth, match the root against the Google roots from android.googleapis.com/attestation/root. Fifth, check every serial against the revocation list at android.googleapis.com/attestation/status. Sixth, read the first attestation extension, because only the first occurrence in the chain counts. Seventh, check the values, namely the challenge, the security level, the origin, the boot state, the lock flag, the patch levels and the app ID. The keyattestation library from github.com/android/keyattestation runs steps 3 to 7." loading="lazy"></div>
+    <figcaption>Seven steps on the server. A library runs most of them.</figcaption>
+  </figure>
+
+  <p>Google publishes the root keys as JavaScript Object Notation (JSON) at <code>android.googleapis.com/attestation/root</code>. A new root with the subject <code>CN=Key Attestation CA1, OU=Android, O=Google LLC, C=US</code> signs attestation chains from 1 February 2026. A verifier has to accept both the older roots and this new one. The revocation list lives at <code>android.googleapis.com/attestation/status</code>, and the <code>Cache-Control</code> header tells you when to fetch it again.</p>
+<pre class="code" data-lang="json" data-file="android.googleapis.com/attestation/status, one entry"><code>{
+  "entries": {
+    "2c8cdddfd5e03bfc": {
+      "status": "REVOKED",
+      "expires": "2020-11-13",
+      "reason": "KEY_COMPROMISE",
+      "comment": "Key stored on unsecure system"
+    }
+  }
+}</code></pre>
+  <p>Each key in <code>entries</code> is a certificate serial number in lowercase hexadecimal. The status is <code>REVOKED</code> or <code>SUSPENDED</code>. The reason is <code>UNSPECIFIED</code>, <code>KEY_COMPROMISE</code>, <code>CA_COMPROMISE</code>, <code>SUPERSEDED</code> or <code>SOFTWARE_FLAW</code>.</p>
+  <p>Do not write the parser yourself. The Kotlin library <code>keyattestation</code> covers many cases that home-made verifiers miss, such as old chains that do not follow Request for Comments (RFC) 5280 exactly. The Android Open Source Project (AOSP) carries it in <code>external/keyattestation</code>, and Google publishes it at <code>github.com/android/keyattestation</code>.</p>
+<pre class="code" data-lang="kotlin" data-file="Server side, with the keyattestation library"><code>val verifier = Verifier(
+    { setOf(TrustAnchor(googleRootCertificate, null)) },  // trust anchors
+    { revokedSerials },                                   // from the status list
+    { Instant.now() },                                    // time source
+)
+
+when (val result = verifier.verify(certificateChain)) {
+    is VerificationResult.Success -&gt; {
+        // Check the challenge, the security level, the boot state,
+        // the patch levels and the app ID against your policy.
+    }
+    else -&gt; rejectDevice(result)   // path, parsing, challenge or constraint failure
+}</code></pre>
+  <p>The library validates the chain through its own <code>CertPathValidator</code> named <code>KeyAttestation</code>. It checks revocation with the serial numbers that you supply. A success result carries the attested public key, the challenge, the security level, the boot state and the device identity. The library also insists that the <code>origin</code> of the key is <code>GENERATED</code> and that both security levels match.</p>
+
+  <h3>Common mistakes</h3>
+  <ul>
+    <li><strong>A check on the device.</strong> A compromised app or system can skip or fake a local check. Verify only on a server.</li>
+    <li><strong>A weak challenge.</strong> A fixed or reused challenge lets an attacker replay an old, valid chain. Make it random, use it once and let it expire.</li>
+    <li><strong>A look at the leaf only.</strong> A chain that does not end in a Google root proves nothing. An attacker can build such a chain with any key.</li>
+    <li><strong>The wrong extension.</strong> Only the first attestation extension in the chain counts. Do not assume that a later one belongs to your key.</li>
+    <li><strong>Trust in software properties.</strong> Base decisions on <code>hardwareEnforced</code> and on <code>attestationSecurityLevel</code>, not on the software list.</li>
+    <li><strong>No revocation check.</strong> A revoked batch key still produces chains that look valid. Fetch the status list and respect its cache time.</li>
+    <li><strong>A fixed root.</strong> Roots change, as the new root of 2026 shows. Load the list of roots from the published file.</li>
+  </ul>
+
+  <h3>Device attestation with Play Integrity</h3>
+  <p>Many apps do not need to parse certificates at all. The Play Integrity API asks Google to judge the device, the app and the account. On Android 13 and later, Google Play services uses hardware key attestation as one of its signals. Google checks it on its servers and returns a signed verdict.</p>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../../assets/img/diagrams/se-play-integrity.svg" alt="On the device, the app calls the Play Integrity API. Google Play services collects signals, including a hardware key attestation on Android 13 and later, from KeyMint with the boot state and the patch levels. The signals go to the Google Play servers, which return a signed verdict that your server decodes. The verdict has deviceIntegrity with labels such as MEETS_BASIC, MEETS_DEVICE and MEETS_STRONG, appIntegrity with PLAY_RECOGNIZED, accountDetails with LICENSED and requestDetails with the request hash and the time. Play Integrity builds on key attestation, and Google does the verification, but your server still decides." loading="lazy"></div>
+    <figcaption>Play Integrity collects signals on the device, Google judges them and your server reads the verdict.</figcaption>
+  </figure>
+
+  <p>Your server decodes the token and reads the verdict. First check <code>requestDetails</code>, the package name, the request hash or nonce and the time. Then read the labels of <code>deviceRecognitionVerdict</code>.</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Label</th><th>Meaning on Android 13 and later</th></tr></thead>
+      <tbody>
+        <tr><td><code>MEETS_BASIC_INTEGRITY</code></td><td>Basic system integrity checks pass. The bootloader can be unlocked, and the device need not be certified. The attestation root of trust comes from Google.</td></tr>
+        <tr><td><code>MEETS_DEVICE_INTEGRITY</code></td><td>A genuine, certified Android device. Hardware-backed proof shows a locked bootloader and a certified image from the device maker.</td></tr>
+        <tr><td><code>MEETS_STRONG_INTEGRITY</code></td><td>Device integrity, plus security updates within the last year for all partitions, including the Android OS patch and the vendor patch.</td></tr>
+        <tr><td><code>MEETS_VIRTUAL_INTEGRITY</code></td><td>Only for apps in Google Play Games for PC, on an emulator that passes the checks.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>On Android 12 and lower, strong integrity needs only hardware-backed proof of boot integrity, without the patch rule. So also read <code>deviceAttributes.sdkVersion</code>. An empty verdict points to an attack such as API hooking, a rooted system or an emulator that fails the checks. Other fields report whether Google Play recognizes the app and whether the user got it from Google Play. They also report apps that can capture the screen or control the device.</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Need</th><th>Good fit</th></tr></thead>
+      <tbody>
+        <tr><td>An app on Google Play that wants a quick verdict on device and app</td><td>Play Integrity API</td></tr>
+        <tr><td>Proof that one specific key lives in secure hardware</td><td>Key attestation of that key</td></tr>
+        <tr><td>Devices without Google Play services, or a fleet of company devices</td><td>Key attestation with your own server policy</td></tr>
+        <tr><td>Payments, account recovery and other high-value actions</td><td>Both, with the key attestation bound to the key that signs the action</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="block key">
+    <div class="label">Key idea</div>
+    <p>Attestation raises the cost of an attack but does not end the work of the server. A verdict says something about one device at one moment. Combine it with server-side limits, fraud checks and short-lived sessions.</p>
+  </div>
+
+  <h3>Attestation inside the platform</h3>
+  <p>Android also uses attestation between its own components. The new security VMs and the TEE do not share a Binder transport, so they need another way to trust each other.</p>
+  <ul>
+    <li><strong>DICE chains.</strong> Each boot stage measures the next one and derives a key from the measurement. The chain of certificates describes the whole boot. RKP uses it to identify a device, and protected VMs use it to prove their own code.</li>
+    <li><strong>AuthGraph.</strong> An authenticated key exchange in <code>IAuthGraphKeyExchange</code>, with a Rust reference in <code>system/authgraph/</code>. Two parties run an ECDH exchange on P-256 and sign the session ID with their identity keys from a DICE chain. They end with two AES-256 session keys, one for each direction.</li>
+    <li><strong>SecretKeeper.</strong> A HAL that keeps secrets for protected VMs and releases them only to a VM with the right identity. A VM reaches it through an AuthGraph session.</li>
+    <li><strong>AuthMgr.</strong> The authorization manager of the Secure Execution Environment checks a protected VM with a DICE-based challenge before the VM can reach trusted HALs.</li>
+  </ul>
+
+  <div class="block analogy">
+    <div class="label">Real-life analogy</div>
+    <p>Think of a notary. You cannot prove your own signature by saying that it is yours. A notary checks your passport and stamps the document with a seal that everyone knows. The receiver checks the seal, not your words.</p>
+    <p>KeyMint is the notary, the attestation key is the seal and the Google root is the public register of seals. The challenge is the date on the stamp, so nobody can reuse an old document.</p>
+  </div>
+
+  <h2>Encryption of user data</h2>
+  <p>A lost phone is the classic physical threat. The data on its flash memory has to stay unreadable without the credential of the user. Android uses file-based encryption (FBE) since Android 7.0, and FBE is mandatory since Android 10. The volume daemon <code>vold</code> manages it in <code>system/vold/FsCrypt.cpp</code> with the fscrypt feature of the kernel.</p>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../../assets/img/diagrams/se-encryption.svg" alt="On the left, three layers. Metadata encryption uses dm-default-key with AES-256-XTS or Adiantum, works from boot and protects the file system structure, sizes and times. Device Encrypted storage has one key for each user, works from boot and holds alarms, telephony and accessibility data. Credential Encrypted storage has one key for each user, works after the first unlock and holds app data, contacts and messages. The wrapped keys live in /data/misc/vold/user_keys/ce and de. On the right, the unlock path. The user enters a PIN, Gatekeeper or Weaver checks it, the synthetic password is recovered, vold unwraps the CE key and installs it in the kernel fscrypt keyring. The CE key never exists unwrapped without the credential." loading="lazy"></div>
+    <figcaption>Three layers of encryption on /data, and the path that unlocks the CE key with the credential.</figcaption>
+  </figure>
+
+  <h3>Two classes of keys</h3>
+  <p>FBE gives each user two keys. The Device Encrypted (DE) key works right after boot. The Credential Encrypted (CE) key works only after the user enters the credential for the first time. This split enables Direct Boot. An alarm can ring and a call can come in before the first unlock, while app data, contacts and messages stay locked.</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Class</th><th>Available</th><th>Example folders</th></tr></thead>
+      <tbody>
+        <tr><td>DE</td><td>From boot</td><td><code>/data/system_de/&lt;user&gt;/</code>, <code>/data/misc_de/&lt;user&gt;/</code></td></tr>
+        <tr><td>CE</td><td>After the first unlock</td><td><code>/data/system_ce/&lt;user&gt;/</code>, <code>/data/data/</code> for user 0</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>The wrapped keys live in <code>/data/misc/vold/user_keys/ce/</code> and <code>de/</code>, with one folder for each user. To use a key, <code>vold</code> adds it to the fscrypt keyring of the kernel with <code>FS_IOC_ADD_ENCRYPTION_KEY</code>. It then sets the policy of each folder with <code>FS_IOC_SET_ENCRYPTION_POLICY</code>. From then on, the kernel encrypts and decrypts file contents and file names on its own.</p>
+
+  <h3>The CE key and the credential</h3>
+  <p>The CE key is a random 256-bit key. <code>vold</code> wraps it with a key derived from three inputs. These are a Keystore key bound to the device, a secret from the credential of the user and a random file of 16 KiB called <code>secdiscardable</code>.</p>
+  <p>The credential does not wrap the CE key directly. <code>LockSettingsService</code> creates a random synthetic password once. It protects the synthetic password with the credential, through Gatekeeper and, where present, Weaver. At unlock, it recovers the synthetic password and hands it to <code>vold</code> with <code>fscrypt_unlock_ce_storage</code>. A change of the PIN only rewraps the synthetic password and leaves the CE key alone.</p>
+  <p>To destroy a key for good, <code>vold</code> erases its <code>secdiscardable</code> file with a secure discard command. Even if a copy of the wrapped key survives in flash memory, the missing file makes it useless.</p>
+
+  <h3>Metadata encryption</h3>
+  <p>FBE protects file contents and names, but not sizes, times or the folder structure. Metadata encryption closes this gap with the device mapper target <code>dm-default-key</code>, set up in <code>system/vold/MetadataCrypt.cpp</code>. It encrypts every block of <code>/data</code> that FBE does not already cover, with a key available from boot. The default cipher is AES-256 in XEX-based tweaked-codebook mode with ciphertext stealing (XTS). Devices without AES instructions in the processor use Adiantum.</p>
+
+  <h3>Keys that software never sees</h3>
+  <p>Many chips include an inline crypto engine in the storage controller. With hardware-wrapped keys, the engine creates the key and hands software only a wrapped form. The engine unwraps the key inside itself for each read or write. A full compromise of the kernel then still does not reveal the raw key. In <code>vold</code>, the key type <code>KeyType::kHwWrapped</code> selects this mode.</p>
+
+  <h3>Keys that leave the device</h3>
+  <p>Some keys have to survive the loss of a phone, such as the keys of an end-to-end encrypted backup. The recoverable key store in <code>LockSettingsService</code> encrypts them with SecureBox, a small library in <code>frameworks/base/libs/securebox/</code>. SecureBox combines ECDH on P-256, the HMAC-based key derivation function (HKDF) with SHA-256 and AES-128 in GCM mode. It binds the result to a secret from the credential of the user and to the public key of a recovery service. The cloud stores the blob but cannot open it without the credential.</p>
+
+  <h2>Network security</h2>
+  <p>The Network Security Config lets an app declare its rules for TLS in an XML file instead of code. The framework applies the rules to every connection that uses the standard trust manager, such as <code>HttpsURLConnection</code> and OkHttp. The code lives in <code>frameworks/base/packages/NetworkSecurityConfig/</code>.</p>
+<pre class="code" data-lang="xml" data-file="res/xml/network_security_config.xml"><code>&lt;network-security-config&gt;
+    &lt;base-config cleartextTrafficPermitted="false"&gt;
+        &lt;trust-anchors&gt;
+            &lt;certificates src="system" /&gt;
+        &lt;/trust-anchors&gt;
+    &lt;/base-config&gt;
+    &lt;domain-config&gt;
+        &lt;domain includeSubdomains="true"&gt;api.example.com&lt;/domain&gt;
+        &lt;pin-set expiration="2027-06-01"&gt;
+            &lt;pin digest="SHA-256"&gt;7HIpactkIAq2Y49orFOOQKurWxmmSFZhBCoQYcRhJ3Y=&lt;/pin&gt;
+            &lt;pin digest="SHA-256"&gt;fwza0LRMXouZHRC8Ei+4PyuldPDcf3UKgO/04cDM1oE=&lt;/pin&gt;
+        &lt;/pin-set&gt;
+    &lt;/domain-config&gt;
+    &lt;debug-overrides&gt;
+        &lt;trust-anchors&gt;
+            &lt;certificates src="user" /&gt;
+        &lt;/trust-anchors&gt;
+    &lt;/debug-overrides&gt;
+&lt;/network-security-config&gt;</code></pre>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../../assets/img/diagrams/se-nsc.svg" alt="An app opens a connection, and four checks follow. Plain HTTP is blocked by default since target API 28. The certificate chain must be trusted by the trust anchors, which are the system CAs only, with user CAs only in debug overrides. If the domain has a pin set, one pin in the chain has to match. If Certificate Transparency is required, which is the default for target API 37, the connection needs valid SCTs. Then the TLS connection proceeds. A failed check stops the connection. The rules come from res/xml/network_security_config.xml." loading="lazy"></div>
+    <figcaption>Four checks for each connection. A failure stops the connection before any data flows.</figcaption>
+  </figure>
+
+  <ul>
+    <li><strong>Cleartext.</strong> Plain Hypertext Transfer Protocol (HTTP) is off by default for apps that target API 28 or higher. For apps that target Android 17, the manifest flag <code>usesCleartextTraffic</code> no longer counts, and only the config decides.</li>
+    <li><strong>Trust anchors.</strong> Since Android 7.0, apps trust only the system certificate authorities (CAs) by default. A CA that the user installed counts only in <code>debug-overrides</code> or when the app opts in.</li>
+    <li><strong>Pinning.</strong> A pin set binds a domain to the hashes of known public keys. Use a backup pin and an expiration date, so that a key rotation does not lock out the app.</li>
+    <li><strong>Certificate Transparency.</strong> For apps that target Android 17, the platform requires Certificate Transparency (CT) by default. A certificate needs valid Signed Certificate Timestamps (SCTs) from public CT logs, which makes a wrongly issued certificate visible.</li>
+  </ul>
+  <p>Below the app, Private DNS protects Domain Name System (DNS) lookups. It uses DNS over TLS since Android 9 and DNS over HTTP Secure (HTTPS) since Android 13. The DNS Resolver mainline module implements both. A virtual private network (VPN) app runs as a normal app in <code>untrusted_app</code>, and only the system can bind its <code>VpnService</code>.</p>
+
+  <h2>Keeping devices current</h2>
+  <p>A layer helps only while its code has no known flaws. Android therefore ships fixes on two tracks. Monthly security patches update the whole image through the device maker. Mainline modules update single components through Google Play.</p>
+
+  <h3>Patch levels</h3>
+  <p>Each build carries two patch levels as dates. <code>ro.build.version.security_patch</code> covers the platform, and <code>ro.vendor.build.security_patch</code> covers the vendor image and the kernel. The Android Security Bulletin lists the fixes of each month. CTS checks that a device really contains the fixes that its patch level claims. KeyMint copies these levels into every attestation, as tags 706, 718 and 719, so a server can demand a recent patch.</p>
+
+  <h3>Mainline modules</h3>
+  <p>Since Android 10, Project Mainline lets Google update security-critical modules as Android Pony EXpress (APEX) packages or APKs through Google Play. Examples are Conscrypt for TLS, the DNS Resolver for Private DNS, the media codecs, the networking stack, the permission controller and <code>com.android.rkpd</code> for Remote Key Provisioning. A fix in one of them reaches devices without a full system update from the device maker.</p>
+
+  <h3>Hardening over the years</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Release</th><th>Main security change</th></tr></thead>
+      <tbody>
+        <tr><td>5.0</td><td>SELinux in enforcing mode for all processes</td></tr>
+        <tr><td>6.0</td><td>Runtime permissions</td></tr>
+        <tr><td>7.0</td><td>File-based encryption, Network Security Config, key attestation and strict verified boot</td></tr>
+        <tr><td>8.0</td><td>AVB 2.0, Treble with separate HAL processes, seccomp for all apps and ID attestation</td></tr>
+        <tr><td>9</td><td>StrongBox, BiometricPrompt and no cleartext traffic by default</td></tr>
+        <tr><td>10</td><td>Scoped storage, mandatory FBE and a mount namespace for each app</td></tr>
+        <tr><td>12</td><td>KeyMint on AIDL and Remote Key Provisioning</td></tr>
+        <tr><td>13</td><td>The SDK Runtime and the photo picker</td></tr>
+        <tr><td>14</td><td>The updatable RKP module and attestation of a second IMEI</td></tr>
+        <tr><td>16</td><td>Advanced Protection mode, and RKP only for new devices</td></tr>
+        <tr><td>17</td><td>ML-DSA keys, security HALs in a protected VM and RKP hardening</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Security tests in AOSP</h3>
+  <p>Each layer has its own tests. <code>system/sepolicy/tests/</code> checks neverallow rules and contexts. The Vendor Test Suite (VTS) in <code>hardware/interfaces/security/keymint/aidl/vts/</code> checks every KeyMint implementation, including attestation records and the new ML-DSA keys. <code>external/avb/test/</code> covers verified boot. <code>keystore2</code> has unit tests in Rust that run with <code>atest keystore2_test</code>.</p>
+
+  <h2>What changed in Android 17</h2>
+  <p>Android 17 brings the first post-quantum keys, moves the security HALs into a protected virtual machine and tightens Remote Key Provisioning.</p>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../../assets/img/diagrams/se-a17.svg" alt="At the top, keystore2 and system_server ask servicemanager for a security HAL, and servicemanager returns an IAccessor proxy with an accessor_trusty type that forwards to a security VM. The VM hosts KeyMint, Gatekeeper, SecureClock, SharedSecret and the RKP component. Below, ML-DSA, the first post-quantum key in KeyMint. The algorithm value is ML_DSA = 4, with the tag ML_DSA_VARIANT number 11. The variants are ML-DSA-65 and ML-DSA-87, with no KEY_SIZE. It works in the TEE only, not in StrongBox, with the purpose SIGN or ATTEST_KEY. A key can be imported as a 32-byte seed, and attestation version 500 records the variant." loading="lazy"></div>
+    <figcaption>Security HALs move behind IAccessor into a security VM, and KeyMint learns ML-DSA.</figcaption>
+  </figure>
+
+  <h3>ML-DSA keys</h3>
+  <p>The Module-Lattice Digital Signature Algorithm (ML-DSA), standardized in Federal Information Processing Standard (FIPS) 204, is the first post-quantum signature in KeyMint. <code>Algorithm.aidl</code> gains the value <code>ML_DSA = 4</code>, and the new tag <code>ML_DSA_VARIANT</code> picks ML-DSA-65 or ML-DSA-87. The rules in <code>IKeyMintDevice.aidl</code> are strict.</p>
+  <ul>
+    <li>A request without <code>Tag::ML_DSA_VARIANT</code> fails with <code>UNSUPPORTED_ML_DSA_VARIANT</code>, and no <code>KEY_SIZE</code> applies.</li>
+    <li>The TEE must support both variants. StrongBox does not support ML-DSA.</li>
+    <li>The purpose is <code>SIGN</code> or <code>ATTEST_KEY</code>, never both, and the only digest is <code>NONE</code>.</li>
+    <li>An import can carry a 32-byte seed, from which KeyMint derives the full private key.</li>
+    <li>The attestation record of version 500 carries the variant as <code>mlDsaVariant</code>, tag 11.</li>
+  </ul>
+  <p>The reference TA implements the algorithm in <code>system/keymint/common/src/crypto/mldsa.rs</code>. Public keys use the OIDs <code>2.16.840.1.101.3.4.3.18</code> and <code>2.16.840.1.101.3.4.3.19</code> from RFC 9881.</p>
+
+  <h3>Security HALs in a protected VM</h3>
+  <p>KeyMint, Gatekeeper, SecureClock, SharedSecret and the RKP component can now run inside a security VM. <code>servicemanager</code> answers a lookup with an <code>IAccessor</code> proxy that forwards Binder calls into the VM. SELinux gives each accessor its own type, such as <code>accessor_trusty_keymint_comm_service</code>. The framework still uses the usual service names, so the whole root of trust can move into the VM without a change to its clients.</p>
+
+  <h3>The clock inside KeyMint</h3>
+  <p>Authenticated timestamps limit the age of auth tokens. In Android 17, the KeyMint TA serves the <code>ISecureClock</code> interface itself and signs the timestamp with the same shared HMAC key. A separate timestamp service is no longer needed, and the SELinux policy dropped it. The old method <code>deviceLocked</code> of KeyMint stays deprecated and returns <code>UNIMPLEMENTED</code>.</p>
+
+  <h3>Remote Key Provisioning hardening</h3>
+  <ul>
+    <li><strong>A hostname gate.</strong> RKP counts as enabled only when the property <code>remote_provisioning.hostname</code> holds a value. A device that relies on RKP alone and lacks the hostname fails with <code>OUT_OF_KEYS_PERMANENT_ERROR</code> instead of giving out keys without attestation.</li>
+    <li><strong>ML-DSA through RKP.</strong> <code>is_asymmetric_key</code> now includes <code>ML_DSA</code>, so post-quantum keys get the same attestation path.</li>
+    <li><strong>A cap on calls.</strong> At most 15 calls to rkpd run at the same time. Further calls get <code>TooManyConcurrentOperations</code>, so network waits cannot block the threads of <code>keystore2</code>.</li>
+  </ul>
+
+  <h3>Certificate post-processing</h3>
+  <p>Keystore gained an optional hook for chains from RKP keys. When the property <code>remote_provisioning.use_cert_processor</code> is true, <code>keystore2</code> hands the chain to a service named <code>rkp_cert_processor.service</code>. The service implements <code>IKeystoreCertificatePostProcessor</code> and can return a replacement chain. The call has a 5-second timeout. Any failure keeps the original chain, so the hook can never block key generation. The only consumer in AOSP, <code>DroidfoodAttestationFixer</code>, serves internal test devices behind a build-time flag.</p>
+
+  <h3>Smaller changes</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Area</th><th>Android 16</th><th>Android 17</th></tr></thead>
+      <tbody>
+        <tr><td>Signature keys</td><td>RSA and EC</td><td>Adds ML-DSA-65 and ML-DSA-87 in the TEE</td></tr>
+        <tr><td>Location of security HALs</td><td>The TEE through vendor services</td><td>Optionally a security VM behind <code>IAccessor</code></td></tr>
+        <tr><td>Secure clock</td><td>A separate timestamp service</td><td>Served by the KeyMint TA</td></tr>
+        <tr><td>Keys for each app</td><td>No fixed limit</td><td>50,000 for apps that target API 37, 200,000 for all apps</td></tr>
+        <tr><td>Public HPKE API</td><td>Internal to Conscrypt</td><td><code>android.crypto.hpke</code> behind a flag</td></tr>
+        <tr><td>Certificate Transparency</td><td>Opt-in</td><td>On by default for apps that target API 37</td></tr>
+        <tr><td>SELinux and memfd</td><td>memfd descriptors as files</td><td>The <code>memfd_class</code> capability and the <code>memfd_file</code> class</td></tr>
+        <tr><td>Lockout API</td><td><code>getLockoutAttemptDeadline</code></td><td><code>getLockoutEndTime</code>, which returns a <code>Duration</code></td></tr>
+        <tr><td>Trusty</td><td>TrustZone builds</td><td>Adds a Trusty VM for Android on desktop hardware</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Hybrid Public Key Encryption (HPKE), from RFC 9180, lets a sender encrypt a message to a public key in one step. Apps reach it through <code>Hpke.getInstance</code> with a suite such as <code>DHKEM_X25519_HKDF_SHA256/HKDF_SHA256/AES_128_GCM</code>. The locked-out lock screen can also show a recovery link, by default <code>g.co/android/unlock</code>.</p>
+
+  <div class="block remember">
+    <div class="label">Worth remembering</div>
+    <ul>
+      <li>Android stacks independent layers, so an attacker has to defeat all of them, not just one.</li>
+      <li>SELinux confines every process with one central policy, and neverallow rules guard the core promises at build time.</li>
+      <li>The app sandbox combines a UID, an SELinux domain, a seccomp filter and a mount namespace.</li>
+      <li>Keys live in KeyMint inside the TEE or StrongBox. They never leave it.</li>
+      <li>PIN, fingerprint and face all end in one HardwareAuthToken that KeyMint checks.</li>
+      <li>Key attestation is a certificate chain from KeyMint that describes a key, the app and the boot state of the device.</li>
+      <li>Verify attestation on a server, against the Google roots and the revocation list, with a fresh challenge.</li>
+      <li>Remote Key Provisioning replaced shared factory keys with short-lived keys from Google, which allows revocation of a single device.</li>
+    </ul>
+  </div>
+
+  <div class="block security">
+    <div class="label">Security lens</div>
+    <p>This whole chapter is a security lens. A few points matter most for people who build apps or devices.</p>
+    <ul>
+      <li><strong>Trust the hardware list.</strong> In an attestation, only <code>hardwareEnforced</code> and <code>attestationSecurityLevel</code> carry hardware weight.</li>
+      <li><strong>Bind attestation to the action.</strong> Attest the key that signs the payment or login, not a separate key that proves nothing about the request.</li>
+      <li><strong>Plan for root changes.</strong> Load the attestation roots and the revocation list from the published files, and accept the new root of February 2026.</li>
+      <li><strong>Narrow SELinux fixes.</strong> Give new data its own type instead of copying the output of <code>audit2allow</code>.</li>
+      <li><strong>Auth-bound keys.</strong> For high-value keys, require strong biometrics or the LSKF for each use.</li>
+      <li><strong>Current patches.</strong> A layer protects only while its code has no known flaws. Check the patch levels in attestation for sensitive actions.</li>
+    </ul>
+  </div>
+
+  <details class="deep">
+    <summary>For the curious, source files <small>Optional</small></summary>
+    <div class="inner">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Path</th><th>Content</th></tr></thead>
+          <tbody>
+            <tr><td><code>system/sepolicy/</code></td><td>The SELinux policy in <code>public/</code>, <code>private/</code> and <code>vendor/</code></td></tr>
+            <tr><td><code>external/avb/</code></td><td>Android Verified Boot and <code>avbtool.py</code></td></tr>
+            <tr><td><code>bionic/libc/SECCOMP_*.TXT</code></td><td>The seccomp allow and block lists</td></tr>
+            <tr><td><code>system/security/keystore2/</code></td><td>The Keystore service in Rust</td></tr>
+            <tr><td><code>system/security/keystore2/src/remote_provisioning.rs</code></td><td>The choice between RKP and factory keys</td></tr>
+            <tr><td><code>hardware/interfaces/security/keymint/aidl/</code></td><td>The KeyMint HAL, with <code>KeyCreationResult.aidl</code> for the attestation schema</td></tr>
+            <tr><td><code>system/keymint/</code></td><td>The reference KeyMint TA in Rust</td></tr>
+            <tr><td><code>packages/modules/RemoteKeyProvisioning/</code></td><td>The rkpd mainline module</td></tr>
+            <tr><td><code>external/keyattestation/</code></td><td>The Kotlin verifier library for attestation chains</td></tr>
+            <tr><td><code>system/authgraph/</code></td><td>The AuthGraph key exchange</td></tr>
+            <tr><td><code>system/core/trusty/</code></td><td>HALs and tools that talk to Trusty</td></tr>
+            <tr><td><code>trusty/</code></td><td>The Trusty TEE</td></tr>
+            <tr><td><code>system/gatekeeper/</code> and <code>system/weaver/</code></td><td>Reference Gatekeeper and Weaver</td></tr>
+            <tr><td><code>hardware/interfaces/biometrics/</code></td><td>The fingerprint and face HALs</td></tr>
+            <tr><td><code>system/vold/</code></td><td><code>FsCrypt.cpp</code>, <code>MetadataCrypt.cpp</code> and <code>KeyStorage.cpp</code></td></tr>
+            <tr><td><code>frameworks/base/packages/NetworkSecurityConfig/</code></td><td>The Network Security Config</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>The attestation schema in <code>KeyCreationResult.aidl</code> is the source of truth for every tag. The documentation pages on source.android.com copy it.</p>
+    </div>
+  </details>
+
+  <div class="block try">
+    <div class="label">Try it yourself</div>
+    <p><strong>On an emulator or a test device.</strong> Look at the sandbox and the boot state.</p>
+<pre class="code" data-lang="bash" data-file="Terminal"><code>adb shell getenforce
+adb shell ps -eZ | grep untrusted_app | head
+adb shell getprop ro.boot.verifiedbootstate
+adb shell getprop ro.boot.vbmeta.device_state
+adb shell getprop ro.build.version.security_patch
+adb shell getprop ro.crypto.type
+adb shell "cat /proc/self/status | grep Seccomp"
+adb shell dmesg | grep "avc:  denied" | head</code></pre>
+    <p><strong>In an app.</strong> Create an attested key with the code of the attestation section, then print the chain on a server or a desktop tool.</p>
+<pre class="code" data-lang="bash" data-file="Terminal"><code># Save each certificate of the chain as leaf.der, inter.der ...
+openssl x509 -inform der -in leaf.der -noout -text | less
+# Look for the extension 1.3.6.1.4.1.11129.2.1.17 and dump it.
+openssl asn1parse -inform der -in leaf.der | grep -A2 11129.2.1.17</code></pre>
+    <p><strong>In an AOSP source tree.</strong> Read the policy and the attestation schema.</p>
+<pre class="code" data-lang="bash" data-file="Terminal"><code>grep untrusted_app system/sepolicy/private/seapp_contexts
+grep -c neverallow system/sepolicy/private/*.te | sort -t: -k2 -n | tail
+grep -n "rootOfTrust\|moduleHash\|mlDsaVariant" \
+    hardware/interfaces/security/keymint/aidl/android/hardware/security/keymint/KeyCreationResult.aidl</code></pre>
+    <p>On an emulator, the boot state is usually orange, and attestation uses a software or test root. Run real attestation checks only on certified hardware.</p>
+  </div>
+
+  <h2>Key terms</h2>
+  <dl class="terms">
+    <dt>MAC</dt><dd>Mandatory access control, where one central policy decides every access.</dd>
+    <dt>DAC</dt><dd>Discretionary access control, where the owner of a file sets its permissions.</dd>
+    <dt>SELinux domain</dt><dd>The type of a process, which decides what it can reach.</dd>
+    <dt>neverallow</dt><dd>A rule that the build checks and that no policy can break.</dd>
+    <dt>MLS categories</dt><dd>Labels from the UID and user ID that keep apps and users apart in SELinux.</dd>
+    <dt>seccomp-BPF</dt><dd>A filter that blocks system calls before the kernel runs them.</dd>
+    <dt>AVB</dt><dd>Android Verified Boot, the checks of every image before it runs.</dd>
+    <dt>Rollback index</dt><dd>A counter that stops an older signed image from booting.</dd>
+    <dt>TEE</dt><dd>Trusted Execution Environment, an isolated operating system next to Android.</dd>
+    <dt>TrustZone</dt><dd>The ARM feature that splits a chip into a normal world and a secure world.</dd>
+    <dt>SMC</dt><dd>Secure Monitor Call, the instruction that enters the secure world.</dd>
+    <dt>Trusty</dt><dd>The open source TEE of Google.</dd>
+    <dt>TA</dt><dd>Trusted application, a program inside the TEE.</dd>
+    <dt>StrongBox</dt><dd>A separate secure element with its own KeyMint.</dd>
+    <dt>KeyMint</dt><dd>The HAL and TA that create and use keys in secure hardware.</dd>
+    <dt>keystore2</dt><dd>The Rust service between apps and KeyMint.</dd>
+    <dt>Key blob</dt><dd>Key material that KeyMint encrypted with its own key.</dd>
+    <dt>Gatekeeper</dt><dd>The TA that checks the PIN, pattern or password.</dd>
+    <dt>LSKF</dt><dd>Lock screen knowledge factor, a PIN, pattern or password.</dd>
+    <dt>Weaver</dt><dd>A HAL with throttled secret slots on a secure element.</dd>
+    <dt>HAT</dt><dd>HardwareAuthToken, the signed proof that the user authenticated.</dd>
+    <dt>Key attestation</dt><dd>A certificate chain from KeyMint that describes a key and the device.</dd>
+    <dt>KeyDescription</dt><dd>The ASN.1 record inside the attestation extension.</dd>
+    <dt>Root of trust</dt><dd>The boot facts that the bootloader gives to KeyMint.</dd>
+    <dt>Attestation key</dt><dd>The private key in secure hardware that signs attestation certificates.</dd>
+    <dt>ID attestation</dt><dd>Attestation of hardware identifiers such as the serial number and IMEI.</dd>
+    <dt>RKP</dt><dd>Remote Key Provisioning, attestation keys signed by a Google server.</dd>
+    <dt>DICE</dt><dd>Device Identifier Composition Engine, a chain of keys derived from each boot stage.</dd>
+    <dt>CSR</dt><dd>Certificate signing request.</dd>
+    <dt>Play Integrity API</dt><dd>A Google Play service that returns a signed verdict about the device, the app and the account.</dd>
+    <dt>AuthGraph</dt><dd>An authenticated key exchange between secure components.</dd>
+    <dt>FBE</dt><dd>File-based encryption, with DE and CE keys for each user.</dd>
+    <dt>Synthetic password</dt><dd>A random secret that the credential protects and that unlocks the CE key.</dd>
+    <dt>dm-default-key</dt><dd>The device mapper target for metadata encryption.</dd>
+    <dt>CT</dt><dd>Certificate Transparency, public logs of issued certificates.</dd>
+    <dt>ML-DSA</dt><dd>Module-Lattice Digital Signature Algorithm, a post-quantum signature from FIPS 204.</dd>
+    <dt>HPKE</dt><dd>Hybrid Public Key Encryption, from RFC 9180.</dd>
+  </dl>
+
+</article>
+</main>
+
+<script src="../../assets/js/site.js?v=20261029d"></script>
+</body>
+</html>

@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 503" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">How the chain of thought program of Example 1 flows</title>
+  <desc id="d">Data, for problem in problems, 3 security calculations, one at a time. Template, cot_prompt = ChatPromptTemplate.from_template(...), Role, an experienced cybersecurity analyst, {problem}, 5 steps, values, order, formula, calculation, final answer. Model, llm = ChatGoogleGenerativeAI(model=&quot;gemini-3.1-flash-lite&quot;, temperature=0), One long answer for each problem. Parser, StrOutputParser(), Keeps the text. Output, print the problem and the solution, Steps and a final answer, 3 accounts, 9 computers, 270 GB. A loop goes back from stage 5 to stage 1, next problem.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="20" y="34" width="92" height="26" rx="13" fill="#eef0f3" stroke="#5d6b7e" stroke-width="1.2"/>
+<text x="66" y="51.32" font-size="12" fill="#3f4a59" text-anchor="middle" font-weight="700">Data</text>
+<rect x="126" y="24" width="680" height="65" rx="12" fill="#fff" stroke="#5d6b7e" stroke-width="1.6"/>
+<rect x="126" y="24" width="6" height="65" rx="3" fill="#5d6b7e"/>
+<text x="146" y="52" font-size="13.6" fill="#3f4a59" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">for problem in problems</text>
+<text x="146" y="74" font-size="12.2" fill="#4a5263" text-anchor="start">3 security calculations, one at a time</text>
+<path d="M466 91 L 466 109" fill="none" stroke="#1c2230" stroke-width="1.6" marker-end="url(#m0)"/>
+<rect x="20" y="123" width="92" height="26" rx="13" fill="#f3f0fa" stroke="#7a4fc2" stroke-width="1.2"/>
+<text x="66" y="140.32" font-size="12" fill="#58378f" text-anchor="middle" font-weight="700">Template</text>
+<rect x="126" y="113" width="680" height="103" rx="12" fill="#fff" stroke="#7a4fc2" stroke-width="1.6"/>
+<rect x="126" y="113" width="6" height="103" rx="3" fill="#7a4fc2"/>
+<text x="146" y="141" font-size="13.6" fill="#58378f" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">cot_prompt = ChatPromptTemplate.from_template(...)</text>
+<text x="146" y="163" font-size="12.2" fill="#4a5263" text-anchor="start">Role, an experienced cybersecurity analyst</text>
+<text x="146" y="182" font-size="12.2" fill="#1c2230" text-anchor="start" font-family="JetBrains Mono, monospace">{problem}</text>
+<text x="146" y="201" font-size="12.2" fill="#4a5263" text-anchor="start">5 steps, values, order, formula, calculation, final answer</text>
+<path d="M466 218 L 466 236" fill="none" stroke="#1c2230" stroke-width="1.6" marker-end="url(#m0)"/>
+<rect x="20" y="250" width="92" height="26" rx="13" fill="#eef3fb" stroke="#2f62c8" stroke-width="1.2"/>
+<text x="66" y="267.32" font-size="12" fill="#1f4a9e" text-anchor="middle" font-weight="700">Model</text>
+<rect x="126" y="240" width="680" height="65" rx="12" fill="#fff" stroke="#2f62c8" stroke-width="1.6"/>
+<rect x="126" y="240" width="6" height="65" rx="3" fill="#2f62c8"/>
+<text x="146" y="268" font-size="13.6" fill="#1f4a9e" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">llm = ChatGoogleGenerativeAI(model=&quot;gemini-3.1-flash-lite&quot;, temperature=0)</text>
+<text x="146" y="290" font-size="12.2" fill="#4a5263" text-anchor="start">One long answer for each problem</text>
+<path d="M466 307 L 466 325" fill="none" stroke="#1c2230" stroke-width="1.6" marker-end="url(#m0)"/>
+<rect x="20" y="339" width="92" height="26" rx="13" fill="#fdf4e3" stroke="#b7791f" stroke-width="1.2"/>
+<text x="66" y="356.32" font-size="12" fill="#8a5a12" text-anchor="middle" font-weight="700">Parser</text>
+<rect x="126" y="329" width="680" height="65" rx="12" fill="#fff" stroke="#b7791f" stroke-width="1.6"/>
+<rect x="126" y="329" width="6" height="65" rx="3" fill="#b7791f"/>
+<text x="146" y="357" font-size="13.6" fill="#8a5a12" text-anchor="start" font-weight="700">StrOutputParser()</text>
+<text x="146" y="379" font-size="12.2" fill="#4a5263" text-anchor="start">Keeps the text</text>
+<path d="M466 396 L 466 414" fill="none" stroke="#1c2230" stroke-width="1.6" marker-end="url(#m0)"/>
+<rect x="20" y="428" width="92" height="26" rx="13" fill="#e3f4ee" stroke="#0f8a6a" stroke-width="1.2"/>
+<text x="66" y="445.32" font-size="12" fill="#0b6650" text-anchor="middle" font-weight="700">Output</text>
+<rect x="126" y="418" width="680" height="65" rx="12" fill="#fff" stroke="#0f8a6a" stroke-width="1.6"/>
+<rect x="126" y="418" width="6" height="65" rx="3" fill="#0f8a6a"/>
+<text x="146" y="446" font-size="13.6" fill="#0b6650" text-anchor="start" font-weight="700">print the problem and the solution</text>
+<text x="146" y="468" font-size="12.2" fill="#4a5263" text-anchor="start">Steps and a final answer, 3 accounts, 9 computers, 270 GB</text>
+<path d="M806 465 h30 V 42 h-24" fill="none" stroke="#5d6b7e" stroke-width="1.8"/>
+<path d="M820 42 L 810 42" fill="none" stroke="#5d6b7e" stroke-width="1.8" marker-end="url(#m8)"/>
+<text x="852" y="245.5" font-size="11.5" fill="#3f4a59" text-anchor="middle" font-weight="700">next</text>
+<text x="852" y="261.5" font-size="11.5" fill="#3f4a59" text-anchor="middle" font-weight="700">problem</text>
+</svg>

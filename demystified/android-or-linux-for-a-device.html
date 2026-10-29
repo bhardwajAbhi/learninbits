@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Android or Linux for a device? · LearnInBits</title>
+  <meta name="description" content="When a device maker must choose Android, and when plain embedded Linux is the better choice.">
+  <link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,500;0,8..60,600;1,8..60,500&display=swap">
+  <link rel="stylesheet" href="../assets/css/style.css?v=20261029d">
+  <script>try{var t=localStorage.getItem("lib-theme");t=t?JSON.parse(t):(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+</head>
+<body data-root="../" data-page="post" data-kind="demystified" data-id="android-or-linux-for-a-device">
+
+<main id="main">
+<article>
+
+  <div class="block oneline">
+    <div class="label">In one line</div>
+    <p>Android is Linux plus a large ready-made layer for screens, apps and wireless. Choose Android when your device needs that layer.</p>
+  </div>
+
+  <p>Many devices that are not phones run Linux inside: smart TVs, set-top boxes, medical monitors, payment terminals and car dashboards. A company that builds a new device must choose the software base early. One choice is a custom build of Linux. The other choice is Android, which also runs on Linux.</p>
+  <p>The article that I read asks a simple question: when is Android the better base for a device? Here is the answer in simple words, with what changed since the article came out.</p>
+
+  <h2>Same base, different build</h2>
+  <p>Android and embedded Linux are not opposites. Android stands on the Linux kernel. The difference is in the layers above the kernel.</p>
+  <p>With embedded Linux, you start with the kernel and a C library. Then you choose and build all the other parts: the screen toolkit, the Wi-Fi manager, the update system and the app. With Android, these parts already exist and already work together.</p>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../assets/img/diagrams/android-vs-linux-stacks.svg" alt="Two stacks side by side. Both stand on the same hardware and the same Linux kernel. In embedded Linux, the app, the services and the screen toolkit are dashed boxes that the device maker must build. In Android, the native libraries and HAL, the runtime, the framework and the app layer are ready-made."></div>
+    <figcaption>Both stacks share the same base. Android gives you the upper layers ready-made.</figcaption>
+  </figure>
+
+  <div class="block analogy">
+    <div class="label">Real-life analogy</div>
+    <p>Embedded Linux is a plot of land. You can build any house that you want, but you must build every wall yourself. Android is a furnished apartment. You move in on the first day. You can still paint the walls and move the furniture, but the plan of the building is already fixed.</p>
+    <p>A small shed does not need an apartment. A family home with many visitors does.</p>
+  </div>
+
+  <h2>Which one fits your device?</h2>
+  <p>The article starts with the purpose of the device, not with the software. Answer four questions about the device, then count the yes answers.</p>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../assets/img/diagrams/android-or-linux-decision.svg" alt="A decision path. Four questions: does the device need a rich touch screen, does it need Wi-Fi, Bluetooth or mobile data, must it run apps from other developers and must it get new features after you sell it. Count the yes answers. Zero or one points to embedded Linux. Two means test both. Three or four points to Android."></div>
+    <figcaption>A quick test. It is a starting point, not a final answer.</figcaption>
+  </figure>
+
+  <p>The last question is easy to forget. A device that only does one job today can get a new job next year. Android was made for that: new apps and new features can come to the device after you sell it.</p>
+
+  <h2>What Android gives you, ready-made</h2>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Area</th><th>Embedded Linux</th><th>Android</th></tr></thead>
+      <tbody>
+        <tr><td>Touch screen</td><td>You choose a toolkit and design every screen</td><td>A complete touch interface with standard parts</td></tr>
+        <tr><td>Wireless</td><td>You connect Wi-Fi, Bluetooth and mobile data yourself</td><td>One connection manager for all of them, also in the settings screens</td></tr>
+        <tr><td>Apps from others</td><td>No standard way</td><td>A standard SDK and a standard way to publish apps</td></tr>
+        <tr><td>Developers</td><td>Mostly C and C++ experts</td><td>Java and Kotlin developers, plus C and C++ through the NDK</td></tr>
+        <tr><td>Phone calls and SMS</td><td>You add a telephony stack</td><td>Built in</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>A Linux expert can say: "Linux can do all of this too." That is true. The real question is how much work it is. On Android, the work is already done.</p>
+
+  <h2>Common worries, answered</h2>
+  <p>People who know Android from phones often think that it is too heavy for a device. Most of these worries are about the full phone build. A build that is made for one device is different.</p>
+
+  <div class="slides" data-slides>
+    <div class="slides-track">
+      <div class="slide card-slide">
+        <span class="kicker">Worry 1 of 5</span>
+        <h3>"Android takes too long to start."</h3>
+        <p>A phone build starts many services that a device does not need. A device build can remove these services, load fewer classes at start and use a faster boot loader. With this work, teams made Android start in a few seconds.</p>
+      </div>
+      <div class="slide card-slide">
+        <span class="kicker">Worry 2 of 5</span>
+        <h3>"Android works only on ARM chips."</h3>
+        <p>Most Android devices use ARM chips, but AOSP also builds for x86. The Android emulator on a computer uses x86 images every day.</p>
+      </div>
+      <div class="slide card-slide">
+        <span class="kicker">Worry 3 of 5</span>
+        <h3>"Android needs too much memory."</h3>
+        <p>A phone build needs a lot. A trimmed build runs on modest hardware. But for very small hardware, embedded Linux is the better choice. Do not force Android onto a chip that is too small for it.</p>
+      </div>
+      <div class="slide card-slide">
+        <span class="kicker">Worry 4 of 5</span>
+        <h3>"Android costs money."</h3>
+        <p>AOSP is free, and most of it uses the Apache 2.0 license. You pay nothing to use it. Only the Google apps and the Play Store need an agreement with Google and a certified device. The C library of Android, Bionic, uses a permissive BSD license.</p>
+      </div>
+      <div class="slide card-slide">
+        <span class="kicker">Worry 5 of 5</span>
+        <h3>"Linux gives me more freedom."</h3>
+        <p>Android is Linux underneath. You can change every layer of Android, also the kernel. You must learn how the framework uses the kernel, but nothing is closed to you.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="block changed">
+    <div class="label">What changed since</div>
+    <p>The article came out in 2013. Since then, these things changed:</p>
+    <ul>
+      <li><strong>A new runtime.</strong> Android 5.0 (2014) replaced the Dalvik runtime with ART. ART compiles app code to machine code, so apps start and run faster.</li>
+      <li><strong>Kotlin.</strong> Since 2019, Google recommends Kotlin first for Android apps. Java still works.</li>
+      <li><strong>Easier updates.</strong> Project Treble (Android 8.0, 2017) put the code of the chip makers behind a fixed interface. Later, the Generic Kernel Image (GKI) made the kernel the same on many devices. Both changes make updates faster for device makers.</li>
+      <li><strong>Editions for devices.</strong> Google made Android Things for small connected devices in 2018 and stopped it in 2022. But Android for cars (Android Automotive OS) and Android for TVs grew strongly.</li>
+      <li><strong>Better Linux tools.</strong> The Yocto Project and Buildroot make custom Linux builds easier than before.</li>
+    </ul>
+  </div>
+
+  <div class="block security">
+    <div class="label">Security lens</div>
+    <p>More code means more places where a bug can hide. A full Android build is much larger than a small Linux build. Thus, it has a larger attack surface.</p>
+    <p>But Android also brings strong security parts that you do not need to build: an app sandbox, SELinux rules, verified boot and a monthly security bulletin. On embedded Linux, you must design and build each of these yourself.</p>
+    <p>On both, the most important rule is the same: plan how you will send security updates to the device for all the years that people use it.</p>
+  </div>
+
+  <div class="block take">
+    <div class="label">My take</div>
+    <p>The question of the article is still the right question, more than ten years later. Start with the job of the device, not with the software.</p>
+    <p>For a device with a screen that people touch every day, and that must change over time, I choose Android. For a small device with one fixed job and no screen, I choose embedded Linux. In the middle, I build a small test on the real hardware before I decide.</p>
+  </div>
+
+  <h2>Key terms</h2>
+  <dl class="terms">
+    <dt>Embedded device</dt><dd>A device made for a small set of jobs, for example a TV box or a medical monitor.</dd>
+    <dt>Embedded Linux</dt><dd>A custom Linux build that contains only the parts that one device needs.</dd>
+    <dt>AOSP</dt><dd>Android Open Source Project. The free source code of Android.</dd>
+    <dt>Bionic</dt><dd>The C library of Android.</dd>
+    <dt>ART</dt><dd>Android Runtime. It runs the code of Android apps.</dd>
+    <dt>Attack surface</dt><dd>All the places where an attacker can try to get in.</dd>
+  </dl>
+
+  <p>To learn how the Android layers work, start with <a href="../courses/android/01-introduction.html">What is AOSP?</a> in the Inside Android course.</p>
+
+</article>
+</main>
+
+<script src="../assets/js/site.js?v=20261029d"></script>
+</body>
+</html>

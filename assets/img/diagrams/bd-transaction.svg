@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 496" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">One synchronous Binder call</title>
+  <desc id="d">A sequence diagram with the lanes Client thread, Binder driver, Server thread. Step 1, Client thread to Binder driver, BC_TRANSACTION, handle, code, Parcel. Step 2, Binder driver to Client thread, BR_TRANSACTION_COMPLETE, the client now waits for the reply. Step 3, Binder driver to Binder driver, copy into server region, adds caller UID, PID and SELinux context. Step 4, Binder driver to Server thread, BR_TRANSACTION, a waiting binder thread wakes up. Step 5, Server thread to Server thread, onTransact(code, data, reply), the stub runs your method. Step 6, Server thread to Binder driver, BC_REPLY, the reply Parcel. Step 7, Binder driver to Client thread, BR_REPLY, the client thread continues.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="15" y="18" width="150" height="42" rx="10" fill="#eef3fb" stroke="#2f62c8" stroke-width="1.4"/>
+<text x="90" y="44" font-size="12.3" fill="#1f4a9e" text-anchor="middle" font-weight="700">Client thread</text>
+<line x1="90" y1="60" x2="90" y2="480" stroke="#d9d4c7" stroke-width="1.6" stroke-dasharray="5 5"/>
+<rect x="365" y="18" width="150" height="42" rx="10" fill="#fbecec" stroke="#c2552d" stroke-width="1.4"/>
+<text x="440" y="44" font-size="12.3" fill="#963f1f" text-anchor="middle" font-weight="700">Binder driver</text>
+<line x1="440" y1="60" x2="440" y2="480" stroke="#d9d4c7" stroke-width="1.6" stroke-dasharray="5 5"/>
+<rect x="715" y="18" width="150" height="42" rx="10" fill="#e3f4ee" stroke="#0f8a6a" stroke-width="1.4"/>
+<text x="790" y="44" font-size="12.3" fill="#0b6650" text-anchor="middle" font-weight="700">Server thread</text>
+<line x1="790" y1="60" x2="790" y2="480" stroke="#d9d4c7" stroke-width="1.6" stroke-dasharray="5 5"/>
+<path d="M94 98 L 434 98" fill="none" stroke="#2f62c8" stroke-width="1.7" marker-end="url(#m3)"/>
+<circle cx="108" cy="85" r="10" fill="#2f62c8"/>
+<text x="108" y="88.96" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">1</text>
+<text x="124" y="90" font-size="12" fill="#1f4a9e" text-anchor="start" font-weight="700">BC_TRANSACTION</text>
+<text x="124" y="114" font-size="11.3" fill="#4a5263" text-anchor="start">handle, code, Parcel</text>
+<path d="M436 154 L 96 154" fill="none" stroke="#c2552d" stroke-width="1.7" stroke-dasharray="6 4" marker-end="url(#m7)"/>
+<circle cx="108" cy="141" r="10" fill="#c2552d"/>
+<text x="108" y="144.96" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">2</text>
+<text x="124" y="146" font-size="12" fill="#963f1f" text-anchor="start" font-weight="700">BR_TRANSACTION_COMPLETE</text>
+<text x="124" y="170" font-size="11.3" fill="#4a5263" text-anchor="start">the client now waits for the reply</text>
+<path d="M440 200 h34 v18 h-30" fill="none" stroke="#c2552d" stroke-width="1.6"/>
+<path d="M448 218 L 442 218" fill="none" stroke="#c2552d" stroke-width="1.6" marker-end="url(#m7)"/>
+<circle cx="496" cy="209" r="10" fill="#c2552d"/>
+<text x="496" y="212.96" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">3</text>
+<text x="512" y="213" font-size="12" fill="#963f1f" text-anchor="start" font-weight="700">copy into server region</text>
+<text x="512" y="229" font-size="11.3" fill="#4a5263" text-anchor="start">adds caller UID, PID and SELinux context</text>
+<path d="M444 266 L 784 266" fill="none" stroke="#c2552d" stroke-width="1.7" marker-end="url(#m7)"/>
+<circle cx="458" cy="253" r="10" fill="#c2552d"/>
+<text x="458" y="256.96" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">4</text>
+<text x="474" y="258" font-size="12" fill="#963f1f" text-anchor="start" font-weight="700">BR_TRANSACTION</text>
+<text x="474" y="282" font-size="11.3" fill="#4a5263" text-anchor="start">a waiting binder thread wakes up</text>
+<path d="M790 312 h-34 v18 h30" fill="none" stroke="#0f8a6a" stroke-width="1.6"/>
+<path d="M782 330 L 788 330" fill="none" stroke="#0f8a6a" stroke-width="1.6" marker-end="url(#m4)"/>
+<circle cx="734" cy="321" r="10" fill="#0f8a6a"/>
+<text x="734" y="324.96" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">5</text>
+<text x="718" y="325" font-size="12" fill="#0b6650" text-anchor="end" font-family="JetBrains Mono, monospace" font-weight="700">onTransact(code, data, reply)</text>
+<text x="718" y="341" font-size="11.3" fill="#4a5263" text-anchor="end">the stub runs your method</text>
+<path d="M786 378 L 446 378" fill="none" stroke="#0f8a6a" stroke-width="1.7" marker-end="url(#m4)"/>
+<circle cx="458" cy="365" r="10" fill="#0f8a6a"/>
+<text x="458" y="368.96" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">6</text>
+<text x="474" y="370" font-size="12" fill="#0b6650" text-anchor="start" font-weight="700">BC_REPLY</text>
+<text x="474" y="394" font-size="11.3" fill="#4a5263" text-anchor="start">the reply Parcel</text>
+<path d="M436 434 L 96 434" fill="none" stroke="#c2552d" stroke-width="1.7" stroke-dasharray="6 4" marker-end="url(#m7)"/>
+<circle cx="108" cy="421" r="10" fill="#c2552d"/>
+<text x="108" y="424.96" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">7</text>
+<text x="124" y="426" font-size="12" fill="#963f1f" text-anchor="start" font-weight="700">BR_REPLY</text>
+<text x="124" y="450" font-size="11.3" fill="#4a5263" text-anchor="start">the client thread continues</text>
+</svg>

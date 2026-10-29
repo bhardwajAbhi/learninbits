@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Use open-source models with Ollama · LangChain, Step by Step · LearnInBits</title>
+  <meta name="description" content="Run an open-source language model on your own computer with Ollama and send it your first question through LangChain.">
+  <link rel="icon" href="../../assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,500;0,8..60,600;1,8..60,500&display=swap">
+  <link rel="stylesheet" href="../../assets/css/style.css?v=20261029d">
+  <script>try{var t=localStorage.getItem("lib-theme");t=t?JSON.parse(t):(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+</head>
+<body data-root="../../" data-page="chapter" data-course="langchain" data-id="03-using-ollama">
+
+<main id="main">
+<article>
+
+
+<div class="block oneline">
+  <div class="label">In one line</div>
+  <p>An open-source model can run on your own computer, so that you need no API key and your questions never leave your machine.</p>
+</div>
+
+<section class="learn">
+  <h2>What you will learn</h2>
+  <ul>
+    <li>Why you can run a language model on your own computer, and when that is the better choice</li>
+    <li>How LangChain connects to a local model through Ollama</li>
+    <li>How to send a question with <code>invoke()</code> and read the answer</li>
+    <li>What else comes back with the answer, such as the number of tokens</li>
+  </ul>
+  <p class="needs">Set up your project first, as <a href="start-here.html">Start here</a> shows. You need the <code>gemma:2b</code> model from that setup.</p>
+</section>
+
+<h2>The idea</h2>
+<p>The best known models, such as Gemini and the models of OpenAI, run on the servers of their companies. To use them, you send your question over the internet with an API key, and you pay for heavy use. For many tasks, this is fine.</p>
+<p>Some tasks need a different choice. A question can contain private data, such as customer records or the logs of an app. A team can also want to try many prompts without paying for each one. For such cases, you can run an open-source model on your own computer. An open-source model is a model whose files anyone can download and run, such as Gemma from Google or Mistral.</p>
+<p>Ollama makes this easy. It downloads the model, runs it in the background and answers questions on your computer. LangChain then talks to Ollama in the same way as it talks to a cloud model, so the code of your app hardly changes.</p>
+
+
+<div class="block analogy">
+  <div class="label">Real-life analogy</div>
+  <p>A cloud model is like a restaurant. The food is excellent and you need no kitchen, but you pay for each meal and the restaurant sees your order. A local model is like cooking at home. The meal is simpler, but it costs nothing extra. Nobody outside your home knows what you eat.</p>
+</div>
+
+<figure class="diagram">
+  <div class="frame"><img src="../../assets/img/diagrams/lc-03-cloud-local.svg" alt="Two columns. On the left, a cloud model, used in chapters 1 and 2. Your program, with ChatGoogleGenerativeAI or ChatOpenAI, sends the question over the internet to the Gemini or OpenAI servers, which write the answer. It needs an API key, has large and fast models, and usage can cost money. On the right, a local model, used in this chapter. Your program, with ChatOllama, sends the question to Ollama on your computer at localhost port 11434, and gemma:2b on your computer writes the answer. It needs no API key, the data stays on your computer, and the models are smaller and slower on a laptop." loading="lazy"></div>
+  <figcaption>A cloud model gets your question over the internet. A local model gets it on your own computer.</figcaption>
+</figure>
+
+<h2>What you will build</h2>
+<p>You will build a short program that asks a local model one question and prints the answer. The question is about mobile operating systems, but any question works. The program has only a few lines, so that you can see clearly how LangChain talks to a model.</p>
+
+
+<figure class="diagram">
+  <div class="frame"><img src="../../assets/img/diagrams/lc-03-flow.svg" alt="Setup, llm = ChatOllama(model=&quot;gemma2b&quot;), Connects to Ollama on your computer. Input, query, &quot;Which operating system is the most popular in mobile devices?&quot;. Call, llm.invoke(query), Sends the question and waits for the full answer. Reply, response, An AIMessage with the answer, data about the call and the token counts. Output, print(&quot;Response&quot;, response.content), Prints only the text of the answer." loading="lazy"></div>
+  <figcaption>The program makes one model object, sends one question and prints the text of the answer.</figcaption>
+</figure>
+
+<h2>Build it step by step</h2>
+
+<h3 class="step"><span class="sn">Step 1</span>Create the file</h3>
+
+<p>In the <code>code</code> folder, create the folder <code>03_using_ollama</code> and in it the file <code>app_ollama.py</code>.</p>
+
+<h3 class="step"><span class="sn">Step 2</span>Import the model class</h3>
+
+<pre class="code" data-lang="python" data-file="code/03_using_ollama/app_ollama.py"><code>from langchain_ollama.chat_models import ChatOllama</code></pre>
+
+<ul class="explain">
+  <li><code>langchain_ollama</code> is the LangChain package for Ollama. You installed it with the other packages.</li>
+  <li><code>ChatOllama</code> is a chat model class. It sends your messages to Ollama and turns the reply into a LangChain message, so that the rest of your code works with any model.</li>
+</ul>
+
+<h3 class="step"><span class="sn">Step 3</span>Create the model</h3>
+
+<pre class="code" data-lang="python" data-file="code/03_using_ollama/app_ollama.py"><code>llm = ChatOllama(model="gemma:2b")</code></pre>
+
+<ul class="explain">
+  <li><code>model="gemma:2b"</code> names the model that Ollama must use. The name must be the same as in <code>ollama list</code>.</li>
+  <li><code>llm</code> is the usual name for the model object. It stands for large language model.</li>
+  <li>This line does not call the model yet. It only prepares the connection to Ollama on your computer.</li>
+</ul>
+
+<h3 class="step"><span class="sn">Step 4</span>Ask the question</h3>
+
+<pre class="code" data-lang="python" data-file="code/03_using_ollama/app_ollama.py"><code>query = "Which operating system is the most popular in mobile devices?"
+print("Query:", query)
+
+response = llm.invoke(query)</code></pre>
+
+<ul class="explain">
+  <li><code>query</code> holds the question as plain text. The program prints it, so that the output shows the question next to its answer.</li>
+  <li><code>llm.invoke(query)</code> sends the question to the model and waits until the full answer is ready. Every model class in LangChain has this method, so the same line will work with Gemini and OpenAI.</li>
+  <li><code>response</code> is an <code>AIMessage</code>, a message object that holds the answer and data about the call.</li>
+</ul>
+
+<h3 class="step"><span class="sn">Step 5</span>Print the answer</h3>
+
+<pre class="code" data-lang="python" data-file="code/03_using_ollama/app_ollama.py"><code>print("Response:", response.content)</code></pre>
+
+<ul class="explain">
+  <li><code>response.content</code> is only the text of the answer. You will use <code>.content</code> in most chapters, because the page shows only the text.</li>
+</ul>
+
+<h2>Run it</h2>
+<p>Make sure that Ollama runs and that the <code>langchain</code> environment is active. Then run the program from the root folder of the project.</p>
+
+<pre class="code" data-lang="bash"><code>python code/03_using_ollama/app_ollama.py</code></pre>
+
+<pre class="code" data-lang="output"><code>Query: Which operating system is the most popular in mobile devices?
+Response: Android is the most popular operating system in mobile devices, with a market share of over 80%.</code></pre>
+
+<div class="block note">
+  <div class="label">Your output can be different</div>
+  <p>A language model does not always give the same answer to the same question. Your answer can use other words or another number. The first answer can also take a few seconds, because Ollama must first load the model into memory.</p>
+</div>
+
+<h2>Look closely</h2>
+<p>The answer is only one part of what comes back. Change the last line to <code>print("Response:", response)</code> and run the program again. The output now shows the full message.</p>
+
+<pre class="code" data-lang="output"><code>Query: Which operating system is the most popular in mobile devices?
+Response: content='Android is the most popular operating system in mobile devices, with a market share of over 80%.' 
+additional_kwargs={} response_metadata={'model': 'gemma:2b', 'created_at': '2026-06-30T09:55:51.581108758Z', 'done': True, 
+'done_reason': 'stop', 'total_duration': 814374719, 'load_duration': 93605697, 'prompt_eval_count': 33, 'prompt_eval_duration': 99404120, 
+'eval_count': 22, 'eval_duration': 610037131, 'logprobs': None, 'model_name': 'gemma:2b', 'model_provider': 'ollama'} 
+id='lc_run--019f17f4-db6c-77f3-b348-559b6c6ec57f-0' tool_calls=[] invalid_tool_calls=[] usage_metadata={'input_tokens': 33, 'output_tokens': 22, 'total_tokens': 55}</code></pre>
+
+<ul class="explain">
+  <li><code>content</code> is the text of the answer, the part that you printed before.</li>
+  <li><code>response_metadata</code> holds data about the call, such as the model name and the time it took. <code>total_duration</code> is in nanoseconds, so 814374719 is about 0.8 seconds.</li>
+  <li><code>usage_metadata</code> counts the tokens. A token is a small piece of text, often part of a word. The question used 33 tokens and the answer 22. Cloud providers charge by tokens, so this count matters in chapters 1 and 2.</li>
+  <li><code>tool_calls</code> is empty here. In chapter 9, the model will use this field to ask your program to run a tool.</li>
+</ul>
+
+<p>The answer also states a market share of "over 80%" with full confidence. The model wrote a likely number and did not check it. Different sources give different figures, depending on whether they count phones sold or phones in use. Treat a number from a model as a claim that you must check.</p>
+
+<details class="fold">
+  <summary><span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m16 18 6-6-6-6M8 6l-6 6 6 6"/></svg></span><span class="ft">Full code of chapter 3<small>code/03_using_ollama/app_ollama.py</small></span><a class="gh-btn" href="https://github.com/bhardwajAbhi/learning-langchain/blob/master/code/03_using_ollama/app_ollama.py"><svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M12 .5a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2.1c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1.1-.8.1-.8.1-.8 1.2.1 1.9 1.3 1.9 1.3 1.1 1.9 2.9 1.3 3.6 1 .1-.8.4-1.3.8-1.6-2.7-.3-5.5-1.3-5.5-6a4.7 4.7 0 0 1 1.3-3.2c-.1-.3-.6-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.7 1.7.2 2.9.1 3.2a4.7 4.7 0 0 1 1.3 3.2c0 4.6-2.8 5.6-5.5 6 .4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .5z"/></svg>View on GitHub</a></summary>
+  <div class="fold-body">
+<pre class="code" data-lang="python" data-file="code/03_using_ollama/app_ollama.py"><code>from langchain_ollama.chat_models import ChatOllama
+
+llm = ChatOllama(model="gemma:2b")
+
+query = "Which operating system is the most popular in mobile devices?"
+print("Query:", query)
+
+response = llm.invoke(query)
+
+print("Response:", response.content)</code></pre>
+  </div>
+</details>
+
+<div class="block security">
+  <div class="label">Security lens</div>
+  <p>A local model keeps your questions on your computer, so it suits private data, such as logs or customer records. Two points still need care. Ollama answers on port 11434 and, by default, only on your own computer. Do not open this port to the network, because anyone could then use your model. Also, a small model knows less than a large cloud model, so check its facts before you use them.</p>
+</div>
+
+<h2>Check yourself</h2>
+<div class="quiz">
+  <details>
+    <summary><span class="qq">Why does a team choose a local model and not a cloud model?</span></summary>
+    <div class="ans"><p>To keep private data on its own computers, and to use the model without an API key or a cost for each question.</p></div>
+  </details>
+  <details>
+    <summary><span class="qq">What is the difference between <code>response</code> and <code>response.content</code>?</span></summary>
+    <div class="ans"><p><code>response</code> is the full message with data about the call. <code>response.content</code> is only the text of the answer.</p></div>
+  </details>
+  <details>
+    <summary><span class="qq">The program shows <code>httpx.ConnectError</code>. What do you check first?</span></summary>
+    <div class="ans"><p>That Ollama runs. Start the Ollama app or run <code>ollama serve</code>.</p></div>
+  </details>
+</div>
+
+<h2>Key terms at a glance</h2>
+<div class="table-wrap">
+  <table class="kw">
+    <thead><tr><th>Term</th><th>Meaning</th></tr></thead>
+    <tbody>
+      <tr><td>Open-source model</td><td>A model whose files anyone can download and run, such as Gemma or Mistral</td></tr>
+      <tr><td>Ollama</td><td>A tool that downloads and runs language models on your own computer</td></tr>
+      <tr><td><code>ChatOllama</code></td><td>The LangChain class that sends messages to a model in Ollama</td></tr>
+      <tr><td><code>invoke()</code></td><td>The method that sends a question to any LangChain model and returns the answer</td></tr>
+      <tr><td><code>AIMessage</code></td><td>The message object that holds the answer and data about the call</td></tr>
+      <tr><td>Token</td><td>A small piece of text that a model reads or writes, often part of a word</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<p>For a deeper look at the reply of a model, see <a href="../ai-engineering/01-talk-to-a-model.html">AI Engineering chapter 1</a>.</p>
+
+<h2>Next</h2>
+<p>Your program can now talk to a model, but only in the terminal. In <a href="04-streamlit-gui.html">chapter 4</a>, you will put a web page in front of the model, so that anyone can use it in a browser.</p>
+</article>
+</main>
+
+<script src="../../assets/js/site.js?v=20261029d"></script>
+</body>
+</html>

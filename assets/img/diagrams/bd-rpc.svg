@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 306" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">Kernel Binder compared with RPC Binder</title>
+  <desc id="d">Left, kernel Binder through /dev/binder in one kernel, with one copy through a mapped region, the caller UID and PID from the kernel, a thread pool managed by the driver and death notices from the driver. Right, RPC Binder over Unix, vsock, TCP or TIPC sockets, with normal socket send and receive, identity from TLS or socket rules, a thread pool in user space and death when the connection closes. Both use the same AIDL interfaces, so a service can move into a virtual machine without new interface code.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="20" y="20" width="400" height="250" rx="14" fill="#fff" stroke="#2f62c8" stroke-width="1.6"/>
+<text x="220" y="46" font-size="13.5" fill="#1f4a9e" text-anchor="middle" font-weight="700">Kernel Binder</text>
+<rect x="44" y="62" width="100" height="44" rx="10" fill="#eef0f3" stroke="#5d6b7e" stroke-width="1.4"/>
+<text x="94" y="88.536" font-size="12.6" fill="#3f4a59" text-anchor="middle" font-weight="700">Client</text>
+<rect x="296" y="62" width="100" height="44" rx="10" fill="#eef0f3" stroke="#5d6b7e" stroke-width="1.4"/>
+<text x="346" y="88.536" font-size="12.6" fill="#3f4a59" text-anchor="middle" font-weight="700">Server</text>
+<path d="M146 84 L 294 84" fill="none" stroke="#2f62c8" stroke-width="1.6" marker-end="url(#m3)" marker-start="url(#m3)"/>
+<text x="220" y="130" font-size="11" fill="#1f4a9e" text-anchor="middle" font-weight="700">/dev/binder in one kernel</text>
+<text x="50" y="160" font-size="11.6" fill="#1c2230" text-anchor="start">· One copy through a mapped region</text>
+<text x="50" y="184" font-size="11.6" fill="#1c2230" text-anchor="start">· Caller UID and PID from the kernel</text>
+<text x="50" y="208" font-size="11.6" fill="#1c2230" text-anchor="start">· Thread pool managed by the driver</text>
+<text x="50" y="232" font-size="11.6" fill="#1c2230" text-anchor="start">· Death notices from the driver</text>
+<rect x="460" y="20" width="400" height="250" rx="14" fill="#fff" stroke="#0e7c86" stroke-width="1.6"/>
+<text x="660" y="46" font-size="13.5" fill="#095a61" text-anchor="middle" font-weight="700">RPC Binder</text>
+<rect x="484" y="62" width="100" height="44" rx="10" fill="#eef0f3" stroke="#5d6b7e" stroke-width="1.4"/>
+<text x="534" y="88.536" font-size="12.6" fill="#3f4a59" text-anchor="middle" font-weight="700">Client</text>
+<rect x="736" y="62" width="100" height="44" rx="10" fill="#eef0f3" stroke="#5d6b7e" stroke-width="1.4"/>
+<text x="786" y="88.536" font-size="12.6" fill="#3f4a59" text-anchor="middle" font-weight="700">Server</text>
+<path d="M586 84 L 734 84" fill="none" stroke="#0e7c86" stroke-width="1.6" marker-end="url(#m0)" marker-start="url(#m0)"/>
+<text x="660" y="130" font-size="11" fill="#095a61" text-anchor="middle" font-weight="700">sockets: Unix, vsock, TCP, TIPC</text>
+<text x="490" y="160" font-size="11.6" fill="#1c2230" text-anchor="start">· Normal socket send and receive</text>
+<text x="490" y="184" font-size="11.6" fill="#1c2230" text-anchor="start">· Identity from TLS or socket rules</text>
+<text x="490" y="208" font-size="11.6" fill="#1c2230" text-anchor="start">· Thread pool in user space</text>
+<text x="490" y="232" font-size="11.6" fill="#1c2230" text-anchor="start">· Death when the connection closes</text>
+<text x="440" y="292" font-size="11.4" fill="#1c2230" text-anchor="middle" font-weight="600">Both use the same AIDL interfaces, so a service can move into a virtual machine without new interface code.</text>
+</svg>

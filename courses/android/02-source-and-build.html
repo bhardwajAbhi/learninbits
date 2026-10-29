@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Source code and build system · Inside Android · LearnInBits</title>
+  <meta name="description" content="How to get the Android source code and how the build system turns it into the images that a phone starts.">
+  <link rel="icon" href="../../assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,500;0,8..60,600;1,8..60,500&display=swap">
+  <link rel="stylesheet" href="../../assets/css/style.css?v=20261029d">
+  <script>try{var t=localStorage.getItem("lib-theme");t=t?JSON.parse(t):(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+</head>
+<body data-root="../../" data-page="chapter" data-course="android" data-id="02-source-and-build">
+
+<main id="main">
+<article>
+
+  <div class="block oneline">
+    <div class="label">In one line</div>
+    <p>A tool with the name repo downloads more than one thousand Git projects. The build system then turns them into the images that a phone starts.</p>
+  </div>
+
+  <p>In chapter 1, you saw the five layers of Android. All these layers come from one large source tree. In this chapter, you follow the path from that source tree to Android on a screen: first you get the code, then you choose what to build, then you build it and start it.</p>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../../assets/img/diagrams/aosp-source-to-images.svg" alt="Four stages from left to right. One: get the code with the manifest and repo, more than one thousand Git projects. Two: choose the target with lunch, which sets the product, the release and the variant. Three: build with the m command, which reads the Android.bp recipes, makes a build plan and compiles in parallel. Four: run the images boot.img, system.img, vendor.img and super.img on the emulator or a phone."></div>
+    <figcaption>The four stages of this chapter.</figcaption>
+  </figure>
+
+  <h2>Stage 1: Get the code</h2>
+  <p>AOSP is not one Git repository. It is more than one thousand separate Git projects. The kernel tools, the framework, each system app and many outside libraries are separate projects. Each project keeps its own history.</p>
+  <p>Two things put these projects together:</p>
+  <ul>
+    <li><strong>The manifest.</strong> An XML file that lists each project, the folder for it in the source tree and the version to use.</li>
+    <li><strong>The repo tool.</strong> A Python program that reads the manifest and downloads each project with Git. It also updates all projects with one command.</li>
+  </ul>
+
+  <div class="block analogy">
+    <div class="label">Real-life analogy</div>
+    <p>Think of a large library. The manifest is the catalog, with each book and its shelf. The repo tool is the librarian. It gets every book and puts it on the correct shelf. Git is the history inside each book, with each change and its author.</p>
+  </div>
+
+  <p>The source is very large. You need a Linux computer with a case-sensitive file system. You also need at least 400 GB of free disk space and at least 32 GB of RAM. More cores and more memory make the build much faster.</p>
+
+  <h2>Stage 2: Choose what to build</h2>
+  <p>One source tree can make Android for many devices. Before you build, you tell the build system what you want. Two commands do this.</p>
+  <p>First, <code>source build/envsetup.sh</code> adds the Android build commands to your terminal, for example <code>lunch</code> and <code>m</code>. Then <code>lunch</code> sets three choices:</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Choice</th><th>What it means</th><th>Example</th></tr></thead>
+      <tbody>
+        <tr><td>Product</td><td>The device that you build for</td><td><code>sdk_phone64_x86_64</code> (the emulator on a normal computer)</td></tr>
+        <tr><td>Release</td><td>Which set of new features is on</td><td><code>trunk_staging</code></td></tr>
+        <tr><td>Variant</td><td>How open the build is for testing</td><td><code>user</code>, <code>userdebug</code> or <code>eng</code></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>The variant is important. It decides how much access a person with the device gets:</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Variant</th><th>Used for</th><th>Root access</th><th>Debug tools</th></tr></thead>
+      <tbody>
+        <tr><td><code>user</code></td><td>Phones that people buy</td><td>None</td><td>None</td></tr>
+        <tr><td><code>userdebug</code></td><td>Testing that is close to a real phone</td><td>Yes, with <code>adb root</code></td><td>Partial</td></tr>
+        <tr><td><code>eng</code></td><td>Development of the platform</td><td>Yes</td><td>All</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>Stage 3: Build</h2>
+  <p>One command starts the build: <code>m</code>. Behind this command, the build system works in three steps.</p>
+
+  <ol class="steps">
+    <li><strong>Read the recipes.</strong> Each project has an <code>Android.bp</code> file. It describes what to build and from which files, for example "a library with the name liblog, from these C files".</li>
+    <li><strong>Make one plan.</strong> A program with the name Soong reads all the <code>Android.bp</code> files. A second program, Kati, reads the older <code>Android.mk</code> files and the settings of the product. Together, they write one large build plan. The plan lists every step and the order of the steps.</li>
+    <li><strong>Do the work.</strong> An executor reads the plan and runs the compilers, many at the same time. In Android 17, this executor is Siso. Before, it was Ninja. Both read the same plan.</li>
+  </ol>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../../assets/img/diagrams/aosp-build-kitchen.svg" alt="Android.bp files go to Soong. Android.mk files and the product settings go to Kati. Both write one build plan in .ninja files. Siso or Ninja runs the steps of the plan in parallel with compilers such as clang, javac and rustc. The result is the images. Below, a note compares the build to a large kitchen."></div>
+    <figcaption>Inside the m command: recipes, planners, one plan, then many workers.</figcaption>
+  </figure>
+
+  <p>Here is a very small <code>Android.bp</code> file. It tells the build system to make a program with the name <code>hello_aosp</code> from one C++ file:</p>
+<pre><code>cc_binary {
+    name: "hello_aosp",
+    srcs: ["hello.cpp"],
+    shared_libs: ["liblog"],
+}</code></pre>
+  <p>You can build one module only, which is much faster than a full build:</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Command</th><th>What it builds</th></tr></thead>
+      <tbody>
+        <tr><td><code>m</code></td><td>The full system, with all the images</td></tr>
+        <tr><td><code>m hello_aosp</code></td><td>Only the module with this name</td></tr>
+        <tr><td><code>m Settings</code></td><td>Only the Settings app</td></tr>
+        <tr><td><code>m systemimage</code></td><td>Only the system image</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>The first full build takes some hours. After that, the build system builds only what changed, so a small change takes minutes.</p>
+
+  <h2>Stage 4: The result</h2>
+  <p>The build puts its output in the <code>out/</code> folder. The images for your device are in <code>out/target/product/&lt;device&gt;/</code>. Each image becomes one part of the storage of the device:</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Image</th><th>What it holds</th></tr></thead>
+      <tbody>
+        <tr><td><code>boot.img</code></td><td>The Linux kernel and the first files that it needs</td></tr>
+        <tr><td><code>system.img</code></td><td>The Android framework and the system apps</td></tr>
+        <tr><td><code>vendor.img</code></td><td>The code for the chips of the device, for example the HALs</td></tr>
+        <tr><td><code>super.img</code></td><td>One container that holds system, vendor and other parts. Android can change the size of each part inside it.</td></tr>
+        <tr><td><code>userdata.img</code></td><td>An empty area for apps and user data</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Then the <code>emulator</code> command starts a virtual phone with your new images. On a real phone, a tool with the name fastboot writes the images to the storage.</p>
+
+  <h2>Two special builds</h2>
+  <p>Two parts of Android use their own build path:</p>
+  <ul>
+    <li><strong>The kernel</strong> uses Kleaf, a build system that is based on Bazel. It builds the Generic Kernel Image (GKI), which many devices share. Chapter 5 tells you more.</li>
+    <li><strong>Mainline modules</strong> are packed as APEX files. Google can update an APEX file through the Play Store, without a full system update. Chapter 54 tells you more.</li>
+  </ul>
+
+  <div class="block security">
+    <div class="label">Security lens</div>
+    <p>The build decides many security settings of the final device. Three of them are very important:</p>
+    <ul>
+      <li><strong>The variant.</strong> A phone for real users must use the <code>user</code> variant. A <code>userdebug</code> or <code>eng</code> build gives root access and debug tools. If a maker ships such a build by mistake, any person with a USB cable can get full control.</li>
+      <li><strong>The keys.</strong> AOSP signs a build with test keys by default. These keys are public. A maker must sign with its own private release keys. Otherwise, an attacker can sign a fake update or a fake system app that the device accepts.</li>
+      <li><strong>The source.</strong> The manifest fixes the version of each project. Thus, a team can know exactly which code went into a build. This helps when a security bug appears: the team can find each device that has the bad code.</li>
+    </ul>
+  </div>
+
+  <details class="deep">
+    <summary>For the curious: where the build system lives <small>Optional</small></summary>
+    <div class="inner">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Folder</th><th>What it holds</th></tr></thead>
+          <tbody>
+            <tr><td><code>build/blueprint/</code></td><td>The parser and the framework for <code>Android.bp</code> files</td></tr>
+            <tr><td><code>build/soong/</code></td><td>Soong: the Go code for each module type, for example <code>cc/</code>, <code>java/</code>, <code>rust/</code> and <code>apex/</code></td></tr>
+            <tr><td><code>build/make/</code></td><td>The older Make layer, <code>envsetup.sh</code> and the product settings</td></tr>
+            <tr><td><code>out/soong/</code></td><td>The build plan files and the intermediate files</td></tr>
+            <tr><td><code>out/target/product/&lt;device&gt;/</code></td><td>The final images</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>The build system went through three generations. From 2008, Android used GNU Make with <code>Android.mk</code> files. This became too slow for a tree of this size, so from about 2016, Soong with <code>Android.bp</code> files took over most of the work. The Make layer stays for product settings and old modules. A move of the full platform build to Bazel started later, but Google stopped it. Today, only the kernel build (Kleaf) uses Bazel.</p>
+      <p>To see which executor runs your build, look at the <code>SOONG_NINJA</code> environment variable. The default value comes from <code>build/soong/ui/build/config.go</code>.</p>
+    </div>
+  </details>
+
+  <div class="block try">
+    <div class="label">Try it yourself</div>
+    <p><strong>On any phone or emulator.</strong> Find out how the system on your device was built:</p>
+<pre><code># user, userdebug or eng?
+adb shell getprop ro.build.type
+
+# release-keys (good) or test-keys?
+adb shell getprop ro.build.tags
+
+# The full name of the build
+adb shell getprop ro.build.fingerprint</code></pre>
+    <p><strong>Build Android yourself.</strong> You need a Linux computer with at least 400 GB of free disk space and 32 GB of RAM. The download takes more than one hour. The first build takes some hours.</p>
+<pre><code># 1. Get the code
+mkdir aosp &amp;&amp; cd aosp
+repo init --partial-clone --no-use-superproject -b android-latest-release \
+  -u https://android.googlesource.com/platform/manifest
+repo sync -c -j8
+
+# 2. Choose the target: the emulator for a normal PC
+source build/envsetup.sh
+lunch sdk_phone64_x86_64-trunk_staging-eng
+
+# 3. Build
+m
+
+# 4. Start your own Android
+emulator</code></pre>
+  </div>
+
+  <h2>Key terms</h2>
+  <dl class="terms">
+    <dt>repo</dt><dd>The tool that downloads and updates all AOSP projects.</dd>
+    <dt>Manifest</dt><dd>The XML file that lists each project and its folder.</dd>
+    <dt>lunch</dt><dd>The command that sets the product, the release and the variant.</dd>
+    <dt>Variant</dt><dd>user, userdebug or eng. It decides root access and debug tools.</dd>
+    <dt>Android.bp</dt><dd>The file that describes what to build in one project.</dd>
+    <dt>Soong</dt><dd>The program that reads all Android.bp files and makes the build plan.</dd>
+    <dt>Siso, Ninja</dt><dd>The programs that run the steps of the build plan.</dd>
+    <dt>Image</dt><dd>A file that becomes one part of the storage of the device.</dd>
+  </dl>
+
+</article>
+</main>
+
+<script src="../../assets/js/site.js?v=20261029d"></script>
+</body>
+</html>

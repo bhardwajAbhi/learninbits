@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 484" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">The path of one property set request</title>
+  <desc id="d">Four lanes, the client process, the property thread in init, shared memory and the main thread of init. The client sends a name and a value on /dev/socket/property_service. The property thread reads the caller credentials, namely pid, uid and gid, and calls CheckMacPerms for the property_service set permission. If the name starts with ctl., the thread queues a control message and wakes the main thread, which starts or stops a service. Else, the thread updates shared memory, so readers see the value at once. It then calls NotifyPropertyChange and writes the eventfd, so property triggers run on the main thread. A persist. property is also written to /data.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="20" y="20" width="180" height="40" rx="10" fill="#2f62c8"/>
+<text x="110" y="45" font-size="12.6" fill="#fff" text-anchor="middle" font-weight="700">Client process</text>
+<line x1="110" y1="60" x2="110" y2="470" stroke="#d9d4c7" stroke-width="1.6" stroke-dasharray="5 5"/>
+<rect x="240" y="20" width="180" height="40" rx="10" fill="#7a4fc2"/>
+<text x="330" y="45" font-size="12.6" fill="#fff" text-anchor="middle" font-weight="700">Property thread in init</text>
+<line x1="330" y1="60" x2="330" y2="470" stroke="#d9d4c7" stroke-width="1.6" stroke-dasharray="5 5"/>
+<rect x="470" y="20" width="180" height="40" rx="10" fill="#0f8a6a"/>
+<text x="560" y="45" font-size="12.6" fill="#fff" text-anchor="middle" font-weight="700">Shared memory</text>
+<line x1="560" y1="60" x2="560" y2="470" stroke="#d9d4c7" stroke-width="1.6" stroke-dasharray="5 5"/>
+<rect x="680" y="20" width="180" height="40" rx="10" fill="#b7791f"/>
+<text x="770" y="45" font-size="12.6" fill="#fff" text-anchor="middle" font-weight="700">Main thread of init</text>
+<line x1="770" y1="60" x2="770" y2="470" stroke="#d9d4c7" stroke-width="1.6" stroke-dasharray="5 5"/>
+<path d="M114 90 L 324 90" fill="none" stroke="#2f62c8" stroke-width="1.7" marker-end="url(#m3)"/>
+<text x="220" y="82" font-size="11.4" fill="#1f4a9e" text-anchor="middle" font-weight="600">name and value on /dev/socket/property_service</text>
+<rect x="248" y="104" width="164" height="56" rx="8" fill="#f3f0fa" stroke="#7a4fc2" stroke-width="1.3"/>
+<text x="330" y="122" font-size="11.2" fill="#58378f" text-anchor="middle" font-weight="500">Read ucred of the caller</text>
+<text x="330" y="138" font-size="11.2" fill="#58378f" text-anchor="middle" font-weight="500">pid, uid and gid</text>
+<rect x="248" y="170" width="164" height="56" rx="8" fill="#f3f0fa" stroke="#7a4fc2" stroke-width="1.3"/>
+<text x="330" y="188" font-size="11.2" fill="#58378f" text-anchor="middle" font-weight="500">CheckMacPerms()</text>
+<text x="330" y="204" font-size="11.2" fill="#58378f" text-anchor="middle" font-weight="500">property_service set</text>
+<rect x="20" y="238" width="840" height="92" rx="10" fill="none" stroke="#c2552d" stroke-width="1.2" stroke-dasharray="5 4"/>
+<text x="30" y="256" font-size="11.6" fill="#963f1f" text-anchor="start" font-weight="700">If the name starts with ctl.</text>
+<path d="M334 290 L 764 290" fill="none" stroke="#c2552d" stroke-width="1.7" marker-end="url(#m7)"/>
+<text x="550" y="282" font-size="11.4" fill="#963f1f" text-anchor="middle" font-weight="600">QueueControlMessage() and a wake</text>
+<rect x="688" y="298" width="164" height="26" rx="8" fill="#fdf4e3" stroke="#b7791f" stroke-width="1.3"/>
+<text x="770" y="316" font-size="11.2" fill="#8a5a12" text-anchor="middle" font-weight="500">start or stop a service</text>
+<path d="M334 364 L 554 364" fill="none" stroke="#0f8a6a" stroke-width="1.7" marker-end="url(#m4)"/>
+<text x="445" y="356" font-size="11.4" fill="#0b6650" text-anchor="middle" font-weight="600">__system_property_update()</text>
+<rect x="478" y="374" width="164" height="30" rx="8" fill="#e3f4ee" stroke="#0f8a6a" stroke-width="1.3"/>
+<text x="560" y="392" font-size="11.2" fill="#0b6650" text-anchor="middle" font-weight="500">Readers see it at once</text>
+<path d="M334 424 L 764 424" fill="none" stroke="#b7791f" stroke-width="1.7" marker-end="url(#m6)"/>
+<text x="550" y="416" font-size="11.4" fill="#8a5a12" text-anchor="middle" font-weight="600">NotifyPropertyChange() and eventfd</text>
+<rect x="688" y="432" width="164" height="30" rx="8" fill="#fdf4e3" stroke="#b7791f" stroke-width="1.3"/>
+<text x="770" y="450" font-size="11.2" fill="#8a5a12" text-anchor="middle" font-weight="500">Property triggers run</text>
+<text x="30" y="356" font-size="11.6" fill="#1c2230" text-anchor="start" font-weight="700">Else</text>
+<rect x="248" y="440" width="164" height="30" rx="8" fill="#fff" stroke="#7a4fc2" stroke-width="1.2" stroke-dasharray="4 3"/>
+<text x="330" y="460" font-size="11.2" fill="#58378f" text-anchor="middle" font-weight="500">persist. goes to /data</text>
+</svg>

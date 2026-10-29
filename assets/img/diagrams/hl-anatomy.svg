@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 322" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">The parts of an AIDL HAL</title>
+  <desc id="d">The files of one AIDL HAL, here the lights HAL. On the interface side, shared by framework and vendor, ILights.aidl is the interface with @VintfStability. The aidl_interface module in Android.bp sets stability vintf and lists frozen versions. The build generates libraries such as android.hardware.light-V2-ndk, and also rust and java variants. The service binary links them. On the vendor side, the service binary in vendor/bin/hw, the init script lights-default.rc that tells init how to start it, the VINTF fragment lights-default.xml that declares ILights/default, and the SELinux policy with the domain, the service label and the binder rules.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<text x="20" y="30" font-size="12.6" fill="#1c2230" text-anchor="start" font-weight="700">The files of one AIDL HAL, here the lights HAL</text>
+<rect x="20" y="48" width="390" height="54" rx="10" fill="#f3f0fa" stroke="#7a4fc2" stroke-width="1.4"/>
+<text x="34" y="72" font-size="12" fill="#58378f" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">ILights.aidl</text>
+<text x="34" y="90" font-size="11" fill="#4a5263" text-anchor="start">the interface, @VintfStability</text>
+<rect x="20" y="116" width="390" height="54" rx="10" fill="#f3f0fa" stroke="#7a4fc2" stroke-width="1.4"/>
+<text x="34" y="140" font-size="12" fill="#58378f" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">Android.bp: aidl_interface</text>
+<text x="34" y="158" font-size="11" fill="#4a5263" text-anchor="start">stability vintf, frozen versions</text>
+<rect x="20" y="184" width="390" height="54" rx="10" fill="#e6f3f4" stroke="#0e7c86" stroke-width="1.4"/>
+<text x="34" y="208" font-size="12" fill="#095a61" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">android.hardware.light-V2-ndk</text>
+<text x="34" y="226" font-size="11" fill="#4a5263" text-anchor="start">generated libraries, also -rust, -java</text>
+<rect x="470" y="48" width="390" height="54" rx="10" fill="#f8eaf1" stroke="#b0457a" stroke-width="1.4"/>
+<text x="484" y="72" font-size="12" fill="#7d2a55" text-anchor="start" font-weight="700">the service binary</text>
+<text x="484" y="90" font-size="11" fill="#4a5263" text-anchor="start">vendor/bin/hw/...lights-service...</text>
+<rect x="470" y="116" width="390" height="54" rx="10" fill="#fdf4e3" stroke="#b7791f" stroke-width="1.4"/>
+<text x="484" y="140" font-size="12" fill="#8a5a12" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">lights-default.rc</text>
+<text x="484" y="158" font-size="11" fill="#4a5263" text-anchor="start">tells init how to start it</text>
+<rect x="470" y="184" width="390" height="54" rx="10" fill="#e3f4ee" stroke="#0f8a6a" stroke-width="1.4"/>
+<text x="484" y="208" font-size="12" fill="#0b6650" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">lights-default.xml</text>
+<text x="484" y="226" font-size="11" fill="#4a5263" text-anchor="start">VINTF fragment, declares ILights/default</text>
+<rect x="470" y="252" width="390" height="54" rx="10" fill="#fbecec" stroke="#c2552d" stroke-width="1.4"/>
+<text x="484" y="276" font-size="12" fill="#963f1f" text-anchor="start" font-weight="700">SELinux policy</text>
+<text x="484" y="294" font-size="11" fill="#4a5263" text-anchor="start">domain, service label, binder rules</text>
+<path d="M215 104 L 215 114" fill="none" stroke="#1c2230" stroke-width="1.3" marker-end="url(#m0)"/>
+<path d="M215 172 L 215 182" fill="none" stroke="#1c2230" stroke-width="1.3" marker-end="url(#m0)"/>
+<path d="M412 211 C 440 211, 440 75, 468 75" fill="none" stroke="#1c2230" stroke-width="1.3" marker-end="url(#m0)"/>
+<text x="20" y="270" font-size="11.2" fill="#4a5263" text-anchor="start" font-weight="700">Interface side, shared by</text>
+<text x="20" y="288" font-size="11.2" fill="#4a5263" text-anchor="start" font-weight="700">framework and vendor</text>
+</svg>

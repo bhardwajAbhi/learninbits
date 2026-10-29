@@ -1,0 +1,104 @@
+<!doctype html>
+<!-- Project page. The top part (title, tagline, links, stack, tags) comes from data/projects.js.
+     Write the rest of the page below. -->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>APK Inspector · LearnInBits</title>
+  <meta name="description" content="Right-click any APK. Get a full malware-analysis breakdown in seconds.">
+  <link rel="icon" href="../../assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,500;0,8..60,600;1,8..60,500&display=swap">
+  <link rel="stylesheet" href="../../assets/css/style.css?v=20261029d">
+  <script>try{var t=localStorage.getItem("lib-theme");t=t?JSON.parse(t):(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+</head>
+<body data-root="../../" data-page="project" data-id="apk-inspector">
+
+<main id="main" class="wrap page">
+
+  <div data-render="project-header"></div>
+
+  <div class="content-col">
+
+    <h2>The problem</h2>
+    <p>To examine an APK, you usually switch between many tools. You use the terminal for <code>aapt</code> and <code>apksigner</code>, a different tool for the certificate and a browser for hash lookups. Each tool shows one part of the picture.</p>
+    <p>APK Inspector puts all the parts in one window. Right-click an APK file, select <strong>Scripts</strong> and then <strong>Get APK Details</strong>. You do not need the terminal.</p>
+
+    <h2>How it works</h2>
+    <figure class="diagram">
+      <div class="frame"><img src="../../assets/img/diagrams/apk-inspector-flow.svg" alt="You right-click an APK in the file manager. A Nautilus script starts the Python app. The app runs aapt, apksigner, openssl and unzip on the APK. The results show in one window with ten tabs."></div>
+      <figcaption>From a right-click to a full report.</figcaption>
+    </figure>
+    <ol class="steps">
+      <li><strong>You select the APK.</strong> Right-click the file in the Nautilus file manager.</li>
+      <li><strong>The script starts.</strong> A Nautilus script gives the path of the file to the app.</li>
+      <li><strong>The app runs the tools.</strong> The Python app runs <code>aapt</code>, <code>apksigner</code>, <code>openssl</code> and <code>unzip</code> on the APK.</li>
+      <li><strong>The app reads the results.</strong> It collects the output of each tool and finds the important values.</li>
+      <li><strong>You see the report.</strong> A GTK window shows the results in ten tabs.</li>
+    </ol>
+  </div>
+
+  <h2>What you get</h2>
+  <div class="feature-grid">
+    <div class="feature"><b>File info</b><span>File name, path, size, MD5 and SHA-256</span></div>
+    <div class="feature"><b>Metadata</b><span>Package name, version, SDK targets and the debuggable flag</span></div>
+    <div class="feature"><b>Permissions</b><span>All declared permissions, with dangerous permissions in red</span></div>
+    <div class="feature"><b>Components</b><span>Counts and names of activities, services, receivers and providers</span></div>
+    <div class="feature"><b>Contents</b><span>DEX files, native libraries, assets and MultiDex</span></div>
+    <div class="feature"><b>Signing</b><span>Signature schemes v1 to v4 and the result of the check</span></div>
+    <div class="feature"><b>Certificate</b><span>Subject, issuer, dates, key size and fingerprints</span></div>
+    <div class="feature"><b>Native libraries</b><span>Each <code>.so</code> file and its CPU architecture</span></div>
+    <div class="feature"><b>Strings</b><span>URLs, IP addresses, email addresses, API keys and crypto wallet addresses</span></div>
+    <div class="feature"><b>Toolbar</b><span>Export the report, copy the SHA-256, open in JADX-GUI and change the theme</span></div>
+  </div>
+
+  <h2>Screenshots</h2>
+  <div class="slides" data-slides>
+    <div class="slides-track">
+      <div class="slide"><figure><img src="../../assets/img/projects/apk-inspector/main-window-light.png" alt="The main window in the light theme, File Info tab" loading="lazy"><figcaption>The main window, light theme</figcaption></figure></div>
+      <div class="slide"><figure><img src="../../assets/img/projects/apk-inspector/main-window-dark.png" alt="The main window in the dark theme" loading="lazy"><figcaption>The main window, dark theme</figcaption></figure></div>
+      <div class="slide"><figure><img src="../../assets/img/projects/apk-inspector/tab-permissions.png" alt="The Permissions tab with dangerous permissions in red" loading="lazy"><figcaption>Permissions, with dangerous permissions in red</figcaption></figure></div>
+      <div class="slide"><figure><img src="../../assets/img/projects/apk-inspector/tab-components.png" alt="The Components tab" loading="lazy"><figcaption>Components</figcaption></figure></div>
+      <div class="slide"><figure><img src="../../assets/img/projects/apk-inspector/tab-signing.png" alt="The Signing tab" loading="lazy"><figcaption>Signing</figcaption></figure></div>
+      <div class="slide"><figure><img src="../../assets/img/projects/apk-inspector/tab-certificate.png" alt="The Certificate tab" loading="lazy"><figcaption>Certificate</figcaption></figure></div>
+      <div class="slide"><figure><img src="../../assets/img/projects/apk-inspector/tab-strings.png" alt="The Strings tab" loading="lazy"><figcaption>Strings</figcaption></figure></div>
+      <div class="slide"><figure><img src="../../assets/img/projects/apk-inspector/context-menu.png" alt="The right-click menu in Nautilus with Scripts and Get APK Details" loading="lazy"><figcaption>The right-click menu</figcaption></figure></div>
+    </div>
+  </div>
+
+  <div class="content-col">
+    <h2>Install</h2>
+    <p>APK Inspector works on Ubuntu with the Nautilus file manager.</p>
+<pre><code># 1. Get the code
+git clone https://github.com/bhardwajAbhi/apk-inspector.git
+cd apk-inspector
+
+# 2. Install the tools that it uses
+sudo apt install aapt apksigner openssl unzip python3-gi gir1.2-gtk-3.0
+
+# 3. Install APK Inspector
+bash install.sh</code></pre>
+    <p>The installer copies the app to <code>~/.local/share/apk-inspector/</code>, adds the Nautilus script and restarts Nautilus. For decompilation, also install <code>jadx-gui</code>. This is optional.</p>
+
+    <h2>Use</h2>
+    <ul>
+      <li><strong>From the file manager:</strong> right-click an <code>.apk</code> file, select <strong>Scripts</strong>, then <strong>Get APK Details</strong>.</li>
+      <li><strong>From the terminal:</strong> run the Python script with the path of the APK.</li>
+    </ul>
+
+    <div class="block security">
+      <div class="label">Security lens</div>
+      <p>APK Inspector does static analysis. It reads the APK but does not run it. Thus, it is safe to use on a malicious APK. It also does not send the APK to a server. All the work happens on your computer.</p>
+      <p>Static analysis has a limit: it cannot see code that the app downloads or decrypts when it runs. For that, you need dynamic analysis.</p>
+    </div>
+
+    <p class="mt"><a class="more-link" href="../index.html">All projects<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg></a></p>
+  </div>
+
+</main>
+
+<script src="../../assets/js/site.js?v=20261029d"></script>
+</body>
+</html>

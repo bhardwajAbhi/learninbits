@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 336" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">Lawful grounds in the DPDP Act and the GDPR</title>
+  <desc id="d">On the left, the DPDP Act in Sections 4 to 7 allows two grounds. Consent must be free, specific, informed, unconditional and unambiguous with a clear affirmative action, and withdrawal must be as easy as giving it. Certain legitimate uses cover data the person gave for a purpose and did not object to, state services, legal duties, court orders, medical emergencies, disasters and employment. On the right, GDPR Article 6 has six bases, namely consent, contract, legal obligation, vital interests, public task and legitimate interests. Contract and legitimate interests have no direct DPDP equivalent.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="20" y="30" width="360" height="290" rx="14" fill="#fff" stroke="#b7791f" stroke-width="1.6"/>
+<text x="36" y="58" font-size="13.5" fill="#8a5a12" text-anchor="start" font-weight="700">DPDP Act, Sections 4 to 7</text>
+<rect x="36" y="74" width="328" height="96" rx="10" fill="#fdf4e3" stroke="#b7791f" stroke-width="1.2"/>
+<text x="50" y="98" font-size="13" fill="#8a5a12" text-anchor="start" font-weight="700">Consent</text>
+<text x="50" y="120" font-size="11.2" fill="#1c2230" text-anchor="start">Free, specific, informed, unconditional and</text>
+<text x="50" y="136" font-size="11.2" fill="#1c2230" text-anchor="start">unambiguous, with a clear affirmative action.</text>
+<text x="50" y="152" font-size="11.2" fill="#1c2230" text-anchor="start">Withdrawal as easy as giving it.</text>
+<rect x="36" y="184" width="328" height="120" rx="10" fill="#fdf4e3" stroke="#b7791f" stroke-width="1.2"/>
+<text x="50" y="208" font-size="13" fill="#8a5a12" text-anchor="start" font-weight="700">Certain legitimate uses</text>
+<text x="50" y="230" font-size="11.2" fill="#1c2230" text-anchor="start">Data the person gave for a purpose and did not</text>
+<text x="50" y="246" font-size="11.2" fill="#1c2230" text-anchor="start">object to, state services, legal duties, court</text>
+<text x="50" y="262" font-size="11.2" fill="#1c2230" text-anchor="start">orders, medical emergencies, disasters and</text>
+<text x="50" y="278" font-size="11.2" fill="#1c2230" text-anchor="start">employment.</text>
+<rect x="420" y="30" width="440" height="290" rx="14" fill="#fff" stroke="#2f62c8" stroke-width="1.6"/>
+<text x="436" y="58" font-size="13.5" fill="#1f4a9e" text-anchor="start" font-weight="700">GDPR, Article 6</text>
+<rect x="436" y="74" width="408" height="30" rx="8" fill="#eef3fb" stroke="#2f62c8" stroke-width="1.2"/>
+<text x="450" y="94" font-size="12.2" fill="#1f4a9e" text-anchor="start" font-weight="700">(a) Consent</text>
+<rect x="436" y="112" width="408" height="30" rx="8" fill="#eef3fb"/>
+<text x="450" y="132" font-size="12.2" fill="#1f4a9e" text-anchor="start" font-weight="600">(b) Contract</text>
+<rect x="436" y="150" width="408" height="30" rx="8" fill="#eef3fb"/>
+<text x="450" y="170" font-size="12.2" fill="#1f4a9e" text-anchor="start" font-weight="600">(c) Legal obligation</text>
+<rect x="436" y="188" width="408" height="30" rx="8" fill="#eef3fb"/>
+<text x="450" y="208" font-size="12.2" fill="#1f4a9e" text-anchor="start" font-weight="600">(d) Vital interests</text>
+<rect x="436" y="226" width="408" height="30" rx="8" fill="#eef3fb"/>
+<text x="450" y="246" font-size="12.2" fill="#1f4a9e" text-anchor="start" font-weight="600">(e) Public task</text>
+<rect x="436" y="264" width="408" height="30" rx="8" fill="#eef3fb"/>
+<text x="450" y="284" font-size="12.2" fill="#1f4a9e" text-anchor="start" font-weight="600">(f) Legitimate interests</text>
+<text x="450" y="308" font-size="11" fill="#4a5263" text-anchor="start" font-style="italic">Contract and legitimate interests have no direct DPDP equivalent.</text>
+</svg>

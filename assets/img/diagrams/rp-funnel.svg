@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 400" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">Introduction funnel and literature gap</title>
+  <desc id="d">On the left, the introduction narrows from the field to the area, to the specific problem and to your contribution. On the right, a gap matrix of speed and accuracy. Method A is fast but inaccurate. Method B is accurate but slow. The gap is a method that is both fast and accurate.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<path d="M30 30 H430 L390 106 H70 Z" fill="#eef3fb" stroke="#2f62c8" stroke-width="1.6"/>
+<text x="230" y="74" font-size="15.5" fill="#1f4a9e" text-anchor="middle" font-weight="700">The field</text>
+<path d="M70 116 H390 L350 192 H110 Z" fill="#f3f0fa" stroke="#7a4fc2" stroke-width="1.6"/>
+<text x="230" y="160" font-size="15.5" fill="#58378f" text-anchor="middle" font-weight="700">The area</text>
+<path d="M110 202 H350 L310 278 H150 Z" fill="#fdf4e3" stroke="#b7791f" stroke-width="1.6"/>
+<text x="230" y="246" font-size="15.5" fill="#8a5a12" text-anchor="middle" font-weight="700">The specific problem</text>
+<path d="M150 288 H310 L295 364 H165 Z" fill="#e3f4ee" stroke="#0f8a6a" stroke-width="1.6"/>
+<text x="230" y="332" font-size="15.5" fill="#0b6650" text-anchor="middle" font-weight="700">Your contribution</text>
+<text x="230" y="384" font-size="12.5" fill="#4a5263" text-anchor="middle" font-weight="700">Start broad, then narrow down</text>
+<text x="670" y="24" font-size="15.5" fill="#1c2230" text-anchor="middle" font-weight="700">Find the gap in the literature</text>
+<rect x="490" y="40" width="174" height="144" rx="10" fill="#fff" stroke="#d9d4c7" stroke-width="1.5"/>
+<rect x="670" y="40" width="174" height="144" rx="10" fill="#fff" stroke="#d9d4c7" stroke-width="1.5"/>
+<rect x="490" y="190" width="174" height="144" rx="10" fill="#fff" stroke="#d9d4c7" stroke-width="1.5"/>
+<rect x="670" y="190" width="174" height="144" rx="10" fill="#fff" stroke="#d9d4c7" stroke-width="1.5"/>
+<rect x="496" y="46" width="162" height="132" rx="8" fill="#fdf4e3" stroke="#b7791f" stroke-width="1.5"/>
+<text x="577" y="104" font-size="15.5" fill="#8a5a12" text-anchor="middle" font-weight="700">Method A</text>
+<text x="577" y="128" font-size="12.5" fill="#4a5263" text-anchor="middle">fast, inaccurate</text>
+<rect x="676" y="196" width="162" height="132" rx="8" fill="#f3f0fa" stroke="#7a4fc2" stroke-width="1.5"/>
+<text x="757" y="254" font-size="15.5" fill="#58378f" text-anchor="middle" font-weight="700">Method B</text>
+<text x="757" y="278" font-size="12.5" fill="#4a5263" text-anchor="middle">slow, accurate</text>
+<rect x="676" y="46" width="162" height="132" rx="8" fill="#0f8a6a"/>
+<text x="757" y="104" font-size="15.5" fill="#fff" text-anchor="middle" font-weight="700">The gap</text>
+<text x="757" y="128" font-size="12.5" fill="#ffffffdd" text-anchor="middle">fast and accurate</text>
+<text x="478" y="116" font-size="12.5" fill="#4a5263" text-anchor="end" font-weight="700">Fast</text>
+<text x="478" y="266" font-size="12.5" fill="#4a5263" text-anchor="end" font-weight="700">Slow</text>
+<text x="580" y="352" font-size="12.5" fill="#4a5263" text-anchor="middle" font-weight="700">Inaccurate</text>
+<text x="760" y="352" font-size="12.5" fill="#4a5263" text-anchor="middle" font-weight="700">Accurate</text>
+</svg>

@@ -1,0 +1,503 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>The LangChain Expression Language (LCEL) · LangChain, Step by Step · LearnInBits</title>
+  <meta name="description" content="Join a prompt, a model and an output parser into a chain with the pipe symbol, and join two chains into one, so that the output of one step becomes the input of the next.">
+  <link rel="icon" href="../../assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,500;0,8..60,600;1,8..60,500&display=swap">
+  <link rel="stylesheet" href="../../assets/css/style.css?v=20261029d">
+  <script>try{var t=localStorage.getItem("lib-theme");t=t?JSON.parse(t):(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+</head>
+<body data-root="../../" data-page="chapter" data-course="langchain" data-id="06-lcel">
+
+<main id="main">
+<article>
+
+
+<div class="block oneline">
+  <div class="label">In one line</div>
+  <p>A chain joins several steps into one, so that the output of each step goes into the next and one call runs the whole task.</p>
+</div>
+
+<section class="learn">
+  <h2>What you will learn</h2>
+  <ul>
+    <li>Why a task with several steps is easier to build as a chain</li>
+    <li>How the pipe symbol <code>|</code> joins a prompt, a model and a parser</li>
+    <li>How to join two chains, so that the answer of the first becomes the input of the second</li>
+    <li>How to see what each step receives and returns, with the debug mode</li>
+  </ul>
+  <p class="needs">Read <a href="05-prompt-templates.html">chapter 5</a> first. In this chapter, you will turn the template and the model from that chapter into a chain.</p>
+</section>
+
+<h2>The idea</h2>
+<p>In chapter 5, your code did each step by hand. It filled the template with <code>format()</code>, sent the prompt with <code>invoke()</code> and took the text with <code>.content</code>. For one step, this is fine. A real task often has several steps, such as first sorting a description into categories and then writing a report about them.</p>
+<p>The LangChain Expression Language (LCEL) joins such steps with the pipe symbol <code>|</code>. The output of the step on the left goes into the step on the right. The result is a chain, and a chain has the same <code>invoke()</code> method as a model. One call then runs all the steps in order, so that your code stays short and each step stays easy to change.</p>
+<p>A typical chain has three steps. The prompt template fills its slots. The model writes the answer. An output parser turns the answer into the form that the next step needs, such as plain text.</p>
+
+
+<div class="block analogy">
+  <div class="label">Real-life analogy</div>
+  <p>A chain works like an assembly line in a factory. Each station does one job and passes the part to the next station. You can add a station or replace one, and the rest of the line stays the same.</p>
+</div>
+
+<figure class="diagram">
+  <div class="frame"><img src="../../assets/img/diagrams/lc-06-chain.svg" alt="Top, one chain with three steps. The input is a dictionary with the behavior. The prompt step fills the template, the model ChatOllama writes the answer, and the parser StrOutputParser keeps only the text, so the output is a plain string. The code is first_chain equals mitre_prompt pipe llm pipe StrOutputParser. Bottom, two chains joined into one. The behavior text from the user goes into first_chain, which maps it to techniques as a plain string. The string goes into second_chain, which writes the report as an AIMessage. The code is overall_chain equals first_chain pipe second_chain." loading="lazy"></div>
+  <figcaption>Top, the three steps of one chain. Bottom, two chains joined into one.</figcaption>
+</figure>
+
+<h2>What you will build</h2>
+<p>You will build a page that analyzes a description of how an app behaves. The first chain maps the behavior to techniques in the MITRE ATT&amp;CK Mobile matrix. This matrix is a public list of known attack techniques, each with an ID. The second chain writes a short threat report from that mapping. One click runs both chains.</p>
+<p>The same structure works for any two-step task, such as summarizing a document and then translating the summary. You will change only the two templates.</p>
+
+
+<figure class="diagram">
+  <div class="frame"><img src="../../assets/img/diagrams/lc-06-flow.svg" alt="Setup, set_debug(True) and llm = ChatOllama(model=&quot;gemma2b&quot;), Debug logs on, so that each step prints to the terminal. Template, mitre_prompt and report_prompt, Two templates, one slot each, {behavior} and {techniques}. Chain 1, first_chain = mitre_prompt | llm | StrOutputParser(), Maps the behavior to MITRE ATT&amp;CK Mobile techniques. Chain 2, second_chain = report_prompt | llm, Writes a threat report from the techniques. Call, overall_chain.invoke({&quot;behavior&quot; behavior}), Runs after a click on Analyze Behavior. Page, st.write(response.content), The report shows below the button." loading="lazy"></div>
+  <figcaption>Two templates become two chains. One call to the joined chain runs both.</figcaption>
+</figure>
+
+<h2>Build it step by step</h2>
+
+<h3 class="step"><span class="sn">Step 1</span>Create the file</h3>
+
+<p>In the <code>code</code> folder, create the folder <code>06_lang_chain_expression_language_LCEL</code> and in it the file <code>app_ollama.py</code>.</p>
+
+<h3 class="step"><span class="sn">Step 2</span>Import the libraries</h3>
+
+<pre class="code" data-lang="python" data-file="code/06_lang_chain_expression_language_LCEL/app_ollama.py"><code>from langchain_ollama.chat_models import ChatOllama
+from langchain_core.prompts import PromptTemplate
+from langchain_core.output_parsers import StrOutputParser
+from langchain_core.globals import set_debug
+
+import streamlit as st</code></pre>
+
+<ul class="explain">
+  <li><code>StrOutputParser</code> is new. It takes the answer of the model and returns only its text, so that the next step receives plain text and not a message object.</li>
+  <li><code>set_debug</code> is new. It turns the debug mode of LangChain on or off.</li>
+  <li><code>ChatOllama</code>, <code>PromptTemplate</code> and <code>streamlit</code> are the same as in chapter 5.</li>
+</ul>
+
+<h3 class="step"><span class="sn">Step 3</span>Turn on the debug mode and load the model</h3>
+
+<pre class="code" data-lang="python" data-file="code/06_lang_chain_expression_language_LCEL/app_ollama.py"><code>set_debug(True)
+
+llm = ChatOllama(model="gemma:2b")</code></pre>
+
+<ul class="explain">
+  <li><code>set_debug(True)</code> makes LangChain print each step of a chain to the terminal, with its input and its output. When a chain gives a strange result, you can then see which step caused it.</li>
+  <li><code>llm</code> uses <code>gemma:2b</code>, as in chapter 5.</li>
+</ul>
+
+<h3 class="step"><span class="sn">Step 4</span>Write the first template</h3>
+
+<pre class="code" data-lang="python" data-file="code/06_lang_chain_expression_language_LCEL/app_ollama.py"><code>mitre_prompt = PromptTemplate(
+    input_variables=["behavior"],
+    template="""
+    You are a senior Android Malware Analyst with 15 years of experience in the domain.
+    Analyze the following observed Android malware behavior.
+    {behavior}
+
+    Your task is to map the behavior ONLY to the MITRE ATT&amp;CK Mobile Matrix (Android platform).
+
+    For every matching technique, provide:
+    - Technique ID
+    - Technique Name
+    - One-line justification
+    """
+)</code></pre>
+
+<ul class="explain">
+  <li>The template has one slot, <code>{behavior}</code>, for the text that the user types.</li>
+  <li>"ONLY to the MITRE ATT&amp;CK Mobile Matrix" limits the model to one list of techniques, so that the answer uses known IDs and names.</li>
+  <li>The three items under "For every matching technique" fix the form of each result, so that the second step always gets the same kind of input.</li>
+</ul>
+
+<h3 class="step"><span class="sn">Step 5</span>Write the second template</h3>
+
+<pre class="code" data-lang="python" data-file="code/06_lang_chain_expression_language_LCEL/app_ollama.py"><code>report_prompt = PromptTemplate(
+    input_variables=["techniques"],
+    template="""
+    You are a Mobile Threat Intelligence Analyst.
+
+    Below are the mapped MITRE ATT&amp;CK Mobile techniques.
+    {techniques}
+
+    Generate a professional Android Threat Intelligence Report.
+
+    Include the following sections:
+
+    1. Executive Summary
+
+    2. Mobile ATT&amp;CK Techniques
+
+    3. Possible Malware Objectives
+
+    4. Detection Opportunities
+
+    5. Mitigation Recommendations
+
+    Keep the report concise, clear and easy to understand.
+    """
+)</code></pre>
+
+<ul class="explain">
+  <li>The slot <code>{techniques}</code> will receive the output of the first chain.</li>
+  <li>The five numbered sections fix the structure of the report, as the numbered list did in chapter 5.</li>
+</ul>
+
+<h3 class="step"><span class="sn">Step 6</span>Build the chains</h3>
+
+<pre class="code" data-lang="python" data-file="code/06_lang_chain_expression_language_LCEL/app_ollama.py"><code>first_chain = mitre_prompt | llm | StrOutputParser()
+
+second_chain = report_prompt | llm
+
+overall_chain = first_chain | second_chain</code></pre>
+
+<ul class="explain">
+  <li><code>mitre_prompt | llm | StrOutputParser()</code> is the first chain. The template fills its slot and the model answers. The parser then keeps only the text.</li>
+  <li><code>report_prompt | llm</code> is the second chain. It has no parser, so it returns the full message. The page will use <code>.content</code>.</li>
+  <li><code>first_chain | second_chain</code> joins the two chains. The text from the first chain goes into the second. The second template has only one slot, so LangChain puts the text into <code>{techniques}</code> by itself.</li>
+  <li>These lines only describe the chains. Nothing runs until the code calls <code>invoke()</code>.</li>
+</ul>
+
+<h3 class="step"><span class="sn">Step 7</span>Build the page</h3>
+
+<pre class="code" data-lang="python" data-file="code/06_lang_chain_expression_language_LCEL/app_ollama.py"><code>st.set_page_config(page_title="Android Mobile ATT&amp;CK Mapper", page_icon="🤖")
+
+st.write(
+    "Describe the observed Android malware behavior. "
+    "This application will first map the behavior to the **MITRE ATT&amp;CK Mobile Matrix**, "
+    "then generate a threat intelligence report."
+)
+
+behavior = st.text_area(
+    label="Observed Android Malware Behavior",
+    height=400, 
+    placeholder="""
+
+    App uses following permissions:
+    READ_SMS
+    INTERNET
+    RECEIVE_BOOT_COMPLETED
+
+    Observed Behaviour:
+    - Reads incoming OTP SMS messages
+    - Starts automatically after device reboot
+    - Sends collected SMS messages to a remote server
+    - Requests SMS permissions during installation
+    - Hides app icon from the app drawer
+    """
+)
+analyze_button = st.button(label="Analyze Behavior",)</code></pre>
+
+<ul class="explain">
+  <li><code>page_icon</code> sets the small icon on the browser tab.</li>
+  <li><code>st.write</code> shows a short description at the top, so that the user knows what to type.</li>
+  <li><code>st.text_area</code> is a text box with many lines, so that the user can paste a long description. <code>placeholder</code> shows an example in gray, and <code>height=400</code> makes the box tall enough for it.</li>
+</ul>
+
+<h3 class="step"><span class="sn">Step 8</span>Run the chain</h3>
+
+<pre class="code" data-lang="python" data-file="code/06_lang_chain_expression_language_LCEL/app_ollama.py"><code>if analyze_button:
+    if behavior.strip():
+        with st.spinner(text="Analyzing malware behavior..."):
+            response = overall_chain.invoke({"behavior":behavior})
+        st.subheader("Threat Intelligence Report")
+        st.write(response.content)
+    else:
+        st.warning("Please enter the observed Android malware behavior.")</code></pre>
+
+<ul class="explain">
+  <li><code>behavior.strip()</code> removes spaces and empty lines, so that a box with only spaces counts as empty.</li>
+  <li><code>overall_chain.invoke({"behavior": behavior})</code> runs both chains with one call. The key <code>"behavior"</code> must match the slot of the first template.</li>
+  <li><code>st.write(response.content)</code> shows the report. The output of the first chain is not on the page, but the debug mode prints it in the terminal.</li>
+</ul>
+
+<h2>Run it</h2>
+<p>Make sure that Ollama runs and that the <code>langchain</code> environment is active. Then start the app from the root folder of the project.</p>
+
+<pre class="code" data-lang="bash"><code>streamlit run code/06_lang_chain_expression_language_LCEL/app_ollama.py</code></pre>
+
+<p>Streamlit will start a small web server and print its address.</p>
+
+<pre class="code" data-lang="output"><code>  You can now view your Streamlit app in your browser.
+
+  Local URL: http://localhost:8501
+  Network URL: http://192.168.1.20:8501</code></pre>
+
+<p>Open the Local URL in your browser. Paste the example from the gray text in the box, with the app details, the permissions and the observed behavior. Then click Analyze Behavior. The report will appear after both chains finish, so it takes longer than in chapter 5.</p>
+
+<figure class="shot">
+  <div class="browser"><div class="bar"><i></i><i></i><i></i><span>localhost:8501</span></div><img src="https://raw.githubusercontent.com/bhardwajAbhi/learning-langchain/master/code/06_lang_chain_expression_language_LCEL/app_ollama_output.png" alt="The Streamlit page with a description of an app called OTP Thief that reads SMS messages, starts after a reboot, sends messages to a server and hides its icon. Below the Analyze Behavior button, the Threat Intelligence Report has an executive summary, two techniques T1011 Lateral Movement and T1015 SMS Spoofing, possible objectives, detection opportunities and mitigation recommendations." loading="lazy"></div>
+  <figcaption>The second chain wrote a report from the techniques that the first chain found.</figcaption>
+</figure>
+
+<div class="block note">
+  <div class="label">Your output can be different</div>
+  <p>A language model does not always give the same answer. Your report can name other techniques. The sections of the report will be the same, because the second template asks for them.</p>
+</div>
+
+<h2>Read the debug output</h2>
+
+<p>In chapter 5, the app had one step, so the page showed everything that happened. This app has five steps, and the page shows only the result of the last one. While the app runs, the debug mode prints every step in the terminal. You can then see what each step received and what it gave back. The output is long, but it repeats one simple pattern.</p>
+
+<p>A shortened run looks like this. The long texts end in <code>...</code>, and your times and token counts will be different.</p>
+
+<pre class="code" data-lang="output"><code>[chain/start] [chain:RunnableSequence] Entering Chain run with input:
+{
+  "behavior": "App uses following permissions:\nREAD_SMS\nINTERNET\n..."
+}
+[chain/start] [chain:RunnableSequence &gt; prompt:PromptTemplate] Entering Prompt run with input:
+{
+  "behavior": "App uses following permissions:\nREAD_SMS\nINTERNET\n..."
+}
+[chain/end] [chain:RunnableSequence &gt; prompt:PromptTemplate] [1ms] Exiting Prompt run with output:
+[outputs]
+[llm/start] [chain:RunnableSequence &gt; llm:ChatOllama] Entering LLM run with input:
+{
+  "prompts": [
+    "Human: \n    You are a senior Android Malware Analyst with 15 years of experience in the domain.\n    Analyze the following observed Android malware behavior.\n    App uses following permissions:\nREAD_SMS\n..."
+  ]
+}
+[llm/end] [chain:RunnableSequence &gt; llm:ChatOllama] [9.84s] Exiting LLM run with output:
+{
+  "generations": [
+    [
+      {
+        "text": "Technique ID T1011, Lateral Movement ...",
+        ...
+            "usage_metadata": {
+              "input_tokens": 148,
+              "output_tokens": 212,
+              "total_tokens": 360
+            },
+        ...
+}
+[chain/start] [chain:RunnableSequence &gt; parser:StrOutputParser] Entering Parser run with input:
+[inputs]
+[chain/end] [chain:RunnableSequence &gt; parser:StrOutputParser] [0ms] Exiting Parser run with output:
+{
+  "output": "Technique ID T1011, Lateral Movement ..."
+}
+[chain/start] [chain:RunnableSequence &gt; prompt:PromptTemplate] Entering Prompt run with input:
+{
+  "input": "Technique ID T1011, Lateral Movement ..."
+}
+...
+[chain/end] [chain:RunnableSequence] [31.25s] Exiting Chain run with output:
+[outputs]</code></pre>
+
+<figure class="diagram">
+  <div class="frame"><img src="../../assets/img/diagrams/lc-06-debug.svg" alt="Left, the terminal output of the debug mode, shortened to one start line and one end line for each step. Right, the step that printed each pair. The first pair belongs to the whole chain, a RunnableSequence, which receives the behavior and returns the report. Then come the steps of chain 1. The prompt fills behavior into the template, the model ChatOllama maps the behavior to techniques and the parser StrOutputParser keeps only the text of the answer. Then come the steps of chain 2. The prompt fills techniques into the template, and the model writes the report. Green lines start a step. Cyan lines end it and carry the time, such as 1 millisecond for a prompt and about 10 to 20 seconds for the model." loading="lazy"></div>
+  <figcaption>Each pair of debug lines belongs to one step. The two model calls take almost all of the time.</figcaption>
+</figure>
+
+<h3>The parts of a line</h3>
+
+<p>Every block starts with one line, and each line has the same parts. Once you can read one line, you can read the whole output.</p>
+
+<div class="table-wrap">
+  <table>
+    <thead><tr><th>Part</th><th>Example</th><th>What it tells you</th></tr></thead>
+    <tbody>
+      <tr><td>Event</td><td><code>[chain/start]</code><br><code>[llm/end]</code></td><td>Whether a step starts or ends. <code>llm</code> marks a call to the model, and <code>chain</code> marks every other step. In the terminal, start lines are green and end lines are cyan, so that you can scan the output quickly.</td></tr>
+      <tr><td>Path</td><td><code>[... &gt; llm:ChatOllama]</code></td><td>Where the step sits. The full path reads from left to right, like a folder path. The whole chain, <code>chain:RunnableSequence</code>, comes first, and the step inside it comes after the <code>&gt;</code> sign. Each step shows its kind and its class, so that you can match it to one part of your code.</td></tr>
+      <tr><td>Time</td><td><code>[9.84s]</code></td><td>How long the step took. Only end lines carry a time. It shows you which step makes the app slow.</td></tr>
+      <tr><td>Data</td><td>The JSON below the line</td><td>What the step received or returned. Some steps show only <code>[inputs]</code> or <code>[outputs]</code>, because LangChain prints the full data only when it is a plain dictionary.</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<p>The times already tell a story. The two prompts and the parser take a millisecond or less. The two model calls take almost all of the 31 seconds. If the app feels slow, a faster or smaller model helps, and changes to the rest of the chain do not.</p>
+
+<h3>The line to check first</h3>
+
+<p>The most useful block is the input of the model, under <code>[llm/start]</code>. The <code>prompts</code> list shows the exact text that reached the model, after the template filled in its slot. <code>Human:</code> marks the role of the message, and <code>\n</code> marks a line break. When an answer looks wrong, read this text first. A missing value, an empty slot or a mistake in the template will show up here, before the model even starts.</p>
+
+<p>The end of the model call, under <code>[llm/end]</code>, holds the answer in <code>text</code>. Further down, <code>usage_metadata</code> counts the tokens. <code>input_tokens</code> counts the prompt, and <code>output_tokens</code> counts the answer. More tokens make a call slower, and with a paid model such as GPT or Gemini, they also make it cost more.</p>
+
+<h3>Follow the data through both chains</h3>
+
+<p>The debug output lets you follow one piece of data from the page to the report. The behavior from the text box enters the whole chain and the first prompt. The answer of the first model call passes through the parser and comes out as <code>{"output": "..."}</code>. The second prompt then receives the same text. The debug mode labels a plain text input as <code>input</code>, and the template puts it into its only slot, <code>{techniques}</code>. The second model call writes the report, and the whole chain ends.</p>
+
+<p>The page never shows the techniques from the first chain. In the terminal, they are right there, between the two chains. The next section shows why that matters.</p>
+
+<h2>Look closely</h2>
+<p>The report looks professional, but its technique IDs are wrong. <code>T1011</code> is "Exfiltration Over Other Network Medium" in the Enterprise matrix, not a mobile technique. <code>T1015</code> is "Accessibility Features", also from the Enterprise matrix. "Lateral Movement" is the name of a tactic, which is a group of techniques. It is not the name of one technique.</p>
+<p>The Mobile matrix has techniques for this app. Examples are <a href="https://attack.mitre.org/techniques/T1636/004/">T1636.004, SMS Messages</a> and <a href="https://attack.mitre.org/techniques/T1628/001/">T1628.001, Suppress Application Icon</a>. The second chain trusted the first chain completely and built the whole report on its mistakes.</p>
+<p>This is the main risk of a chain. An error in an early step travels to every later step. The debug output helps here. It shows the techniques between the two chains, so that you can check them before you trust the report.</p>
+
+
+<details class="fold">
+  <summary><span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m16 18 6-6-6-6M8 6l-6 6 6 6"/></svg></span><span class="ft">Full code of chapter 6<small>code/06_lang_chain_expression_language_LCEL/app_ollama.py</small></span><a class="gh-btn" href="https://github.com/bhardwajAbhi/learning-langchain/blob/master/code/06_lang_chain_expression_language_LCEL/app_ollama.py"><svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M12 .5a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2.1c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1.1-.8.1-.8.1-.8 1.2.1 1.9 1.3 1.9 1.3 1.1 1.9 2.9 1.3 3.6 1 .1-.8.4-1.3.8-1.6-2.7-.3-5.5-1.3-5.5-6a4.7 4.7 0 0 1 1.3-3.2c-.1-.3-.6-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.7 1.7.2 2.9.1 3.2a4.7 4.7 0 0 1 1.3 3.2c0 4.6-2.8 5.6-5.5 6 .4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .5z"/></svg>View on GitHub</a></summary>
+  <div class="fold-body">
+<pre class="code" data-lang="python" data-file="code/06_lang_chain_expression_language_LCEL/app_ollama.py"><code>from langchain_ollama.chat_models import ChatOllama
+from langchain_core.prompts import PromptTemplate
+from langchain_core.output_parsers import StrOutputParser
+from langchain_core.globals import set_debug
+
+import streamlit as st
+
+# ------------------------------------------------------
+# Enable LCEL Debug Logs
+# ------------------------------------------------------
+set_debug(True)
+
+# ------------------------------------------------------
+# Loading Ollama Model
+# ------------------------------------------------------
+llm = ChatOllama(model="gemma:2b")
+
+# ------------------------------------------------------
+# Prompt 1
+# Android Malware Behaviour --&gt; Mobile ATT&amp;CK Mapping
+# ------------------------------------------------------
+mitre_prompt = PromptTemplate(
+    input_variables=["behavior"],
+    template="""
+    You are a senior Android Malware Analyst with 15 years of experience in the domain.
+    Analyze the following observed Android malware behavior.
+    {behavior}
+
+    Your task is to map the behavior ONLY to the MITRE ATT&amp;CK Mobile Matrix (Android platform).
+
+    For every matching technique, provide:
+    - Technique ID
+    - Technique Name
+    - One-line justification
+    """
+)
+
+# ------------------------------------------------------
+# Prompt 2
+# Mobile ATT&amp;CK Mapping --&gt; Threat Intelligence Report
+# ------------------------------------------------------
+report_prompt = PromptTemplate(
+    input_variables=["techniques"],
+    template="""
+    You are a Mobile Threat Intelligence Analyst.
+
+    Below are the mapped MITRE ATT&amp;CK Mobile techniques.
+    {techniques}
+
+    Generate a professional Android Threat Intelligence Report.
+
+    Include the following sections:
+
+    1. Executive Summary
+
+    2. Mobile ATT&amp;CK Techniques
+
+    3. Possible Malware Objectives
+
+    4. Detection Opportunities
+
+    5. Mitigation Recommendations
+
+    Keep the report concise, clear and easy to understand.
+    """
+)
+
+# ---------------------------
+# LCEL Chains
+# ---------------------------
+first_chain = mitre_prompt | llm | StrOutputParser()
+
+second_chain = report_prompt | llm
+
+overall_chain = first_chain | second_chain
+
+# ---------------------------
+# Building Streamlit UI
+# ---------------------------
+st.set_page_config(page_title="Android Mobile ATT&amp;CK Mapper", page_icon="🤖")
+
+st.write(
+    "Describe the observed Android malware behavior. "
+    "This application will first map the behavior to the **MITRE ATT&amp;CK Mobile Matrix**, "
+    "then generate a threat intelligence report."
+)
+
+behavior = st.text_area(
+    label="Observed Android Malware Behavior",
+    height=400, 
+    placeholder="""
+
+    App uses following permissions:
+    READ_SMS
+    INTERNET
+    RECEIVE_BOOT_COMPLETED
+
+    Observed Behaviour:
+    - Reads incoming OTP SMS messages
+    - Starts automatically after device reboot
+    - Sends collected SMS messages to a remote server
+    - Requests SMS permissions during installation
+    - Hides app icon from the app drawer
+    """
+)
+analyze_button = st.button(label="Analyze Behavior",)
+# ---------------------------
+# Generating Response
+# ---------------------------
+if analyze_button:
+    if behavior.strip():
+        with st.spinner(text="Analyzing malware behavior..."):
+            response = overall_chain.invoke({"behavior":behavior})
+        st.subheader("Threat Intelligence Report")
+        st.write(response.content)
+    else:
+        st.warning("Please enter the observed Android malware behavior.")</code></pre>
+  </div>
+</details>
+
+<div class="block security">
+  <div class="label">Security lens</div>
+  <p>Each step of a chain trusts the output of the step before it. A wrong technique ID or an invented fact in step one becomes a confident claim in the final report. Check the output of the first step against the real source, such as the <a href="https://attack.mitre.org/matrices/mobile/">MITRE ATT&amp;CK Mobile matrix</a>, before you use a report. Also, the debug mode prints every prompt and answer in the terminal. Turn it off in an app for real users, so that private data does not end up in logs.</p>
+</div>
+
+<h2>Check yourself</h2>
+<div class="quiz">
+  <details>
+    <summary><span class="qq">What does <code>StrOutputParser()</code> do at the end of the first chain?</span></summary>
+    <div class="ans"><p>It takes the answer of the model and returns only its text, so that the second chain receives plain text.</p></div>
+  </details>
+  <details>
+    <summary><span class="qq">How does the text from the first chain reach the slot <code>{techniques}</code>?</span></summary>
+    <div class="ans"><p>The pipe symbol passes the text to the second chain. The second template has only one slot, so LangChain puts the text into it.</p></div>
+  </details>
+  <details>
+    <summary><span class="qq">The report has a wrong technique ID. Where do you look first?</span></summary>
+    <div class="ans"><p>At the output of the first chain, which the debug mode prints in the terminal. The error usually starts there.</p></div>
+  </details>
+</div>
+
+<h2>Key terms at a glance</h2>
+<div class="table-wrap">
+  <table class="kw">
+    <thead><tr><th>Term</th><th>Meaning</th></tr></thead>
+    <tbody>
+      <tr><td>LCEL</td><td>The LangChain Expression Language, which joins steps into chains with the pipe symbol</td></tr>
+      <tr><td>Chain</td><td>Several steps joined into one, so that one call runs them all in order</td></tr>
+      <tr><td>Pipe symbol <code>|</code></td><td>The symbol that passes the output of one step to the next step</td></tr>
+      <tr><td><code>StrOutputParser</code></td><td>An output parser that returns only the text of the answer</td></tr>
+      <tr><td>Debug mode</td><td>A mode that prints the input and the output of each step to the terminal</td></tr>
+      <tr><td>MITRE ATT&amp;CK</td><td>A public list of attack tactics and techniques, each with an ID</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<p>For more on joining steps, see <a href="../ai-engineering/02-your-first-chain.html">AI Engineering chapter 2</a>.</p>
+
+<h2>Next</h2>
+<p>In this chapter, plain text passed from one chain to the next. In <a href="07-sequential-chains.html">chapter 7</a>, the first chain will return structured data in JSON. You will also add a value from the user before the second chain runs.</p>
+</article>
+</main>
+
+<script src="../../assets/js/site.js?v=20261029d"></script>
+</body>
+</html>

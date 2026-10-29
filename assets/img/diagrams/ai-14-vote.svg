@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 308" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">How the votes become one answer</title>
+  <desc id="d">Four columns from left to right. The answers of five samples are 2000, 2600, 2000, 900 and 2000. Step 1 counts each answer, so 2000 has 3, 2600 has 1 and 900 has 1. Step 2 keeps the answer with the highest count, 2000. Step 3 works out the confidence, 3 of 5, which is 60 percent. Below, a tie. With the counts 2600 two times, 2000 two times and 900 once, both files keep the answer that appeared first, so 2600 wins. The confidence is only 40 percent, and a low value warns you that the runs did not agree.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="20" y="24" width="196" height="176" rx="12" fill="#fff" stroke="#5d6b7e" stroke-width="1.5"/>
+<rect x="20" y="24" width="196" height="34" rx="12" fill="#eef0f3"/>
+<text x="118" y="46" font-size="12.4" fill="#3f4a59" text-anchor="middle" font-weight="700">The answers</text>
+<text x="118" y="84" font-size="12.4" fill="#1c2230" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="600">2000</text>
+<text x="118" y="106" font-size="12.4" fill="#1c2230" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="600">2600</text>
+<text x="118" y="128" font-size="12.4" fill="#1c2230" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="600">2000</text>
+<text x="118" y="150" font-size="12.4" fill="#1c2230" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="600">900</text>
+<text x="118" y="172" font-size="12.4" fill="#1c2230" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="600">2000</text>
+<path d="M218 112 L 234 112" fill="none" stroke="#1c2230" stroke-width="1.5" marker-end="url(#m0)"/>
+<rect x="236" y="24" width="196" height="176" rx="12" fill="#fff" stroke="#0e7c86" stroke-width="1.5"/>
+<rect x="236" y="24" width="196" height="34" rx="12" fill="#e6f3f4"/>
+<text x="334" y="46" font-size="12.4" fill="#095a61" text-anchor="middle" font-weight="700">Step 1, count</text>
+<text x="286" y="84" font-size="12.4" fill="#1c2230" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="600">2000</text>
+<text x="382" y="84" font-size="12.4" fill="#1c2230" text-anchor="end">3 votes</text>
+<text x="286" y="106" font-size="12.4" fill="#1c2230" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="600">2600</text>
+<text x="382" y="106" font-size="12.4" fill="#1c2230" text-anchor="end">1 vote</text>
+<text x="286" y="128" font-size="12.4" fill="#1c2230" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="600">900</text>
+<text x="382" y="128" font-size="12.4" fill="#1c2230" text-anchor="end">1 vote</text>
+<path d="M434 112 L 450 112" fill="none" stroke="#1c2230" stroke-width="1.5" marker-end="url(#m0)"/>
+<rect x="452" y="24" width="196" height="176" rx="12" fill="#fff" stroke="#2f62c8" stroke-width="1.5"/>
+<rect x="452" y="24" width="196" height="34" rx="12" fill="#eef3fb"/>
+<text x="550" y="46" font-size="12.4" fill="#1f4a9e" text-anchor="middle" font-weight="700">Step 2, highest count</text>
+<text x="550" y="84" font-size="12.4" fill="#1c2230" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="600">2000</text>
+<path d="M650 112 L 666 112" fill="none" stroke="#1c2230" stroke-width="1.5" marker-end="url(#m0)"/>
+<rect x="668" y="24" width="196" height="176" rx="12" fill="#fff" stroke="#0f8a6a" stroke-width="1.5"/>
+<rect x="668" y="24" width="196" height="34" rx="12" fill="#e3f4ee"/>
+<text x="766" y="46" font-size="12.4" fill="#0b6650" text-anchor="middle" font-weight="700">Step 3, confidence</text>
+<text x="766" y="84" font-size="12.4" fill="#1c2230" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="600">3 / 5 = 60%</text>
+<rect x="20" y="218" width="840" height="76" rx="12" fill="#f2efe8"/>
+<text x="40" y="244" font-size="12.6" fill="#1c2230" text-anchor="start" font-weight="700">A tie</text>
+<text x="40" y="266" font-size="12" fill="#1c2230" text-anchor="start">2600 and 2000 get 2 votes each, and 900 gets 1. Both files keep the answer that appeared first, so 2600 wins.</text>
+<text x="40" y="284" font-size="12" fill="#4a5263" text-anchor="start">The confidence is only 40%. A low value warns you that the runs did not agree.</text>
+</svg>

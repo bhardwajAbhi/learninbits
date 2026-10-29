@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 206" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">The checks of the Network Security Config for one connection</title>
+  <desc id="d">An app opens a connection, and four checks follow. Plain HTTP is blocked by default since target API 28. The certificate chain must be trusted by the trust anchors, which are the system CAs only, with user CAs only in debug overrides. If the domain has a pin set, one pin in the chain has to match. If Certificate Transparency is required, which is the default for target API 37, the connection needs valid SCTs. Then the TLS connection proceeds. A failed check stops the connection. The rules come from res/xml/network_security_config.xml.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="20" y="24" width="140" height="50" rx="12" fill="#1c2230"/>
+<text x="90" y="46" font-size="11.6" fill="#fff" text-anchor="middle" font-weight="700">App opens a</text>
+<text x="90" y="62" font-size="11.6" fill="#fff" text-anchor="middle" font-weight="700">connection</text>
+<path d="M240 12 L310 49 L240 86 L170 49 Z" fill="#fff" stroke="#b7791f" stroke-width="2"/>
+<text x="240" y="54" font-size="11.2" fill="#8a5a12" text-anchor="middle" font-weight="700">Plain HTTP?</text>
+<path d="M160 49 L 168 49" fill="none" stroke="#1c2230" stroke-width="1.5" marker-end="url(#m0)"/>
+<text x="240" y="112" font-size="10.6" fill="#4a5263" text-anchor="middle">Blocked by default</text>
+<text x="240" y="126" font-size="10.6" fill="#4a5263" text-anchor="middle">since target API 28</text>
+<path d="M400 12 L470 49 L400 86 L330 49 Z" fill="#fff" stroke="#2f62c8" stroke-width="2"/>
+<text x="400" y="45.5" font-size="11.2" fill="#1f4a9e" text-anchor="middle" font-weight="700">Chain trusted by</text>
+<text x="400" y="62.5" font-size="11.2" fill="#1f4a9e" text-anchor="middle" font-weight="700">the trust anchors?</text>
+<path d="M310 49 L 328 49" fill="none" stroke="#1c2230" stroke-width="1.5" marker-end="url(#m0)"/>
+<text x="400" y="112" font-size="10.6" fill="#4a5263" text-anchor="middle">System CAs only, user</text>
+<text x="400" y="126" font-size="10.6" fill="#4a5263" text-anchor="middle">CAs in debug overrides</text>
+<path d="M560 12 L630 49 L560 86 L490 49 Z" fill="#fff" stroke="#7a4fc2" stroke-width="2"/>
+<text x="560" y="45.5" font-size="11.2" fill="#58378f" text-anchor="middle" font-weight="700">Pin set for</text>
+<text x="560" y="62.5" font-size="11.2" fill="#58378f" text-anchor="middle" font-weight="700">the domain?</text>
+<path d="M470 49 L 488 49" fill="none" stroke="#1c2230" stroke-width="1.5" marker-end="url(#m0)"/>
+<text x="560" y="112" font-size="10.6" fill="#4a5263" text-anchor="middle">One pin in the</text>
+<text x="560" y="126" font-size="10.6" fill="#4a5263" text-anchor="middle">chain has to match</text>
+<path d="M720 12 L790 49 L720 86 L650 49 Z" fill="#fff" stroke="#0f8a6a" stroke-width="2"/>
+<text x="720" y="54" font-size="11.2" fill="#0b6650" text-anchor="middle" font-weight="700">CT required?</text>
+<path d="M630 49 L 648 49" fill="none" stroke="#1c2230" stroke-width="1.5" marker-end="url(#m0)"/>
+<text x="720" y="112" font-size="10.6" fill="#4a5263" text-anchor="middle">Default for target</text>
+<text x="720" y="126" font-size="10.6" fill="#4a5263" text-anchor="middle">API 37, needs valid SCTs</text>
+<path d="M790 49 L 802 49" fill="none" stroke="#0f8a6a" stroke-width="1.8" marker-end="url(#m4)"/>
+<rect x="804" y="30" width="56" height="38" rx="8" fill="#e3f4ee" stroke="#0f8a6a" stroke-width="1.5"/>
+<text x="832" y="54" font-size="12" fill="#0b6650" text-anchor="middle" font-weight="700">TLS</text>
+<rect x="20" y="150" width="840" height="44" rx="10" fill="#f2efe8"/>
+<text x="440" y="177" font-size="12" fill="#1c2230" text-anchor="middle" font-weight="600">A failed check stops the connection. The rules come from res/xml/network_security_config.xml.</text>
+</svg>

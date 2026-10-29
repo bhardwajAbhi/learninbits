@@ -1,0 +1,2096 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Learnings from PC DPO 360 on privacy in data and AI · LearnInBits</title>
+  <meta name="description" content="Learnings from the PC DPO 360 certification, from the DPDP Act and consent to threat modeling, anonymization, differential privacy, private AI and a privacy rollout plan.">
+  <link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,500;0,8..60,600;1,8..60,500&display=swap">
+  <link rel="stylesheet" href="../assets/css/style.css?v=20261029d">
+  <script>try{var t=localStorage.getItem("lib-theme");t=t?JSON.parse(t):(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+</head>
+<body data-root="../" data-page="post" data-kind="article" data-id="privacy-in-data-and-ai-pc-dpo-360">
+
+<main id="main">
+<article>
+
+  <div class="block oneline">
+    <div class="label">In one line</div>
+    <p>Privacy is not a form to fill in. It is an engineering discipline that measures the risk in real data and reduces it with law, process and technology.</p>
+  </div>
+
+  <p>My work is in mobile security, where the focus is usually on confidentiality and access control. The PC DPO 360 (PrivaSapien Certified Data Protection Officer 360) certification widened this view. It treats privacy as a discipline of its own. Its central concern is what somebody can learn about a person from data, even when that data is fully secure. This article records what I learned, in the order of the course, for readers who work with personal data, privacy law or artificial intelligence (AI).</p>
+
+  <h2 id="a-story-to-begin">A story to begin</h2>
+  <div class="story">
+    <p class="st-intro">Think of your personal data as a diary. It holds your name, your address, your health and your habits. Many organizations ask to borrow it. Follow the diary through one week, and note the questions that come up. This article answers each of them.</p>
+
+    <div class="scene" style="--sc:#0e7c86">
+      <div class="sc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5V5a2 2 0 0 1 2-2h13v18H6a2 2 0 0 1-2-1.5z"/><path d="M8 7h7M8 11h7"/></svg></div>
+      <div class="sc-body">
+        <div class="sc-time">Monday</div>
+        <h3>The request to borrow</h3>
+        <p>A fitness app asks to borrow your diary. It shows a long page of terms, and you tap "I agree" without reading. The app promises to read only the pages about your exercise.</p>
+        <div class="ask"><span class="q">Did you really agree? Can the app prove it, and can you take the diary back?</span><a href="#part-2">Part 2</a></div>
+      </div>
+    </div>
+
+    <div class="scene" style="--sc:#2f62c8">
+      <div class="sc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></div>
+      <div class="sc-body">
+        <div class="sc-time">Tuesday</div>
+        <h3>The strong cupboard</h3>
+        <p>The app keeps the diary in a strong cupboard. Nobody can steal it. But the app copies pages that it never needed, and it shares them with partners.</p>
+        <div class="ask"><span class="q">If the cupboard is secure, is the diary private too?</span><a href="#part-1">Part 1</a></div>
+      </div>
+    </div>
+
+    <div class="scene" style="--sc:#0f8a6a">
+      <div class="sc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg></div>
+      <div class="sc-body">
+        <div class="sc-time">Wednesday</div>
+        <h3>The page without a name</h3>
+        <p>The app removes your name from the cover and gives some pages to a research partner. The pages still show your age, your gender and your pincode. A clerk at the partner compares them with a public voter list and finds you in minutes.</p>
+        <div class="ask"><span class="q">Is data without a name really anonymous? How can anyone measure the risk before the pages leave?</span><a href="#part-3">Part 3</a></div>
+      </div>
+    </div>
+
+    <div class="scene" style="--sc:#7a4fc2">
+      <div class="sc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><path d="M4 4l16 16"/></svg></div>
+      <div class="sc-body">
+        <div class="sc-time">Thursday</div>
+        <h3>The blurred copy and the sealed box</h3>
+        <p>A careful partner blurs some words before it reads. Another partner never opens the diary at all. It works on a sealed copy and still finds the answer that it needs.</p>
+        <div class="ask"><span class="q">Which blurring actually protects you? Is it possible to compute on data without seeing it?</span><a href="#part-4">Part 4</a></div>
+      </div>
+    </div>
+
+    <div class="scene" style="--sc:#4f46b5">
+      <div class="sc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="8" height="16" rx="1"/><rect x="13" y="4" width="8" height="16" rx="1"/><path d="M6 8h2M16 8h2M6 12h2M16 12h2"/></svg></div>
+      <div class="sc-body">
+        <div class="sc-time">Friday</div>
+        <h3>The twin diary</h3>
+        <p>A school wants many diaries to teach its students about fitness. Instead of yours, it gets a twin diary. The twin has the same patterns as thousands of real diaries, but it belongs to nobody.</p>
+        <div class="ask"><span class="q">Can artificial data be as useful as real data? How much can a count of many diaries reveal about one of them?</span><a href="#part-5">Part 5</a></div>
+      </div>
+    </div>
+
+    <div class="scene" style="--sc:#a3407a">
+      <div class="sc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="8" width="16" height="12" rx="3"/><path d="M12 4v4M9 13h.01M15 13h.01M9 17h6"/></svg></div>
+      <div class="sc-body">
+        <div class="sc-time">Saturday</div>
+        <h3>The talkative assistant</h3>
+        <p>The app adds a smart assistant that read many diaries. A stranger asks it a clever question, and the assistant repeats a line from your diary.</p>
+        <div class="ask"><span class="q">How does personal data get into an assistant, and how do you keep it from coming out again?</span><a href="#part-6">Part 6</a></div>
+      </div>
+    </div>
+
+    <div class="scene" style="--sc:#b7791f">
+      <div class="sc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg></div>
+      <div class="sc-body">
+        <div class="sc-time">Sunday</div>
+        <h3>The new rulebook</h3>
+        <p>A regulator visits the app and asks for proof of every borrowed diary. The app decides to write a rulebook for all its teams, and to appoint a guard who watches the assistant day and night.</p>
+        <div class="ask"><span class="q">Where does an organization start, and in what order? What comes next?</span><a href="#part-7">Part 7</a> <a href="#part-8">Part 8</a></div>
+      </div>
+    </div>
+  </div>
+
+  <h2 id="the-certificate">The certificate</h2>
+  <div class="credential">
+    <div class="cr-frame">
+      <img src="../assets/img/articles/pc-dpo-360-certificate.jpg" alt="Certificate of achievement for PC DPO 360, issued to Abhishek Bhardwaj by PrivaSapien Technologies. Certification ID PCDPO360#03002, valid until 5 March 2028." width="1100" height="778" loading="lazy">
+      <div class="cr-seal" aria-hidden="true"><div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg>CERTIFIED</div></div>
+    </div>
+    <div class="cr-text">
+      <span class="cr-kicker">Certification</span>
+      <div class="cr-title">PC DPO 360</div>
+      <p class="cr-sub">PrivaSapien Certified Data Protection Officer (DPO) 360</p>
+      <dl class="cr-facts">
+        <div class="wide"><dt>Holder</dt><dd>Abhishek Bhardwaj</dd></div>
+        <div><dt>Certification ID</dt><dd class="mono">PCDPO360#03002</dd></div>
+        <div><dt>Valid until</dt><dd>5 March 2028</dd></div>
+        <div class="wide"><dt>Issued by</dt><dd>PrivaSapien Technologies</dd></div>
+      </dl>
+    </div>
+  </div>
+  <p>The course provider presented its recognitions at the start. These include Google for Startups (AI) and the Accenture Ventures Tech Next Challenge 24. Another is the Morgan Stanley Chief Technology Officer (CTO) Award for the Future of AI. The National Association of Software and Service Companies (NASSCOM) gave its Responsible AI Game Changer Award. The list also includes the Mobility and Automobile Innovation Lab (MAIL) challenge of Maruti Suzuki. Last is graduation from the privacy enhancing technologies (PET) Sandbox of the Saudi Data and AI Authority (SDAIA).</p>
+
+  <h2 id="the-course-at-a-glance">The course at a glance</h2>
+  <p>PC DPO 360 is a certification for privacy leaders and Data Protection Officers. The number 360 shows the aim to cover the role from all sides. The course presents this as a compass with four points.</p>
+  <figure class="diagram">
+    <div class="frame"><img src="../assets/img/diagrams/pc-compass.svg" alt="A compass with PC DPO 360 in the center. The four points are Regulation, Technology, Planning and rollout and Hands-on." loading="lazy"></div>
+    <figcaption>The four points of the course, namely regulation, technology, planning and hands-on work.</figcaption>
+  </figure>
+  <ul>
+    <li><strong>Regulation.</strong> The requirements of the law. The main law is the Digital Personal Data Protection (DPDP) Act 2023 of India, with its Rules. For comparison, the course uses the General Data Protection Regulation (GDPR) of the European Union (EU). It also uses the Health Insurance Portability and Accountability Act (HIPAA) of the United States (US).</li>
+    <li><strong>Technology.</strong> The tools that actually reduce risk, such as privacy threat modeling, anonymization, encryption, synthetic data, differential privacy and AI safety.</li>
+    <li><strong>Planning and rollout.</strong> The introduction of a privacy program into an organization, phase by phase.</li>
+    <li><strong>Hands-on work.</strong> A working tool for each step, so that no idea stays theoretical.</li>
+  </ul>
+  <p>The course also compares itself with the certifications of the International Association of Privacy Professionals (IAPP). One axis goes from policy and concepts to governance, planning and implementation. The other axis goes from technology and concepts to hands-on mitigation, integration and automation.</p>
+  <figure class="diagram">
+    <div class="frame"><img src="../assets/img/diagrams/pc-positioning.svg" alt="A chart with two axes. The horizontal axis goes from technology and concepts to hands-on mitigation. The vertical axis goes from policy and concepts to governance, planning and rollout. CIPP, CIPM and CIPT are in the lower half. PC DPO 360 is at the top right." loading="lazy"></div>
+    <figcaption>PC DPO 360 sits in the top right corner, where law, hands-on safeguards and rollout meet.</figcaption>
+  </figure>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Certification</th><th>Main focus</th><th>Place on the chart</th></tr></thead>
+      <tbody>
+        <tr><td>Certified Information Privacy Professional (CIPP)</td><td>Privacy laws and regulations</td><td>Concept side, lower half</td></tr>
+        <tr><td>Certified Information Privacy Manager (CIPM)</td><td>Management of a privacy program</td><td>Policy and concept side, lower half</td></tr>
+        <tr><td>Certified Information Privacy Technologist (CIPT)</td><td>Privacy in technology</td><td>Concept side, near the middle</td></tr>
+        <tr><td>PC DPO 360</td><td>Law, hands-on technical safeguards and rollout planning</td><td>Top right, hands-on work and implementation</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <figure class="diagram">
+    <div class="frame"><img src="../assets/img/diagrams/pc-course-path.svg" alt="Eight stops in order, namely privacy beyond security, notice consent and rights, threat modeling and DPIA, anonymization and cryptography, synthetic data and differential privacy, private AI, a privacy program and the road ahead." loading="lazy"></div>
+    <figcaption>The eight stops of the course, from privacy basics to the agents of the future.</figcaption>
+  </figure>
+  <nav class="part-grid" aria-label="Parts of this article">
+    <a href="#part-1" style="--pc:#2f62c8"><b>Part 1</b><span>Privacy is more than security</span></a>
+    <a href="#part-2" style="--pc:#0e7c86"><b>Part 2</b><span>Notice, consent, rights and breaches</span></a>
+    <a href="#part-3" style="--pc:#0f8a6a"><b>Part 3</b><span>Threat modeling and the augmented DPIA</span></a>
+    <a href="#part-4" style="--pc:#7a4fc2"><b>Part 4</b><span>Anonymization, pseudonymization and encryption</span></a>
+    <a href="#part-5" style="--pc:#4f46b5"><b>Part 5</b><span>Synthetic data and differential privacy</span></a>
+    <a href="#part-6" style="--pc:#a3407a"><b>Part 6</b><span>Private AI with RAG, attacks and red teaming</span></a>
+    <a href="#part-7" style="--pc:#b7791f"><b>Part 7</b><span>A privacy program in six months</span></a>
+    <a href="#part-8" style="--pc:#c2552d"><b>Part 8</b><span>The road ahead with AI TRiSM and agents</span></a>
+  </nav>
+
+  <div class="block beyond">
+    <div class="label">Beyond the course</div>
+    <p><strong>Draft rules and final rules.</strong> The course material is from mid-2025, so it uses the draft DPDP Rules of January 2025. The government notified the final Digital Personal Data Protection Rules, 2025 in November 2025. The Gazette is dated 13 November, and the public notice came on 14 November.</p>
+    <p>Most rule numbers stay the same up to Rule 11. The final text adds a new Rule 12 on exemptions for the data of children. Thus, the draft Rules 12 to 15 are now Rules 13 to 16. Where a draft number appears, the final number appears next to it. The full table is in the <a href="#dpdp-quick-reference">DPDP quick reference</a>.</p>
+  </div>
+  <div class="part-banner" data-n="1" style="--pc:#2f62c8" id="part-1">
+    <div class="pb-tag">Part 1 of 8</div>
+    <h2 id="privacy-is-more-than-security" data-toc="1. Privacy is more than security">Privacy is more than security</h2>
+    <p>Privacy needs goals of its own. Data in use is the difficult problem, and good privacy work can protect a business and also earn for it.</p>
+  </div>
+
+  <h3>Two triads, two different goals</h3>
+  <p>Security has a well-known triad of goals, namely Confidentiality, Integrity and Availability (CIA). Privacy has its own triad, namely <strong>Predictability</strong>, <strong>Manageability</strong> and <strong>Disassociability</strong>.</p>
+  <p>A system can be fully secure and still be poor for privacy. Consider a well-protected database that collects much more data than it needs and shares it with partners. It passes the security test, but it fails the privacy test.</p>
+  <figure class="diagram">
+    <div class="frame"><img src="../assets/img/diagrams/pc-two-triads.svg" alt="Two triangles. Security has confidentiality, integrity and availability. Privacy has predictability, manageability and disassociability." loading="lazy"></div>
+    <figcaption>Security asks who can open the data. Privacy asks what happens to the person.</figcaption>
+  </figure>
+  <div class="block beyond">
+    <div class="label">Beyond the course</div>
+    <p>These three goals come from the privacy engineering objectives of the National Institute of Standards and Technology (NIST), in NIST Interagency Report (NISTIR) 8062. The NIST Privacy Framework uses them too.</p>
+    <ul>
+      <li><strong>Predictability.</strong> People, owners and operators can make reliable assumptions about personal data and its processing, so there are no surprises.</li>
+      <li><strong>Manageability.</strong> The organization can manage personal data in detail, for example correct it, delete it or limit it to some uses.</li>
+      <li><strong>Disassociability.</strong> The organization can process data without a link to a person or a device beyond the needs of the task. Anonymization and the other privacy enhancing technologies (PETs) work here.</li>
+    </ul>
+  </div>
+
+  <h3>The difficult problem of data in use</h3>
+  <p>Data exists in three states. Security tools for the first two states are mature. The third state is where privacy risk now sits.</p>
+  <figure class="diagram">
+    <div class="frame"><img src="../assets/img/diagrams/pc-data-states.svg" alt="Data at rest and data in transit have mature security tools. Data in use, in AI models, sharing, cross-border transfer and analytics, is where privacy risk sits." loading="lazy"></div>
+    <figcaption>At rest and in transit, security tools work well. In use, the data must be open, so privacy tools must take over.</figcaption>
+  </figure>
+  <ul>
+    <li><strong>Data at rest</strong> has protection from storage-level encryption.</li>
+    <li><strong>Data in transit</strong> has protection at the access level, for example Transport Layer Security (TLS) and access control.</li>
+    <li><strong>Data in use</strong> is in AI models, data sharing, cross-border transfers and analytics. Any use of data requires open data, so encryption at rest does not help.</li>
+  </ul>
+  <p>The security triad covers data at rest and in transit well. The privacy triad is necessary for data in use.</p>
+  <div class="block key">
+    <div class="label">Key idea</div>
+    <p>When data is in use, the question changes. It is no longer about who can open the data. It is about what somebody can learn about a person from it. Privacy threat modeling measures this, and privacy enhancing technologies reduce it.</p>
+  </div>
+
+  <h3>The course mapped to the DPDP Act and Rules</h3>
+  <p>This picture summarizes the whole course. It follows the data of a Data Principal from collection to the point where a business can use it freely.</p>
+  <figure class="diagram">
+    <div class="frame"><img src="../assets/img/diagrams/pc-dpdp-journey.svg" alt="Personal data is collected and processed under the DPDP Act and Rules, with penalties up to 150 and 250 crore rupees. Privacy enhancing technologies make data unrelatable, and then the Act does not apply. The data can then be used for sharing, AI training, archiving, cross-border transfer and research." loading="lazy"></div>
+    <figcaption>Collection and processing are inside the Act. Privacy enhancing technologies are the bridge out of it.</figcaption>
+  </figure>
+  <p><strong>1. Collection and governance, inside the Act and Rules.</strong> This stage needs a notice, consent, a check of privacy risk, a Data Protection Impact Assessment (DPIA) and support for data principal rights (DPR). Consent must be provable, verifiable, limited to the purpose and withdrawable. The course places the penalty band here at up to 150 crore Indian rupees (Rs).</p>
+  <p><strong>2. Processing of personal data, inside the Act and Rules.</strong> The data is identifiable personal data. The course links this stage to draft Rule 13(5), Act Sections 2(t) and 3 and draft Rule 6(d). It also links it to draft Rule 12(3), and to Act Section 17(2)(b) with draft Rule 15.</p>
+  <ul>
+    <li>Processing is limited to the specified purpose (Act Section 6).</li>
+    <li>Relatable personal data (Rule 6(a)) must have security safeguards (Rule 6).</li>
+    <li>Any unauthorized processing or loss (Act Section 2(u)) is a breach (Rule 7).</li>
+    <li>When the purpose ends, the organization must delete the data (Rule 8).</li>
+  </ul>
+  <p>The penalty band here is up to Rs 250 crore.</p>
+  <p><strong>3. Data made unrelatable by PETs, outside the Act and Rules.</strong> Four routes lead out of the scope of the Act. These are non-applicability of the Act, continuity beyond a CIA compromise, algorithmic use, as well as statistics and research. Unrelatable data (Act Sections 2(t) and 3) is free for data sharing, AI model training, archiving, cross-border transfer and more. This is called continued processing, and no penalty applies.</p>
+  <div class="block key">
+    <div class="label">Key idea</div>
+    <p>The DPDP Act covers only data about an identifiable person (Section 2(t)). PETs can make data truly unrelatable to any person. The data is then no longer personal data, and the business can continue to use it, for example for AI. PETs are the bridge from heavily regulated data to data that is free to use.</p>
+  </div>
+  <div class="block beyond">
+    <div class="label">Beyond the course</div>
+    <p><strong>Rule numbers in this picture.</strong> Draft Rule 12(3) on algorithmic due diligence by Significant Data Fiduciaries is Rule 13(3) in the final Rules. Draft Rule 15 on research, archiving and statistics is Rule 16. Rules 6, 7 and 8 keep their numbers. In the original picture, clock icons mark the items with a time limit, namely consent retention, breach reporting and erasure.</p>
+  </div>
+
+  <h3>Privacy as a profit center</h3>
+  <p>The course argues that privacy must not be only a cost. It places privacy work on two axes. The first goes from governance to risk mitigation, and the second from compliant operations to new revenue.</p>
+  <figure class="diagram">
+    <div class="frame"><img src="../assets/img/diagrams/pc-profit-map.svg" alt="Activities on two axes. Notice and consent, rights, DPIA and RoPA give compliant operations. Rule 6 safeguards are in the middle. PET-based querying, PET-based AI training, SLM-based protection, agentic privacy and responsible AI give new revenue." loading="lazy"></div>
+    <figcaption>Compliance work protects against penalties. PETs unlock data that otherwise stays locked away.</figcaption>
+  </figure>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Area</th><th>Activities, from low value to high value</th></tr></thead>
+      <tbody>
+        <tr><td>Compliant operations (governance side)</td><td>Notice and consent, data principal rights, DPIA and the Record of Processing Activities (RoPA)</td></tr>
+        <tr><td>Security safeguards (the middle)</td><td>Reasonable security safeguards under Rule 6</td></tr>
+        <tr><td>New revenue (risk mitigation side)</td><td>PET-based querying, PET-based AI training, protection with small language models (SLMs), agentic privacy and responsible AI</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Compliance work keeps an organization away from penalties. PETs let it use data safely that otherwise stays locked, and that opens new business.</p>
+
+  <h3>A 2025 approach to privacy, not a 2016 one</h3>
+  <p>The course contrasts privacy in 2016 with privacy in 2025. In 2016, privacy meant form filling, checklists and templates. In 2025, privacy is centered on safeguards and built into the systems. The innovation chart below shows the reason for this change.</p>
+  <figure class="diagram">
+    <div class="frame"><img src="../assets/img/diagrams/pc-innovation-chart.svg" alt="A two by two chart of market and technology. Incremental innovation, with an existing market and existing technology, holds static notice and consent, template-based DPIA, masking and pseudonymization, and PII found by column name. This is privacy in 2016. Architectural innovation holds NER-based LLM security. Disruptive innovation holds agentic DPIA, privacy enhancing technologies and privacy threat modeling. Radical innovation holds SLMs that guard LLMs, prevention of adversarial AI attacks, RAG privacy and security, pseudonymous inference, agentic responsible AI operations and agentic AI red teaming. Privacy in 2025 moves toward the disruptive and radical quadrants." loading="lazy"></div>
+    <figcaption>The old approach sits in the incremental corner. Modern privacy moves toward disruptive and radical innovation.</figcaption>
+  </figure>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Type of innovation</th><th>Examples</th></tr></thead>
+      <tbody>
+        <tr><td>Incremental (existing market, existing technology), the approach of the 2010s</td><td>Static notice and consent, template-based DPIA, masking and pseudonymization, classification of personally identifiable information (PII) by column name</td></tr>
+        <tr><td>Architectural (new market, existing technology)</td><td>Security for large language models (LLMs) based on named entity recognition (NER)</td></tr>
+        <tr><td>Disruptive (existing market, new technology)</td><td>Agentic DPIA, privacy enhancing technologies, privacy threat modeling</td></tr>
+        <tr><td>Radical (new market, new technology)</td><td>SLMs that guard LLMs, prevention of adversarial AI attacks, privacy and security for retrieval-augmented generation (RAG), pseudonymous inference, agentic responsible AI operations, agentic AI red teaming</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Three circles of the field</h3>
+  <p>The course describes this field with three circles that overlap.</p>
+  <ul>
+    <li><strong>The reason</strong> is data in use.</li>
+    <li><strong>The places</strong> are data at rest and data in transit.</li>
+    <li><strong>The method.</strong> Privacy threat modeling (PTM) measures the risk, and PETs and responsible AI (RAI) reduce it.</li>
+  </ul>
+
+  <h3>The full-stack AI TRiSM picture</h3>
+  <p>AI Trust, Risk and Security Management (AI TRiSM) is a term from Gartner. The course presents the field as a staircase, with one step for each stage of the data and AI life cycle.</p>
+  <figure class="diagram">
+    <div class="frame"><img src="../assets/img/diagrams/pc-trism-stairs.svg" alt="Seven steps from consent collection to responsible agents. The lower three steps answer to data privacy laws. The upper four answer to AI rules. The CIO owns all of it with the CISO, DPO and AI officer." loading="lazy"></div>
+    <figcaption>Seven steps from consent to responsible agents. Data laws govern the lower steps, and AI rules govern the upper steps.</figcaption>
+  </figure>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Stage</th><th>Capability</th></tr></thead>
+      <tbody>
+        <tr><td>Consent collection</td><td>A privacy management system and a consent agent</td></tr>
+        <tr><td>Data collection</td><td>Privacy threat modeling with dataset and document scanners, a DPIA workflow and a DPIA agent</td></tr>
+        <tr><td>Data processing</td><td>Privacy enhancing technologies such as anonymization, encryption, differentially private queries and private set intersection</td></tr>
+        <tr><td>AI training</td><td>Privacy-preserving machine learning (PPML), synthetic data and AI red teaming</td></tr>
+        <tr><td>AI deployment</td><td>AI safety and security, with an AI firewall and private RAG</td></tr>
+        <tr><td>AI governance</td><td>Transparency and audit, with AI impact assessment and governance</td></tr>
+        <tr><td>Responsible agents</td><td>Orchestration and tooling for AI agents</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Most of the agents were still in development when the course material was made.</p>
+  <p>The lower steps answer to data privacy laws such as the GDPR and the DPDP Act. Others are the Personal Data Protection Law (PDPL) of Saudi Arabia and the California Consumer Privacy Act (CCPA). The upper steps answer to AI rules such as the EU AI Act, the AI Action Plan, the Digital India Act and ethical AI principles. The Chief Information Officer (CIO) owns all of it. The Chief Information Security Officer (CISO), the DPO and the AI officer report to the CIO. An enterprise can be an AI taker, an AI shaper or an AI maker.</p>
+  <p>The course also shows the same idea as a pipeline. Structured data flows from consent collection into a database. It then goes through a dataset risk scanner, a DPIA and the PETs, namely anonymization, synthetic data, encryption and differentially private queries. Last, it goes through an AI impact assessment, an AI firewall and private RAG before it reaches the user.</p>
+  <p>Unstructured data flows from consent collection into a data lake. It then goes through a document risk scanner, a DPIA, private RAG and an AI impact assessment. A risk gauge follows each step. </p>
+  <p>The first owners along the way are the DPO and the Vice President (VP) of Data Governance. Then come the RAI Officer, the team for LLM operations (LLMOps) or the CISO, all under the CIO. The first half follows data privacy laws and the NIST Privacy Framework. The second half follows AI laws and the NIST AI Risk Management Framework (AI RMF).</p>
+
+  <h3>The impact claimed by the course</h3>
+  <div class="stat-tiles">
+    <div class="st" style="--sc:#2f62c8"><b>30x</b><span>faster threat modeling and DPIA, in minutes rather than days or weeks</span></div>
+    <div class="st" style="--sc:#0f8a6a"><b>10x</b><span>higher return from an inline privacy and security firewall for RAG</span></div>
+    <div class="st" style="--sc:#7a4fc2"><b>5x</b><span>more accurate expert-grade anonymization</span></div>
+  </div>
+  <ul>
+    <li><strong>Threat modeling and DPIA.</strong> Complete in minutes, and agentic DPIA makes it faster. It costs less and it is provable and auditable. It is also more accurate than traditional methods. For quasi-identifiers, the claim is 20 times more accurate.</li>
+    <li><strong>RAG privacy and security.</strong> Five times more accurate than the closest competitor and ten times cheaper than weaker hyperscaler tools. It uses pseudonymized integration with external LLMs, and re-identification happens locally during inference.</li>
+    <li><strong>Expert anonymization.</strong> More than 50 times faster than traditional HIPAA privacy vendors, in minutes rather than days. Traditional methods cost about 50,000 US dollars for each flow. It gives provable mathematical guarantees and meets global compliance requirements.</li>
+  </ul>
+  <p>These figures are claims of the course provider, not my own measurements.</p>
+
+  <h3>Career roles</h3>
+  <p>The course lists five roles that use these skills.</p>
+  <ul class="role-chips">
+    <li>CDPO <small>Chief Data Protection Officer</small></li>
+    <li>CIO <small>Chief Information Officer</small></li>
+    <li>CTO <small>Chief Technology Officer</small></li>
+    <li>RAI Officer <small>Responsible AI Officer</small></li>
+    <li>CRO <small>Chief Risk Officer</small></li>
+  </ul>
+  <div class="part-banner" data-n="2" style="--pc:#0e7c86" id="part-2">
+    <div class="pb-tag">Part 2 of 8</div>
+    <h2 id="notice-consent-rights-and-breaches" data-toc="2. Notice, consent, rights and breaches">Notice, consent, rights and breaches</h2>
+    <p>The front door of every privacy program. It covers the meaning of personal data, a correct notice and consent that the organization can prove later. It also covers the rights of the person and the response when something goes wrong.</p>
+  </div>
+
+  <h3>Personal data, defined</h3>
+  <p>The course breaks the legal definition into three parts, so that each part gets attention.</p>
+  <figure class="diagram">
+    <div class="frame"><img src="../assets/img/diagrams/pc-personal-data.svg" alt="The definition has three parts, namely any data about an individual, who is identifiable, by or in relation to such data. A name is a direct identifier. Pincode, age and gender together can also point to one person, so they are personal data too." loading="lazy"></div>
+    <figcaption>The phrase "in relation to" is broad. Data without a name can still be personal data.</figcaption>
+  </figure>
+  <div class="block law">
+    <div class="label">From the law</div>
+    <div class="src">DPDP Act, Section 2(t)</div>
+    <blockquote><p>"personal data" means any data about an individual who is identifiable by or in relation to such data;</p></blockquote>
+  </div>
+  <div class="block key">
+    <div class="label">Key idea</div>
+    <p>The phrase "in relation to" is broad. Data does not need a name to be personal. If anybody can link it to a person, it is personal data. For example, a pincode, an age and a gender together can point to one person. For this reason, the course spends much time on quasi-identifiers and linkage attacks (Part 3).</p>
+  </div>
+
+  <h3>A notice that stands alone</h3>
+  <p>Before a Data Fiduciary asks for consent, it must give the Data Principal a notice.</p>
+  <div class="block law">
+    <div class="label">From the law</div>
+    <div class="src">DPDP Rule 3(a)</div>
+    <blockquote><p>The notice must be presented and be understandable independently of any other information that the Data Fiduciary has made or may make available.</p></blockquote>
+    <p>In practice, the privacy notice cannot be hidden inside the terms of service.</p>
+  </div>
+  <div class="block remember">
+    <div class="label">Worth remembering</div>
+    <p><strong>The content of a notice (Act Section 5, Rule 3).</strong></p>
+    <ul>
+      <li>An itemized description of the personal data that is collected.</li>
+      <li>The specified purpose of the collection.</li>
+      <li>An itemized description of the goods or services that the processing provides, or the uses that it enables.</li>
+      <li>A link to the website or app where the person can withdraw consent and exercise rights, that is, a data subject rights portal.</li>
+      <li>A link or other means to complain to the Data Protection Board (grievance redressal).</li>
+    </ul>
+  </div>
+  <div class="block beyond">
+    <div class="label">Beyond the course</div>
+    <p>The final Rules keep this structure. Rule 3 also requires clear and plain language, and it requires that withdrawal of consent is as easy as giving it.</p>
+  </div>
+
+  <h3>Consent that the organization can prove</h3>
+  <div class="block law">
+    <div class="label">From the law</div>
+    <div class="src">DPDP Act, Section 6(10)</div>
+    <blockquote><p>Where a consent given by the Data Principal is the basis of processing of personal data and a question arises in this regard in a proceeding, the Data Fiduciary shall be obliged to prove that a notice was given by her to the Data Principal and consent was given by such Data Principal to the Data Fiduciary in accordance with the provisions of this Act and the rules made thereunder.</p></blockquote>
+  </div>
+  <p>The burden of proof is therefore on the company, and a checkbox in a log file is weak evidence. The course showed a sample consent artifact. It is an Extensible Markup Language (XML) record from the Consent Tech Framework v1.1 of the Ministry of Electronics and Information Technology (MeitY). The record holds the data principal, the fiduciary, the data items, the purpose, the time and a signature block. With this record, anybody can check a consent later.</p>
+
+  <h3>Breach, processing and the penalty schedule</h3>
+  <div class="block law">
+    <div class="label">From the law</div>
+    <div class="src">DPDP Act, Section 2(u)</div>
+    <blockquote><p>"personal data breach" means any unauthorised processing of personal data or accidental disclosure, acquisition, sharing, use, alteration, destruction or loss of access to personal data, that compromises the confidentiality, integrity or availability of personal data;</p></blockquote>
+  </div>
+  <div class="block law">
+    <div class="label">From the law</div>
+    <div class="src">DPDP Act, Section 2(x)</div>
+    <blockquote><p>"processing" in relation to personal data, means a wholly or partly automated operation or set of operations performed on digital personal data, and includes operations such as collection, recording, organisation, structuring, storage, adaptation, retrieval, use, alignment or combination, indexing, sharing, disclosure by transmission, dissemination or otherwise making available, restriction, erasure or destruction;</p></blockquote>
+  </div>
+  <div class="block law">
+    <div class="label">From the law</div>
+    <div class="src">DPDP Act, Section 6(1)</div>
+    <blockquote><p>The consent given by the Data Principal shall be free, specific, informed, unconditional and unambiguous with a clear affirmative action, and shall signify an agreement to the processing of her personal data for the specified purpose and be limited to such personal data as is necessary for such specified purpose.</p></blockquote>
+  </div>
+  <div class="block remember">
+    <div class="label">Worth remembering</div>
+    <p><strong>The six qualities of valid consent.</strong> Consent is free, specific, informed, unconditional, unambiguous and given by a clear affirmative action. It also covers only the data that the specified purpose needs.</p>
+  </div>
+  <p>The Schedule of the Act, under Section 33, gives the maximum penalties.</p>
+  <figure class="diagram">
+    <div class="frame"><img src="../assets/img/diagrams/pc-penalties.svg" alt="Bars for the maximum penalties. These are 250 crore rupees for failing reasonable security safeguards, 200 crore for breach notification, 200 crore for children&#x27;s data, 150 crore for Significant Data Fiduciary duties, 50 crore for any other provision and 10,000 rupees for duties of a Data Principal." loading="lazy"></div>
+    <figcaption>The largest penalty is not for a breach. It is for weak security safeguards.</figcaption>
+  </figure>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>No.</th><th>Breach of</th><th>Penalty up to</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>The obligation to take reasonable security safeguards to prevent a personal data breach (Section 8(5))</td><td>Rs 250 crore</td></tr>
+        <tr><td>2</td><td>The obligation to inform the Board or the affected Data Principals of a breach (Section 8(6))</td><td>Rs 200 crore</td></tr>
+        <tr><td>3</td><td>The additional obligations for children (Section 9)</td><td>Rs 200 crore</td></tr>
+        <tr><td>4</td><td>The additional obligations of a Significant Data Fiduciary (Section 10)</td><td>Rs 150 crore</td></tr>
+        <tr><td>5</td><td>The duties of the Data Principal (Section 15)</td><td>Rs 10,000</td></tr>
+        <tr><td>6</td><td>A term of a voluntary undertaking that the Board accepted (Section 32)</td><td>Up to the penalty for the original breach, for which proceedings started under Section 28</td></tr>
+        <tr><td>7</td><td>Any other provision of the Act or the Rules</td><td>Rs 50 crore</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="block key">
+    <div class="label">Key idea</div>
+    <p>The largest penalty (Rs 250 crore) is not for a breach itself. It is for a failure to have reasonable security safeguards. For this reason, the course links every privacy enhancing technology to reasonable security safeguards.</p>
+  </div>
+
+  <h3>Five rights of a Data Principal</h3>
+  <figure class="diagram">
+    <div class="frame"><img src="../assets/img/diagrams/pc-rights.svg" alt="Five rights around the Data Principal, namely access (Section 11), correction (Section 12(2)), erasure (Section 12(3)), grievance redressal (Section 13) and nomination (Section 14)." loading="lazy"></div>
+    <figcaption>The five rights that a privacy program must support.</figcaption>
+  </figure>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Right</th><th>Act section</th><th>Meaning</th></tr></thead>
+      <tbody>
+        <tr><td>Access to information about personal data</td><td>Section 11</td><td>A summary of the personal data and the processing activities, and the identities of the other fiduciaries and processors that received it.</td></tr>
+        <tr><td>Correction, completion and updating</td><td>Section 12(2)</td><td>Correction of wrong data, completion of incomplete data and updating of old data.</td></tr>
+        <tr><td>Erasure</td><td>Section 12(3)</td><td>Erasure of the data, unless the specified purpose or a law needs it.</td></tr>
+        <tr><td>Grievance redressal</td><td>Section 13</td><td>Readily available means to complain to the Data Fiduciary or the Consent Manager. The fiduciary must publish its time limit for the resolution of grievances.</td></tr>
+        <tr><td>Nomination</td><td>Section 14</td><td>Nomination of another person who can exercise these rights after death or in case of incapacity.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>The course also showed the text of Sections 11 to 14 with the key phrases marked, such as "right to correction, completion, updating and erasure of her personal data", "readily available means of grievance redressal" and "in the event of death or incapacity".</p>
+  <div class="block beyond">
+    <div class="label">Beyond the course</div>
+    <p>In the final Rules, Rule 14 (draft Rule 13) covers rights and grievances. Rule 14(3) sets 90 days as the maximum time to respond.</p>
+  </div>
+
+  <h3>Consent across the data ecosystem</h3>
+  <p>This picture connects all of Part 2 to the later parts.</p>
+  <figure class="diagram">
+    <div class="frame"><img src="../assets/img/diagrams/pc-consent-ecosystem.svg" alt="The Data Principal gets a notice and gives consent to a consent collector. A data collector stores the data. Threat modeling and recommendations feed an augmented DPIA that the DPO reviews. Business uses are recorded in the RoPA. Uses beyond the purpose go through PETs first. A rights portal gives control back to the person." loading="lazy"></div>
+    <figcaption>Consent at the start, a DPIA in the middle, then two routes for the data, either business use or PETs first.</figcaption>
+  </figure>
+  <ul>
+    <li>The Data Principal receives a notice and gives consent. A consent collector records it.</li>
+    <li>A data collector stores the personal data.</li>
+    <li>Privacy threat modeling and its recommendations feed an augmented DPIA, which a DPO reviews.</li>
+    <li>Approved flows then take one of two routes. Business uses such as sales, marketing and operations go into the RoPA. Uses beyond the original purpose go through privacy enhancing technologies first. These uses are continued processing, storage, research and archiving, cross-border transfer and AI model training.</li>
+    <li>The rights portal connects back to the Data Principal, who can then see and control the use of the data.</li>
+  </ul>
+
+  <h3>Signatures, verifiable claims and zero knowledge proofs</h3>
+  <p>The course showed three ways to make consent provable.</p>
+  <p><strong>A digital signature.</strong> After consent, the user receives an email from the consent manager. It lists the purposes of the consent, for example sales, marketing, finance, analytics, product development and customer service. It also gives a Consent Reference identifier (ID) and a unique digital signature, which is a long signed string.</p>
+  <p>A "Manage" button lets the user verify, change or withdraw the consent later. This is what makes Section 6(10) provable, because the signature is the proof.</p>
+  <p><strong>Verifiable claims.</strong> These follow the Verifiable Credentials model of the World Wide Web Consortium (W3C).</p>
+  <figure class="diagram">
+    <div class="frame"><img src="../assets/img/diagrams/pc-verifiable-claims.svg" alt="The issuer, the Data Fiduciary, issues a credential. The holder, the Data Principal or a Consent Manager, keeps it and presents it. The verifier, a Data Processor or the Board, checks it. All three use a verifiable data registry. A credential has metadata, claims and proofs." loading="lazy"></div>
+    <figcaption>Issuer, holder and verifier, with a shared registry in the middle.</figcaption>
+  </figure>
+  <ul>
+    <li>The <strong>issuer</strong> issues credentials. Here, it is the Data Fiduciary.</li>
+    <li>The <strong>holder</strong> acquires, stores and presents credentials. Here, it is the Data Principal or a Consent Manager.</li>
+    <li>The <strong>verifier</strong> verifies credentials. Here, it is a Data Processor or the Board.</li>
+  </ul>
+  <p>All three register and check identifiers and schemas against a shared verifiable data registry. A verifiable credential has three parts, namely the credential metadata, the claims and the proofs.</p>
+  <p><strong>A zero knowledge proof (ZKP).</strong> A ZKP proves that a statement is true and reveals nothing more. Part 4 explains the mechanism.</p>
+  <div class="block remember">
+    <div class="label">Worth remembering</div>
+    <p><strong>The three properties of a ZKP.</strong></p>
+    <ul>
+      <li><strong>Completeness.</strong> If the statement is true, an honest prover can convince an honest verifier.</li>
+      <li><strong>Soundness.</strong> If the statement is false, no cheating prover can convince an honest verifier, except with a very small probability.</li>
+      <li><strong>Zero-knowledge.</strong> If the statement is true, the verifier learns nothing beyond that fact. Formally, a simulator that knows only that the statement is true can produce a transcript that looks like a real conversation.</li>
+    </ul>
+  </div>
+  <div class="block practice">
+    <div class="label">In practice</div>
+    <p><strong>Verification of a consent and its versions.</strong> In the privacy management portal, the user selects "Verify Consent", enters the Consent Reference ID and the digital signature, and submits them. The result reads "Verification successful" and lists the active purposes.</p>
+    <p>A versions table keeps every change, with the consent ID, the application, the purposes, the withdrawn ID, the version number, the status and the time. Each change creates a new version and leaves the old one intact.</p>
+  </div>
+
+  <h3>The rights workflow</h3>
+  <p>The Data Principal raises a ticket in the portal for each right. The ticket types are access to information, correction of data, erasure of data, nomination of a person, withdrawal of consent for purposes and a grievance. A grievance form asks for the ticket, the reason for escalation, the status of the issue and further comments.</p>
+  <figure class="diagram">
+    <div class="frame"><img src="../assets/img/diagrams/pc-dsr-flow.svg" alt="The Data Principal raises a ticket for one right, such as access, correction, erasure, nomination, withdrawal of consent or a grievance. The organization sees the ticket in a queue with filters and an assignee, acts within the set time and updates the status. Both sides see the same ticket. An unresolved ticket can be escalated as a grievance." loading="lazy"></div>
+    <figcaption>One ticket, two views. The person and the organization see the same record.</figcaption>
+  </figure>
+  <p>Both sides see the same tickets. The user sees them under "My Tickets", with the ticket ID, the request type, the date and the status, for example Pending or Approved. The administrator sees them on the internal platform in a rights ticket queue, with filters for duration, request type and application. Each ticket has an assignee.</p>
+
+  <h3>Setting up a consent platform</h3>
+  <p>The course showed the setup of a consent platform from the side of the administrator. The admin area has four tabs, namely Consent Apps, App Purposes, App Policies and Cookies.</p>
+  <div class="slides" data-slides>
+    <div class="slides-track">
+      <div class="slide card-slide"><span class="kicker">Step 1</span><h3>Write the policies</h3><p>Add or edit a privacy policy, for example a policy for the DPDP Act of India or for the GDPR of the EU. Each policy has a name, a description and sections.</p></div>
+      <div class="slide card-slide"><span class="kicker">Step 2</span><h3>Define the purposes</h3><p>Define the purposes, for example Sales, Marketing, Finance, Product Development and Job Ads. Give each purpose a description.</p></div>
+      <div class="slide card-slide"><span class="kicker">Step 3</span><h3>Set the time for rights requests</h3><p>Set the permitted time for each ticket type in days and hours, for example for access to information, correction of data and erasure of data.</p></div>
+      <div class="slide card-slide"><span class="kicker">Step 4</span><h3>Add an application</h3><p>Give the application a clear name. Add the host name of the site or app that uses the consent manager, and the region, for example India.</p></div>
+      <div class="slide card-slide"><span class="kicker">Step 5</span><h3>Attach purposes and a policy</h3><p>Attach the purposes for which the application collects data. Then link a policy to it.</p></div>
+      <div class="slide card-slide"><span class="kicker">Step 6</span><h3>Set the retention period</h3><p>Set the retention period of the consent in days, and the time to send a reminder before it ends.</p></div>
+      <div class="slide card-slide"><span class="kicker">Step 7</span><h3>Set the governance alerts</h3><p>Add the email address of the governance team that receives the alerts.</p></div>
+      <div class="slide card-slide"><span class="kicker">Step 8</span><h3>Connect the website</h3><p>An integration guide gives a script tag for the head of the page. The page then calls a function that starts the data layer, and the consent manager loads.</p></div>
+    </div>
+  </div>
+
+  <h3>Retention and erasure</h3>
+  <div class="block law">
+    <div class="label">From the law</div>
+    <div class="src">DPDP Rule 8, time period for specified purpose to be deemed as no longer being served</div>
+    <blockquote>
+      <p>(1) A Data Fiduciary of a class specified in the Third Schedule shall erase personal data, unless its retention is necessary for compliance with any law, if the Data Principal neither approaches the Data Fiduciary for the specified purpose nor exercises her rights for the time period given in that Schedule.</p>
+      <p>(2) At least forty-eight hours before that time period ends, the Data Fiduciary shall inform the Data Principal that the data will be erased, unless she logs into her account or otherwise contacts the Data Fiduciary.</p>
+    </blockquote>
+  </div>
+  <div class="block law">
+    <div class="label">From the law</div>
+    <div class="src">DPDP Act, Section 8(7)</div>
+    <blockquote><p>A Data Fiduciary shall, unless retention is necessary for compliance with any law, (a) erase personal data when the Data Principal withdraws consent or as soon as it is reasonable to assume the specified purpose is no longer served, whichever is earlier; and (b) cause its Data Processor to erase any personal data made available to it.</p></blockquote>
+  </div>
+  <figure class="diagram">
+    <div class="frame"><img src="../assets/img/diagrams/pc-retention.svg" alt="A timeline. Consent is given, then the last contact with the user. After the Third Schedule period, for example three years for large platforms, the data is erased. Forty-eight hours before, the user gets a notice. Withdrawal or the end of the purpose also starts erasure. Logs stay for at least one year." loading="lazy"></div>
+    <figcaption>The clock for erasure starts at the last contact. A 48-hour warning comes before the end.</figcaption>
+  </figure>
+  <div class="block beyond">
+    <div class="label">Beyond the course</div>
+    <p>The Third Schedule covers large e-commerce, online gaming and social media platforms. Their period is three years from the last contact of the user. The final Rules also require fiduciaries to keep the related logs for at least one year.</p>
+  </div>
+
+  <h3>Cookie banners</h3>
+  <div class="block practice">
+    <div class="label">In practice</div>
+    <ul>
+      <li><strong>Creation of a banner.</strong> Add a site, then complete the tabs for the website, language, design, texts, data subject rights, technologies and cookies. Select a layout and colors for the cookie logo, the primary and secondary colors, the accept and reject buttons and the table header.</li>
+      <li><strong>Preview.</strong> Turn on the preview to see the banner as visitors see it, then save or publish it.</li>
+      <li><strong>Cookie categories.</strong> Scan the website for cookies, or add them manually. Each cookie has a name, a domain, a path, an expiry, a vendor, a type, a description and the HttpOnly and Secure flags.</li>
+    </ul>
+  </div>
+  <div class="block remember">
+    <div class="label">Worth remembering</div>
+    <p><strong>Cookie types.</strong> Strictly necessary, functional, performance, targeting and unclassified. In common practice, only strictly necessary cookies run before the user decides. The others wait for the choice of the user on the banner.</p>
+  </div>
+  <div class="part-banner" data-n="3" style="--pc:#0f8a6a" id="part-3">
+    <div class="pb-tag">Part 3 of 8</div>
+    <h2 id="threat-modeling-and-the-augmented-dpia" data-toc="3. Threat modeling and the augmented DPIA">Privacy threat modeling and the augmented DPIA</h2>
+    <p>The measurement of privacy risk in a dataset before anybody uses or shares it. The attacks that turn anonymous data back into people. The use of the measured risk in a faster DPIA based on evidence.</p>
+  </div>
+
+  <h3>Duties of a Significant Data Fiduciary</h3>
+  <p>The government can designate some fiduciaries as Significant Data Fiduciaries (SDFs). It considers the volume and sensitivity of the data that they process and the risk to people and to the country (Act Section 10(1)). SDFs have four additional duties under Section 10(2).</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Duty</th><th>Meaning</th></tr></thead>
+      <tbody>
+        <tr><td>Data Protection Officer</td><td>Based in India and responsible to the Board of Directors or a similar governing body. The point of contact for grievances.</td></tr>
+        <tr><td>Independent data auditor</td><td>Evaluates the compliance of the SDF with the Act.</td></tr>
+        <tr><td>Data Protection Impact Assessment</td><td>Describes the rights of the Data Principals and the purpose of processing, and assesses and manages the risk to those rights.</td></tr>
+        <tr><td>Periodic audit</td><td>Regular audits that evaluate compliance.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="block beyond">
+    <div class="label">Beyond the course</div>
+    <p>In the final Rules, Rule 13 (draft Rule 12) details these duties. It requires a DPIA and an audit once every twelve months, with a report to the Board. It also requires due diligence on algorithms, and it can limit the transfer of some data outside India.</p>
+  </div>
+
+  <h3>The augmented DPIA</h3>
+  <div class="block law">
+    <div class="label">From the law</div>
+    <div class="src">DPDP Act, Section 10(2)(c)</div>
+    <blockquote><p>Periodic Data Protection Impact Assessment, which shall be a process comprising a description of the rights of Data Principals and the purpose of processing of their personal data, assessment and management of the risk to the rights of the Data Principals.</p></blockquote>
+  </div>
+  <p>A traditional DPIA is a questionnaire in which people record their view of the risk. An augmented DPIA adds a measured, technical assessment of the risk in the actual data. It has three stages.</p>
+  <figure class="diagram">
+    <div class="frame"><img src="../assets/img/diagrams/pc-augmented-dpia.svg" alt="A classic DPIA is a questionnaire. An augmented DPIA adds a measured risk of the real data. In stage one, teams give the business context, nature, purpose, scope, necessity and proportionality. Stage two gives a technical risk score, a recommendation and a regulatory mapping. In stage three, the DPO evaluates the risk and approves or rejects." loading="lazy"></div>
+    <figcaption>The same questions as before, plus a measured risk score for the real data.</figcaption>
+  </figure>
+  <ol class="steps">
+    <li><strong>Departments or teams.</strong> They give the business context, the nature and purpose, the scope as well as the necessity and proportionality.</li>
+    <li><strong>Risk assessment on the database.</strong> The tool gives the technical risk, a technical recommendation and a mapping to the law.</li>
+    <li><strong>DPO approval.</strong> The DPO evaluates the risk and gives the final recommendation, then approves or rejects.</li>
+  </ol>
+  <p>The course illustrated this with two pictures. In the first, a tired person sits under a pile of paper questionnaires. In the second, a person works with an AI assistant on mitigation. The task is the same, with much less manual effort and better evidence.</p>
+
+  <h3>Privacy threat modeling</h3>
+  <p>PTM finds and measures privacy risk inside data, in both kinds of data. A dataset scanner reads structured databases, that is, tables. A document scanner reads unstructured data such as documents, files in the Portable Document Format (PDF) and text.</p>
+  <figure class="diagram">
+    <div class="frame"><img src="../assets/img/diagrams/pc-ptm.svg" alt="Tables and documents go through five steps, namely attack simulation and risk classes, a risk score, qualitative and quantitative scoring, mapping to law, LINDDUN and NIST, and a technical recommendation. Data carries hidden germs such as linkages, outliers and hidden inferences." loading="lazy"></div>
+    <figcaption>Five steps from raw data to a recommendation.</figcaption>
+  </figure>
+  <p>The first steps are attack simulation with risk classification, and a risk score on a gauge from excellent to poor. Qualitative and quantitative risk scoring follows, with a mapping to the law and to LINDDUN or NIST, and finally a technical recommendation.</p>
+  <p><strong>The benefit.</strong> The course uses the image of a data doctor. Data carries germs that are invisible to the naked eye, namely linkages, outliers and hidden inferences, and these can easily compromise privacy.</p>
+  <p>With PTM, a DPO can diagnose and clean such data, which gives a healthier and safer data ecosystem.</p>
+  <p><strong>Risk for each data flow.</strong> Data Security Posture Management (DSPM) checks the security posture against the security triad. PTM checks privacy against the privacy triad. The course placed the table of objectives from the NIST Privacy Framework next to the LINDDUN method.</p>
+  <div class="block beyond">
+    <div class="label">Beyond the course</div>
+    <p><strong>LINDDUN</strong> is a privacy threat modeling method from KU Leuven (Katholieke Universiteit Leuven), a university in Belgium. Each letter is a type of threat, namely Linking, Identifying, Non-repudiation, Detecting, Data disclosure, Unawareness (and unintervenability) and Non-compliance.</p>
+    <p>The method models the system as a data flow diagram, finds the threats for each element and then selects mitigations. The report of the dataset scanner groups its advice under some of these threat names, namely linkability, identifiability, deniability and undetectability.</p>
+  </div>
+
+  <h3>Measuring risk before data is shared</h3>
+  <p>The course showed a risk score gauge that drops from 100 (high risk) to 10 (low risk) after safeguards are applied. For one type of attack, singling out, it claimed three values. These are an assessment 30 times faster, 95% validation of the PETs and protection from a penalty of up to Rs 250 crore.</p>
+  <p>The real questions concern how relatable the data is and which safeguard actually works. The course answered with the definitions of personal data (Section 2(t)) and breach (Section 2(u)), and with the table below. It is Table 6 of Opinion 05/2014 on anonymization techniques, from the Article 29 Working Party of the EU.</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Technique</th><th>Risk of singling out</th><th>Risk of linkability</th><th>Risk of inference</th></tr></thead>
+      <tbody>
+        <tr><td>Pseudonymization</td><td>Yes</td><td>Yes</td><td>Yes</td></tr>
+        <tr><td>Noise addition</td><td>Yes</td><td>Possibly not</td><td>Possibly not</td></tr>
+        <tr><td>Substitution</td><td>Yes</td><td>Yes</td><td>Possibly not</td></tr>
+        <tr><td>Aggregation or k-anonymity</td><td>No</td><td>Yes</td><td>Yes</td></tr>
+        <tr><td>L-diversity</td><td>No</td><td>Yes</td><td>Possibly not</td></tr>
+        <tr><td>Differential privacy</td><td>Possibly not</td><td>Possibly not</td><td>Possibly not</td></tr>
+        <tr><td>Hashing or tokenization</td><td>Yes</td><td>Yes</td><td>Possibly not</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="block key">
+    <div class="label">Key idea</div>
+    <p>Pseudonymization leaves all three risks in place, so pseudonymized data is still personal data. No single technique removes every risk. The right choice depends on the attacks that matter for the data flow, and the organization must measure the result.</p>
+  </div>
+
+  <h3>Eight kinds of privacy attack</h3>
+  <p>The course places personal data in the middle, with eight attacks around it.</p>
+  <figure class="diagram">
+    <div class="frame"><img src="../assets/img/diagrams/pc-attacks.svg" alt="Personal data in the middle, with eight attacks around it, namely singling out, linkage, inference, background knowledge, homogeneity, data breach, unconsented monitoring and unconsented processing." loading="lazy"></div>
+    <figcaption>Five attacks on the data itself, and three on the way it is used.</figcaption>
+  </figure>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Attack</th><th>Result</th></tr></thead>
+      <tbody>
+        <tr><td>Singling out</td><td>One record is unique in the dataset, so the person behind it can be picked out.</td></tr>
+        <tr><td>Linkage</td><td>The attacker joins the dataset with another dataset (public, from the dark web or from social media) on shared fields and re-identifies people.</td></tr>
+        <tr><td>Inference</td><td>The attacker guesses a sensitive value with high confidence, even without the exact record.</td></tr>
+        <tr><td>Background knowledge</td><td>The attacker uses existing knowledge about a person to narrow the guess.</td></tr>
+        <tr><td>Collective privacy (homogeneity)</td><td>All people in a group share the same sensitive value, so the whole group is exposed.</td></tr>
+        <tr><td>Data breach</td><td>Data leaks, or somebody gains access without authorization.</td></tr>
+        <tr><td>Unconsented monitoring</td><td>People are tracked or observed without their consent.</td></tr>
+        <tr><td>Unconsented processing</td><td>Data is used for purposes to which the person did not agree.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p><strong>A real example.</strong> This happened during the coronavirus disease 2019 (COVID-19) pandemic. A state geospatial portal, the Karnataka Geographic Information System (K-GIS), published the locations of positive cases on a map. Electoral rolls are public, and they list the name, age, gender and house number for each constituency. Attackers could combine the map with these rolls and with social media profiles on Facebook, Instagram and LinkedIn. They could then re-identify individual patients.</p>
+  <p>This is re-identification through a linkage attack.</p>
+
+  <h3>Direct and indirect identifiers</h3>
+  <div class="side-by-side">
+    <div class="block remember" style="margin:0">
+      <div class="label">Worth remembering</div>
+      <p><strong>Direct identifiers</strong> are personally identifiable information and protected health information (PHI), for example the name, the phone number and the Aadhaar number. De-identification removes them.</p>
+    </div>
+    <div class="block remember" style="margin:0">
+      <div class="label">Worth remembering</div>
+      <p><strong>Indirect identifiers</strong> are quasi-identifiers such as age, gender and pincode, as well as statistical data such as test results and conditions.</p>
+    </div>
+  </div>
+  <p>The example record from the course follows. The RT-PCR column holds the result of the reverse transcription polymerase chain reaction (RT-PCR) test.</p>
+  <div class="table-wrap">
+    <table class="mini-table">
+      <thead><tr><th>Age</th><th>Gender</th><th>Pincode</th><th>RT-PCR</th><th>Co-morbidity</th></tr></thead>
+      <tbody><tr><td>18</td><td>Female</td><td>560072</td><td>Covid positive</td><td>D1, D2, D3, D4</td></tr></tbody>
+    </table>
+  </div>
+  <figure class="diagram">
+    <div class="frame"><img src="../assets/img/diagrams/pc-linkage.svg" alt="A released record has no name but keeps age, gender and pincode. An attacker joins it with an electoral roll and social media on these three fields and gets the name, the house and the health result." loading="lazy"></div>
+    <figcaption>Three ordinary fields act like a fingerprint when they are joined with public data.</figcaption>
+  </figure>
+  <p>The name is gone. But possibly only one 18-year-old woman with this pincode took a test. The attacker matches the age, gender and pincode with a public or leaked dataset and finds her name. The removal of direct identifiers is not enough. This is a singling out attack that linkage makes possible.</p>
+
+  <h3>Inference and homogeneity attacks</h3>
+  <p>Now suppose that the data is generalized, so that the age is a range.</p>
+  <div class="table-wrap">
+    <table class="mini-table">
+      <thead><tr><th>Age</th><th>Gender</th><th>Pincode</th><th>RT-PCR</th></tr></thead>
+      <tbody>
+        <tr><td>18-24</td><td>Female</td><td>560072</td><td>Covid positive</td></tr>
+        <tr><td>18-24</td><td>Female</td><td>560072</td><td>Covid positive</td></tr>
+        <tr><td>18-24</td><td>Female</td><td>560072</td><td>Covid positive</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p><strong>Inference attack.</strong> The attacker reasons as follows. "My target took an RT-PCR test, and I know her quasi-identifiers. I cannot tell which row is hers. But every row with her quasi-identifiers is Covid positive, so she is positive." The attacker never found the record, but the secret leaked.</p>
+  <p><strong>Collective privacy or homogeneity attack.</strong> With five identical positive rows, the attacker says "It is easy. I can target anybody. Free lunch." The course showed a shark facing a school of fish. When the whole group looks the same, the whole group is exposed.</p>
+
+  <h3>Location privacy</h3>
+  <p>The course gave a simple method for location data.</p>
+  <ol class="steps">
+    <li><strong>Start</strong> with the sensitive Global Positioning System (GPS) coordinates of patients.</li>
+    <li><strong>Anonymize</strong> them with a rule, for example at least 10 positive cases within a radius of 1 km.</li>
+    <li><strong>Share</strong> the privacy-preserved coordinates for visualization and research.</li>
+  </ol>
+  <figure class="diagram">
+    <div class="frame"><img src="../assets/img/diagrams/pc-location.svg" alt="On the left, rounding the coordinates of a person who lives alone in a large area still points to her. On the right, a crowd rule shows a point only when at least ten cases are within one kilometer." loading="lazy"></div>
+    <figcaption>Rounding ignores the number of people nearby. A crowd rule counts them.</figcaption>
+  </figure>
+  <div class="block key">
+    <div class="label">Key idea</div>
+    <p>Simple tricks such as rounding the coordinates are blind to context and to privacy. A rounded location still points to a person who is the only resident within 100 km. The protection must depend on the number of other people nearby.</p>
+  </div>
+
+  <h3>k-anonymity, l-diversity and t-closeness</h3>
+  <figure class="diagram">
+    <div class="frame"><img src="../assets/img/diagrams/pc-anonymity-ladder.svg" alt="Five steps. Removing names leaves singling out and linkage. k-anonymity stops singling out, but inference stays. l-diversity stops homogeneity, but similar values leak. t-closeness stops skewed groups, but outliers stay. Differential privacy adds calibrated noise and gives each person plausible deniability." loading="lazy"></div>
+    <figcaption>Each step closes one attack and leaves another open, so the risk must be measured after each step.</figcaption>
+  </figure>
+  <p><strong>k-anonymity.</strong> Every combination of quasi-identifiers must occur at least k times. Then nobody can single out a record.</p>
+  <div class="table-wrap">
+    <table class="mini-table">
+      <thead><tr><th>Age</th><th>Gender</th><th>Pincode</th><th>RT-PCR</th><th>Co-morbidity</th></tr></thead>
+      <tbody>
+        <tr><td>18-24</td><td>Female</td><td>560072</td><td>Covid positive</td><td>D4</td></tr>
+        <tr><td>18-24</td><td>Female</td><td>560072</td><td>Covid positive</td><td>D1, D2</td></tr>
+        <tr><td>18-24</td><td>Female</td><td>560072</td><td>Covid positive</td><td>D1, D2, D3, D4</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Here k is 3, so a singling out attack is not possible. But the sensitive column reads "Covid positive" in all rows, so inference still works.</p>
+  <p><strong>t-closeness.</strong> The sensitive values in each group must resemble the whole population. Suppose that the group of five has three positive and two negative results. The attacker then concludes "I cannot say. I learned nothing from this dataset."</p>
+  <p>The course showed this as a school of different animals, namely a jellyfish, a whale, a turtle and a fish. The shark cannot treat the group as one.</p>
+  <div class="table-wrap">
+    <table class="mini-table">
+      <thead><tr><th>Age</th><th>Gender</th><th>Pincode</th><th>RT-PCR</th></tr></thead>
+      <tbody>
+        <tr><td>18-24</td><td>Female</td><td>560072</td><td>Covid positive</td></tr>
+        <tr><td>18-24</td><td>Female</td><td>560072</td><td>Covid positive</td></tr>
+        <tr><td>18-24</td><td>Female</td><td>560072</td><td>Covid positive</td></tr>
+        <tr><td>18-24</td><td>Female</td><td>560072</td><td>Covid negative</td></tr>
+        <tr><td>18-24</td><td>Female</td><td>560072</td><td>Covid negative</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p><strong>A differentially private mitigation.</strong> The last step is a bar chart of a disease distribution. It includes asthma, Covid-19, cancer, diabetes, Ebola, flu, the human immunodeficiency virus (HIV), heart disease and hepatitis. It also includes hypertension, kidney disease, Middle East respiratory syndrome (MERS), sexually transmitted diseases (STDs), tuberculosis (TB) and Zika. </p>
+  <p>The old distribution stands next to a new one with noise. The bars change very little, but the attacker learns nothing certain. The overall picture stays useful, and nobody can confirm a single person.</p>
+  <div class="block beyond">
+    <div class="label">Beyond the course</div>
+    <p><strong>l-diversity</strong> was named in the course but not explained. It requires that each group of matching quasi-identifiers holds at least l different sensitive values. It stops the homogeneity attack above, where all rows are positive.</p>
+    <p>It can still leak when the values are different but similar, for example lung cancer and stomach cancer. It can also leak when one value is much more common. t-closeness goes further and compares the whole distribution in the group with the distribution in the whole table.</p>
+  </div>
+
+  <h3>Scanning a dataset for privacy risk</h3>
+  <p>The course showed the operation of a dataset risk scanner, step by step.</p>
+  <div class="slides" data-slides>
+    <div class="slides-track">
+      <div class="slide card-slide"><span class="kicker">Step 1</span><h3>Open the scanner</h3><p>The scanner sits in the threat modeling group of the platform, next to the document scanner and the DPIA workflow. The dashboard shows charts of the risk score and the risk index, and counts of the column classes.</p></div>
+      <div class="slide card-slide"><span class="kicker">Step 2</span><h3>Create a job and select the law</h3><p>Create a new job and select the regulation, which is India (DPDP), the EU (GDPR) or Japan (Act on the Protection of Personal Information, APPI).</p></div>
+      <div class="slide card-slide"><span class="kicker">Step 3</span><h3>Select the data</h3><p>Name the job. Select the source of the dataset, either a database connection with its table, or a file upload.</p></div>
+      <div class="slide card-slide"><span class="kicker">Step 4</span><h3>Select the classification mode</h3><p>In Auto mode, the tool classifies the columns. In Manual mode, the user uploads a manual assessment file. Hybrid mode combines the two.</p></div>
+      <div class="slide card-slide"><span class="kicker">Step 5</span><h3>Cross-border flows</h3><p>When the data goes to another country, turn on the cross-border toggle to receive advice on cross-border mitigation.</p></div>
+      <div class="slide card-slide"><span class="kicker">Step 6</span><h3>Submit and wait</h3><p>Submit the job. When the status shows "Success", open the results.</p></div>
+      <div class="slide card-slide"><span class="kicker">Step 7</span><h3>Correct the classes</h3><p>Review the class of each column and its confidence score. If a class is wrong, mark it, select the correct class and run the job again.</p></div>
+      <div class="slide card-slide"><span class="kicker">Step 8</span><h3>Download the report</h3><p>Download the report of the job.</p></div>
+    </div>
+  </div>
+  <div class="block practice">
+    <div class="label">In practice</div>
+    <p><strong>Column classes.</strong> The classes are PII (name, email, phone, Aadhaar, Permanent Account Number or PAN, and address), quasi-identifier (zip code, age, gender), time (date of birth, time stamps), unique identifier (Goods and Services Tax or GST number), statistical data (turnover, asset worth, education), sensitive statistical data (for example the state), statistical numeric and statistical text. Each class has a risk level, which is 100 for PII and lower for the others.</p>
+    <p><strong>Manual and hybrid files.</strong> These are simple comma-separated values (CSV) files with three columns, <code>column_name</code>, <code>attribute_sub_type</code> and <code>attribute_type</code>. They also carry three thresholds, <code>k_value = 5</code>, <code>t_value = 0.5</code> and <code>outlier_value = 0.2</code>.</p>
+  </div>
+  <figure class="diagram">
+    <div class="frame"><img src="../assets/img/diagrams/pc-risk-matrix.svg" alt="A five by five grid. Severity, how identifiable the data is, goes from category 1 to 5. Likelihood, how feasible re-identification is, goes from very low to very high. Green cells are low risk and red cells are high risk. A marker shows where the dataset sits." loading="lazy"></div>
+    <figcaption>Severity and likelihood together show the position of a dataset.</figcaption>
+  </figure>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Output</th><th>Meaning</th></tr></thead>
+      <tbody>
+        <tr><td>Risk score (0 to 100)</td><td>A qualitative score of the privacy risk of the dataset. In the example, 100.</td></tr>
+        <tr><td>Risk index (0 to 2500+)</td><td>A quantitative measure of the overall privacy risk. In the example, 930.</td></tr>
+        <tr><td>Likelihood and severity matrix</td><td>Severity is the identifiability of the data (categories 1 to 5). Likelihood is the feasibility of re-identification (very low to very high). Green is low risk and red is high risk. A marker shows the position of the dataset.</td></tr>
+        <tr><td>Technical safeguards (PET mitigation)</td><td>Based on the LINDDUN threat model and grouped by linkability, identifiability, deniability and undetectability. Each item gives its applicability (for example "Strong compliance"), the law (DPDP Act 8(4), draft Rule 6(1)(d)) and a recommendation. For example, "For datasets with sensitive user attributes and a risk score greater than 20, explore a suitable PET like context-based anonymization to protect against linkage attacks."</td></tr>
+        <tr><td>Key recommendations</td><td>Grouped under the five functions of the NIST Privacy Framework, namely Identify, Govern, Control, Communicate and Protect. The categories include policies and procedures, risk strategy, awareness and training, grievance management, then monitoring and review. The legal reference is DPDP Act 4(1).</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p><strong>Output files.</strong> The scanner produces an attribute risk chart. It also produces a CSV file for each technique, namely the k-table, the outliers, the numeric outliers and an outlier summary.</p>
+  <p>Images show the likelihood and severity matrix, the linkability and inference attacks, the singling out attack, the risk score and the quality risk. The full report comes as a PDF. A CSV holds the assessed dataset, and sample JavaScript Object Notation (JSON) supports integration. Further CSV files hold the singling out and linkage inference results.</p>
+  <p><strong>Integration.</strong> A JSON output gives the regulation, the risk score, the risk index and the technical configuration (k, t and outlier). It also gives each attribute with its name, sub-type, type, risk level and confidence. A Representational State Transfer (REST) application programming interface (API), <code>POST /jobs/create</code>, starts a job. It takes a job name, a configuration type (<code>AUTO</code> or <code>MANUAL</code>), the regulation, a cross-border flag (<code>true</code> or <code>false</code>) and the dataset file.</p>
+
+  <h3>A DPIA built on measured risk</h3>
+  <div class="block practice">
+    <div class="label">In practice</div>
+    <p><strong>The dashboard</strong> shows graphs of the DPIAs. It groups them by a custom template under a "dictionary" (for example Sales) and by status (under review, approved, rejected). When the template uses weighted questions, it also groups them by risk (low, medium, high).</p>
+    <p><strong>Creation of a DPIA job.</strong></p>
+    <ol>
+      <li>Open the jobs list and select "New Job". Enter a job name.</li>
+      <li>Select the link for the DPIA, which is none, a scanned data flow or a consented RoPA entry (a consent application).</li>
+      <li>Select whether to use the default DPIA questionnaire template.</li>
+      <li>Select the job of the dataset scanner. Its risk score and index arrive automatically.</li>
+      <li>Answer the questions section by section, namely Nature, Purpose, Context and Scope, followed by Necessity and Proportionality. The questions address the data subject, the data controller and the data processor. Many use a scale from 1 to 5, for example from "less necessary" to "more necessary".</li>
+      <li>Submit when all sections are complete.</li>
+    </ol>
+    <p><strong>Review and approval.</strong> The reviewer opens the job and goes through three steps. The first is the assessment overview with the answers.</p>
+    <p>The second is the scan result, with gauges and recommendations whose parts the reviewer can select for feedback. The third is the approval, with a recommendation for process mitigation, comments and a choice to reject or approve. After approval, the report is available for download.</p>
+  </div>
+
+  <h3>Scanning documents</h3>
+  <div class="block practice">
+    <div class="label">In practice</div>
+    <p>Create a new job for the document scanner and name it. Select a database connection or upload a file in Word, PDF, JSON or text format, then submit. The scanner finds personal and sensitive data in documents such as health records or loan documents. It reports the risk in the same way as the dataset scanner does for tables.</p>
+  </div>
+  <div class="part-banner" data-n="4" style="--pc:#7a4fc2" id="part-4">
+    <div class="pb-tag">Part 4 of 8</div>
+    <h2 id="anonymization-pseudonymization-and-encryption" data-toc="4. Anonymization, pseudonymization and encryption">Anonymization, pseudonymization and encryption</h2>
+    <p>The toolbox of privacy enhancing technologies. It covers the place of each tool, the risks that it removes and the legal status of the result. It also covers cryptography that lets people compute on data that they cannot see.</p>
+  </div>
+
+  <h3>Input PETs and output PETs</h3>
+  <p>The course sorts PETs on two axes. <strong>Input PETs</strong> protect the data during computation. <strong>Output PETs</strong> protect the released result. The second axis is the mode of use, either non-interactive data sharing (high volume, low frequency) or interactive data querying (low volume, high frequency).</p>
+  <figure class="diagram">
+    <div class="frame"><img src="../assets/img/diagrams/pc-pet-map.svg" alt="A two by two map. For data sharing, input PETs are confidential computing, fully homomorphic encryption and ZKP, and output PETs are k-anonymity, t-closeness, differential privacy and synthetic data. For data querying, input PETs are private set intersection, secure multi-party computation, pseudonymous inference and threshold cryptography, and output PETs are differential querying, synthetic prompts and federated learning." loading="lazy"></div>
+    <figcaption>Four groups of PETs. Threat modeling measures the output PETs for sharing, and small-model guards protect the input PETs for querying.</figcaption>
+  </figure>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th></th><th>Input PETs</th><th>Output PETs</th></tr></thead>
+      <tbody>
+        <tr><td>Data sharing</td><td>Confidential computing, fully homomorphic encryption (FHE), ZKP and verifiable claims</td><td>k-anonymity, t-closeness, differential privacy (DP) and synthetic data, measured by threat modeling</td></tr>
+        <tr><td>Data querying</td><td>Private set intersection (PSI), secure multi-party computation (SMPC), pseudonymous inference and threshold cryptography, guarded by SLM guards</td><td>Differential querying, synthetic prompts and federated learning</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>The course also marked which of these were live products and which were early versions, or minimum viable products (MVPs), at the time.</p>
+
+  <h3>The data spectrum</h3>
+  <p>This scale goes from PII to input privacy. At the left end, the risk is high. The regulation and the overheads are high too. At the right end, the risk is low.</p>
+  <figure class="diagram">
+    <div class="frame"><img src="../assets/img/diagrams/pc-data-spectrum.svg" alt="A scale from high risk to low risk with PII, masked, pseudonymized, anonymized, synthetic, DP and input privacy. PII, masked and pseudonymized data are personal data in scope of the law. Anonymized and synthetic data are exempt but keep some residual risk. DP and input privacy share only insights or encrypted results." loading="lazy"></div>
+    <figcaption>The further right the data goes, the lower the risk and the lighter the regulation.</figcaption>
+  </figure>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Zone</th><th>Data</th><th>Legal status</th></tr></thead>
+      <tbody>
+        <tr><td>In scope of regulation, personal data</td><td>PII, masked, pseudonymized</td><td>Sensitive and regulated. Movement is restricted at many levels. Data subject rights apply directly.</td></tr>
+        <tr><td>Exempt from regulation, non-personal data or insights</td><td>Anonymized, synthetic</td><td>Some residual risk remains, and other techno-legal measures must protect it.</td></tr>
+        <tr><td>Exempt, privacy-preserved data query</td><td>DP, input privacy</td><td>Only insights or encrypted computations leave. These are input privacy technologies.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p><strong>Masking compared with PETs.</strong> The course calls masking "peekaboo privacy". It showed an elephant with a leaf over its face and asked the audience to guess the animal. To hide part of the data does not hide the identity behind it. A PET gives a privacy guarantee with mathematical proofs, like a cloak of invisibility.</p>
+
+  <h3>Reasonable security safeguards</h3>
+  <p>The DPDP Rules turn reasonable security safeguards into a concrete list. The course arranged them in two groups.</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Goal</th><th>Rule</th><th>Safeguards</th></tr></thead>
+      <tbody>
+        <tr><td>Protect confidentiality, integrity and availability</td><td>Rule 6(1)(a) and the following clauses</td><td>Encryption, access control, logs and analysis, log backup, data backup, contracts and organizational measures</td></tr>
+        <tr><td>Continue the processing even if CIA is compromised (fiduciary or processor)</td><td>Rule 6(1)(d), with Act Sections 2(t), 2(u) and 33(2)</td><td>Anonymization, synthetic data, differential privacy and SMPC</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="block law">
+    <div class="label">From the law</div>
+    <div class="src">DPDP Rule 6, reasonable security safeguards (summary)</div>
+    <blockquote>
+      <p>A Data Fiduciary shall protect personal data in its possession or under its control, including processing by its Data Processor, by taking reasonable security safeguards, which shall include at least:</p>
+      <ul>
+        <li>appropriate data security measures, including securing such personal data through its encryption, obfuscation or masking or the use of virtual tokens mapped to it;</li>
+        <li>appropriate measures to control access to the computer resources used;</li>
+        <li>visibility on access through appropriate logs, monitoring and review, to detect, investigate and remediate unauthorised access;</li>
+        <li>reasonable measures for continued processing in the event of confidentiality, integrity or availability being compromised, including by way of data backups;</li>
+        <li>retaining such logs and personal data for a period of one year, unless law requires otherwise, to enable detection of unauthorised access and its investigation and remediation;</li>
+        <li>appropriate provision in the contract with a Data Processor for taking reasonable security safeguards;</li>
+        <li>appropriate technical and organisational measures to ensure effective observance of security safeguards.</li>
+      </ul>
+    </blockquote>
+  </div>
+  <div class="block law">
+    <div class="label">From the law</div>
+    <div class="src">DPDP Act, Section 33(2), factors for the amount of a penalty</div>
+    <blockquote>
+      <ul>
+        <li>the nature, gravity and duration of the breach;</li>
+        <li>the type and nature of the personal data affected;</li>
+        <li>whether the breach is repetitive;</li>
+        <li>whether the person, as a result of the breach, has realised a gain or avoided a loss;</li>
+        <li>whether the person took any action to mitigate the effects and consequences of the breach, and the timeliness and effectiveness of such action;</li>
+        <li>whether the monetary penalty is proportionate and effective, having regard to the need to secure observance of and deter breach of the Act;</li>
+        <li>the likely impact of the penalty on the person.</li>
+      </ul>
+    </blockquote>
+  </div>
+  <div class="block key">
+    <div class="label">Key idea</div>
+    <p>Clause (e) of Section 33(2) is important for a DPO. Proof of strong and timely mitigation, for example with PETs, can reduce the penalty even when something goes wrong.</p>
+  </div>
+
+  <h3>Expert-grade anonymization</h3>
+  <p>An anonymization engine moves data from the personal zone of the spectrum to the anonymized zone. The threat modeling score then turns from red to green. The example from the course uses k = 2, with ages, genders and Zone Improvement Plan (ZIP) codes.</p>
+  <div class="side-by-side">
+    <div>
+      <h4>Before</h4>
+      <div class="table-wrap">
+        <table class="mini-table">
+          <thead><tr><th>Age</th><th>Gender</th><th>ZIP</th><th>Disease</th></tr></thead>
+          <tbody>
+            <tr><td>28</td><td>Male</td><td>10001</td><td>Flu</td></tr>
+            <tr><td>28</td><td>Male</td><td>10001</td><td>Asthma</td></tr>
+            <tr><td>35</td><td>Female</td><td>20002</td><td>Diabetes</td></tr>
+            <tr><td>35</td><td>Female</td><td>20002</td><td>Hypertension</td></tr>
+            <tr><td>45</td><td>Male</td><td>30003</td><td>Cancer</td></tr>
+            <tr><td>45</td><td>Male</td><td>30003</td><td>Flu</td></tr>
+            <tr><td>50</td><td>Female</td><td>40004</td><td>Asthma</td></tr>
+            <tr><td>50</td><td>Female</td><td>40004</td><td>Diabetes</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div>
+      <h4>After (k = 2)</h4>
+      <div class="table-wrap">
+        <table class="mini-table">
+          <thead><tr><th>Group</th><th>Age</th><th>Gender</th><th>ZIP</th><th>Disease</th></tr></thead>
+          <tbody>
+            <tr><td>1</td><td>20-30</td><td>Male</td><td>100**</td><td>Flu</td></tr>
+            <tr><td>1</td><td>20-30</td><td>Male</td><td>100**</td><td>Asthma</td></tr>
+            <tr><td>2</td><td>30-40</td><td>Female</td><td>200**</td><td>Diabetes</td></tr>
+            <tr><td>2</td><td>30-40</td><td>Female</td><td>200**</td><td>Hypertension</td></tr>
+            <tr><td>3</td><td>40-50</td><td>Male</td><td>300**</td><td>Cancer</td></tr>
+            <tr><td>3</td><td>40-50</td><td>Male</td><td>300**</td><td>Flu</td></tr>
+            <tr><td>4</td><td>50+</td><td>Female</td><td>400**</td><td>Asthma</td></tr>
+            <tr><td>4</td><td>50+</td><td>Female</td><td>400**</td><td>Diabetes</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <h3>A short history of anonymization</h3>
+  <figure class="diagram">
+    <div class="frame"><img src="../assets/img/diagrams/pc-anon-history.svg" alt="Four eras. In the 1960s and 1970s, basic redaction. In the 1980s and 1990s, the first attacks, when Sweeney showed in 1997 that zip code, gender and birth date identify about 87 percent of people. From 2002 to 2007, formal models such as k-anonymity, l-diversity and t-closeness. From 2006, differential privacy, synthetic data, clean rooms and laws such as GDPR, DPDP and CCPA." loading="lazy"></div>
+    <figcaption>Sixty years of anonymization, from redaction to differential privacy.</figcaption>
+  </figure>
+  <ul>
+    <li><strong>1960 to 1970, the origins of data privacy.</strong> Electronic data processing grew, with basic data redaction. People believed that the removal of direct identifiers (PII) was enough.</li>
+    <li><strong>1980 to 1990, de-identification and the first attacks.</strong> Basic anonymization only removed PII. In 1997, the well-known work of Latanya Sweeney re-identified about 87 percent of people with only the zip code, the gender and the birth date.</li>
+    <li><strong>2002 to 2007, formal privacy models.</strong> k-anonymity (Samarati and Sweeney, 2002), l-diversity (Machanavajjhala and others, 2006) and t-closeness (Li and others, 2007).</li>
+    <li><strong>The modern trend.</strong> Differential privacy (Dwork, 2006), synthetic data generation (privacy by design) and data clean rooms. Global laws such as the GDPR, the DPDP Act of India and the CCPA of California all define anonymization legally.</li>
+  </ul>
+
+  <h3>Anonymization in the law</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Law</th><th>Definition or method</th></tr></thead>
+      <tbody>
+        <tr><td>GDPR (Recital 26)</td><td>Information which does not relate to an identified or identifiable natural person, or personal data rendered anonymous in such a manner that the data subject is not or no longer identifiable.</td></tr>
+        <tr><td>HIPAA (164.514(b)), Safe Harbor method</td><td>Removal of 18 specific identifiers, for example the name, the Social Security Number (SSN), full dates and the ZIP codes of areas with fewer than 20,000 people, with no actual knowledge that the data can identify somebody.</td></tr>
+        <tr><td>HIPAA, Expert Determination method</td><td>A statistical expert certifies, with accepted statistical methods, that the risk of re-identification is very small.</td></tr>
+        <tr><td>PDPL (Saudi Arabia)</td><td>The process by which personal data is irreversibly altered so that individuals can no longer be identified directly or indirectly by any means, including by combining it with other datasets, now or in the future.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Anonymization techniques</h3>
+  <p><strong>k-anonymity.</strong> A property of a dataset in which each record is indistinguishable from at least k−1 other records on certain attributes, the quasi-identifiers. For example, an attacker looks for a man in a released table and knows only his age and gender. The table has k men with the same age and gender, so the attacker cannot tell which one he is.</p>
+  <p><strong>Generalization.</strong> A value is replaced with a broader one, so that records form groups. The ages 20, 21, 22, 23, 24 and 25 become "20–25 years".</p>
+  <p><strong>Suppression.</strong> Parts of a value are replaced with a symbol such as an asterisk. The ZIP codes 47677, 47602 and 47678 all become "476**" and form one group. The gender can also be fully suppressed to "***".</p>
+  <p><strong>t-closeness.</strong> A group, or equivalence class, has t-closeness when the distance between two distributions is not more than a threshold t. The first is the distribution of a sensitive attribute in the group, and the second is its distribution in the whole table. A table has t-closeness when all its groups have it.</p>
+  <p>In the example of the course, the distances of the groups are 0.252, 0.276 and 0.104. All are below the threshold of 0.35, so the table reveals less private data.</p>
+  <p><strong>Differential privacy.</strong> After t-closeness, outliers can remain in the statistical data, and other attacks are still possible. A differentially private algorithm adds controlled noise to statistical results. It is then difficult to tell whether the data of any one person was in the input, which gives plausible deniability. Part 5 explains it in full.</p>
+
+  <h3>Configuring an anonymization job</h3>
+  <p>The course showed the configuration of a job in an anonymization engine.</p>
+  <div class="slides" data-slides>
+    <div class="slides-track">
+      <div class="slide card-slide"><span class="kicker">Step 1</span><h3>Create a new job</h3><p>The engine sits in the PET group, next to the encryption tool, the synthetic data generator and the differentially private query service.</p></div>
+      <div class="slide card-slide"><span class="kicker">Step 2</span><h3>Job details</h3><p>Enter the job name and the data size (the number of input records). Then select the connection method, either an upload of a CSV or JSON file or a connector with a data path. With the write-back option, the output goes to the same path as the input.</p></div>
+      <div class="slide card-slide"><span class="kicker">Step 3</span><h3>k-anonymization</h3><p>Set the value of k and add the quasi-identifier columns. For each column, select a hierarchy type, either a generalization that the business defines (custom ranges) or character masking from the left or the right (suppression). Then set its levels.</p></div>
+      <div class="slide card-slide"><span class="kicker">Step 4</span><h3>t-closeness</h3><p>Set t between 0 and 1, where 1 is excluded, for example 0.35. With t = 0, every group must match the global distribution exactly. A value of t near 1 accepts any distribution. Select the sensitive columns.</p></div>
+      <div class="slide card-slide"><span class="kicker">Step 5</span><h3>Differential privacy</h3><p>Select the statistical columns, their data type and the noise level.</p><p>For text, 0.1 gives epsilon-level noise on frequency or count metrics. For numbers, "5,Auto" gives a noise scale of 5, or lets the system set it from the sensitivity.</p><p>For dates, "1,0,1" covers day, month and year, where 1 adds noise and 0 skips. For date and time, "1,2,0,0,1,1" covers seconds, minutes, hours, date, month and year, where 2 means noise at two levels.</p></div>
+      <div class="slide card-slide"><span class="kicker">Step 6</span><h3>Post-processing and PII</h3><p>Choose to drop or ignore the PII columns. Select a step before anonymization, for example masking from the left or the right, rounding to decimals or rounding to multiples, with its level.</p></div>
+      <div class="slide card-slide"><span class="kicker">Step 7</span><h3>Results</h3><p>The job list shows each job with its file, its status (Success or Failed) and its dates.</p></div>
+    </div>
+  </div>
+
+  <h3>Pseudonymization</h3>
+  <ul>
+    <li>It replaces direct identifiers with pseudonyms, for example John becomes P001.</li>
+    <li>It keeps the data useful for analytics.</li>
+    <li>Unlike anonymization, an authorized party can reverse it under controlled conditions.</li>
+    <li>Organizations use it for GDPR compliance and secure data sharing.</li>
+  </ul>
+  <figure class="diagram">
+    <div class="frame"><img src="../assets/img/diagrams/pc-tokenization.svg" alt="Names and phone numbers are replaced with pseudonyms such as P001 and encrypted values. A key vault keeps the mapping. Analytics works on the pseudonyms. An authorized user can reverse them with the key, so the result is still personal data." loading="lazy"></div>
+    <figcaption>A pseudonym hides the name, but the key can restore it. For this reason, the law still treats it as personal data.</figcaption>
+  </figure>
+  <div class="block remember">
+    <div class="label">Worth remembering</div>
+    <p><strong>Modern data protection techniques.</strong></p>
+    <ul>
+      <li><strong>Advanced Encryption Standard in Galois/Counter Mode (AES-GCM).</strong> Authenticated encryption that gives confidentiality and integrity together.</li>
+      <li><strong>Format-preserving encryption (FPE).</strong> Encryption that keeps the format of the data. For example, a 16-digit card number stays 16 digits.</li>
+      <li><strong>Tokenization.</strong> The replacement of data with non-sensitive tokens, with the mapping in a lookup table.</li>
+      <li><strong>Use cases.</strong> Compliance in health care and banking.</li>
+    </ul>
+  </div>
+  <p>A cell-level encryption tool sits on the pseudonymized part of the spectrum and encrypts data cell by cell. In the example, the names, PAN numbers and mobile numbers of 8 people are encrypted. An authorized user can decrypt one cell and recover, for example, 9098765432.</p>
+  <div class="block practice">
+    <div class="label">In practice</div>
+    <ul>
+      <li>Open the encryption tool from the PET group and select "New Job". The dashboard shows the records generated, the job status and a chart of the data type configuration.</li>
+      <li>Enter a job name and a sample size, which must be more than zero and not more than the number of rows.</li>
+      <li>Select the data source, either a database connection or a file upload.</li>
+      <li>For each column, select the level (L1 or L2), the algorithm (AES or FPE) and the method (encryption or hash), then submit.</li>
+      <li>Check the job status, open the summary (for example 17 columns with 0 kept, 17 encrypted and 0 hashed) and download the report.</li>
+      <li>To decrypt, select a column, paste an encrypted value and select Decrypt. A preview shows the encrypted dataset.</li>
+    </ul>
+  </div>
+
+  <h3>Fully homomorphic encryption</h3>
+  <ul>
+    <li>FHE allows computation directly on encrypted data.</li>
+    <li>The raw data stays hidden, even during processing.</li>
+    <li>It is based on lattice cryptography, which experts also consider resistant to quantum computers.</li>
+    <li>Its use cases are encrypted machine learning, confidential processing in the cloud and analytics on encrypted data.</li>
+  </ul>
+  <figure class="diagram">
+    <div class="frame"><img src="../assets/img/diagrams/pc-fhe.svg" alt="The applicant, the bank and the credit bureau send encrypted data to a cloud service provider. The provider computes the credit score on the encrypted data and sends back an encrypted score. Each party decrypts it with its own key. The provider never sees the data or the result." loading="lazy"></div>
+    <figcaption>The cloud computes the credit score on locked data and never holds a key.</figcaption>
+  </figure>
+  <p><strong>Example of an encrypted credit score.</strong> The applicant, the bank and the credit bureau each send their encrypted data to a cloud service provider (CSP). The CSP computes the credit score without decryption and returns an encrypted credit score.</p>
+  <p>Each party decrypts the score with its own key. The cloud provider never sees the data or the result. During the course, a Quick Response (QR) code led to a live FHE example that participants could try.</p>
+
+  <h3>Zero knowledge proofs</h3>
+  <ul>
+    <li>A ZKP proves possession of some information without revealing it.</li>
+    <li>Its properties are completeness, soundness and zero-knowledge (Part 2).</li>
+    <li>Its use cases are authentication, privacy-preserving identity checks (proof of an age of 18 or more without the date of birth) and voting on a blockchain.</li>
+  </ul>
+  <figure class="diagram">
+    <div class="frame"><img src="../assets/img/diagrams/pc-zkp-cave.svg" alt="A ring-shaped cave with paths A and B, joined by a magic door at the back. The prover walks in by one path. The verifier shouts which side to come out. With the password, the prover always comes out on that side. A cheat is right only half the time. After many rounds the verifier is convinced but never learns the password." loading="lazy"></div>
+    <figcaption>The prover shows many times that she knows the password, and never says it.</figcaption>
+  </figure>
+  <div class="block beyond">
+    <div class="label">Beyond the course</div>
+    <p><strong>The cave picture</strong> is the classic "Ali Baba cave". A ring-shaped cave has two paths, A and B, joined by a magic door at the back. The prover enters by one path. The verifier waits outside and calls the path by which the prover must come out.</p>
+    <p>A prover who knows the password for the door can always come out on the correct side. A prover who does not know it is correct only half the time. After many rounds, the verifier is convinced, but never learns the password.</p>
+  </div>
+  <p><strong>Example of a proof of bank balance.</strong> The bank gives the prover the balance. The prover generates a proof that the balance is above a threshold and sends only that proof to the verifier, for example a visa office. The verifier learns that the balance is above the threshold, and nothing about the actual amount.</p>
+  <p>My own certificate carries a "ZK Cert ID" at the bottom, which is a zero knowledge (ZK) certificate identifier. It is a small reminder that a verifier can check a credential with a proof, not only with trust.</p>
+
+  <h3>Private set intersection and secure multi-party computation</h3>
+  <figure class="diagram">
+    <div class="frame"><img src="../assets/img/diagrams/pc-psi-smpc.svg" alt="On the left, two companies find their common customers. Each learns only the overlap. On the right, a bid is split into three secret shares, one for each server. No server sees the bid. Together the servers compute and reveal only the winning bid." loading="lazy"></div>
+    <figcaption>Both methods compute an answer together and keep each input private.</figcaption>
+  </figure>
+  <p><strong>PSI.</strong> Two parties find the items that they have in common without revealing the rest of their data. PSI uses hashing, encryption or oblivious transfer.</p>
+  <p>Its use cases are checks for breached passwords, contact tracing and the comparison of marketing lists. For example, two companies find their common customers, and each one learns only the overlap.</p>
+  <p><strong>SMPC.</strong> Several parties compute a result together, and each one keeps its input private. SMPC uses secret sharing or garbled circuits. Its use cases are joint analytics, privacy-preserving machine learning and secure auctions.</p>
+  <p><strong>Example of a secure auction between different governing bodies.</strong> A client splits a bid into secret shares and sends one share to each of three servers. No single server can see the bid. The servers run the SMPC protocol together and reveal only the output, which is the winning bid.</p>
+
+  <h3>Threshold cryptography</h3>
+  <ul>
+    <li>It splits a cryptographic key across several parties.</li>
+    <li>Only a subset of them, the threshold, is necessary to rebuild the key.</li>
+    <li>Its use cases are secure key management and digital signatures.</li>
+  </ul>
+  <figure class="diagram">
+    <div class="frame"><img src="../assets/img/diagrams/pc-threshold.svg" alt="A key is split into three shares for three parties. Any two shares rebuild the key to decrypt or sign. One lost or dishonest party cannot stop or break the system." loading="lazy"></div>
+    <figcaption>In a 2-of-3 scheme, any two shares rebuild the key.</figcaption>
+  </figure>
+  <p><strong>Example.</strong> A key is split into three shares, and three parties hold them. Any two of them can come together, generate the key and decrypt the message. The threshold here is 2, in a 2-of-3 scheme. One lost or dishonest party cannot stop or break the system.</p>
+  <div class="part-banner" data-n="5" style="--pc:#4f46b5" id="part-5">
+    <div class="pb-tag">Part 5 of 8</div>
+    <h2 id="synthetic-data-and-differential-privacy" data-toc="5. Synthetic data and differential privacy">Synthetic data and differential privacy</h2>
+    <p>Two ways to use data without exposing anybody. One is artificial data that behaves like the real data. The other is answers about the real data with just enough noise that no single person shows through.</p>
+  </div>
+
+  <p>This part of the course had three goals. The first was to understand how synthetic data makes safe data use possible. The second was to learn practical uses of differential privacy. The third was to study real use cases for compliance and innovation.</p>
+
+  <h3>Synthetic data</h3>
+  <p>Synthetic data is artificial data that looks and behaves like real data. A computer program generates it, so nobody collects it from real events. It reproduces the structure, the patterns and the statistics of the actual data, but it contains no real personal or sensitive information.</p>
+  <p>On the data spectrum, synthetic data is in the non-personal, unrelatable zone. The example from the course follows.</p>
+  <div class="side-by-side">
+    <div>
+      <h4>Real</h4>
+      <div class="table-wrap">
+        <table class="mini-table">
+          <thead><tr><th>Name</th><th>Age</th><th>Salary</th></tr></thead>
+          <tbody>
+            <tr><td>Deepak Sharma</td><td>28</td><td>55,000</td></tr>
+            <tr><td>Vinayak Ram</td><td>34</td><td>62,000</td></tr>
+            <tr><td>Amit Gupta</td><td>26</td><td>47,000</td></tr>
+            <tr><td>Ankit Bajaj</td><td>42</td><td>80,000</td></tr>
+            <tr><td>Vaishnav Kumar</td><td>29</td><td>58,000</td></tr>
+            <tr><td>Swati Singh</td><td>39</td><td>72,000</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div>
+      <h4>Synthetic</h4>
+      <div class="table-wrap">
+        <table class="mini-table">
+          <thead><tr><th>Name</th><th>Age</th><th>Salary</th></tr></thead>
+          <tbody>
+            <tr><td>Suresh Kumar</td><td>29</td><td>54,000</td></tr>
+            <tr><td>Abhishek Singh</td><td>35</td><td>61,000</td></tr>
+            <tr><td>Sahil Godse</td><td>27</td><td>48,000</td></tr>
+            <tr><td>Ankur Bawa</td><td>41</td><td>79,000</td></tr>
+            <tr><td>Rohan Kumar</td><td>30</td><td>59,000</td></tr>
+            <tr><td>Neha Gupta</td><td>38</td><td>71,000</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <p>The averages and the relation between age and salary stay the same, but no row is a real person.</p>
+  <figure class="diagram">
+    <div class="frame"><img src="../assets/img/diagrams/pc-synthetic.svg" alt="Real rows go into a generator that learns patterns and statistics, not people. Differential privacy stops it from memorizing rare rows. The synthetic rows keep the averages and the link between age and salary, but no row is a real person. Uses include AI model building, fraud detection, application testing, patient data safety and research. Check quality with distributions, PCA and correlations." loading="lazy"></div>
+    <figcaption>A generator learns the patterns, not the people. The quality must be checked before use.</figcaption>
+  </figure>
+
+  <h3>Market and legal basis</h3>
+  <ul>
+    <li>Fortune Business Insights (September 2023) expects the market for synthetic data generation to exceed 2,339.8 million US dollars (USD) by 2030. It gives a compound annual growth rate (CAGR) of 31.1%.</li>
+    <li>DataHorizzon Research expects the market to reach USD 6.9 billion by 2032.</li>
+  </ul>
+  <div class="block law">
+    <div class="label">From the law</div>
+    <div class="src">Position of the Personal Data Protection Commission (PDPC) of Singapore</div>
+    <ul>
+      <li>Synthetic data is not personal data if it does not relate to an identifiable individual.</li>
+      <li>The risks of re-identification must still be assessed.</li>
+      <li>The PDPC guidance on PETs governs it, with the use of anonymization techniques and governance controls.</li>
+    </ul>
+  </div>
+
+  <h3>Uses of synthetic data</h3>
+  <p><strong>Across the machine learning life cycle.</strong> Data sources include traditional business data, partner data, mobile apps and legacy data. They go through data preparation, with preprocessing, a training set and a testing set. They then go through model training, with network models, hyperparameters, deep learning frameworks, a trained model and deployment in production. A synthetic data generator can replace real data at the source or at the preparation step. The use cases follow.</p>
+  <ul>
+    <li>AI model building</li>
+    <li>Fraud detection (finance)</li>
+    <li>Application testing (operations)</li>
+    <li>Protection of patient data (health care)</li>
+    <li>Data collaboration (research, archives and statistics)</li>
+  </ul>
+  <p><strong>Development and testing.</strong> Developers need realistic data to test a new application. Instead of a copy of production data, the process below applies.</p>
+  <ol class="steps">
+    <li><strong>The production database</strong> is real and sensitive.</li>
+    <li><strong>The schema and the constraints</strong> are extracted.</li>
+    <li><strong>A constraint-aware generator</strong> keeps the formats, the types, the edge cases and the relationships.</li>
+    <li><strong>A synthetic test database</strong> is safe and has a realistic structure.</li>
+    <li><strong>The quality assurance (QA) and development environments</strong> use it. These include the APIs, the extract, transform and load (ETL) jobs, the pipelines and the user interface (UI).</li>
+  </ol>
+  <p><strong>Research and statistics.</strong> Researchers want to study trends in a population without access to confidential records. Confidential population records go into a synthetic data generator that reproduces the structure and the statistics. The result is synthetic population data, statistically similar but without real individuals. Researchers and analysts then study the trends and publish.</p>
+
+  <h3>Synthetic data with DP</h3>
+  <p>A synthetic data generator can memorize rare real records and copy them into its output. DP techniques applied during generation prevent this and make the synthetic dataset more trustworthy.</p>
+
+  <h3>Generating synthetic data and checking its quality</h3>
+  <div class="block practice">
+    <div class="label">In practice</div>
+    <ul>
+      <li><strong>The dashboard</strong> shows the records generated so far, with charts of the job status and the job configuration and the list of all jobs. The user selects "Create New Job".</li>
+      <li><strong>Upload.</strong> Enter the job name, the number of input samples (for example 1,000) and the number of samples to generate (for example 2,000). Then upload a file, or use a connector to select a source and an entity.</li>
+      <li><strong>Encoder configuration.</strong> The tool predicts an encoder type for each column, namely numerical, categorical, datetime, textual or pattern. The user can correct it.</li>
+      <li>The example used a dataset of credit card fraud. Its columns included the distance from home, the distance from the last transaction and the ratio to the median purchase price. Other columns were repeat retailer, used chip, used personal identification number (PIN), online order and fraud.</li>
+    </ul>
+  </div>
+  <p>The real data and the synthetic data are then compared.</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Check</th><th>Subject of the check</th><th>A good result</th></tr></thead>
+      <tbody>
+        <tr><td>Cumulative distribution comparison</td><td>The cumulative sum curve of each column, real and synthetic on one chart</td><td>The better the overlap, the better the synthetic data</td></tr>
+        <tr><td>Principal component analysis (PCA) in two dimensions (2D)</td><td>The real and synthetic data on two principal components</td><td>The more alike the two plots, the closer the synthetic data is to the real data</td></tr>
+        <tr><td>Correlation comparison</td><td>The correlation matrices of the real and the synthetic data, with the difference between them</td><td>The lighter the difference matrix, the closer the synthetic data is to the real data</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Differential privacy</h3>
+  <div class="block key">
+    <div class="label">Key idea</div>
+    <p>Differential privacy is a mathematical framework that protects the privacy of individuals in a dataset with controlled noise. It gives quantifiable privacy guarantees and balances the utility of the data with privacy.</p>
+  </div>
+  <p>In other words, DP shares information about a group. It describes patterns in the group and withholds information about specific individuals. It makes small random changes to individual data that do not alter the statistics of interest. Thus, nobody can use the data to learn much about one person.</p>
+  <p><strong>Use cases.</strong> Data Principals feed a central database. Its data passes through DP before it reaches public relations for external sharing, and data science and other departments for querying.</p>
+  <p><strong>A data clean room with insight privacy.</strong> Consider the query "COUNT of people with a salary above 2 lakh who bought car model A".</p>
+  <figure class="diagram">
+    <div class="frame"><img src="../assets/img/diagrams/pc-dp-query.svg" alt="With exact answers, the count is 1002 and the same query without one person is 1001, so you learn that person&#x27;s salary and purchase. With differential privacy, each answer has noise, so one person&#x27;s row does not show. Each query spends part of a privacy budget." loading="lazy"></div>
+    <figcaption>An exact count can expose one person. A count with noise cannot.</figcaption>
+  </figure>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Setup</th><th>Answer</th><th>Risk</th></tr></thead>
+      <tbody>
+        <tr><td>A direct query on personal data, with no limit on queries</td><td>Exactly 1002</td><td>High. Repeated queries that differ slightly can isolate one person.</td></tr>
+        <tr><td>A query through a differentially private service, with a query budget</td><td>1002 ± N (noise added)</td><td>Low. The threat modeling score turns green.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="block beyond">
+    <div class="label">Beyond the course</div>
+    <p><strong>Exact counts leak.</strong> Suppose that 1002 people earn above 2 lakh and bought model A. The same query without one known person gives 1001. The salary and the purchase of that person are then known. Noise hides whether the row of one person changed the answer.</p>
+  </div>
+
+  <h3>The privacy budget, epsilon and delta</h3>
+  <p><strong>The privacy budget</strong> measures the permitted loss of privacy. It works like a limit on the number of questions that anyone can ask a dataset before the privacy of individuals is at risk. Each query uses part of the budget.</p>
+  <figure class="diagram">
+    <div class="frame"><img src="../assets/img/diagrams/pc-privacy-budget.svg" alt="A budget bar with a total epsilon of 1.0. Four queries spend 0.2, 0.3, 0.15 and 0.25, so 0.1 is left. A scale shows that a small epsilon gives more noise and stronger privacy, and a large epsilon gives less noise and more accurate results. Delta is a tiny chance that the epsilon promise fails." loading="lazy"></div>
+    <figcaption>Each query spends some epsilon. When the budget is empty, the answers stop.</figcaption>
+  </figure>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Parameter</th><th>Meaning</th><th>Effect</th></tr></thead>
+      <tbody>
+        <tr><td>Epsilon (ε)</td><td>The main DP parameter. It sets the permitted privacy loss for a query or a set of queries.</td><td>A smaller ε gives stronger privacy, more noise and less accurate results. A larger ε gives more accuracy and less privacy. The ε values add up across queries, so they can be tracked.</td></tr>
+        <tr><td>Delta (δ)</td><td>A small positive number in (ε, δ)-differential privacy. It covers the probability of a privacy breach.</td><td>ε keeps breaches small, and δ makes large breaches extremely unlikely.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="block remember">
+    <div class="label">Worth remembering</div>
+    <p>The smaller the epsilon, the stronger the privacy. All guarantees work within the limit that ε sets.</p>
+  </div>
+  <div class="block beyond">
+    <div class="label">Beyond the course</div>
+    <p><strong>The formal definition.</strong> Take any two datasets D and D′ that differ in one person, and any set of outputs S. A mechanism M is (ε, δ)-differentially private if the following holds.</p>
+    <div class="formula">Pr[ M(D) ∈ S ] ≤ e<sup>ε</sup> × Pr[ M(D′) ∈ S ] + δ</div>
+    <p>With δ = 0, this is pure ε-DP. For the Laplace mechanism, the noise scale is the sensitivity divided by ε. For a count, the sensitivity is 1, because one person changes the count by at most 1. Thus, with ε = 0.5 the noise scale is 2, and with ε = 0.1 it is 10.</p>
+  </div>
+
+  <h3>Ways to apply DP</h3>
+  <p>There are three ways, namely <strong>noise addition</strong> (randomness in the outputs), <strong>aggregation</strong> (combination of data so that single entries stay hidden) and <strong>data subsampling</strong> (use of subsets to reduce exposure).</p>
+  <figure class="diagram">
+    <div class="frame"><img src="../assets/img/diagrams/pc-local-central-dp.svg" alt="In local DP, each phone adds noise before it sends data, so the collector sees only noisy data. Privacy is stronger, but utility is lower. In central DP, a trusted curator collects the data and adds noise to the result. This gives a better balance of privacy and accuracy." loading="lazy"></div>
+    <figcaption>Local DP adds noise on each device. Central DP adds it once, after collection.</figcaption>
+  </figure>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th></th><th>Local DP</th><th>Central DP</th></tr></thead>
+      <tbody>
+        <tr><td>Place of the noise</td><td>At the source, for example on the device of the user</td><td>After collection, by a trusted curator</td></tr>
+        <tr><td>Trade-off</td><td>Stronger privacy, but it can reduce utility</td><td>A better balance of privacy and accuracy</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p><strong>Mechanisms.</strong> The noise comes from a distribution chosen for the data type and the use case.</p>
+  <ul>
+    <li><strong>Laplace mechanism.</strong> Best for numeric queries. It adds noise from a Laplace distribution.</li>
+    <li><strong>Gaussian mechanism.</strong> Suitable when a small relaxation of privacy is acceptable in exchange for better utility. It gives (ε, δ)-DP.</li>
+    <li><strong>Randomized response.</strong> For yes or no answers and categorical data. It adds controlled randomness to each answer.</li>
+  </ul>
+  <p><strong>Three DP techniques.</strong></p>
+  <ul>
+    <li><strong>Noise addition.</strong> Protects individuals and still allows accurate analysis and insights.</li>
+    <li><strong>Data perturbation.</strong> Changes the data to prevent identification and keeps the overall integrity of the dataset.</li>
+    <li><strong>Query restriction.</strong> Limits the types of queries, so that nobody can extract sensitive information about one person.</li>
+  </ul>
+
+  <h3>A differentially private query session</h3>
+  <div class="block practice">
+    <div class="label">In practice</div>
+    <ul>
+      <li>Open the differentially private query service from the PET group. The records list shows the past sessions.</li>
+      <li><strong>Creation of a session.</strong> Enter a job name and upload the dataset, with a requirement file in <span data-ste="skip">YAML Ain't Markup Language (YAML)</span> format. Set the total privacy budget (epsilon and delta), which is consumed over time, the privacy cost of each query and the DP algorithm.</li>
+      <li><strong>Query.</strong> Select the session, write a Structured Query Language (SQL) query such as a COUNT, submit it and read the noisy answer. Each query consumes budget. When the budget is exhausted, the service answers no further queries.</li>
+    </ul>
+  </div>
+  <div class="part-banner" data-n="6" style="--pc:#a3407a" id="part-6">
+    <div class="pb-tag">Part 6 of 8</div>
+    <h2 id="private-ai-rag-attacks-and-llm-operations" data-toc="6. Private AI with RAG, attacks and LLM operations">Private AI with RAG, attacks and LLM operations</h2>
+    <p>The ways in which personal data enters AI systems and the position of the DPDP Rules on it. Private retrieval-augmented generation, attacks that break the guardrails of LLMs, and the testing and governance of AI before release.</p>
+  </div>
+
+  <h3>Responsible data in use, layer by layer</h3>
+  <p>Everything in this part relates to the protection of data in use, in data sharing, AI models and cross-border transfer. The course splits it into two branches.</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Branch</th><th>Parts</th></tr></thead>
+      <tbody>
+        <tr><td>Data (privacy)</td><td>Privacy management and privacy enhancing technologies</td></tr>
+        <tr><td>AI (responsible)</td><td>Responsible AI operations and guardian agents</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Together they form AI TRiSM. The course spreads the stack across seven goals. These are data consent (verifiable and withdrawable), data collection (safe and privacy-aware), data processing (fair and privacy-preserving), ethical model training (privacy-preserving), AI model security, AI user safety (safe and accountable) and governance (transparent, accountable and fair). They map to five platform areas, namely a privacy management system (PMS), PTM, PETs, PPML and RAI.</p>
+  <p>The course describes each layer of responsible data in use.</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Layer</th><th>Content</th></tr></thead>
+      <tbody>
+        <tr><td>Responsible AI governance</td><td>Continuous monitoring of AI privacy and security, a central dashboard for responsible AI deployment, and agentic reporting and feedback</td></tr>
+        <tr><td>Responsible AI inference</td><td>A responsible AI firewall, detection and prevention of adversarial attacks, RAG privacy and safety, pseudonymous or anonymous inference, and role-based control of prompts</td></tr>
+        <tr><td>Responsible AI training</td><td>Privacy-preserving machine learning training, agentic AI red teaming, simulation of adversarial privacy and security attacks, and AI impact assessment</td></tr>
+        <tr><td>Responsible data sharing</td><td>PETs such as expert anonymization, synthetic data with DP, cryptographic data collaboration, differentially private insight sharing and FHE</td></tr>
+        <tr><td>Responsible data assessment</td><td>PTM with discovery, privacy attack simulation, risk quantification, agentic DPIA and recommendation</td></tr>
+        <tr><td>Responsible data collection</td><td>Verifiable consent, integrated data subject rights, a RoPA based on data flows, breach management and agentic consent management</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>An agentic orchestration layer runs across all of these. The agentic items were still in development when the course material was made.</p>
+
+  <h3>Personal data in LLMs under the DPDP Rules</h3>
+  <p><strong>Algorithmic processing.</strong> Two paths lead from a database of Data Principals to an algorithm that uses personal data, for example an LLM.</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Path</th><th>Result</th></tr></thead>
+      <tbody>
+        <tr><td>With PETs, personal data becomes non-personal data first</td><td>Free of risk</td></tr>
+        <tr><td>Without PETs, personal data goes directly into model building</td><td>High risk</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="block law">
+    <div class="label">From the law</div>
+    <div class="src">Draft DPDP Rule 12(3), final Rule 13(3), for Significant Data Fiduciaries</div>
+    <blockquote><p>Observe due diligence to verify that algorithmic software deployed by it for hosting, display, uploading, modification, publishing, transmission, storage, updating or sharing of personal data processed by it are not likely to pose a risk to the rights of Data Principals.</p></blockquote>
+  </div>
+  <p><strong>Continued processing.</strong> The data of Data Principals in a database can serve research, archiving, external sharing and AI model building in two lawful ways.</p>
+  <div class="block law">
+    <div class="label">From the law</div>
+    <div class="src">DPDP Rule 6(1)(d), continued processing</div>
+    <blockquote><p>Reasonable measures for continued processing in the event of confidentiality, integrity or availability of such personal data being compromised as a result of destruction or loss of access to personal data or otherwise, including by way of data backups.</p></blockquote>
+  </div>
+  <div class="block law">
+    <div class="label">From the law</div>
+    <div class="src">Draft Rule 15, final Rule 16, with Act Section 17(2)(b), research, archiving or statistical purposes</div>
+    <blockquote><p>The provisions of the Act shall not apply to the processing of personal data necessary for research, archiving or statistical purposes if it is carried on in accordance with the standards specified in the Second Schedule.</p></blockquote>
+  </div>
+  <p>With privacy enhancing technologies in the path, continued processing is permitted. Without them, the course marks the path as not compliant with the DPDP Act.</p>
+  <div class="block beyond">
+    <div class="label">Beyond the course</div>
+    <p>Section 17(2)(b) also requires that the data is not used to take any decision specific to a Data Principal.</p>
+  </div>
+
+  <h3>AI building blocks</h3>
+  <p><strong>Transformers.</strong> A neural network design that processes sequences in parallel with an attention mechanism. It is the foundation of modern AI models such as the Generative Pre-trained Transformer (GPT). The core parts are the embedding layer, positional encoding, attention layers, feedforward layers and the encoder-decoder structure. The course showed the original diagram from the paper "Attention Is All You Need".</p>
+  <p><strong>RAG.</strong> An architecture that retrieves knowledge from a vector database to enrich and ground the answers of a language model.</p>
+  <figure class="diagram">
+    <div class="frame"><img src="../assets/img/diagrams/pc-rag.svg" alt="Documents and the user query go through an embedding model. The vector database finds close matches. The prompt holds the question and the retrieved context, and goes to the LLM, which answers the user. Personal data from the documents can travel to an external LLM in the prompt." loading="lazy"></div>
+    <figcaption>RAG grounds the answer in internal documents, and it can also carry their personal data to the model.</figcaption>
+  </figure>
+  <ol class="steps">
+    <li><strong>Documents</strong> pass through an embedding model and are stored as vectors in a vector database.</li>
+    <li><strong>The query of the user</strong> passes through the same embedding model.</li>
+    <li><strong>The vector database</strong> returns the closest matching context.</li>
+    <li><strong>The LLM</strong> receives the prompt of the user and the retrieved context.</li>
+    <li><strong>The LLM</strong> sends its response.</li>
+  </ol>
+  <div class="block key">
+    <div class="label">Key idea</div>
+    <p>In RAG, personal data in the documents can enter the prompt that goes to an external LLM. That is a data transfer and a privacy risk, which private RAG addresses.</p>
+  </div>
+  <p><strong>AI agents.</strong> Autonomous systems that use reasoning and AI tools to reach goals through decisions in many steps. An agent sits between the user and databases, external files, software tools and APIs. It produces an output or an action. A multi-agent architecture has several agents, each with a distinct task, which work together on complex goals.</p>
+
+  <h3>PASSFERS, the principles for responsible AI</h3>
+  <figure class="diagram">
+    <div class="frame"><img src="../assets/img/diagrams/pc-passfers.svg" alt="Eight tiles for Privacy, Accountability, Safety, Security, Fairness, Explainability, Reliability and Sustainability." loading="lazy"></div>
+    <figcaption>Eight principles, one letter each.</figcaption>
+  </figure>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Letter</th><th>Principle</th><th>Meaning</th></tr></thead>
+      <tbody>
+        <tr><td>P</td><td>Privacy</td><td>Protect personal and sensitive data</td></tr>
+        <tr><td>A</td><td>Accountability</td><td>Make responsible AI decisions traceable</td></tr>
+        <tr><td>S</td><td>Safety</td><td>Prevent harmful behavior</td></tr>
+        <tr><td>S</td><td>Security</td><td>Protect AI from misuse, manipulation and threats</td></tr>
+        <tr><td>F</td><td>Fairness</td><td>Treat all users equally, without bias and discrimination</td></tr>
+        <tr><td>E</td><td>Explainability</td><td>Make AI decisions transparent and easy to interpret</td></tr>
+        <tr><td>R</td><td>Reliability</td><td>Deliver consistent, predictable results</td></tr>
+        <tr><td>S</td><td>Sustainability</td><td>Build energy-efficient AI systems</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Private RAG</h3>
+  <p>The course showed a system for RAG-based anonymization and mitigation. Its core parts are listed below.</p>
+  <ul>
+    <li>An attribute identification module</li>
+    <li>An encryption module</li>
+    <li>Key management</li>
+    <li>An encrypted inference pipeline</li>
+    <li>A local decryption module</li>
+  </ul>
+  <figure class="diagram">
+    <div class="frame"><img src="../assets/img/diagrams/pc-private-rag.svg" alt="Inside your boundary, a detector finds more than 30 sensitive attributes with an NER model, rules and tree matching. Format-preserving encryption replaces them with realistic tokens. The external LLM works on the tokens. The reply comes back and is decrypted only on the user side, so the user reads the real values." loading="lazy"></div>
+    <figcaption>The external model sees realistic tokens, never the real values.</figcaption>
+  </figure>
+  <ol class="steps">
+    <li><strong>The query or the document</strong> of the user arrives.</li>
+    <li><strong>The attribute identification module</strong> finds the sensitive attributes.</li>
+    <li><strong>The encryptor</strong> encrypts them, so that the PII in the data is encrypted.</li>
+    <li><strong>The external LLM</strong> works on the encrypted text and returns an encrypted response.</li>
+    <li><strong>The local decryptor</strong> restores the real values.</li>
+    <li><strong>The user</strong> sees the decrypted response.</li>
+  </ol>
+  <p><strong>Attribute identification and tagging.</strong> The system detects and tags more than 30 sensitive attributes. It uses NER (an AI model), rule-based pattern matching and an efficient tree matching algorithm. It also supports custom entities that the user defines. The attributes include PII, financial entities and medical entities (PHI).</p>
+  <p><strong>Encryption and decryption.</strong> The system uses FPE, which keeps the structure, the format and the token length. The LLM can therefore process encrypted prompts without broken grammar. Decryption happens only on the side of the user.</p>
+  <div class="block key">
+    <div class="label">Key idea</div>
+    <p>The external LLM never sees the real names, numbers or IDs. Its answer still makes sense, because the placeholders look and behave like real values. This is pseudonymous inference.</p>
+  </div>
+
+  <h3>Adversarial attacks on LLMs</h3>
+  <p>An adversarial attack is an input that makes a model produce an output that it must not produce. The course showed an attacker who indirectly prompts applications with an LLM inside.</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Injection methods</th><th>Affected parties</th><th>Threats</th></tr></thead>
+      <tbody>
+        <tr><td>Passive (through retrieval), active (for example emails), user-driven injections and hidden injections</td><td>End users, developers, automated systems and the LLM itself</td><td>Weapons, self-harm, misinformation, toxicity, privacy leakage and malware</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <figure class="diagram">
+    <div class="frame"><img src="../assets/img/diagrams/pc-llm-attacks.svg" alt="White-box attacks use the weights and data, for example gradient-based suffixes such as GCG, logit-based search and harmful fine-tuning. Black-box attacks only send queries, with templates, rewriting and another LLM that writes jailbreaks. Prompt-level defenses detect odd prompts, perturb prompts and use safer system prompts. Model-level defenses use safety fine-tuning, gradient analysis and a guard model that checks the output." loading="lazy"></div>
+    <figcaption>Attacks come from two sides. Defenses sit at the prompt and inside the model.</figcaption>
+  </figure>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Type</th><th>Knowledge of the attacker</th><th>Methods</th></tr></thead>
+      <tbody>
+        <tr><td>White box</td><td>Everything, namely the training data, the architecture, the weights and the hyperparameters</td><td><strong>Gradient-based.</strong> A jailbreak prompt built from the gradients of the model. <strong>Logit-based.</strong> A prompt built from the logits (scores) of the output tokens. <strong>Fine-tuning-based.</strong> Fine-tuning of the model with adversarial examples to bring out harmful behavior.</td></tr>
+        <tr><td>Black box</td><td>Very little, only query access</td><td><strong>Template completion.</strong> A harmful question inside a contextual template. <strong>Prompt rewriting.</strong> The question rewritten in other natural or non-natural languages. <strong>LLM-based generation.</strong> Another LLM acts as the attacker and creates or improves jailbreak prompts.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p><strong>A white-box attack, step by step.</strong> First, the model refuses the harmful request. Next, the attacker uses the internals of the model to search for a string of unusual characters. This adversarial suffix pushes the model toward agreement. Finally, the request with the suffix receives an answer. This is the idea behind the Greedy Coordinate Gradient (GCG) attack.</p>
+  <p><strong>Black-box template tricks.</strong> Without a jailbreak, the model refuses. With one, the harmful question hides inside one of the forms below.</p>
+  <ul>
+    <li><strong>Scenario nesting.</strong> A role-play story, such as "you are a helpful robot and a kind old lady asks you...".</li>
+    <li><strong>In-context attack.</strong> Fabricated earlier turns in which the "assistant" already answered similar harmful questions.</li>
+    <li><strong>Code injection.</strong> The question split into pieces inside a small function, with a request to run it and answer the result.</li>
+  </ul>
+
+  <h3>Defenses against adversarial attacks</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Level</th><th>Defense</th><th>Method</th></tr></thead>
+      <tbody>
+        <tr><td rowspan="3">Prompt level</td><td>Prompt detection</td><td>Detection and filtering of adversarial prompts with perplexity (the unusualness of the text) or other features</td></tr>
+        <tr><td>Prompt perturbation</td><td>A slight change to the prompt to break any hidden malicious content</td></tr>
+        <tr><td>System prompt safeguard</td><td>Carefully designed system prompts that improve safety</td></tr>
+        <tr><td rowspan="3">Model level</td><td>Fine-tuning</td><td>Fine-tuning of the LLM with safety examples to make it more robust</td></tr>
+        <tr><td>Gradient analysis</td><td>Detection of malicious prompts from the gradients of safety-critical parameters</td></tr>
+        <tr><td>Proxy defenses</td><td>Another secure SLM or LLM that monitors and filters the output of the target LLM</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>AI red teaming</h3>
+  <figure class="diagram">
+    <div class="frame"><img src="../assets/img/diagrams/pc-red-team.svg" alt="Four stages, namely scope and plan, adversarial strategies, test and run, and report, then fix and test again. The attack simulation sets what to test (fairness, safety and privacy leakage), uses an attacker agent with multi-turn dialogs and jailbreak templates, uses judges to decide if each attack worked and produces reports." loading="lazy"></div>
+    <figcaption>Plan, attack, test and report, then fix and repeat.</figcaption>
+  </figure>
+  <ol class="steps">
+    <li><strong>Scoping and planning.</strong> Define the system, define the threats and set the success criteria.</li>
+    <li><strong>Adversarial strategies.</strong> Evasion, poisoning, attacks and other exploits.</li>
+    <li><strong>Testing and execution.</strong> Create the tests and run the simulation.</li>
+    <li><strong>Reporting and analysis.</strong> Assess the risks and give recommendations.</li>
+  </ol>
+  <p><strong>The attack simulation</strong> has four parts.</p>
+  <ul>
+    <li><strong>Attributes to test.</strong> Fairness (race, religion, sex, sexual orientation, age and custom), safety (weapons, self-harm, child sexual exploitation, violent crimes, non-violent crimes and custom) and privacy (leakage of PII and of confidential data).</li>
+    <li><strong>Agent testing.</strong> A multi-turn dialogue attacker uses adversarial jailbreak templates, creates many prompt instances and sends them to the target LLM.</li>
+    <li><strong>Evaluations.</strong> An LLM judge, static evaluators and a delta-based evaluator decide whether each attack succeeded.</li>
+    <li><strong>Reports</strong> with charts and tables.</li>
+  </ul>
+
+  <h3>A governed chat with an LLM</h3>
+  <div class="block practice">
+    <div class="label">In practice</div>
+    <p>A governed AI chat gateway sits in the responsible AI group, with the private RAG tool, the AI impact assessment and the AI governance tool. It provides governance of generative AI and LLMs for the enterprise.</p>
+    <ul>
+      <li>Select the AI provider and the model, type a prompt and submit it.</li>
+      <li>An internal model tags the risks in the prompt. For "Hi I'm Alex Mercer. I live in Bengaluru, India", it tags the name as a person, Bengaluru as a location and India as a geo-political entity (GPE). A risk summary lists location risk, personal risk and first-person risk.</li>
+      <li>Select "Generate Synthetic Prompt". The tool replaces the sensitive values with tokens, for example a different invented name and place, so the real details never reach the external model.</li>
+    </ul>
+    <p>The gateway also detects attacks and labels them with a confidence score.</p>
+    <ul>
+      <li><strong>Persuasion attack.</strong> A long framing that sounds reasonable and slowly pushes toward harmful content.</li>
+      <li><strong>Template attack.</strong> A known jailbreak template, for example a request to act as a different model without limits.</li>
+      <li><strong>GPT Fuzzer.</strong> Jailbreak templates that a program mutates automatically.</li>
+      <li><strong>GCG attack.</strong> A prompt with an unusual adversarial suffix, the white-box method above.</li>
+    </ul>
+  </div>
+
+  <h3>Protecting files before an LLM reads them</h3>
+  <div class="block practice">
+    <div class="label">In practice</div>
+    <p>The private RAG tool reduces the risk of unstructured data for LLMs and RAG.</p>
+    <ul>
+      <li>Select "New Job", enter a job name, select the dataset mode and upload the file.</li>
+      <li>Select the action, which is tokenize, redact or encrypt.</li>
+      <li>Select all entities or some of them. Examples are the card verification value (CVV), card number, phone number, email, date, time and website. Others are location, SSN, unique identifier, Uniform Resource Locator (URL), organization and credential.</li>
+      <li>Submit, select View when the job completes and download the report.</li>
+      <li>To ask questions, select the protected file, the AI provider and the model, save, then ask questions about the file. The LLM sees only the protected version.</li>
+    </ul>
+    <p>The course showed one sports news paragraph in tokenized and original form. A realistic token replaced every name, phone number, email address, license number and web link. The text still read normally.</p>
+  </div>
+  <div class="block remember">
+    <div class="label">Worth remembering</div>
+    <p><strong>Measurement of detection quality.</strong> True positives (TP) are the PII or sensitive items that the tool found. False negatives (FN) are the items that it missed.</p>
+    <div class="formula">Recall (%) = (TP × 100) ÷ (TP + FN)</div>
+    <p>For example, 21 items found and 0 missed give a recall of 100%.</p>
+  </div>
+
+  <h3>An impact assessment for AI systems</h3>
+  <div class="block practice">
+    <div class="label">In practice</div>
+    <p>An AI impact assessment tool does for AI systems what the DPIA workflow does for data.</p>
+    <ul>
+      <li>Select "New Job" and enter a job name. Select the link, which is none, a job of the document scanner or the consent manager.</li>
+      <li>Answer the questions section by section. The sections follow the PASSFERS principles, namely privacy, accountability, safety, security, fairness, explainability, reliability and sustainability.</li>
+      <li>The sustainability section asks about energy use and the carbon footprint during training and deployment, and about the optimization of hardware and software resources. It also asks about plans for long-term maintenance and the disposal of hardware at its end of life.</li>
+      <li>Submit when all sections are complete. The job can also be discarded or saved as a draft.</li>
+    </ul>
+  </div>
+  <div class="part-banner" data-n="7" style="--pc:#b7791f" id="part-7">
+    <div class="pb-tag">Part 7 of 8</div>
+    <h2 id="a-privacy-program-in-six-months" data-toc="7. A privacy program in six months">A privacy program in six months</h2>
+    <p>The conversion of everything above into a program. A six-month plan in the order of penalty risk and a Request for Proposal (RFP) mapped to the law. Then phased onboarding of applications, correct sizing of the infrastructure and go-live.</p>
+  </div>
+
+  <h3>The rollout in eight parts</h3>
+  <p>This session of the course had eight parts.</p>
+  <ol>
+    <li>A phased design for the privacy journey</li>
+    <li>An RFP based on a mapping to the law</li>
+    <li>A structure for the privacy journey of the enterprise</li>
+    <li>A start with the integration of one sample business application</li>
+    <li>Standard policies and collaboration</li>
+    <li>Phased onboarding of applications</li>
+    <li>Traffic scoping and infrastructure planning for go-live</li>
+    <li>Staging, training and go-live</li>
+  </ol>
+
+  <h3>The six-month plan</h3>
+  <p>The plan has twenty-one activities. Each one shows the DPDP penalty that it protects against and its month. The foundations come first, followed by the technical safeguards with the highest penalties, and then AI and rights.</p>
+  <figure class="diagram">
+    <div class="frame"><img src="../assets/img/diagrams/pc-six-month-plan.svg" alt="Twenty-one activities over six months. Month 1 has governance and platform. Month 2 has the sample team, security, notice, consent and cookies. Month 3 has risk discovery, DPIA and safeguards for consented flows. Months 4 and 5 have safeguards for analytics, testing, call center, marketing and third-party data, and application changes. Month 6 has AI chatbot protection, AI governance, customizations, rights, sign-off and go live. Most money at risk sits in the safeguards, at up to 250 crore rupees each." loading="lazy"></div>
+    <figcaption>Twenty-one activities over six months, colored by the penalty that each one protects against.</figcaption>
+  </figure>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>No.</th><th>Activity</th><th>Penalty</th><th>Month</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>Privacy governance and policy definition</td><td>None</td><td>1</td></tr>
+        <tr><td>2</td><td>Deployment of the platform</td><td>None</td><td>1</td></tr>
+        <tr><td>3</td><td>Onboarding of a sample application team</td><td>None</td><td>2</td></tr>
+        <tr><td>4</td><td>Security and firewall configuration</td><td>None</td><td>2</td></tr>
+        <tr><td>5</td><td>Notice and consent</td><td>Rs 50 crore</td><td>2</td></tr>
+        <tr><td>6</td><td>Cookies</td><td>Rs 50 crore</td><td>2</td></tr>
+        <tr><td>7</td><td>Risk discovery in data flows</td><td>Rs 150 crore</td><td>3</td></tr>
+        <tr><td>8</td><td>Data protection impact assessment</td><td>Rs 150 crore</td><td>3</td></tr>
+        <tr><td>9</td><td>Technical safeguards for consented data flows</td><td>Rs 250 crore</td><td>3</td></tr>
+        <tr><td>10</td><td>Technical safeguards for analytics data</td><td>Rs 250 crore</td><td>4 and 5</td></tr>
+        <tr><td>11</td><td>Technical safeguards for application test data</td><td>Rs 250 crore</td><td>4 and 5</td></tr>
+        <tr><td>12</td><td>Technical safeguards for call center data</td><td>Rs 250 crore</td><td>4 and 5</td></tr>
+        <tr><td>13</td><td>Technical safeguards for marketing data sharing</td><td>Rs 250 crore</td><td>4 and 5</td></tr>
+        <tr><td>14</td><td>Technical safeguards for third-party data sharing</td><td>Rs 250 crore</td><td>4 and 5</td></tr>
+        <tr><td>15</td><td>Changes on the side of the business applications</td><td>None</td><td>4 and 5</td></tr>
+        <tr><td>16</td><td>Protection of AI chatbots</td><td>Rs 250 crore</td><td>6</td></tr>
+        <tr><td>17</td><td>AI governance</td><td>Rs 50 crore</td><td>6</td></tr>
+        <tr><td>18</td><td>Customizations</td><td>None</td><td>6</td></tr>
+        <tr><td>19</td><td>Data principal rights</td><td>Rs 50 crore</td><td>6</td></tr>
+        <tr><td>20</td><td>User acceptance testing (UAT) sign-off</td><td>None</td><td>6</td></tr>
+        <tr><td>21</td><td>Go live</td><td>None</td><td>6</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="block key">
+    <div class="label">Key idea</div>
+    <p>Most of the money at risk in this plan is in the technical safeguards, in rows 9 to 14 and 16. Each one relates to the Rs 250 crore penalty for a failure of reasonable security safeguards. Notice and consent come early because everything else depends on them, although their penalty is lower.</p>
+  </div>
+
+  <h3>An RFP mapped to the law</h3>
+  <p>The course shared a sample template, "Request for Proposal, India DPDPA", where DPDPA stands for the DPDP Act. The advice is to align the RFP with the law, so that every purchase meets the obligations of the organization. The table of contents follows.</p>
+  <p><strong>Objective of the document.</strong></p>
+  <ul>
+    <li>Notice and consent</li>
+    <li>Risk assessment to classify personal data</li>
+    <li>Data protection impact assessment</li>
+    <li>Data principal rights</li>
+    <li>An approach of limited processing</li>
+    <li>Handling of identifiable and relatable personal data</li>
+    <li>Breach management and unauthorized use</li>
+    <li>Deletion, and exempted use for archiving, research and statistics (non-personal use)</li>
+    <li>Reasonable security safeguards through privacy enhancing technologies</li>
+    <li>Data unlocked for continued processing, innovation and AI</li>
+  </ul>
+  <p><strong>Scope of work, with the mapping to the law.</strong></p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Work item</th><th>Mapped to</th></tr></thead>
+      <tbody>
+        <tr><td>Notice and consent management</td><td>Act Sections 5 and 6. Rule 3.</td></tr>
+        <tr><td>Data protection impact assessment</td><td>Act Section 10(2). Draft Rule 12(1), final Rule 13(1).</td></tr>
+        <tr><td>Breach notification</td><td>Act Section 8(6). Rule 7.</td></tr>
+        <tr><td>Technical safeguards for protection against breach</td><td>Draft Rule 15 (final Rule 16) and the Second Schedule. Act Section 17(2)(b). Rule 6(1)(d). Draft Rule 12(3), final Rule 13(3).</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>A phased deployment</h3>
+  <p>There are two rows of steps. The first row builds and proves the setup on one application, and the second row scales it out.</p>
+  <figure class="diagram">
+    <div class="frame"><img src="../assets/img/diagrams/pc-rollout.svg" alt="First prove the setup on one application. Deploy, configure a sample app, integrate, add technical safeguards, sign off and go live. Then scale out. Standardize the process, train, roll out apps in phases and run support. Four phases of six months each, about two years, with two apps first, then one third of the apps in each later phase." loading="lazy"></div>
+    <figcaption>Prove the setup on one application, scale it out, then roll it across the portfolio in four phases.</figcaption>
+  </figure>
+  <ul>
+    <li><strong>Proof.</strong> Deployment, configuration of a sample business application, integration, technical safeguards, then UAT sign-off and go-live.</li>
+    <li><strong>Scale.</strong> A standard process, training for the scale-up and the rollout, a phased rollout of applications, and support and operations.</li>
+  </ul>
+
+  <h3>Standard policies and collaboration</h3>
+  <ul>
+    <li>Engagement of the stakeholders with a RACI matrix (Responsible, Accountable, Consulted and Informed) across legal, information technology (IT), the application teams, the system integrator, data governance and the executives.</li>
+    <li>Organization policies for privacy, notice, consent, cookies and data principal rights.</li>
+    <li>Integration through API documentation and the database types.</li>
+    <li>Security through access requirements.</li>
+    <li>Infrastructure requirements for users, peak traffic and average traffic.</li>
+    <li>The onboarding process for applications.</li>
+    <li>DPIA templates and configuration.</li>
+    <li>Technical safeguards and policies for internal and external data sharing.</li>
+    <li>The process for staging and go-live.</li>
+    <li>Training requirements.</li>
+  </ul>
+  <p>The picture for this step shows the consent portal. Data goes from it through firewalls into the cloud, then through a DPIA gate that sends each data flow to the correct technical safeguard. Five safeguard boxes carry the labels A, P, S, ε and PI. These most likely stand for anonymization, pseudonymization, synthetic data, differential privacy (ε) and pseudonymous inference.</p>
+
+  <h3>Phased onboarding of applications</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Phase</th><th>Duration</th><th>Scope</th></tr></thead>
+      <tbody>
+        <tr><td>Phase 1</td><td>6 months</td><td>2 applications set up end to end, with the process defined</td></tr>
+        <tr><td>Phase 2</td><td>6 months</td><td>One third of the applications</td></tr>
+        <tr><td>Phase 3</td><td>6 months</td><td>The next third</td></tr>
+        <tr><td>Phase 4</td><td>6 months</td><td>The final third</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>A full rollout in an enterprise therefore takes about two years, and each phase reuses the six-month activity plan.</p>
+
+  <h3>Traffic scoping and infrastructure planning</h3>
+  <p>Before go-live, scoping questions set the size of each product. The questions show the true drivers of the load.</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Product area</th><th>Scoping questions</th></tr></thead>
+      <tbody>
+        <tr><td>Consent management, cookies and rights requests</td><td>The total users of the application. The maximum expected daily API or web traffic that updates consent or rights requests. The peak concurrent users or requests per minute. The data retention period. The number of existing users who must give opt-in consent and receive a notice within 3 months, through the Short Message Service (SMS) or email gateway of the organization. The maximum concurrent users to inform of a breach (within 48 hours).</td></tr>
+        <tr><td>Threat modeling and risk discovery (structured)</td><td>The number of databases and tables to scan. The tables that need one-time discovery and scoring. The time to complete the one-time discovery (in months). The maximum concurrent ongoing scans. The retention of the reports (in years).</td></tr>
+        <tr><td>Threat modeling and risk discovery (unstructured)</td><td>The number of databases, text files and tokens to scan. The tokens for one-time discovery. The ongoing scans over the year. The maximum concurrent scans. The maximum file size (doc, searchable PDF, txt). The retention of the reports.</td></tr>
+        <tr><td>DPIA</td><td>The number of DPIAs per year. The retention period. The maximum concurrent jobs.</td></tr>
+        <tr><td>Cryptographic data collaboration and pseudonymous inference (structured)</td><td>The volume of data to encrypt for collaboration, in gigabytes (GB). The maximum concurrent API calls for encryption and decryption. The total API calls. The volume of logs. The number of separate keys (for example 10 departments × 12 months). The type of encryption, masking or hashing.</td></tr>
+        <tr><td>Expert-grade anonymization</td><td>The total volume to anonymize with a statistical guarantee (GB). The maximum per day. The maximum per batch (up to 1 lakh rows). The maximum concurrent jobs. The retention of anonymized data on the platform.</td></tr>
+        <tr><td>Synthetic data for utility and for testing</td><td>The total volume to generate. The volume per day, week or month. The maximum per batch (up to 1 lakh rows). The maximum concurrent jobs. The retention of synthetic data.</td></tr>
+        <tr><td>Differentially private data sharing</td><td>The data volume and the number of tables for insights. The number of users who make API calls. The maximum concurrent API calls. The retention of the records of queries and privacy budgets.</td></tr>
+        <tr><td>Pseudonymous inference for unstructured data and AI inference</td><td>The total tokens to anonymize or tokenize. The maximum tokens per API call. The maximum concurrent API calls and jobs. The maximum file size. The number of separate keys.</td></tr>
+        <tr><td>Platform</td><td>The users who log in. The concurrent API calls. The number of databases to connect. The required microservices. The tenants. The services (frontend, backend, scheduler and connector). A MongoDB cluster with replica sets. The PostgreSQL requirements. A vault for secret management.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Staging, training and go-live</h3>
+  <ol class="steps">
+    <li><strong>Staging.</strong> Analyze the results, standardize the process and set the scope of application onboarding.</li>
+    <li><strong>Training.</strong> Train the stakeholders on the defined policies and processes for a faster rollout.</li>
+    <li><strong>Go-live.</strong> Lead the industry with a pioneering privacy program and strengthen the trust of customers.</li>
+  </ol>
+  <div class="part-banner" data-n="8" style="--pc:#c2552d" id="part-8">
+    <div class="pb-tag">Part 8 of 8</div>
+    <h2 id="the-road-ahead-ai-trism-and-agents" data-toc="8. The road ahead with AI TRiSM and agents">The road ahead with AI TRiSM and agents</h2>
+    <p>The direction of the field, with AI TRiSM as the frame and AI agents that perform DPIAs, red teaming and continuous monitoring on their own.</p>
+  </div>
+
+  <p>The final session covered four topics, namely AI TRiSM, agentic DPIA, agentic AI red teaming and guardian agents.</p>
+
+  <h3>AI TRiSM</h3>
+  <p>The course used the Gartner chart "Sample AI TRiSM Technologies". It lists technologies by layer across the AI life cycle, from the initial steps through development, update and deployment to operation.</p>
+  <figure class="diagram">
+    <div class="frame"><img src="../assets/img/diagrams/pc-trism-layers.svg" alt="Five layers from Gartner, namely AI governance, AI runtime enforcement, AI data protection and classification, AI infrastructure and stack, and traditional technology protection. The top three layers hold the six responsible layers of the course, namely AI governance, AI inference, AI training, data sharing, data assessment and data collection." loading="lazy"></div>
+    <figcaption>Five Gartner layers. The six responsible layers of the course fit in the top three.</figcaption>
+  </figure>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Gartner layer</th><th>Sample technologies</th></tr></thead>
+      <tbody>
+        <tr><td>AI governance</td><td>Posture management, adversarial testing of AI systems, AI validation and third-party risk management</td></tr>
+        <tr><td>AI runtime enforcement</td><td>Runtime defense, dynamic data classification and contextual access management, and anomaly detection</td></tr>
+        <tr><td>AI data protection and classification</td><td>PETs, DSPM, data governance and data classification</td></tr>
+        <tr><td>AI infrastructure and stack</td><td>Hardened environments, trusted execution environments (TEEs) for confidential computing, and AI chipsets</td></tr>
+        <tr><td>Traditional technology protection</td><td>Software composition analysis, application security testing, web application and API protection (WAAP), API gateways, endpoint security as well as identity and access management (IAM)</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>The six responsible layers of the course fit in the top three Gartner layers.</p>
+  <ul>
+    <li><strong>Responsible AI governance.</strong> Continuous posture management and agentic orchestration, with feedback to the data collection and training pipeline.</li>
+    <li><strong>Responsible AI inference.</strong> An inline prompt firewall based on an SLM, pseudonymous inference, RAG privacy and security, with detection and prevention of AI attacks.</li>
+    <li><strong>Responsible AI training and assessment.</strong> Privacy-preserving machine learning, AI red teaming and attack simulation, and agentic AI impact assessment.</li>
+    <li><strong>Responsible data sharing.</strong> Expert anonymization, FHE, differential privacy, synthetic data with DP, ZKP, verifiable credentials, SMPC, threshold cryptography and PSI.</li>
+    <li><strong>Responsible data assessment.</strong> PTM, privacy attack simulation, risk quantification, automated technical and regulatory recommendations, agentic DPIA and data governance.</li>
+    <li><strong>Responsible data collection.</strong> Verifiable and provable consent, the RoPA, agentic consent, rights requests, breach management and a workflow for data deletion.</li>
+  </ul>
+  <p>The course closed this topic with the full-stack staircase from Part 1.</p>
+
+  <h3>Agents for DPIA and red teaming</h3>
+  <div class="side-by-side">
+    <div class="block practice" style="margin:0">
+      <div class="label">In practice</div>
+      <p><strong>Agentic DPIA.</strong> A chat-based agent runs the DPIA as a conversation. It opens with a request for the name of the project and continues with follow-up questions. People do not have to complete a long form.</p>
+    </div>
+    <div class="block practice" style="margin:0">
+      <div class="label">In practice</div>
+      <p><strong>Agentic AI red teaming.</strong> An agent runs attack simulations on a model and writes an AI red teaming report. The report contains a fairness analysis (bias across groups) and a privacy analysis (for example PII leakage), with charts and methods.</p>
+    </div>
+  </div>
+
+  <h3>Guardian agents</h3>
+  <p>Gartner describes guardian agents as AI agents that oversee other AI systems. They have two roles.</p>
+  <ul>
+    <li><strong>Sentinel.</strong> Observes, builds a baseline and gives real-time insights.</li>
+    <li><strong>Operative.</strong> Acts when something is wrong, with the context of the baseline.</li>
+  </ul>
+  <figure class="diagram">
+    <div class="frame"><img src="../assets/img/diagrams/pc-guardian-loop.svg" alt="A loop of five steps, namely data ingestion, integrity assessment, operation enablement, action execution and a feedback loop. Sentinels watch, build a baseline and give insights. Operatives act when something is wrong. An orchestrator links them." loading="lazy"></div>
+    <figcaption>Guardian agents work in a loop of ingestion, assessment, monitoring, action and learning.</figcaption>
+  </figure>
+  <p>They work in a loop.</p>
+  <ol class="steps">
+    <li><strong>Data ingestion.</strong> New data arrives, such as logs, code and threats.</li>
+    <li><strong>Integrity assessment.</strong> It starts on a schedule, after a system change or with new data.</li>
+    <li><strong>Operation enablement.</strong> The agent updates the baseline and starts to monitor.</li>
+    <li><strong>Action execution.</strong> The agent detects an anomaly or activates a recommendation.</li>
+    <li><strong>Feedback loop.</strong> The action completes and the event enters the log, which feeds the next round.</li>
+  </ol>
+  <p>The course mapped planned agents onto this model. The sentinels sit on one side and the operatives on the other, with an orchestrator agent in the middle that links them.</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Agent</th><th>Area of protection</th></tr></thead>
+      <tbody>
+        <tr><td>A consent agent</td><td>Notice and consent</td></tr>
+        <tr><td>A DPIA agent</td><td>PETs and DPIA</td></tr>
+        <tr><td>A red-teaming agent</td><td>The model</td></tr>
+        <tr><td>An AI security agent</td><td>AI security</td></tr>
+        <tr><td>An orchestrator agent</td><td>Orchestration across all of them</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>The course ended with a vote of thanks.</p>
+  <h2 id="my-takeaways">My takeaways</h2>
+  <ol class="takeaways">
+    <li><b>Security and privacy are different disciplines.</b> A well-protected system can still collect too much and share too much. The privacy triad deserves the same attention as the CIA triad.</li>
+    <li><b>Compliance starts with notice and consent. The value lies in safeguards.</b> The largest penalties and the largest business value both sit in the technical safeguards.</li>
+    <li><b>Removal of names is not anonymization.</b> Quasi-identifiers and linkage re-identify people, so the organization must measure the risk and never assume it.</li>
+    <li><b>Each PET removes some risks and leaves others.</b> The technique must suit the data flow and the relevant attack. The organization then measures the result again.</li>
+    <li><b>Unrelatable data is outside the DPDP Act.</b> This is how PETs lawfully unlock data for research, sharing and AI.</li>
+    <li><b>AI opens new paths for leaks.</b> Prompts, RAG context and model outputs can all carry personal data, and jailbreaks are a new class of attack. They need their own tests and guardrails.</li>
+    <li><b>A privacy program is a rollout, not a document.</b> It proceeds in phases, in the order of penalty risk. Real traffic numbers set its size.</li>
+  </ol>
+
+  <h2 id="choosing-the-right-privacy-technology">Choosing the right privacy technology</h2>
+  <p>The guide below brings the whole course together as a set of decisions. Start at the top, answer each question for the data at hand, and follow the lane that matches the task. Each result names the part of this article that explains it.</p>
+  <ul class="guide-intro-chips">
+    <li><b>A</b> Store and process inside</li>
+    <li><b>B</b> Share or publish</li>
+    <li><b>C</b> Compute or prove with others</li>
+    <li><b>D</b> Use with AI and LLMs</li>
+  </ul>
+  <figure class="diagram">
+    <div class="frame"><img src="../assets/img/diagrams/pc-guide-start.svg" alt="Start with personal data that you want to use. If the notice and the consent do not cover the use, and the use cannot work with unrelatable data, give a new notice and get fresh consent. If the use can work with unrelatable data, go to lane B. If the notice and consent cover the use, select a lane. Lane A is to store and process the data inside your organization. Lane B is to share or publish it. Lane C is to compute or prove something with other parties or the cloud. Lane D is to use it with AI or an LLM." loading="lazy"></div>
+    <figcaption>The starting point. Check the consent first, then select a lane.</figcaption>
+  </figure>
+  <h3>Lane A, store and process inside the organization</h3>
+  <figure class="diagram">
+    <div class="frame"><img src="../assets/img/diagrams/pc-guide-a.svg" alt="Always apply the Rule 6 baseline of encryption, access control, logs kept for one year, backups and processor contracts. If systems need the original format, use format-preserving encryption, else AES-GCM. If teams must join records without identities, use pseudonymization with a key vault. If you are a Significant Data Fiduciary or the flow is high risk, run an augmented DPIA and a yearly audit. If the purpose ended or consent was withdrawn, erase the data and tell processors. Then keep the logs and review." loading="lazy"></div>
+    <figcaption>The Rule 6 baseline applies to every flow, and each question adds a control.</figcaption>
+  </figure>
+  <h3>Lane B, share or publish data</h3>
+  <figure class="diagram">
+    <div class="frame"><img src="../assets/img/diagrams/pc-guide-b.svg" alt="First measure the risk with threat modeling. If the receiver does not need individual records, share insights only, with a differentially private query service for many queries or aggregates with DP noise for one release. If the records need not be real people, use synthetic data with DP. If you must link back to the person, use pseudonymization, which stays personal data. If the data is location data, use a crowd rule. Else generalize and suppress the quasi-identifiers until k-anonymity, then apply l-diversity, t-closeness and DP noise as needed, and measure again. When the risk is low, share the anonymized data." loading="lazy"></div>
+    <figcaption>Measure first, choose the lightest technique that removes the risk, then measure again.</figcaption>
+  </figure>
+  <h3>Lane C, compute or prove with other parties</h3>
+  <figure class="diagram">
+    <div class="frame"><img src="../assets/img/diagrams/pc-guide-c.svg" alt="If you must prove a fact and not show the data, use a zero knowledge proof or a verifiable credential. If two parties only need the items that they share, use private set intersection. If several parties need one joint result, use federated learning for model training or secure multi-party computation for other results. If an outside service must compute on your data, use fully homomorphic encryption for the strongest guarantee or confidential computing for speed. If no single person may hold the full key, use threshold cryptography." loading="lazy"></div>
+    <figcaption>Cryptographic PETs let parties work together without revealing their inputs.</figcaption>
+  </figure>
+  <h3>Lane D, use data with AI and LLMs</h3>
+  <figure class="diagram">
+    <div class="frame"><img src="../assets/img/diagrams/pc-guide-d.svg" alt="If you train or fine-tune a model on personal data, make the data non-personal first with synthetic data and DP or with anonymization, and a Significant Data Fiduciary must check its algorithms. If prompts or RAG documents with personal data go to an external LLM, use private RAG with detection, format-preserving tokens and local decryption, and measure recall. If users or untrusted text reach the model, add prompt-level and model-level defenses. Before release, run AI red teaming and an AI impact assessment. In production, monitor with guardian agents." loading="lazy"></div>
+    <figcaption>Protect the data before training and prompting, defend the model, test it and watch it in production.</figcaption>
+  </figure>
+
+  <h2 id="the-whole-course-on-one-page">The whole course on one page</h2>
+  <div class="recap-grid">
+    <section style="--pc:#2f62c8">
+      <h4>Part 1, privacy is more than security</h4>
+      <ul>
+        <li>The security triad is confidentiality, integrity and availability. The privacy triad is predictability, manageability and disassociability.</li>
+        <li>Security solves data at rest and in transit. Data in use is the privacy problem.</li>
+        <li>PETs move data from identifiable (regulated, with penalties up to Rs 250 crore) to unrelatable (outside the Act).</li>
+        <li>Privacy can be a profit center through PET-based querying and AI training.</li>
+      </ul>
+    </section>
+    <section style="--pc:#0e7c86">
+      <h4>Part 2, notice, consent, rights and breaches</h4>
+      <ul>
+        <li>Personal data is any data about an identifiable individual (2(t)).</li>
+        <li>The notice stands alone (Rule 3(a)) and has five contents.</li>
+        <li>Consent is free, specific, informed, unconditional, unambiguous and a clear affirmative action (6(1)). The fiduciary must prove it (6(10)).</li>
+        <li>The rights are access (11), correction and erasure (12), grievance (13) and nomination (14).</li>
+        <li>Erasure follows a 48-hour warning (Rule 8), and happens on withdrawal or at the end of the purpose (8(7)).</li>
+      </ul>
+    </section>
+    <section style="--pc:#0f8a6a">
+      <h4>Part 3, threat modeling and the augmented DPIA</h4>
+      <ul>
+        <li>An SDF needs a DPO in India, an independent auditor, a periodic DPIA and a periodic audit (Section 10).</li>
+        <li>The augmented DPIA combines business inputs, a technical risk assessment and DPO approval.</li>
+        <li>PTM uses a dataset scanner (structured) and a document scanner (unstructured), aligned to LINDDUN and NIST.</li>
+        <li>The attacks include singling out, linkage, inference, background knowledge and homogeneity.</li>
+        <li>The fixes are k-anonymity, then l-diversity, then t-closeness, then DP.</li>
+      </ul>
+    </section>
+    <section style="--pc:#7a4fc2">
+      <h4>Part 4, anonymization, pseudonymization and encryption</h4>
+      <ul>
+        <li>Input PETs protect the computation (FHE, SMPC, PSI, ZKP, threshold cryptography). Output PETs protect the release (k-anonymity, t-closeness, DP, synthetic data).</li>
+        <li>Pseudonymized data is still personal data. Anonymized data is not.</li>
+        <li>Rule 6 covers encryption, access control, logs, continued processing, one-year retention, contracts and measures.</li>
+        <li>Under Section 33(2), timely mitigation lowers the penalty.</li>
+      </ul>
+    </section>
+    <section style="--pc:#4f46b5">
+      <h4>Part 5, synthetic data and differential privacy</h4>
+      <ul>
+        <li>Synthetic data looks and behaves like real data and contains no real people. Distributions, PCA and correlations check its quality.</li>
+        <li>DP uses calibrated noise for a mathematical guarantee. A smaller ε means more privacy.</li>
+        <li>The privacy budget limits the total number of queries.</li>
+        <li>Local DP adds noise on the device. Central DP adds it after collection.</li>
+        <li>The mechanisms are Laplace (numbers), Gaussian (relaxed) and randomized response (categories).</li>
+      </ul>
+    </section>
+    <section style="--pc:#a3407a">
+      <h4>Part 6, private AI</h4>
+      <ul>
+        <li>Under draft Rule 12(3) (final 13(3)), SDFs must check that their algorithms do not harm rights.</li>
+        <li>The research exemption combines Act 17(2)(b) with draft Rule 15 (final 16) and the Second Schedule.</li>
+        <li>Private RAG finds the sensitive attributes, encrypts them with FPE, sends them to the LLM and decrypts locally.</li>
+        <li>White-box attacks use gradients, logits or fine-tuning. Black-box attacks use templates, rewriting or LLM-generated prompts.</li>
+        <li>Red teaming moves through scope, strategies, tests and reports, guided by the PASSFERS principles.</li>
+      </ul>
+    </section>
+    <section style="--pc:#b7791f">
+      <h4>Part 7, a privacy program</h4>
+      <ul>
+        <li>A 21-step plan over six months, in the order of penalty.</li>
+        <li>The RFP follows the law.</li>
+        <li>The rollout starts on one application, then moves through 4 phases of 6 months.</li>
+        <li>Real traffic numbers set the size of the infrastructure before go-live.</li>
+      </ul>
+    </section>
+    <section style="--pc:#c2552d">
+      <h4>Part 8, the road ahead</h4>
+      <ul>
+        <li>The AI TRiSM layers are governance, runtime enforcement, data protection, infrastructure and traditional protection.</li>
+        <li>Agents now perform DPIAs and red teaming.</li>
+        <li>Guardian agents work in a feedback loop, where sentinels observe and operatives act.</li>
+      </ul>
+    </section>
+  </div>
+
+  <h2 id="check-your-learning">Check your learning</h2>
+  <p>Each question links to one idea of the course. Select a question to reveal the answer.</p>
+  <div class="quiz">
+    <details>
+      <summary><span class="qq">A database has strong encryption and strict access control, but it collects more data than it needs and shares it with partners. Is it private?</span></summary>
+      <div class="ans"><p>No. It passes the security test but fails the privacy test, especially predictability and manageability. Security protects access, while privacy limits what the organization collects and does with the data (Part 1).</p></div>
+    </details>
+    <details>
+      <summary><span class="qq">Which failure carries the largest penalty under the DPDP Act?</span></summary>
+      <div class="ans"><p>The failure to take reasonable security safeguards, with a penalty of up to Rs 250 crore (Section 8(5)). It is larger than the penalty for a failure to notify a breach (Part 2).</p></div>
+    </details>
+    <details>
+      <summary><span class="qq">Who must prove that a notice was given and that consent was obtained?</span></summary>
+      <div class="ans"><p>The Data Fiduciary, under Section 6(10). Signed consent records, verifiable credentials and versioned consent histories make this proof possible (Part 2).</p></div>
+    </details>
+    <details>
+      <summary><span class="qq">A dataset has no names, but it keeps age, gender and pincode. Why can it still identify people?</span></summary>
+      <div class="ans"><p>These are quasi-identifiers. Together they can single out a person, especially when an attacker joins them with public data such as electoral rolls. This is a linkage attack (Part 3).</p></div>
+    </details>
+    <details>
+      <summary><span class="qq">A table is 3-anonymous, but every row in a group shows the same diagnosis. Which attack still works, and which technique stops it?</span></summary>
+      <div class="ans"><p>The homogeneity, or inference, attack still works, because the attacker learns the diagnosis without the exact row. l-diversity stops it, and t-closeness gives stronger protection (Part 3).</p></div>
+    </details>
+    <details>
+      <summary><span class="qq">Is pseudonymized data still personal data?</span></summary>
+      <div class="ans"><p>Yes. A key can reverse it, and the singling out, linkability and inference risks all remain. It still needs consent and safeguards (Part 4).</p></div>
+    </details>
+    <details>
+      <summary><span class="qq">A bank, a credit bureau and an applicant want a credit score from a cloud service, and none of them can reveal its data. Which technology fits?</span></summary>
+      <div class="ans"><p>Fully homomorphic encryption (FHE). The cloud computes on encrypted data and returns an encrypted score that each party decrypts with its own key (Part 4).</p></div>
+    </details>
+    <details>
+      <summary><span class="qq">Two companies want to know their common customers without revealing the rest of their lists. Which technology fits?</span></summary>
+      <div class="ans"><p>Private set intersection (PSI). Each company learns only the overlap (Part 4).</p></div>
+    </details>
+    <details>
+      <summary><span class="qq">A count query returns 1002, and the same query without one known person returns 1001. What does differential privacy change here?</span></summary>
+      <div class="ans"><p>It adds calibrated noise to each answer and spends part of a privacy budget. The attacker can then no longer tell whether one row changed the result (Part 5).</p></div>
+    </details>
+    <details>
+      <summary><span class="qq">Does a smaller epsilon give stronger or weaker privacy?</span></summary>
+      <div class="ans"><p>Stronger privacy, with more noise and less accurate results (Part 5).</p></div>
+    </details>
+    <details>
+      <summary><span class="qq">A RAG system sends customer documents to an external LLM. How can the LLM answer without seeing the real names and numbers?</span></summary>
+      <div class="ans"><p>Through pseudonymous inference. A detector finds the sensitive attributes, format-preserving encryption replaces them with realistic tokens, and decryption happens only on the side of the user (Part 6).</p></div>
+    </details>
+    <details>
+      <summary><span class="qq">An attacker hides a harmful question inside a role-play story. Which type of attack is this, and which defenses help?</span></summary>
+      <div class="ans"><p>A black-box template attack, called scenario nesting. Prompt detection, prompt perturbation, safer system prompts and a guard model on the output all help, and red teaming finds such weaknesses before release (Part 6).</p></div>
+    </details>
+    <details>
+      <summary><span class="qq">In a six-month privacy program, why do notice and consent come before the high-penalty safeguards?</span></summary>
+      <div class="ans"><p>Everything else depends on them. The safeguards protect data flows that must first rest on a valid notice and consent (Part 7).</p></div>
+    </details>
+    <details>
+      <summary><span class="qq">What is the difference between a sentinel and an operative in guardian agents?</span></summary>
+      <div class="ans"><p>A sentinel observes, builds a baseline and gives insights. An operative acts when something is wrong, with the context of that baseline (Part 8).</p></div>
+    </details>
+  </div>
+  <h2 id="dpdp-quick-reference">DPDP quick reference</h2>
+  <p>The sections of the Act and the rules that this article cites, with the part that covers each.</p>
+  <h3>DPDP Act 2023</h3>
+  <div class="table-wrap">
+    <table class="mono-table">
+      <thead><tr><th>Section</th><th>Topic</th><th>In this article</th></tr></thead>
+      <tbody>
+        <tr><td>2(t)</td><td>Definition of personal data</td><td><a href="#part-1">Part 1</a>, <a href="#part-2">Part 2</a></td></tr>
+        <tr><td>2(u)</td><td>Definition of personal data breach</td><td><a href="#part-2">Part 2</a></td></tr>
+        <tr><td>2(x)</td><td>Definition of processing</td><td><a href="#part-2">Part 2</a></td></tr>
+        <tr><td>3</td><td>Application of the Act (digital personal data)</td><td><a href="#part-1">Part 1</a></td></tr>
+        <tr><td>4(1)</td><td>Grounds for processing (in the advice of the dataset scanner)</td><td><a href="#part-3">Part 3</a></td></tr>
+        <tr><td>5</td><td>Notice</td><td><a href="#part-2">Part 2</a></td></tr>
+        <tr><td>6, 6(1)</td><td>Consent and its qualities</td><td><a href="#part-2">Part 2</a></td></tr>
+        <tr><td>6(10)</td><td>The fiduciary must prove the notice and the consent</td><td><a href="#part-2">Part 2</a></td></tr>
+        <tr><td>8(4)</td><td>Technical and organizational measures (in the advice of the dataset scanner)</td><td><a href="#part-3">Part 3</a></td></tr>
+        <tr><td>8(5)</td><td>Reasonable security safeguards</td><td><a href="#part-2">Part 2</a>, <a href="#part-4">Part 4</a></td></tr>
+        <tr><td>8(6)</td><td>Breach notification</td><td><a href="#part-2">Part 2</a></td></tr>
+        <tr><td>8(7)</td><td>Erasure after withdrawal or at the end of the purpose</td><td><a href="#part-2">Part 2</a></td></tr>
+        <tr><td>9</td><td>Data of children</td><td><a href="#part-2">Part 2</a> (penalty)</td></tr>
+        <tr><td>10, 10(2)(c)</td><td>Duties of a Significant Data Fiduciary and the periodic DPIA</td><td><a href="#part-3">Part 3</a></td></tr>
+        <tr><td>11</td><td>Right to access information</td><td><a href="#part-2">Part 2</a></td></tr>
+        <tr><td>12</td><td>Right to correction and erasure</td><td><a href="#part-2">Part 2</a></td></tr>
+        <tr><td>13</td><td>Right of grievance redressal</td><td><a href="#part-2">Part 2</a></td></tr>
+        <tr><td>14</td><td>Right to nominate</td><td><a href="#part-2">Part 2</a></td></tr>
+        <tr><td>15</td><td>Duties of the Data Principal</td><td><a href="#part-2">Part 2</a> (penalty)</td></tr>
+        <tr><td>17(2)(b)</td><td>Exemption for research, archiving and statistics</td><td><a href="#part-6">Part 6</a></td></tr>
+        <tr><td>33(2) and the Schedule</td><td>Penalty factors and amounts</td><td><a href="#part-2">Part 2</a>, <a href="#part-4">Part 4</a></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <h3>DPDP Rules, draft numbers and final numbers</h3>
+  <p>The final Rules were notified in November 2025. Rules 1, 2 and 17 to 21 took effect at once. Rule 4 (Consent Managers) starts 12 months later. Rules 3, 5 to 16, 22 and 23 start 18 months after the notification.</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Topic</th><th>Draft rule (January 2025, used in the course)</th><th>Final rule (November 2025)</th><th>In this article</th></tr></thead>
+      <tbody>
+        <tr><td>Notice</td><td>3</td><td>3</td><td><a href="#part-2">Part 2</a></td></tr>
+        <tr><td>Consent Managers</td><td>4</td><td>4</td><td>Not in detail</td></tr>
+        <tr><td>Processing by the State</td><td>5</td><td>5</td><td>Not covered</td></tr>
+        <tr><td>Reasonable security safeguards, with continued processing (6(1)(d))</td><td>6</td><td>6</td><td><a href="#part-4">Part 4</a>, <a href="#part-6">Part 6</a></td></tr>
+        <tr><td>Breach intimation</td><td>7</td><td>7</td><td><a href="#part-1">Part 1</a></td></tr>
+        <tr><td>Erasure and retention period (Third Schedule)</td><td>8</td><td>8</td><td><a href="#part-2">Part 2</a></td></tr>
+        <tr><td>Contact details of the DPO or the responder</td><td>9</td><td>9</td><td>Not covered</td></tr>
+        <tr><td>Verifiable consent for children</td><td>10</td><td>10</td><td>Not covered</td></tr>
+        <tr><td>Consent for persons with disability</td><td>11</td><td>11</td><td>Not covered</td></tr>
+        <tr><td>Exemptions from the rules on the data of children</td><td>Not a separate rule</td><td>12 (new)</td><td>Not covered</td></tr>
+        <tr><td>Duties of a Significant Data Fiduciary, DPIA and audit, algorithmic due diligence (12(3))</td><td>12</td><td>13</td><td><a href="#part-3">Part 3</a>, <a href="#part-6">Part 6</a></td></tr>
+        <tr><td>Rights of Data Principals and grievances</td><td>13</td><td>14</td><td><a href="#part-2">Part 2</a></td></tr>
+        <tr><td>Processing outside India</td><td>14</td><td>15</td><td>Not covered</td></tr>
+        <tr><td>Research, archiving and statistics (Second Schedule)</td><td>15</td><td>16</td><td><a href="#part-6">Part 6</a></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>The final rule numbers were checked against public summaries of the Gazette text, such as those of SCC Online and S.S. Rana &amp; Co. For a precise clause, refer to the Gazette text.</p>
+
+  <h2 id="numbers-and-formulas">Numbers and formulas</h2>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Item</th><th>Value or formula</th><th>Meaning</th></tr></thead>
+      <tbody>
+        <tr><td>k (k-anonymity)</td><td>Each combination of quasi-identifiers occurs at least k times</td><td>Stops singling out. The default of the dataset scanner is k = 5.</td></tr>
+        <tr><td>l (l-diversity)</td><td>At least l different sensitive values in each group</td><td>Stops homogeneity attacks</td></tr>
+        <tr><td>t (t-closeness)</td><td>Distance between the sensitive distribution of the group and of the table ≤ t, with 0 ≤ t &lt; 1</td><td>Stops inference from skewed groups. Example threshold 0.35. The default of the dataset scanner is 0.5.</td></tr>
+        <tr><td>Outlier value</td><td>0.2 (default of the dataset scanner)</td><td>The threshold to flag unusual records</td></tr>
+        <tr><td>ε (epsilon)</td><td>Smaller means more private</td><td>Permitted privacy loss for each query or set of queries. It adds up across queries.</td></tr>
+        <tr><td>δ (delta)</td><td>A small positive number</td><td>The probability that the ε guarantee fails</td></tr>
+        <tr><td>DP definition</td><td>Pr[M(D) ∈ S] ≤ e<sup>ε</sup> Pr[M(D′) ∈ S] + δ</td><td>The output changes very little when you add or remove one person</td></tr>
+        <tr><td>Laplace noise scale</td><td>sensitivity ÷ ε</td><td>Count queries have a sensitivity of 1</td></tr>
+        <tr><td>Recall</td><td>(TP × 100) ÷ (TP + FN)</td><td>The share of sensitive items that a detector finds</td></tr>
+        <tr><td>Risk score of a dataset</td><td>0 to 100</td><td>Qualitative privacy risk of a dataset</td></tr>
+        <tr><td>Risk index of a dataset</td><td>0 to 2500+</td><td>Quantitative overall risk</td></tr>
+        <tr><td>Threshold scheme</td><td>t-of-n (example 2-of-3)</td><td>Any t of the n key holders can rebuild the key</td></tr>
+        <tr><td>Sweeney (1997)</td><td>About 87%</td><td>The share of people that zip code, gender and birth date identify</td></tr>
+        <tr><td>Erasure warning</td><td>48 hours</td><td>The notice before erasure at the end of the Third Schedule period</td></tr>
+        <tr><td>Location privacy rule (example)</td><td>At least 10 cases within 1 km</td><td>The minimum crowd before you show a location</td></tr>
+        <tr><td>Rollout</td><td>4 phases × 6 months</td><td>2 applications first, then the portfolio in thirds</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <h3>Penalties at a glance</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Failure</th><th>Up to</th></tr></thead>
+      <tbody>
+        <tr><td>Reasonable security safeguards</td><td>Rs 250 crore</td></tr>
+        <tr><td>Breach notification</td><td>Rs 200 crore</td></tr>
+        <tr><td>Obligations for the data of children</td><td>Rs 200 crore</td></tr>
+        <tr><td>Obligations of a Significant Data Fiduciary</td><td>Rs 150 crore</td></tr>
+        <tr><td>Any other provision (for example notice, consent and rights)</td><td>Rs 50 crore</td></tr>
+        <tr><td>Duties of a Data Principal</td><td>Rs 10,000</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2 id="key-terms">Key terms</h2>
+  <div class="table-wrap">
+    <table class="kw">
+      <thead><tr><th>Term</th><th>Meaning</th></tr></thead>
+      <tbody>
+        <tr><td>AES-GCM</td><td>A standard encryption mode that keeps data secret and also finds changes to it.</td></tr>
+        <tr><td>AI TRiSM</td><td>AI Trust, Risk and Security Management. The Gartner name for the controls that make AI trustworthy.</td></tr>
+        <tr><td>Anonymization</td><td>A change to data so that nobody can be identified from it, now or later, even when you combine it with other data. You cannot reverse it.</td></tr>
+        <tr><td>Augmented DPIA</td><td>A DPIA that adds a measured technical risk (from PTM) to the usual questionnaire.</td></tr>
+        <tr><td>Consent Manager</td><td>A registered entity under the DPDP Act. Through it, a person can give, manage and withdraw consent.</td></tr>
+        <tr><td>Data Fiduciary</td><td>The organization that decides the purpose and the means of the processing (the "controller" of the GDPR).</td></tr>
+        <tr><td>Data Principal</td><td>The person that the data is about (the "data subject" of the GDPR).</td></tr>
+        <tr><td>Data Processor</td><td>An organization that processes data for a Data Fiduciary.</td></tr>
+        <tr><td>Differential privacy (DP)</td><td>A mathematical guarantee that the result of an analysis changes very little, with or without the data of any one person. Calibrated noise gives it.</td></tr>
+        <tr><td>Direct identifier</td><td>A field that identifies a person alone, for example the name, the phone number or the Aadhaar number.</td></tr>
+        <tr><td>DPIA</td><td>Data Protection Impact Assessment. A review of the purpose of a processing activity and its risks to the rights of people.</td></tr>
+        <tr><td>DPR / DSR</td><td>Data Principal Rights or Data Subject Rights, namely access, correction, erasure, grievance and nomination.</td></tr>
+        <tr><td>DSPM</td><td>Data Security Posture Management. Tools that find data stores and check their security.</td></tr>
+        <tr><td>FHE</td><td>Fully homomorphic encryption. You can compute on encrypted data and not decrypt it.</td></tr>
+        <tr><td>FPE</td><td>Format-preserving encryption. The encrypted value keeps the format and the length of the original.</td></tr>
+        <tr><td>Generalization</td><td>The replacement of a precise value with a range or a category (age 22 becomes 20–25).</td></tr>
+        <tr><td>Guardian agent</td><td>An AI agent that monitors and acts on other AI systems. Sentinels watch, and operatives act.</td></tr>
+        <tr><td>Inference attack</td><td>An attack that finds a sensitive fact about a person without the exact record.</td></tr>
+        <tr><td>k-anonymity</td><td>Each record looks the same as at least k−1 others on its quasi-identifiers.</td></tr>
+        <tr><td>l-diversity</td><td>Each group of records that look the same has at least l different sensitive values.</td></tr>
+        <tr><td>LINDDUN</td><td>A privacy threat modeling method covering Linking, Identifying, Non-repudiation, Detecting, Data disclosure, Unawareness and Non-compliance.</td></tr>
+        <tr><td>Linkage attack</td><td>An attack that joins a dataset with a different one on shared fields to re-identify people.</td></tr>
+        <tr><td>NER</td><td>Named entity recognition. An AI model that finds names, places, numbers and other entities in text.</td></tr>
+        <tr><td>PASSFERS</td><td>The responsible AI principles of the course, namely Privacy, Accountability, Safety, Security, Fairness, Explainability, Reliability and Sustainability.</td></tr>
+        <tr><td>PET</td><td>Privacy enhancing technology. Any technique that lets you use data and protects the people in it.</td></tr>
+        <tr><td>PPML</td><td>Privacy-preserving machine learning.</td></tr>
+        <tr><td>PSI</td><td>Private set intersection. Two parties learn only what their lists have in common.</td></tr>
+        <tr><td>Pseudonymization</td><td>The replacement of identifiers with codes that a key can reverse. The result is still personal data.</td></tr>
+        <tr><td>PTM</td><td>Privacy threat modeling. It finds and measures privacy risk in data and data flows.</td></tr>
+        <tr><td>Quasi-identifier</td><td>A field that does not identify somebody alone, but can in combination, for example age, gender and pincode.</td></tr>
+        <tr><td>RAG</td><td>Retrieval-augmented generation. An LLM answers with documents that it gets from a vector database.</td></tr>
+        <tr><td>Red teaming</td><td>An attack on your own AI system, on purpose, to find weaknesses before others do.</td></tr>
+        <tr><td>RoPA</td><td>Record of Processing Activities. A list of the data that you process, with the reason, the place and the people who do it.</td></tr>
+        <tr><td>SDF</td><td>Significant Data Fiduciary. A fiduciary that the government names for extra duties because of the volume or sensitivity of its data.</td></tr>
+        <tr><td>Singling out</td><td>Isolating the record of one person in a dataset.</td></tr>
+        <tr><td>SLM</td><td>Small language model. Here, a fast guard in front of a larger model.</td></tr>
+        <tr><td>SMPC</td><td>Secure multi-party computation. Several parties compute a result and do not show their inputs.</td></tr>
+        <tr><td>Suppression</td><td>Hiding part or all of a value with a symbol (47677 becomes 476**).</td></tr>
+        <tr><td>Synthetic data</td><td>Artificial data that keeps the statistics of real data but contains no real people.</td></tr>
+        <tr><td>t-closeness</td><td>The spread of sensitive values in each group stays close to the spread in the whole table.</td></tr>
+        <tr><td>Threshold cryptography</td><td>A key is split, so that only a set number of holders together can use it.</td></tr>
+        <tr><td>Tokenization</td><td>The replacement of a value with a token. A secure lookup table keeps the mapping.</td></tr>
+        <tr><td>Verifiable credential</td><td>A signed digital claim with metadata, claims and proofs. An issuer issues it, a holder keeps it and a verifier checks it.</td></tr>
+        <tr><td>ZKP</td><td>Zero knowledge proof. A proof that a statement is true, which shows nothing more.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+
+  <p class="closing-note">Thank you for reading.</p>
+  <div class="the-end" data-ste="skip">That's all, folks</div>
+
+</article>
+</main>
+
+<script src="../assets/js/site.js?v=20261029d"></script>
+</body>
+</html>

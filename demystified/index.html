@@ -1,0 +1,54 @@
+<!doctype html>
+<!-- Demystified: the list page. The posts come from data/posts.js ("kind": "demystified"). -->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Demystified · LearnInBits</title>
+  <meta name="description" content="Things I explore, made simple. Books, courses, articles, papers and projects, explained in my own words.">
+  <link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,500;0,8..60,600;1,8..60,500&display=swap">
+  <link rel="stylesheet" href="../assets/css/style.css?v=20261029d">
+  <script>try{var t=localStorage.getItem("lib-theme");t=t?JSON.parse(t):(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+</head>
+<body data-root="../" data-page="posts" data-kind="demystified">
+
+<main id="main" class="wrap page">
+
+  <section class="demy-hero">
+    <div>
+      <div class="eyebrow" style="color:var(--layer-runtime)">Demystified</div>
+      <h1>Demystified</h1>
+      <p class="hook-line">Things I read and explore, explained simply in my own words.</p>
+    </div>
+
+    <!-- Picture: a tangled line goes through a lens and comes out straight and neat -->
+    <div class="demy-art" aria-hidden="true">
+      <svg viewBox="0 0 420 300">
+        <path d="M20 150c20-60 60 40 40 10s-30-70 10-40 20 80-10 50-10-60 30-40 30 50 0 60-30-40 10-60 50 30 30 40"
+              fill="none" stroke="var(--layer-kernel)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" opacity=".85"/>
+        <circle cx="210" cy="150" r="62" fill="color-mix(in srgb, var(--layer-runtime) 14%, transparent)" stroke="var(--layer-runtime)" stroke-width="5"/>
+        <circle cx="210" cy="150" r="44" fill="none" stroke="var(--layer-runtime)" stroke-width="2" opacity=".45"/>
+        <path d="M160 150h100" stroke="var(--layer-runtime)" stroke-width="5" stroke-linecap="round" opacity=".5"/>
+        <path d="M272 150h120" stroke="var(--layer-apps)" stroke-width="5" stroke-linecap="round"/>
+        <rect x="290" y="100" width="34" height="34" rx="8" fill="var(--layer-framework)"/>
+        <rect x="334" y="100" width="34" height="34" rx="8" fill="var(--layer-apps)"/>
+        <rect x="290" y="166" width="34" height="34" rx="8" fill="var(--layer-native)"/>
+        <rect x="334" y="166" width="34" height="34" rx="8" fill="var(--layer-runtime)"/>
+        <rect x="378" y="133" width="22" height="34" rx="6" fill="var(--layer-kernel)" opacity=".75"/>
+      </svg>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2 class="mt0">All posts</h2>
+    <div data-render="filtered-list" data-list="posts:demystified"></div>
+  </section>
+
+</main>
+
+<script src="../assets/js/site.js?v=20261029d"></script>
+</body>
+</html>

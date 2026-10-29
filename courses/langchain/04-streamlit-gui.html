@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Add a web page with Streamlit · LangChain, Step by Step · LearnInBits</title>
+  <meta name="description" content="Put a simple web page in front of a language model with Streamlit, so that anyone can use it in a browser.">
+  <link rel="icon" href="../../assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,500;0,8..60,600;1,8..60,500&display=swap">
+  <link rel="stylesheet" href="../../assets/css/style.css?v=20261029d">
+  <script>try{var t=localStorage.getItem("lib-theme");t=t?JSON.parse(t):(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+</head>
+<body data-root="../../" data-page="chapter" data-course="langchain" data-id="04-streamlit-gui">
+
+<main id="main">
+<article>
+
+
+<div class="block oneline">
+  <div class="label">In one line</div>
+  <p>A web page in front of a model lets people ask questions in a browser, so that they can use your app without the terminal.</p>
+</div>
+
+<section class="learn">
+  <h2>What you will learn</h2>
+  <ul>
+    <li>Why an AI app needs a user interface, and why Streamlit is a quick way to make one</li>
+    <li>How to show a heading, a text box and an answer with a few lines of Python</li>
+    <li>How Streamlit runs your script again after each action on the page</li>
+    <li>What the Local URL and the Network URL mean, and why the second one needs care</li>
+  </ul>
+  <p class="needs">Read <a href="03-using-ollama.html">chapter 3</a> first. In this chapter, you will put a web page in front of the program that you built there.</p>
+</section>
+
+<h2>The idea</h2>
+<p>In chapter 3, you asked the model a question in the code and read the answer in the terminal. That works for you as a developer. Most users never open a terminal, so an app needs a page where they can type a question and read the answer.</p>
+<p>Streamlit is a Python library that makes such a page from a short script. You do not write HTML, CSS or JavaScript. Each Streamlit function, such as <code>st.text_input</code>, adds one element to the page. You build the interface in the same file as the rest of your app.</p>
+<p>Streamlit has one rule that shapes every app in this track. Each time that the user does something on the page, Streamlit runs your whole script again, from the first line to the last. The page always shows the result of the latest run.</p>
+
+
+<div class="block analogy">
+  <div class="label">Real-life analogy</div>
+  <p>A Streamlit script is like a whiteboard that a teacher redraws after each question from the class. The teacher does not edit one corner of the board. The teacher wipes it and draws everything again with the new information, so that the board always shows the current state.</p>
+</div>
+
+<figure class="diagram">
+  <div class="frame"><img src="../../assets/img/diagrams/lc-04-rerun.svg" alt="Every action on the page starts the script again from the first line to the last. Run 1, the page opens. The text box is empty, so the if statement is false and the model is not called. Run 2, the user types a question and presses Enter. Now query holds the question, the if statement is true and llm.invoke runs. At the end of run 2, st.write shows the answer below the text box. The script reaches st.write only after the model answers, so the page waits for the full answer. Streamlit keeps no variables between runs, and chapter 8 uses session state for that." loading="lazy"></div>
+  <figcaption>Streamlit runs the script from top to bottom after each action. The model is called only in the run where the text box has text.</figcaption>
+</figure>
+
+<h2>What you will build</h2>
+<p>You will build a page with a heading and one text box. When the user types a question and presses Enter, the page will show the answer of the model below the box. The whole app has twelve lines.</p>
+
+
+<figure class="diagram">
+  <div class="frame"><img src="../../assets/img/diagrams/lc-04-flow.svg" alt="Setup, llm = ChatOllama(model=&quot;mistral&quot;), Connects to the mistral model in Ollama. Page, st.title and st.text_input, A heading and a text box with the label Enter your query. Call, if query llm.invoke(query), Runs only when the text box has text. Output, st.write(response.content), The answer shows below the text box." loading="lazy"></div>
+  <figcaption>The page shows a heading and a text box. The model is called only when the box has text.</figcaption>
+</figure>
+
+<h2>Build it step by step</h2>
+
+<h3 class="step"><span class="sn">Step 1</span>Create the file</h3>
+
+<p>In the <code>code</code> folder, create the folder <code>04_adding_streamlit_GUI</code> and in it the file <code>app_ollama.py</code>.</p>
+
+<h3 class="step"><span class="sn">Step 2</span>Import the libraries</h3>
+
+<pre class="code" data-lang="python" data-file="code/04_adding_streamlit_GUI/app_ollama.py"><code>from langchain_ollama.chat_models import ChatOllama
+import streamlit as st</code></pre>
+
+<ul class="explain">
+  <li><code>ChatOllama</code> connects to a model in Ollama, as in chapter 3.</li>
+  <li><code>import streamlit as st</code> imports Streamlit with the short name <code>st</code>. Every Streamlit function in this track starts with <code>st.</code>, so that you can see at once which lines build the page.</li>
+</ul>
+
+<h3 class="step"><span class="sn">Step 3</span>Create the model</h3>
+
+<pre class="code" data-lang="python" data-file="code/04_adding_streamlit_GUI/app_ollama.py"><code>llm = ChatOllama(model="mistral")</code></pre>
+
+<p>This chapter uses <code>mistral</code>, a larger model than <code>gemma:2b</code>. A larger model usually gives better answers, but it needs more memory and more time. You downloaded it when you set up your project.</p>
+
+<h3 class="step"><span class="sn">Step 4</span>Build the page</h3>
+
+<pre class="code" data-lang="python" data-file="code/04_adding_streamlit_GUI/app_ollama.py"><code>st.title("Ollama Chat with Streamlit")
+
+query = st.text_input("Enter your query")</code></pre>
+
+<ul class="explain">
+  <li><code>st.title</code> shows a large heading at the top of the page, so that the user knows which app is open.</li>
+  <li><code>st.text_input</code> shows a text box with the label <code>Enter your query</code>. It returns the text that the user typed.</li>
+  <li>In the first run, the box is empty, so <code>query</code> holds an empty text. After the user presses Enter, Streamlit runs the script again, and <code>query</code> holds the question.</li>
+</ul>
+
+<h3 class="step"><span class="sn">Step 5</span>Call the model and show the answer</h3>
+
+<pre class="code" data-lang="python" data-file="code/04_adding_streamlit_GUI/app_ollama.py"><code>if query:
+    response = llm.invoke(query)
+    st.write(response.content)</code></pre>
+
+<ul class="explain">
+  <li><code>if query:</code> calls the model only when the box has text. Without this check, the app sends an empty question each time that the page opens.</li>
+  <li><code>llm.invoke(query)</code> sends the question to the model, as in chapter 3.</li>
+  <li><code>st.write(response.content)</code> shows the text of the answer below the text box. <code>st.write</code> accepts many kinds of data, so it is the usual way to show a result.</li>
+</ul>
+
+<h2>Run it</h2>
+<p>Make sure that Ollama runs and that the <code>langchain</code> environment is active. Then start the app from the root folder of the project.</p>
+
+<pre class="code" data-lang="bash"><code>streamlit run code/04_adding_streamlit_GUI/app_ollama.py</code></pre>
+
+<p>Streamlit will start a small web server and print its address.</p>
+
+<pre class="code" data-lang="output"><code>  You can now view your Streamlit app in your browser.
+
+  Local URL: http://localhost:8501
+  Network URL: http://192.168.1.20:8501</code></pre>
+
+<p>Open the Local URL in your browser. Type <code>What is two-factor authentication?</code> in the text box and press Enter. After a few seconds, the answer will appear below the box.</p>
+
+<figure class="shot">
+  <div class="browser"><div class="bar"><i></i><i></i><i></i><span>localhost:8501</span></div><img src="https://raw.githubusercontent.com/bhardwajAbhi/learning-langchain/master/code/04_adding_streamlit_GUI/app_ollama_output.png" alt="The Streamlit page with the heading Ollama Chat with Streamlit, a text box with the question What is two-factor authentication? and the answer of the model below it. The answer explains that two-factor authentication asks for two forms of identification, something the user knows and something the user has." loading="lazy"></div>
+  <figcaption>The page shows the question in the text box and the answer of <code>mistral</code> below it.</figcaption>
+</figure>
+
+<div class="block note">
+  <div class="label">Your output can be different</div>
+  <p>A language model does not always give the same answer. Your text can be longer or use other words. The first answer can take longer, because Ollama must first load <code>mistral</code> into memory.</p>
+</div>
+
+<h2>Look closely</h2>
+<p>While the model writes, the page shows nothing new. The answer appears all at once, because <code>invoke()</code> waits for the full answer, and only then does the script reach <code>st.write</code>. With a large model and a long answer, the user can wait many seconds without any sign of progress.</p>
+<p>The next chapter adds a spinner, a small waiting message, so that the user knows that the app works. In chapter 8, you will show the answer piece by piece while the model writes it.</p>
+
+
+<details class="fold">
+  <summary><span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m16 18 6-6-6-6M8 6l-6 6 6 6"/></svg></span><span class="ft">Full code of chapter 4<small>code/04_adding_streamlit_GUI/app_ollama.py</small></span><a class="gh-btn" href="https://github.com/bhardwajAbhi/learning-langchain/blob/master/code/04_adding_streamlit_GUI/app_ollama.py"><svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M12 .5a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2.1c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1.1-.8.1-.8.1-.8 1.2.1 1.9 1.3 1.9 1.3 1.1 1.9 2.9 1.3 3.6 1 .1-.8.4-1.3.8-1.6-2.7-.3-5.5-1.3-5.5-6a4.7 4.7 0 0 1 1.3-3.2c-.1-.3-.6-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.7 1.7.2 2.9.1 3.2a4.7 4.7 0 0 1 1.3 3.2c0 4.6-2.8 5.6-5.5 6 .4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .5z"/></svg>View on GitHub</a></summary>
+  <div class="fold-body">
+<pre class="code" data-lang="python" data-file="code/04_adding_streamlit_GUI/app_ollama.py"><code>from langchain_ollama.chat_models import ChatOllama
+import streamlit as st
+
+llm = ChatOllama(model="mistral")
+
+st.title("Ollama Chat with Streamlit")
+
+query = st.text_input("Enter your query")
+
+if query:
+    response = llm.invoke(query)
+    st.write(response.content)</code></pre>
+  </div>
+</details>
+
+<div class="block security">
+  <div class="label">Security lens</div>
+  <p>Streamlit prints two addresses. The Local URL works only on your computer. The Network URL lets other devices on the same network open your app, such as a phone on the same Wi-Fi. On an office or public network, other people can then use your model.</p><p>To keep the app on your computer only, start it with <code>streamlit run code/04_adding_streamlit_GUI/app_ollama.py --server.address localhost</code>. Also remember that every text in the box goes straight to the model. Chapter 5 shows why that is a risk.</p>
+</div>
+
+<h2>Check yourself</h2>
+<div class="quiz">
+  <details>
+    <summary><span class="qq">Why does the app check <code>if query:</code> before it calls the model?</span></summary>
+    <div class="ans"><p>In the first run, the text box is empty. Without the check, the app sends an empty question to the model each time that the page opens.</p></div>
+  </details>
+  <details>
+    <summary><span class="qq">You type a question and press Enter. What does Streamlit do?</span></summary>
+    <div class="ans"><p>It runs the whole script again. This time, <code>query</code> holds the question, so the app calls the model and shows the answer.</p></div>
+  </details>
+  <details>
+    <summary><span class="qq">What is the difference between the Local URL and the Network URL?</span></summary>
+    <div class="ans"><p>The Local URL opens the app on your own computer. The Network URL lets other devices on the same network open it.</p></div>
+  </details>
+</div>
+
+<h2>Key terms at a glance</h2>
+<div class="table-wrap">
+  <table class="kw">
+    <thead><tr><th>Term</th><th>Meaning</th></tr></thead>
+    <tbody>
+      <tr><td>Streamlit</td><td>A Python library that makes web pages from a short script, so that you need no HTML or JavaScript</td></tr>
+      <tr><td><code>st.text_input</code></td><td>A text box on the page that returns the text that the user typed</td></tr>
+      <tr><td><code>st.write</code></td><td>A function that shows text, tables or other data on the page</td></tr>
+      <tr><td>Rerun</td><td>Streamlit runs the whole script again after each action on the page</td></tr>
+      <tr><td>Local URL</td><td>The address of the app on your own computer, such as <code>http://localhost:8501</code></td></tr>
+      <tr><td>Network URL</td><td>The address that other devices on the same network can use to open the app</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<h2>Next</h2>
+<p>In this chapter, the user typed the full question. In <a href="05-prompt-templates.html">chapter 5</a>, you will write the instructions once in a prompt template. The user will then fill in only a few details.</p>
+</article>
+</main>
+
+<script src="../../assets/js/site.js?v=20261029d"></script>
+</body>
+</html>

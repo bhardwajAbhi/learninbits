@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 380" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">The layers of defense in Android</title>
+  <desc id="d">Five layers from top to bottom. Apps have APK signing, declared permissions and a per-app sandbox. The framework has runtime permissions, Keystore2, Gatekeeper, biometrics and the Network Security Config. The kernel has SELinux, seccomp-BPF, namespaces, dm-verity and file-based encryption. Boot has Android Verified Boot and rollback protection. Hardware has the boot ROM and fuses, the TEE on TrustZone and StrongBox. Each layer works on its own, so an attacker has to defeat all of them.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="20" y="24" width="840" height="54" rx="12" fill="#eef3fb" stroke="#2f62c8" stroke-width="1.4"/>
+<text x="40" y="57" font-size="14" fill="#1f4a9e" text-anchor="start" font-weight="700">Apps</text>
+<rect x="170" y="36" width="97.92" height="30" rx="15" fill="#fff" stroke="#2f62c8" stroke-width="1.2"/>
+<text x="218.96" y="56" font-size="12" fill="#1f4a9e" text-anchor="middle" font-weight="600">APK signing</text>
+<rect x="277.92" y="36" width="158.4" height="30" rx="15" fill="#fff" stroke="#2f62c8" stroke-width="1.2"/>
+<text x="357.12" y="56" font-size="12" fill="#1f4a9e" text-anchor="middle" font-weight="600">Declared permissions</text>
+<rect x="446.32" y="36" width="124.8" height="30" rx="15" fill="#fff" stroke="#2f62c8" stroke-width="1.2"/>
+<text x="508.72" y="56" font-size="12" fill="#1f4a9e" text-anchor="middle" font-weight="600">Per-app sandbox</text>
+<rect x="20" y="90" width="840" height="54" rx="12" fill="#e3f4ee" stroke="#0f8a6a" stroke-width="1.4"/>
+<text x="40" y="123" font-size="14" fill="#0b6650" text-anchor="start" font-weight="700">Framework</text>
+<rect x="170" y="102" width="151.68" height="30" rx="15" fill="#fff" stroke="#0f8a6a" stroke-width="1.2"/>
+<text x="245.84" y="122" font-size="12" fill="#0b6650" text-anchor="middle" font-weight="600">Runtime permissions</text>
+<rect x="331.68" y="102" width="84.48" height="30" rx="15" fill="#fff" stroke="#0f8a6a" stroke-width="1.2"/>
+<text x="373.92" y="122" font-size="12" fill="#0b6650" text-anchor="middle" font-weight="600">Keystore2</text>
+<rect x="426.16" y="102" width="91.2" height="30" rx="15" fill="#fff" stroke="#0f8a6a" stroke-width="1.2"/>
+<text x="471.76" y="122" font-size="12" fill="#0b6650" text-anchor="middle" font-weight="600">Gatekeeper</text>
+<rect x="527.36" y="102" width="91.2" height="30" rx="15" fill="#fff" stroke="#0f8a6a" stroke-width="1.2"/>
+<text x="572.96" y="122" font-size="12" fill="#0b6650" text-anchor="middle" font-weight="600">Biometrics</text>
+<rect x="628.56" y="102" width="178.56" height="30" rx="15" fill="#fff" stroke="#0f8a6a" stroke-width="1.2"/>
+<text x="717.84" y="122" font-size="12" fill="#0b6650" text-anchor="middle" font-weight="600">Network Security Config</text>
+<rect x="20" y="156" width="840" height="54" rx="12" fill="#f3f0fa" stroke="#7a4fc2" stroke-width="1.4"/>
+<text x="40" y="189" font-size="14" fill="#58378f" text-anchor="start" font-weight="700">Kernel</text>
+<rect x="170" y="168" width="71.04" height="30" rx="15" fill="#fff" stroke="#7a4fc2" stroke-width="1.2"/>
+<text x="205.52" y="188" font-size="12" fill="#58378f" text-anchor="middle" font-weight="600">SELinux</text>
+<rect x="251.04" y="168" width="97.92" height="30" rx="15" fill="#fff" stroke="#7a4fc2" stroke-width="1.2"/>
+<text x="300" y="188" font-size="12" fill="#58378f" text-anchor="middle" font-weight="600">seccomp-BPF</text>
+<rect x="358.96" y="168" width="91.2" height="30" rx="15" fill="#fff" stroke="#7a4fc2" stroke-width="1.2"/>
+<text x="404.56" y="188" font-size="12" fill="#58378f" text-anchor="middle" font-weight="600">Namespaces</text>
+<rect x="460.16" y="168" width="84.48" height="30" rx="15" fill="#fff" stroke="#7a4fc2" stroke-width="1.2"/>
+<text x="502.4" y="188" font-size="12" fill="#58378f" text-anchor="middle" font-weight="600">dm-verity</text>
+<rect x="554.64" y="168" width="165.12" height="30" rx="15" fill="#fff" stroke="#7a4fc2" stroke-width="1.2"/>
+<text x="637.2" y="188" font-size="12" fill="#58378f" text-anchor="middle" font-weight="600">File-based encryption</text>
+<rect x="20" y="222" width="840" height="54" rx="12" fill="#fdf4e3" stroke="#b7791f" stroke-width="1.4"/>
+<text x="40" y="255" font-size="14" fill="#8a5a12" text-anchor="start" font-weight="700">Boot</text>
+<rect x="170" y="234" width="165.12" height="30" rx="15" fill="#fff" stroke="#b7791f" stroke-width="1.2"/>
+<text x="252.56" y="254" font-size="12" fill="#8a5a12" text-anchor="middle" font-weight="600">Android Verified Boot</text>
+<rect x="345.12" y="234" width="151.68" height="30" rx="15" fill="#fff" stroke="#b7791f" stroke-width="1.2"/>
+<text x="420.96" y="254" font-size="12" fill="#8a5a12" text-anchor="middle" font-weight="600">Rollback protection</text>
+<rect x="20" y="288" width="840" height="54" rx="12" fill="#fbecec" stroke="#c2552d" stroke-width="1.4"/>
+<text x="40" y="321" font-size="14" fill="#963f1f" text-anchor="start" font-weight="700">Hardware</text>
+<rect x="170" y="300" width="144.96" height="30" rx="15" fill="#fff" stroke="#c2552d" stroke-width="1.2"/>
+<text x="242.48" y="320" font-size="12" fill="#963f1f" text-anchor="middle" font-weight="600">Boot ROM and fuses</text>
+<rect x="324.96" y="300" width="124.8" height="30" rx="15" fill="#fff" stroke="#c2552d" stroke-width="1.2"/>
+<text x="387.36" y="320" font-size="12" fill="#963f1f" text-anchor="middle" font-weight="600">TEE (TrustZone)</text>
+<rect x="459.76" y="300" width="84.48" height="30" rx="15" fill="#fff" stroke="#c2552d" stroke-width="1.2"/>
+<text x="502" y="320" font-size="12" fill="#963f1f" text-anchor="middle" font-weight="600">StrongBox</text>
+<text x="440" y="366" font-size="12" fill="#4a5263" text-anchor="middle" font-style="italic" font-weight="500">Each layer works on its own. An attacker has to defeat all of them, not just one.</text>
+</svg>

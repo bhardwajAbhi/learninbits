@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 360" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">How the first chain flows</title>
+  <desc id="d">Your input is a dictionary with the key text. The chain is prompt pipe llm. The prompt is a ChatPromptTemplate with the text Translate to Hindi and the placeholder text. It fills the placeholder and makes the prompt that the model sees, Translate to Hindi, Hello my name is Abhishek. The llm model object sends the filled prompt to the service. The result is an AIMessage with the content in Hindi and the usage metadata, with no parser yet. The output of each part becomes the input of the next part.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="20" y="70" width="190" height="96" rx="12" fill="#fff" stroke="#5d6b7e" stroke-width="1.7"/>
+<text x="36" y="97" font-size="14" fill="#3f4a59" text-anchor="start" font-weight="700">Your input</text>
+<text x="36" y="120" font-size="11.5" fill="#4a5263" text-anchor="start">{&quot;text&quot;: &quot;Hello!, my</text>
+<text x="36" y="138" font-size="11.5" fill="#4a5263" text-anchor="start">name is Abhishek.&quot;}</text>
+<path d="M210 118 L 246 118" fill="none" stroke="#1c2230" stroke-width="1.6" marker-end="url(#m0)"/>
+<rect x="240" y="34" width="420" height="196" rx="16" fill="#fbfaf6" stroke="#7a4fc2" stroke-width="1.5" stroke-dasharray="6 5"/>
+<text x="450" y="58" font-size="14" fill="#58378f" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="700">chain = prompt | llm</text>
+<rect x="256" y="74" width="180" height="116" rx="12" fill="#fff" stroke="#7a4fc2" stroke-width="1.7"/>
+<text x="272" y="101" font-size="14" fill="#58378f" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">prompt</text>
+<text x="272" y="124" font-size="11.5" fill="#4a5263" text-anchor="start">ChatPromptTemplate</text>
+<text x="272" y="142" font-size="11.5" fill="#4a5263" text-anchor="start">Translate to Hindi:</text>
+<text x="272" y="160" font-size="11.5" fill="#4a5263" text-anchor="start">{text}</text>
+<path d="M436 132 L 470 132" fill="none" stroke="#7a4fc2" stroke-width="1.8" marker-end="url(#m5)"/>
+<text x="453" y="122" font-size="18" fill="#58378f" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="700">|</text>
+<rect x="474" y="74" width="170" height="116" rx="12" fill="#fff" stroke="#2f62c8" stroke-width="1.7"/>
+<text x="490" y="101" font-size="14" fill="#1f4a9e" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">llm</text>
+<text x="490" y="124" font-size="11.5" fill="#4a5263" text-anchor="start">The model object</text>
+<text x="490" y="142" font-size="11.5" fill="#4a5263" text-anchor="start">sends the filled</text>
+<text x="490" y="160" font-size="11.5" fill="#4a5263" text-anchor="start">prompt to the service</text>
+<path d="M660 132 L 694 132" fill="none" stroke="#1c2230" stroke-width="1.6" marker-end="url(#m0)"/>
+<rect x="698" y="74" width="162" height="116" rx="12" fill="#fff" stroke="#0f8a6a" stroke-width="1.7"/>
+<text x="714" y="101" font-size="14" fill="#0b6650" text-anchor="start" font-weight="700">AIMessage</text>
+<text x="714" y="124" font-size="11.8" fill="#4a5263" text-anchor="start">content in Hindi</text>
+<text x="714" y="142" font-size="11.8" fill="#4a5263" text-anchor="start">usage_metadata</text>
+<text x="714" y="160" font-size="11.8" fill="#4a5263" text-anchor="start">(no parser yet)</text>
+<rect x="256" y="246" width="404" height="58" rx="10" fill="#f3f0fa" stroke="#7a4fc2" stroke-width="1.2"/>
+<text x="272" y="270" font-size="12.3" fill="#58378f" text-anchor="start" font-weight="700">The filled prompt that the model sees</text>
+<text x="272" y="290" font-size="12" fill="#1c2230" text-anchor="start" font-family="JetBrains Mono, monospace">Translate to Hindi: Hello!, my name is Abhishek.</text>
+<line x1="346" y1="190" x2="346" y2="246" stroke="#7a4fc2" stroke-width="1.3" stroke-dasharray="4 4"/>
+<text x="450" y="340" font-size="12.3" fill="#4a5263" text-anchor="middle" font-style="italic">The output of each part becomes the input of the next part, like water through pipes.</text>
+</svg>

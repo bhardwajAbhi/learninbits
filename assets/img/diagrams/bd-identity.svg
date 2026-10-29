@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 186" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">The calling identity during one call</title>
+  <desc id="d">Inside a call from an app with UID 10123. First, the call arrives and getCallingUid returns 10123, a value that the kernel wrote. Second, the service checks the caller and enforces a permission of UID 10123, so it decides with the real caller. Third, clearCallingIdentity returns a token, and getCallingUid now returns 1000, so the service works as system_server itself. Fourth, restoreCallingIdentity with the token makes getCallingUid return 10123 again, always in a finally block.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<text x="20" y="32" font-size="12.6" fill="#1c2230" text-anchor="start" font-weight="700">Inside a call from an app with UID 10123</text>
+<rect x="20" y="48" width="196" height="120" rx="10" fill="#eef3fb" stroke="#2f62c8" stroke-width="1.3"/>
+<text x="118" y="76" font-size="12.4" fill="#1f4a9e" text-anchor="middle" font-weight="700">The call arrives</text>
+<text x="118" y="104" font-size="9.6" fill="#1c2230" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="600">getCallingUid() is 10123</text>
+<text x="118" y="140" font-size="11" fill="#4a5263" text-anchor="middle">The kernel wrote this value.</text>
+<path d="M218 108 L 232 108" fill="none" stroke="#1c2230" stroke-width="1.5" marker-end="url(#m0)"/>
+<rect x="234" y="48" width="196" height="120" rx="10" fill="#fdf4e3" stroke="#b7791f" stroke-width="1.3"/>
+<text x="332" y="76" font-size="12.4" fill="#8a5a12" text-anchor="middle" font-weight="700">Check the caller</text>
+<text x="332" y="104" font-size="9.6" fill="#1c2230" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="600">enforce a permission of 10123</text>
+<text x="332" y="140" font-size="11" fill="#4a5263" text-anchor="middle">Decide with the real caller.</text>
+<path d="M432 108 L 446 108" fill="none" stroke="#1c2230" stroke-width="1.5" marker-end="url(#m0)"/>
+<rect x="448" y="48" width="196" height="120" rx="10" fill="#f3f0fa" stroke="#7a4fc2" stroke-width="1.3"/>
+<text x="546" y="76" font-size="9.8" fill="#58378f" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="700">token = clearCallingIdentity()</text>
+<text x="546" y="104" font-size="9.6" fill="#1c2230" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="600">getCallingUid() is now 1000</text>
+<text x="546" y="140" font-size="11" fill="#4a5263" text-anchor="middle">Work as system_server itself.</text>
+<path d="M646 108 L 660 108" fill="none" stroke="#1c2230" stroke-width="1.5" marker-end="url(#m0)"/>
+<rect x="662" y="48" width="196" height="120" rx="10" fill="#e3f4ee" stroke="#0f8a6a" stroke-width="1.3"/>
+<text x="760" y="76" font-size="9.8" fill="#0b6650" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="700">restoreCallingIdentity(token)</text>
+<text x="760" y="104" font-size="9.6" fill="#1c2230" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="600">getCallingUid() is 10123 again</text>
+<text x="760" y="140" font-size="11" fill="#4a5263" text-anchor="middle">Always in a finally block.</text>
+</svg>

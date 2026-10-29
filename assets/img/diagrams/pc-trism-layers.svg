@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 336" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">AI TRiSM layers</title>
+  <desc id="d">Five layers from Gartner, namely AI governance, AI runtime enforcement, AI data protection and classification, AI infrastructure and stack, and traditional technology protection. The top three layers hold the six responsible layers of the course, namely AI governance, AI inference, AI training, data sharing, data assessment and data collection.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="20" y="20" width="520" height="50" rx="10" fill="#f3f0fa" stroke="#7a4fc2" stroke-width="1.5"/>
+<text x="36" y="42" font-size="13" fill="#58378f" text-anchor="start" font-weight="700">AI governance</text>
+<text x="36" y="59" font-size="10.8" fill="#4a5263" text-anchor="start">posture management, adversarial testing, AI validation, third-party risk</text>
+<rect x="20" y="78" width="520" height="50" rx="10" fill="#f3f0fa" stroke="#7a4fc2" stroke-width="1.5"/>
+<text x="36" y="100" font-size="13" fill="#58378f" text-anchor="start" font-weight="700">AI runtime enforcement</text>
+<text x="36" y="117" font-size="10.8" fill="#4a5263" text-anchor="start">runtime defense, dynamic classification and access, anomaly detection</text>
+<rect x="20" y="136" width="520" height="50" rx="10" fill="#f3f0fa" stroke="#7a4fc2" stroke-width="1.5"/>
+<text x="36" y="158" font-size="13" fill="#58378f" text-anchor="start" font-weight="700">AI data protection and classification</text>
+<text x="36" y="175" font-size="10.8" fill="#4a5263" text-anchor="start">PETs, data security posture management, data governance</text>
+<rect x="20" y="194" width="520" height="50" rx="10" fill="#f6f4ef" stroke="#d9d4c7" stroke-width="1.5"/>
+<text x="36" y="216" font-size="13" fill="#3f4a59" text-anchor="start" font-weight="700">AI infrastructure and stack</text>
+<text x="36" y="233" font-size="10.8" fill="#4a5263" text-anchor="start">hardened environments, confidential computing, AI chips</text>
+<rect x="20" y="252" width="520" height="50" rx="10" fill="#f6f4ef" stroke="#d9d4c7" stroke-width="1.5"/>
+<text x="36" y="274" font-size="13" fill="#3f4a59" text-anchor="start" font-weight="700">Traditional technology protection</text>
+<text x="36" y="291" font-size="10.8" fill="#4a5263" text-anchor="start">code scanning, app testing, API gateways, endpoints, IAM</text>
+<path d="M548 20 h10 v164 h-10" fill="none" stroke="#7a4fc2" stroke-width="2"/>
+<path d="M560 102 H592" fill="none" stroke="#7a4fc2" stroke-width="1.6" marker-end="url(#m5)"/>
+<text x="728" y="22" font-size="12" fill="#1c2230" text-anchor="middle" font-weight="700">The six responsible layers</text>
+<rect x="598" y="32" width="260" height="30" rx="15" fill="#f3f0fa" stroke="#7a4fc2" stroke-width="1.2"/>
+<text x="728" y="51.14" font-size="11.5" fill="#58378f" text-anchor="middle" font-weight="600">Responsible AI governance</text>
+<rect x="598" y="70" width="260" height="30" rx="15" fill="#f3f0fa" stroke="#7a4fc2" stroke-width="1.2"/>
+<text x="728" y="89.14" font-size="11.5" fill="#58378f" text-anchor="middle" font-weight="600">Responsible AI inference</text>
+<rect x="598" y="108" width="260" height="30" rx="15" fill="#f3f0fa" stroke="#7a4fc2" stroke-width="1.2"/>
+<text x="728" y="127.14" font-size="11.5" fill="#58378f" text-anchor="middle" font-weight="600">Responsible AI training</text>
+<rect x="598" y="146" width="260" height="30" rx="15" fill="#eef3fb" stroke="#2f62c8" stroke-width="1.2"/>
+<text x="728" y="165.14" font-size="11.5" fill="#1f4a9e" text-anchor="middle" font-weight="600">Responsible data sharing</text>
+<rect x="598" y="184" width="260" height="30" rx="15" fill="#eef3fb" stroke="#2f62c8" stroke-width="1.2"/>
+<text x="728" y="203.14" font-size="11.5" fill="#1f4a9e" text-anchor="middle" font-weight="600">Responsible data assessment</text>
+<rect x="598" y="222" width="260" height="30" rx="15" fill="#eef3fb" stroke="#2f62c8" stroke-width="1.2"/>
+<text x="728" y="241.14" font-size="11.5" fill="#1f4a9e" text-anchor="middle" font-weight="600">Responsible data collection</text>
+<text x="280" y="320" font-size="12" fill="#58378f" text-anchor="middle" font-weight="700">The course works in the top three layers.</text>
+</svg>

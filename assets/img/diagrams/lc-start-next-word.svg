@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 430" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">A language model predicts the next word</title>
+  <desc id="d">The text so far is: A strong password must be long and. The language model gives a score to each possible next word. Unique scores 46 percent, hard 21, random 17, complex 11 and blue 1. The model adds one word, often the likely one, and repeats the step for the next word.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="20" y="24" width="840" height="60" rx="12" fill="#f2efe8"/>
+<text x="40" y="50" font-size="11.5" fill="#4a5263" text-anchor="start" font-weight="700">The text so far</text>
+<text x="40" y="72" font-size="15" fill="#1c2230" text-anchor="start" font-weight="600">A strong password must be long and</text>
+<path d="M440 86 L 440 112" fill="none" stroke="#1c2230" stroke-width="1.6" marker-end="url(#m0)"/>
+<rect x="300" y="116" width="280" height="44" rx="10" fill="#eef3fb" stroke="#2f62c8" stroke-width="1.5"/>
+<text x="440" y="143" font-size="13.5" fill="#1f4a9e" text-anchor="middle" font-weight="700">Language model</text>
+<path d="M440 162 L 440 186" fill="none" stroke="#1c2230" stroke-width="1.6" marker-end="url(#m0)"/>
+<text x="40" y="206" font-size="11.5" fill="#4a5263" text-anchor="start" font-weight="700">Likely next words, with a score for each</text>
+<text x="40" y="239" font-size="13" fill="#1c2230" text-anchor="start" font-weight="600">unique</text>
+<rect x="150" y="226" width="560" height="18" rx="6" fill="#f1efe9"/>
+<rect x="150" y="226" width="515.2" height="18" rx="6" fill="#e3f4ee" stroke="#0f8a6a" stroke-width="1"/>
+<text x="850" y="240" font-size="12" fill="#0b6650" text-anchor="end" font-weight="700">46%</text>
+<text x="40" y="273" font-size="13" fill="#1c2230" text-anchor="start" font-weight="600">hard</text>
+<rect x="150" y="260" width="560" height="18" rx="6" fill="#f1efe9"/>
+<rect x="150" y="260" width="235.2" height="18" rx="6" fill="#eef3fb" stroke="#2f62c8" stroke-width="1"/>
+<text x="850" y="274" font-size="12" fill="#1f4a9e" text-anchor="end" font-weight="700">21%</text>
+<text x="40" y="307" font-size="13" fill="#1c2230" text-anchor="start" font-weight="600">random</text>
+<rect x="150" y="294" width="560" height="18" rx="6" fill="#f1efe9"/>
+<rect x="150" y="294" width="190.4" height="18" rx="6" fill="#eef3fb" stroke="#2f62c8" stroke-width="1"/>
+<text x="850" y="308" font-size="12" fill="#1f4a9e" text-anchor="end" font-weight="700">17%</text>
+<text x="40" y="341" font-size="13" fill="#1c2230" text-anchor="start" font-weight="600">complex</text>
+<rect x="150" y="328" width="560" height="18" rx="6" fill="#f1efe9"/>
+<rect x="150" y="328" width="123.2" height="18" rx="6" fill="#eef3fb" stroke="#2f62c8" stroke-width="1"/>
+<text x="850" y="342" font-size="12" fill="#1f4a9e" text-anchor="end" font-weight="700">11%</text>
+<text x="40" y="375" font-size="13" fill="#1c2230" text-anchor="start" font-weight="600">blue</text>
+<rect x="150" y="362" width="560" height="18" rx="6" fill="#f1efe9"/>
+<rect x="150" y="362" width="11.2" height="18" rx="6" fill="#eef0f3" stroke="#5d6b7e" stroke-width="1"/>
+<text x="850" y="376" font-size="12" fill="#3f4a59" text-anchor="end" font-weight="700">1%</text>
+<text x="440" y="410" font-size="12.2" fill="#4a5263" text-anchor="middle" font-style="italic">The model adds one word, often the likely one, and repeats the step for the next word.</text>
+</svg>

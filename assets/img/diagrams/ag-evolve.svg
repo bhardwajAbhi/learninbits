@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 360" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">How an agent improves from one try to the next</title>
+  <desc id="d">Four steps in a loop. First, the agent tries the task, it plans, acts and observes. Second, it gets feedback, from a self-check where it reviews its own work, from a test that says pass or fail, or from training that puts lessons into the model. Third, it updates its memory with facts about what is true, experience about what worked and links about what connects. Fourth, the next try starts from a better place. Over many tasks, an agent can also write lessons for itself, build new tools or improve its own code. Search and memory feed each other, because each search fills the memory and the memory sharpens the next search.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="30" y="40" width="200" height="70" rx="11" fill="#eef3fb" stroke="#2f62c8" stroke-width="1.5"/>
+<text x="130" y="72" font-size="13" fill="#1f4a9e" text-anchor="middle" font-weight="700">1. Try the task</text>
+<text x="130" y="90" font-size="11.2" fill="#4a5263" text-anchor="middle">plan, act, observe</text>
+<path d="M232 75 L 300 75" fill="none" stroke="#1c2230" stroke-width="1.6" marker-end="url(#m0)"/>
+<rect x="304" y="22" width="300" height="150" rx="12" fill="#fff" stroke="#7a4fc2" stroke-width="1.5"/>
+<text x="454" y="46" font-size="13" fill="#58378f" text-anchor="middle" font-weight="700">2. Get feedback</text>
+<text x="324" y="76" font-size="12" fill="#1c2230" text-anchor="start" font-weight="700">Self-check</text>
+<text x="420" y="76" font-size="11.2" fill="#4a5263" text-anchor="start">the agent reviews its own work</text>
+<text x="324" y="106" font-size="12" fill="#1c2230" text-anchor="start" font-weight="700">Test</text>
+<text x="420" y="106" font-size="11.2" fill="#4a5263" text-anchor="start">a check says pass or fail</text>
+<text x="324" y="136" font-size="12" fill="#1c2230" text-anchor="start" font-weight="700">Training</text>
+<text x="420" y="136" font-size="11.2" fill="#4a5263" text-anchor="start">lessons go into the model</text>
+<path d="M606 97 L 650 97" fill="none" stroke="#1c2230" stroke-width="1.6" marker-end="url(#m0)"/>
+<rect x="654" y="22" width="206" height="150" rx="12" fill="#fff" stroke="#0e7c86" stroke-width="1.5"/>
+<text x="757" y="46" font-size="13" fill="#095a61" text-anchor="middle" font-weight="700">3. Update memory</text>
+<text x="672" y="76" font-size="12" fill="#1c2230" text-anchor="start" font-weight="700">Facts</text>
+<text x="764" y="76" font-size="11" fill="#4a5263" text-anchor="start">what is true</text>
+<text x="672" y="106" font-size="12" fill="#1c2230" text-anchor="start" font-weight="700">Experience</text>
+<text x="764" y="106" font-size="11" fill="#4a5263" text-anchor="start">what worked</text>
+<text x="672" y="136" font-size="12" fill="#1c2230" text-anchor="start" font-weight="700">Links</text>
+<text x="764" y="136" font-size="11" fill="#4a5263" text-anchor="start">what connects</text>
+<path d="M757 174 V 232 H 130 V 114" fill="none" stroke="#0f8a6a" stroke-width="1.8"/>
+<path d="M130 120 L 130 114" fill="none" stroke="#0f8a6a" stroke-width="1.8" marker-end="url(#m4)"/>
+<rect x="250" y="210" width="380" height="44" rx="10" fill="#e3f4ee" stroke="#0f8a6a" stroke-width="1.3"/>
+<text x="440" y="237" font-size="12.4" fill="#0b6650" text-anchor="middle" font-weight="700">4. The next try starts from a better place</text>
+<rect x="30" y="278" width="830" height="66" rx="12" fill="#f2efe8"/>
+<text x="450" y="304" font-size="12" fill="#1c2230" text-anchor="middle">Over many tasks, an agent can also write lessons for itself, build new tools or improve its own code.</text>
+<text x="450" y="326" font-size="12" fill="#4a5263" text-anchor="middle">Search and memory feed each other. Each search fills the memory, and the memory sharpens the next search.</text>
+</svg>

@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 460" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">Each pair of debug lines belongs to one step of the chain</title>
+  <desc id="d">Left, the terminal output of the debug mode, shortened to one start line and one end line for each step. Right, the step that printed each pair. The first pair belongs to the whole chain, a RunnableSequence, which receives the behavior and returns the report. Then come the steps of chain 1. The prompt fills behavior into the template, the model ChatOllama maps the behavior to techniques and the parser StrOutputParser keeps only the text of the answer. Then come the steps of chain 2. The prompt fills techniques into the template, and the model writes the report. Green lines start a step. Cyan lines end it and carry the time, such as 1 millisecond for a prompt and about 10 to 20 seconds for the model.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<text x="20" y="30" font-size="12.6" fill="#1c2230" text-anchor="start" font-weight="700">What the terminal prints</text>
+<text x="560" y="30" font-size="12.6" fill="#1c2230" text-anchor="start" font-weight="700">The step that printed it</text>
+<rect x="20" y="42" width="500" height="404" rx="10" fill="#1f2633"/>
+<circle cx="36" cy="58" r="5" fill="#ff5f57"/>
+<circle cx="52" cy="58" r="5" fill="#febc2e"/>
+<circle cx="68" cy="58" r="5" fill="#28c840"/>
+<text x="36" y="84" font-size="11" fill="#7ee2a8" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">[chain/start]</text>
+<text x="140" y="84" font-size="11" fill="#e8ecf3" text-anchor="start" font-family="JetBrains Mono, monospace">RunnableSequence</text>
+<text x="36" y="104" font-size="11" fill="#7fd6e6" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">[chain/end]</text>
+<text x="140" y="104" font-size="11" fill="#e8ecf3" text-anchor="start" font-family="JetBrains Mono, monospace">RunnableSequence  [7ms]</text>
+<rect x="560" y="68" width="300" height="46" rx="9" fill="#eef0f3" stroke="#5d6b7e" stroke-width="1.3"/>
+<text x="574" y="87" font-size="12.6" fill="#3f4a59" text-anchor="start" font-weight="700">The whole chain</text>
+<text x="574" y="105" font-size="11" fill="#4a5263" text-anchor="start">receives the behavior and returns the report</text>
+<path d="M506 94 L 552 94" fill="none" stroke="#1c2230" stroke-width="1.4" marker-end="url(#m0)"/>
+<text x="36" y="144" font-size="11" fill="#7ee2a8" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">[chain/start]</text>
+<text x="140" y="144" font-size="11" fill="#e8ecf3" text-anchor="start" font-family="JetBrains Mono, monospace">... &gt; prompt:PromptTemplate</text>
+<text x="36" y="164" font-size="11" fill="#7fd6e6" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">[chain/end]</text>
+<text x="140" y="164" font-size="11" fill="#e8ecf3" text-anchor="start" font-family="JetBrains Mono, monospace">... &gt; prompt:PromptTemplate  [1ms]</text>
+<rect x="560" y="128" width="300" height="46" rx="9" fill="#f3f0fa" stroke="#7a4fc2" stroke-width="1.3"/>
+<text x="574" y="147" font-size="12.6" fill="#58378f" text-anchor="start" font-weight="700">Prompt</text>
+<text x="574" y="165" font-size="11" fill="#4a5263" text-anchor="start">fills {behavior} into the template</text>
+<text x="846" y="147" font-size="10.6" fill="#58378f" text-anchor="end" font-weight="700">Chain 1</text>
+<path d="M506 154 L 552 154" fill="none" stroke="#1c2230" stroke-width="1.4" marker-end="url(#m0)"/>
+<text x="36" y="204" font-size="11" fill="#7ee2a8" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">[llm/start]</text>
+<text x="140" y="204" font-size="11" fill="#e8ecf3" text-anchor="start" font-family="JetBrains Mono, monospace">... &gt; llm:ChatOllama</text>
+<text x="36" y="224" font-size="11" fill="#7fd6e6" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">[llm/end]</text>
+<text x="140" y="224" font-size="11" fill="#e8ecf3" text-anchor="start" font-family="JetBrains Mono, monospace">... &gt; llm:ChatOllama  [9.84s]</text>
+<rect x="560" y="188" width="300" height="46" rx="9" fill="#eef3fb" stroke="#2f62c8" stroke-width="1.3"/>
+<text x="574" y="207" font-size="12.6" fill="#1f4a9e" text-anchor="start" font-weight="700">Model</text>
+<text x="574" y="225" font-size="11" fill="#4a5263" text-anchor="start">maps the behavior to techniques</text>
+<text x="846" y="207" font-size="10.6" fill="#1f4a9e" text-anchor="end" font-weight="700">Chain 1</text>
+<path d="M506 214 L 552 214" fill="none" stroke="#1c2230" stroke-width="1.4" marker-end="url(#m0)"/>
+<text x="36" y="264" font-size="11" fill="#7ee2a8" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">[chain/start]</text>
+<text x="140" y="264" font-size="11" fill="#e8ecf3" text-anchor="start" font-family="JetBrains Mono, monospace">... &gt; parser:StrOutputParser</text>
+<text x="36" y="284" font-size="11" fill="#7fd6e6" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">[chain/end]</text>
+<text x="140" y="284" font-size="11" fill="#e8ecf3" text-anchor="start" font-family="JetBrains Mono, monospace">... &gt; parser:StrOutputParser  [0ms]</text>
+<rect x="560" y="248" width="300" height="46" rx="9" fill="#fdf4e3" stroke="#b7791f" stroke-width="1.3"/>
+<text x="574" y="267" font-size="12.6" fill="#8a5a12" text-anchor="start" font-weight="700">Parser</text>
+<text x="574" y="285" font-size="11" fill="#4a5263" text-anchor="start">keeps only the text of the answer</text>
+<text x="846" y="267" font-size="10.6" fill="#8a5a12" text-anchor="end" font-weight="700">Chain 1</text>
+<path d="M506 274 L 552 274" fill="none" stroke="#1c2230" stroke-width="1.4" marker-end="url(#m0)"/>
+<text x="36" y="324" font-size="11" fill="#7ee2a8" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">[chain/start]</text>
+<text x="140" y="324" font-size="11" fill="#e8ecf3" text-anchor="start" font-family="JetBrains Mono, monospace">... &gt; prompt:PromptTemplate</text>
+<text x="36" y="344" font-size="11" fill="#7fd6e6" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">[chain/end]</text>
+<text x="140" y="344" font-size="11" fill="#e8ecf3" text-anchor="start" font-family="JetBrains Mono, monospace">... &gt; prompt:PromptTemplate  [0ms]</text>
+<rect x="560" y="308" width="300" height="46" rx="9" fill="#f3f0fa" stroke="#7a4fc2" stroke-width="1.3"/>
+<text x="574" y="327" font-size="12.6" fill="#58378f" text-anchor="start" font-weight="700">Prompt</text>
+<text x="574" y="345" font-size="11" fill="#4a5263" text-anchor="start">fills {techniques} into the template</text>
+<text x="846" y="327" font-size="10.6" fill="#58378f" text-anchor="end" font-weight="700">Chain 2</text>
+<path d="M506 334 L 552 334" fill="none" stroke="#1c2230" stroke-width="1.4" marker-end="url(#m0)"/>
+<text x="36" y="384" font-size="11" fill="#7ee2a8" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">[llm/start]</text>
+<text x="140" y="384" font-size="11" fill="#e8ecf3" text-anchor="start" font-family="JetBrains Mono, monospace">... &gt; llm:ChatOllama</text>
+<text x="36" y="404" font-size="11" fill="#7fd6e6" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">[llm/end]</text>
+<text x="140" y="404" font-size="11" fill="#e8ecf3" text-anchor="start" font-family="JetBrains Mono, monospace">... &gt; llm:ChatOllama  [21.37s]</text>
+<rect x="560" y="368" width="300" height="46" rx="9" fill="#eef3fb" stroke="#2f62c8" stroke-width="1.3"/>
+<text x="574" y="387" font-size="12.6" fill="#1f4a9e" text-anchor="start" font-weight="700">Model</text>
+<text x="574" y="405" font-size="11" fill="#4a5263" text-anchor="start">writes the report</text>
+<text x="846" y="387" font-size="10.6" fill="#1f4a9e" text-anchor="end" font-weight="700">Chain 2</text>
+<path d="M506 394 L 552 394" fill="none" stroke="#1c2230" stroke-width="1.4" marker-end="url(#m0)"/>
+<text x="36" y="436" font-size="10.8" fill="#9aa6b8" text-anchor="start">Green lines start a step. Cyan lines end it and carry the time.</text>
+</svg>

@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 340" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">How step-back prompting uses two chains</title>
+  <desc id="d">A question about a login with unlimited password attempts goes to step_back_chain, call 1, which asks which principles answer the question. The principles, for example defense in depth, fail-safe defaults and threat modeling, then go with the same question to apply_chain, call 2, which applies the principles. The result is a final answer with risks and fixes and a reason for each one. Two chains and two calls, and the output of the first call is an input of the second call.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="20" y="120" width="180" height="92" rx="12" fill="#fff" stroke="#5d6b7e" stroke-width="1.7"/>
+<text x="36" y="147" font-size="14" fill="#3f4a59" text-anchor="start" font-weight="700">Question</text>
+<text x="36" y="170" font-size="11.8" fill="#4a5263" text-anchor="start">Login with unlimited</text>
+<text x="36" y="188" font-size="11.8" fill="#4a5263" text-anchor="start">password attempts</text>
+<path d="M200 150 C 230 150, 230 80, 258 80" fill="none" stroke="#7a4fc2" stroke-width="1.6" marker-end="url(#m5)"/>
+<rect x="262" y="30" width="250" height="100" rx="12" fill="#fff" stroke="#7a4fc2" stroke-width="1.7"/>
+<text x="278" y="57" font-size="13" fill="#58378f" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">step_back_chain</text>
+<text x="278" y="80" font-size="12" fill="#4a5263" text-anchor="start">Call 1. Which principles</text>
+<text x="278" y="98" font-size="12" fill="#4a5263" text-anchor="start">answer this question?</text>
+<path d="M512 80 L 552 80" fill="none" stroke="#7a4fc2" stroke-width="1.6" marker-end="url(#m5)"/>
+<rect x="556" y="30" width="304" height="100" rx="12" fill="#fff" stroke="#b7791f" stroke-width="1.7"/>
+<text x="572" y="57" font-size="14" fill="#8a5a12" text-anchor="start" font-weight="700">Principles</text>
+<text x="572" y="80" font-size="12" fill="#4a5263" text-anchor="start">Defense in depth</text>
+<text x="572" y="98" font-size="12" fill="#4a5263" text-anchor="start">Fail-safe defaults</text>
+<text x="572" y="116" font-size="12" fill="#4a5263" text-anchor="start">Threat modeling</text>
+<path d="M708 130 C 708 170, 520 170, 512 196" fill="none" stroke="#b7791f" stroke-width="1.6" marker-end="url(#m6)"/>
+<path d="M200 180 C 230 180, 230 236, 258 236" fill="none" stroke="#5d6b7e" stroke-width="1.6" marker-end="url(#m8)"/>
+<rect x="262" y="190" width="250" height="100" rx="12" fill="#fff" stroke="#2f62c8" stroke-width="1.7"/>
+<text x="278" y="217" font-size="13" fill="#1f4a9e" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">apply_chain</text>
+<text x="278" y="240" font-size="12" fill="#4a5263" text-anchor="start">Call 2. Apply the principles</text>
+<text x="278" y="258" font-size="12" fill="#4a5263" text-anchor="start">to the question</text>
+<path d="M512 240 L 552 240" fill="none" stroke="#2f62c8" stroke-width="1.6" marker-end="url(#m3)"/>
+<rect x="556" y="196" width="304" height="90" rx="12" fill="#fff" stroke="#0f8a6a" stroke-width="1.7"/>
+<text x="572" y="223" font-size="14" fill="#0b6650" text-anchor="start" font-weight="700">Final answer</text>
+<text x="572" y="246" font-size="12" fill="#4a5263" text-anchor="start">Risks and fixes, with a</text>
+<text x="572" y="264" font-size="12" fill="#4a5263" text-anchor="start">reason for each one</text>
+<text x="440" y="320" font-size="12.3" fill="#4a5263" text-anchor="middle" font-style="italic">Two chains and two calls. The output of the first call is an input of the second call.</text>
+</svg>

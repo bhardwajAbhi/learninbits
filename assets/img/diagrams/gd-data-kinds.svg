@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 346" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">Kinds of personal data in GDPR, DPDP and US terms</title>
+  <desc id="d">On the left, the terms in GDPR and DPDP. Personal data is any data about an identifiable person. GDPR adds special categories, namely health, genetic data, biometric data for identification, race, religion, political opinions, union membership and sex life, and separate rules for criminal records data in Article 10. The DPDP Act has one category only and no sensitive class. On the right, terms from US laws and industry. PII identifies a person in NIST guidance. NPI is financial data under the Gramm-Leach-Bliley Act. PHI is health data under HIPAA. MNPI is price-sensitive company data under securities law. SPI is a common industry term whose meaning varies.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="20" y="30" width="420" height="300" rx="14" fill="#fff" stroke="#2f62c8" stroke-width="1.6"/>
+<text x="36" y="58" font-size="14" fill="#1f4a9e" text-anchor="start" font-weight="700">Terms in GDPR and DPDP</text>
+<rect x="36" y="76" width="388" height="44" rx="8" fill="#eef3fb" stroke="#2f62c8" stroke-width="1.1"/>
+<text x="50" y="95" font-size="12.4" fill="#1f4a9e" text-anchor="start" font-weight="700">Personal data</text>
+<text x="50" y="112" font-size="11" fill="#4a5263" text-anchor="start">Any data about an identifiable person</text>
+<rect x="36" y="128" width="388" height="64" rx="8" fill="#fbecec" stroke="#c2552d" stroke-width="1.1"/>
+<text x="50" y="147" font-size="12.4" fill="#963f1f" text-anchor="start" font-weight="700">GDPR special categories</text>
+<text x="50" y="164" font-size="11" fill="#4a5263" text-anchor="start">Health, genetic, biometric for ID, race,</text>
+<text x="50" y="180" font-size="11" fill="#4a5263" text-anchor="start">religion, politics, union, sex life</text>
+<rect x="36" y="198" width="388" height="44" rx="8" fill="#fdf4e3" stroke="#b7791f" stroke-width="1.1"/>
+<text x="50" y="217" font-size="12.4" fill="#8a5a12" text-anchor="start" font-weight="700">Criminal records data</text>
+<text x="50" y="234" font-size="11" fill="#4a5263" text-anchor="start">GDPR Article 10, separate rules</text>
+<rect x="36" y="250" width="388" height="44" rx="8" fill="#e3f4ee" stroke="#0f8a6a" stroke-width="1.1"/>
+<text x="50" y="269" font-size="12.4" fill="#0b6650" text-anchor="start" font-weight="700">DPDP Act</text>
+<text x="50" y="286" font-size="11" fill="#4a5263" text-anchor="start">One category only, no sensitive class</text>
+<rect x="460" y="30" width="400" height="300" rx="14" fill="#fff" stroke="#5d6b7e" stroke-width="1.6"/>
+<text x="476" y="58" font-size="14" fill="#3f4a59" text-anchor="start" font-weight="700">Terms from US laws and industry</text>
+<rect x="476" y="76" width="368" height="40" rx="8" fill="#eef0f3"/>
+<text x="490" y="101" font-size="12.6" fill="#3f4a59" text-anchor="start" font-weight="800">PII</text>
+<text x="548" y="101" font-size="11.4" fill="#1c2230" text-anchor="start">Identifies a person, NIST guidance</text>
+<rect x="476" y="124" width="368" height="40" rx="8" fill="#eef0f3"/>
+<text x="490" y="149" font-size="12.6" fill="#3f4a59" text-anchor="start" font-weight="800">NPI</text>
+<text x="548" y="149" font-size="11.4" fill="#1c2230" text-anchor="start">Financial data, Gramm-Leach-Bliley Act</text>
+<rect x="476" y="172" width="368" height="40" rx="8" fill="#eef0f3"/>
+<text x="490" y="197" font-size="12.6" fill="#3f4a59" text-anchor="start" font-weight="800">PHI</text>
+<text x="548" y="197" font-size="11.4" fill="#1c2230" text-anchor="start">Health data, HIPAA</text>
+<rect x="476" y="220" width="368" height="40" rx="8" fill="#eef0f3"/>
+<text x="490" y="245" font-size="12.6" fill="#3f4a59" text-anchor="start" font-weight="800">MNPI</text>
+<text x="548" y="245" font-size="11.4" fill="#1c2230" text-anchor="start">Price-sensitive company data, securities law</text>
+<rect x="476" y="268" width="368" height="40" rx="8" fill="#eef0f3"/>
+<text x="490" y="293" font-size="12.6" fill="#3f4a59" text-anchor="start" font-weight="800">SPI</text>
+<text x="548" y="293" font-size="11.4" fill="#1c2230" text-anchor="start">Common industry term, meaning varies</text>
+</svg>

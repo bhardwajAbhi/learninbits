@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 400" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">The five rights of a Data Principal</title>
+  <desc id="d">Five rights around the Data Principal, namely access (Section 11), correction (Section 12(2)), erasure (Section 12(3)), grievance redressal (Section 13) and nomination (Section 14).</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<circle cx="440" cy="200" r="70" fill="#1c2230"/>
+<text x="440" y="196" font-size="15" fill="#fff" text-anchor="middle" font-weight="700">Data</text>
+<text x="440" y="216" font-size="15" fill="#fff" text-anchor="middle" font-weight="700">Principal</text>
+<line x1="440" y1="130" x2="440" y2="80" stroke="#2f62c8" stroke-width="2"/>
+<rect x="335" y="12" width="210" height="76" rx="12" fill="#fff" stroke="#2f62c8" stroke-width="1.8"/>
+<text x="440" y="36" font-size="14" fill="#1f4a9e" text-anchor="middle" font-weight="700">Access</text>
+<text x="440" y="52" font-size="10.5" fill="#7b8292" text-anchor="middle" font-weight="600">Section 11</text>
+<text x="440" y="68" font-size="11" fill="#4a5263" text-anchor="middle">a summary of the data and</text>
+<text x="440" y="82" font-size="11" fill="#4a5263" text-anchor="middle">who else received it</text>
+<line x1="506.574" y1="178.369" x2="639.722" y2="162.918" stroke="#0f8a6a" stroke-width="2"/>
+<rect x="591.785" y="115.647" width="210" height="76" rx="12" fill="#fff" stroke="#0f8a6a" stroke-width="1.8"/>
+<text x="696.785" y="139.647" font-size="14" fill="#0b6650" text-anchor="middle" font-weight="700">Correction</text>
+<text x="696.785" y="155.647" font-size="10.5" fill="#7b8292" text-anchor="middle" font-weight="600">Section 12(2)</text>
+<text x="696.785" y="171.647" font-size="11" fill="#4a5263" text-anchor="middle">correct, complete and</text>
+<text x="696.785" y="185.647" font-size="11" fill="#4a5263" text-anchor="middle">update the data</text>
+<line x1="481.145" y1="256.631" x2="563.435" y2="297.082" stroke="#c2552d" stroke-width="2"/>
+<rect x="493.702" y="283.353" width="210" height="76" rx="12" fill="#fff" stroke="#c2552d" stroke-width="1.8"/>
+<text x="598.702" y="307.353" font-size="14" fill="#963f1f" text-anchor="middle" font-weight="700">Erasure</text>
+<text x="598.702" y="323.353" font-size="10.5" fill="#7b8292" text-anchor="middle" font-weight="600">Section 12(3)</text>
+<text x="598.702" y="339.353" font-size="11" fill="#4a5263" text-anchor="middle">erase, unless law or the</text>
+<text x="598.702" y="353.353" font-size="11" fill="#4a5263" text-anchor="middle">purpose needs it</text>
+<line x1="398.855" y1="256.631" x2="316.565" y2="297.082" stroke="#b7791f" stroke-width="2"/>
+<rect x="176.298" y="283.353" width="210" height="76" rx="12" fill="#fff" stroke="#b7791f" stroke-width="1.8"/>
+<text x="281.298" y="307.353" font-size="14" fill="#8a5a12" text-anchor="middle" font-weight="700">Grievance</text>
+<text x="281.298" y="323.353" font-size="10.5" fill="#7b8292" text-anchor="middle" font-weight="600">Section 13</text>
+<text x="281.298" y="339.353" font-size="11" fill="#4a5263" text-anchor="middle">readily available means</text>
+<text x="281.298" y="353.353" font-size="11" fill="#4a5263" text-anchor="middle">to complain</text>
+<line x1="373.426" y1="178.369" x2="240.278" y2="162.918" stroke="#7a4fc2" stroke-width="2"/>
+<rect x="78.2147" y="115.647" width="210" height="76" rx="12" fill="#fff" stroke="#7a4fc2" stroke-width="1.8"/>
+<text x="183.215" y="139.647" font-size="14" fill="#58378f" text-anchor="middle" font-weight="700">Nomination</text>
+<text x="183.215" y="155.647" font-size="10.5" fill="#7b8292" text-anchor="middle" font-weight="600">Section 14</text>
+<text x="183.215" y="171.647" font-size="11" fill="#4a5263" text-anchor="middle">a person who acts on death</text>
+<text x="183.215" y="185.647" font-size="11" fill="#4a5263" text-anchor="middle">or incapacity</text>
+</svg>

@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 400" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">A chat without memory compared with a chat with memory</title>
+  <desc id="d">Two columns. Without memory, call 1 sends the system message and question 1, what is a dangerous permission. Call 2 sends the system message and question 2, give me two examples of it. The model does not know what it means. With memory, call 1 is the same. Call 2 sends the system message, question 1, answer 1 and question 2. The model sees question 1 and answer 1, so it makes sense.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="20" y="20" width="400" height="370" rx="14" fill="#fff" stroke="#c2552d" stroke-width="1.6"/>
+<rect x="20" y="20" width="400" height="38" rx="14" fill="#c2552d"/>
+<rect x="20" y="42" width="400" height="16" rx="0" fill="#c2552d"/>
+<text x="220" y="45" font-size="13.5" fill="#fff" text-anchor="middle" font-weight="700">Without memory</text>
+<text x="40" y="88" font-size="11.6" fill="#4a5263" text-anchor="start" font-weight="700">Call 1 sends</text>
+<rect x="40" y="98" width="360" height="28" rx="7" fill="#eef0f3" stroke="#5d6b7e" stroke-width="1"/>
+<text x="52" y="116" font-size="11.4" fill="#3f4a59" text-anchor="start">System</text>
+<rect x="40" y="132" width="360" height="28" rx="7" fill="#eef3fb" stroke="#2f62c8" stroke-width="1"/>
+<text x="52" y="150" font-size="11.4" fill="#1f4a9e" text-anchor="start" font-weight="600">Q1  What is a dangerous permission?</text>
+<text x="40" y="188" font-size="11.6" fill="#4a5263" text-anchor="start" font-weight="700">Call 2 sends</text>
+<rect x="40" y="198" width="360" height="28" rx="7" fill="#eef0f3" stroke="#5d6b7e" stroke-width="1"/>
+<text x="52" y="216" font-size="11.4" fill="#3f4a59" text-anchor="start">System</text>
+<rect x="40" y="232" width="360" height="28" rx="7" fill="#eef3fb" stroke="#2f62c8" stroke-width="1"/>
+<text x="52" y="250" font-size="11.4" fill="#1f4a9e" text-anchor="start" font-weight="600">Q2  Give me two examples of it.</text>
+<text x="220" y="372" font-size="11.6" fill="#963f1f" text-anchor="middle" font-weight="700">The model does not know what &quot;it&quot; means.</text>
+<rect x="460" y="20" width="400" height="370" rx="14" fill="#fff" stroke="#0f8a6a" stroke-width="1.6"/>
+<rect x="460" y="20" width="400" height="38" rx="14" fill="#0f8a6a"/>
+<rect x="460" y="42" width="400" height="16" rx="0" fill="#0f8a6a"/>
+<text x="660" y="45" font-size="13.5" fill="#fff" text-anchor="middle" font-weight="700">With memory</text>
+<text x="480" y="88" font-size="11.6" fill="#4a5263" text-anchor="start" font-weight="700">Call 1 sends</text>
+<rect x="480" y="98" width="360" height="28" rx="7" fill="#eef0f3" stroke="#5d6b7e" stroke-width="1"/>
+<text x="492" y="116" font-size="11.4" fill="#3f4a59" text-anchor="start">System</text>
+<rect x="480" y="132" width="360" height="28" rx="7" fill="#eef3fb" stroke="#2f62c8" stroke-width="1"/>
+<text x="492" y="150" font-size="11.4" fill="#1f4a9e" text-anchor="start" font-weight="600">Q1  What is a dangerous permission?</text>
+<text x="480" y="188" font-size="11.6" fill="#4a5263" text-anchor="start" font-weight="700">Call 2 sends</text>
+<rect x="480" y="198" width="360" height="28" rx="7" fill="#eef0f3" stroke="#5d6b7e" stroke-width="1"/>
+<text x="492" y="216" font-size="11.4" fill="#3f4a59" text-anchor="start">System</text>
+<rect x="480" y="232" width="360" height="28" rx="7" fill="#eef3fb" stroke="#2f62c8" stroke-width="1"/>
+<text x="492" y="250" font-size="11.4" fill="#1f4a9e" text-anchor="start" font-weight="600">Q1  What is a dangerous permission?</text>
+<rect x="480" y="266" width="360" height="28" rx="7" fill="#fdf4e3" stroke="#b7791f" stroke-width="1"/>
+<text x="492" y="284" font-size="11.4" fill="#8a5a12" text-anchor="start" font-weight="600">A1  A dangerous permission is ...</text>
+<rect x="480" y="300" width="360" height="28" rx="7" fill="#eef3fb" stroke="#2f62c8" stroke-width="1"/>
+<text x="492" y="318" font-size="11.4" fill="#1f4a9e" text-anchor="start" font-weight="600">Q2  Give me two examples of it.</text>
+<text x="660" y="372" font-size="11.6" fill="#0b6650" text-anchor="middle" font-weight="700">The model sees Q1 and A1, so &quot;it&quot; makes sense.</text>
+</svg>

@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 398" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">The four phases of first-stage init</title>
+  <desc id="d">Four phases from left to right. Phase one creates basic file systems, namely tmpfs on /dev, devpts, proc with hidepid=2, sysfs, selinuxfs and the nodes /dev/kmsg with mode 0600 and /dev/null. Phase two loads kernel modules from the list for the boot mode, serially or in parallel, and respects page-size folders. Phase three resumes from hibernation if asked, creates block devices, installs reboot handlers and mounts /system and /vendor with dm-verity. Phase four frees the ramdisk, points output to /dev/kmsg and runs execv for selinux_setup. Below, the CHECKCALL macro collects errors in a list until /dev/kmsg is ready. The parallel mode comes from androidboot.load_modules_parallel. Not set means NONE, and the values true, performance and conservative select NORMAL, PERFORMANCE and CONSERVATIVE.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="20" y="24" width="200" height="34" rx="10" fill="#5d6b7e"/>
+<text x="34" y="46" font-size="13" fill="#fff" text-anchor="start" font-weight="700">1  Basic file systems</text>
+<rect x="20" y="66" width="200" height="26" rx="6" fill="#eef0f3"/>
+<text x="30" y="83" font-size="11.6" fill="#3f4a59" text-anchor="start" font-weight="500">tmpfs on /dev</text>
+<rect x="20" y="98" width="200" height="26" rx="6" fill="#eef0f3"/>
+<text x="30" y="115" font-size="11.6" fill="#3f4a59" text-anchor="start" font-weight="500">devpts, proc (hidepid=2)</text>
+<rect x="20" y="130" width="200" height="26" rx="6" fill="#eef0f3"/>
+<text x="30" y="147" font-size="11.6" fill="#3f4a59" text-anchor="start" font-weight="500">sysfs, selinuxfs</text>
+<rect x="20" y="162" width="200" height="26" rx="6" fill="#eef0f3"/>
+<text x="30" y="179" font-size="11.6" fill="#3f4a59" text-anchor="start" font-weight="500">/dev/kmsg 0600, /dev/null</text>
+<path d="M221 41 L 232 41" fill="none" stroke="#1c2230" stroke-width="1.4" marker-end="url(#m0)"/>
+<rect x="233" y="24" width="200" height="34" rx="10" fill="#7a4fc2"/>
+<text x="247" y="46" font-size="13" fill="#fff" text-anchor="start" font-weight="700">2  Kernel modules</text>
+<rect x="233" y="66" width="200" height="26" rx="6" fill="#f3f0fa"/>
+<text x="243" y="83" font-size="11.6" fill="#58378f" text-anchor="start" font-weight="500">Choose modules.load</text>
+<rect x="233" y="98" width="200" height="26" rx="6" fill="#f3f0fa"/>
+<text x="243" y="115" font-size="11.6" fill="#58378f" text-anchor="start" font-weight="500">by the boot mode</text>
+<rect x="233" y="130" width="200" height="26" rx="6" fill="#f3f0fa"/>
+<text x="243" y="147" font-size="11.6" fill="#58378f" text-anchor="start" font-weight="500">Serial or parallel</text>
+<rect x="233" y="162" width="200" height="26" rx="6" fill="#f3f0fa"/>
+<text x="243" y="179" font-size="11.6" fill="#58378f" text-anchor="start" font-weight="500">Page-size folders</text>
+<path d="M434 41 L 445 41" fill="none" stroke="#1c2230" stroke-width="1.4" marker-end="url(#m0)"/>
+<rect x="446" y="24" width="200" height="34" rx="10" fill="#2f62c8"/>
+<text x="460" y="46" font-size="13" fill="#fff" text-anchor="start" font-weight="700">3  Mount partitions</text>
+<rect x="446" y="66" width="200" height="26" rx="6" fill="#eef3fb"/>
+<text x="456" y="83" font-size="11.6" fill="#1f4a9e" text-anchor="start" font-weight="500">Resume from hibernation</text>
+<rect x="446" y="98" width="200" height="26" rx="6" fill="#eef3fb"/>
+<text x="456" y="115" font-size="11.6" fill="#1f4a9e" text-anchor="start" font-weight="500">Create block devices</text>
+<rect x="446" y="130" width="200" height="26" rx="6" fill="#eef3fb"/>
+<text x="456" y="147" font-size="11.6" fill="#1f4a9e" text-anchor="start" font-weight="500">Install reboot handlers</text>
+<rect x="446" y="162" width="200" height="26" rx="6" fill="#eef3fb"/>
+<text x="456" y="179" font-size="11.6" fill="#1f4a9e" text-anchor="start" font-weight="500">dm-verity, /system, /vendor</text>
+<path d="M647 41 L 658 41" fill="none" stroke="#1c2230" stroke-width="1.4" marker-end="url(#m0)"/>
+<rect x="659" y="24" width="200" height="34" rx="10" fill="#b7791f"/>
+<text x="673" y="46" font-size="13" fill="#fff" text-anchor="start" font-weight="700">4  Hand over</text>
+<rect x="659" y="66" width="200" height="26" rx="6" fill="#fdf4e3"/>
+<text x="669" y="83" font-size="11.6" fill="#8a5a12" text-anchor="start" font-weight="500">Free the ramdisk</text>
+<rect x="659" y="98" width="200" height="26" rx="6" fill="#fdf4e3"/>
+<text x="669" y="115" font-size="11.6" fill="#8a5a12" text-anchor="start" font-weight="500">Logs to /dev/kmsg</text>
+<rect x="659" y="130" width="200" height="26" rx="6" fill="#fdf4e3"/>
+<text x="669" y="147" font-size="11.6" fill="#8a5a12" text-anchor="start" font-weight="500">execv selinux_setup</text>
+<rect x="20" y="214" width="400" height="144" rx="12" fill="#1f2633"/>
+<path d="M32 214 h376 a12 12 0 0 1 12 12 v22 h-400 v-22 a12 12 0 0 1 12 -12z" fill="#5d6b7e"/>
+<text x="36" y="237" font-size="13.5" fill="#fff" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">first_stage_init.cpp</text>
+<text x="36" y="270" font-size="11.4" fill="#e8ecf3" text-anchor="start" font-family="JetBrains Mono, monospace">#define CHECKCALL(x) \</text>
+<text x="36" y="288" font-size="11.4" fill="#e8ecf3" text-anchor="start" font-family="JetBrains Mono, monospace">    if ((x) != 0) errors.emplace_back(</text>
+<text x="36" y="306" font-size="11.4" fill="#e8ecf3" text-anchor="start" font-family="JetBrains Mono, monospace">        #x &quot; failed&quot;, errno);</text>
+<text x="36" y="324" font-size="11.4" fill="#9aa6b8" text-anchor="start" font-family="JetBrains Mono, monospace">// no log exists yet, so errors wait</text>
+<text x="36" y="342" font-size="11.4" fill="#9aa6b8" text-anchor="start" font-family="JetBrains Mono, monospace">// in a list until /dev/kmsg is ready</text>
+<rect x="440" y="214" width="420" height="168" rx="12" fill="#fff" stroke="#7a4fc2" stroke-width="1.4"/>
+<text x="456" y="238" font-size="12" fill="#58378f" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">androidboot.load_modules_parallel</text>
+<rect x="456" y="252" width="112" height="20" rx="8" fill="#f3f0fa" stroke="#7a4fc2" stroke-width="1.2"/>
+<text x="512" y="265.96" font-size="11" fill="#58378f" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="600">not set</text>
+<text x="580" y="267" font-size="11.6" fill="#4a5263" text-anchor="start">NONE, one by one</text>
+<rect x="456" y="276" width="112" height="20" rx="8" fill="#f3f0fa" stroke="#7a4fc2" stroke-width="1.2"/>
+<text x="512" y="289.96" font-size="11" fill="#58378f" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="600">true</text>
+<text x="580" y="291" font-size="11.6" fill="#4a5263" text-anchor="start">NORMAL</text>
+<rect x="456" y="300" width="112" height="20" rx="8" fill="#f3f0fa" stroke="#7a4fc2" stroke-width="1.2"/>
+<text x="512" y="313.96" font-size="11" fill="#58378f" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="600">performance</text>
+<text x="580" y="315" font-size="11.6" fill="#4a5263" text-anchor="start">PERFORMANCE</text>
+<rect x="456" y="324" width="112" height="20" rx="8" fill="#f3f0fa" stroke="#7a4fc2" stroke-width="1.2"/>
+<text x="512" y="337.96" font-size="11" fill="#58378f" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="600">conservative</text>
+<text x="580" y="339" font-size="11.6" fill="#4a5263" text-anchor="start">CONSERVATIVE</text>
+<text x="456" y="360" font-size="11.4" fill="#4a5263" text-anchor="start" font-style="italic">Charger and recovery boots load their own short lists.</text>
+</svg>

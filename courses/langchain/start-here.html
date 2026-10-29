@@ -1,0 +1,297 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Start here · LangChain, Step by Step · LearnInBits</title>
+  <meta name="description" content="What a language model and LangChain are, how a generative AI app fits together, and how to set up your project with Anaconda and Ollama.">
+  <link rel="icon" href="../../assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,500;0,8..60,600;1,8..60,500&display=swap">
+  <link rel="stylesheet" href="../../assets/css/style.css?v=20261029d">
+  <script>try{var t=localStorage.getItem("lib-theme");t=t?JSON.parse(t):(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+</head>
+<body data-root="../../" data-page="chapter" data-course="langchain" data-id="start-here">
+
+<main id="main">
+<article>
+
+
+<div class="block oneline">
+  <div class="label">In one line</div>
+  <p>A generative AI app sends your text to a language model and shows the answer. LangChain gives you ready parts for such an app, so that you write less code and can change the model easily.</p>
+</div>
+
+<section class="learn">
+  <h2>What you will learn</h2>
+  <ul>
+    <li>How this track works and what you need for it</li>
+    <li>What a large language model is, and why it can write fluent text that is still wrong</li>
+    <li>What LangChain is, and which parts of an AI app it gives you</li>
+    <li>How to set up the project that every chapter uses</li>
+  </ul>
+  <p class="needs">You need basic Python. You do not need any earlier knowledge of AI.</p>
+</section>
+
+
+<h2>About this track</h2>
+<p>In this track, you will build small AI apps with Python and LangChain. You will start with one question to a model. Chapter by chapter, you will add a web page, prompt templates, chains and a memory. Later chapters will add agents, documents and images. The last chapter will put your app online.</p>
+<p>Each chapter adds one new part, so that you learn one idea at a time and always have an app that works. The examples come from security work, such as an app that explains a permission. The same steps work for any topic, so you can change the examples to your own field.</p>
+<p>Every app in this track runs on Ollama, a free tool that runs language models on your own computer. You do not need a paid account. Later, each chapter will also show the app with Gemini and OpenAI, so that you can compare a local model with a cloud model.</p>
+
+<h2>How to work through this track</h2>
+<p>Read the chapters in order, because each chapter uses the app from the chapter before. In each chapter, read the idea first and look at the diagram. Then type the code yourself, step by step. Typing the code helps you to remember it better than copying it.</p>
+<p>After each step, run the program and compare your result with the screenshot in the chapter. A language model does not always give the same answer, so your text can be different. The layout of the page and the type of answer will be the same.</p>
+
+<h2>Requirements</h2>
+<ul>
+  <li>A computer with Windows, macOS or Linux and at least 8 GB of memory, so that the local models can run</li>
+  <li>About 10 GB of free disk space for Anaconda, the packages and two models</li>
+  <li>Basic Python, such as variables, functions and imports</li>
+  <li>A code editor, such as Visual Studio Code</li>
+  <li>Git, so that you can keep your project in a repository</li>
+</ul>
+
+<h2>Source code</h2>
+<p>The full code of every chapter is in the repository <a href="https://github.com/bhardwajAbhi/learning-langchain">bhardwajAbhi/learning-langchain</a> on GitHub. Each chapter has its own folder in <code>code/</code>, and the number of the folder is the number of the chapter. For example, the code of chapter 5 is in <code>code/05_using_prompt_template</code>. Each folder also has a screenshot of the running app, so that you can compare your result.</p>
+
+
+
+<h2>What a large language model is</h2>
+<p>A large language model (LLM) is a program that learned from a very large amount of text, such as books, websites and code. From that text, it learned which words usually follow other words. When you give it a text, it predicts the next word, adds that word and predicts again. It repeats this step until the answer is complete.</p>
+
+
+<figure class="diagram">
+  <div class="frame"><img src="../../assets/img/diagrams/lc-start-next-word.svg" alt="The text so far is: A strong password must be long and. The language model gives a score to each possible next word. Unique scores 46 percent, hard 21, random 17, complex 11 and blue 1. The model adds one word, often the likely one, and repeats the step for the next word." loading="lazy"></div>
+  <figcaption>A language model gives a score to each possible next word and adds one word at a time.</figcaption>
+</figure>
+
+<p>This method explains two things that you will see in every chapter. First, the answers read well, because the model learned how good text looks. Second, an answer can be wrong, because the model predicts likely words and does not look up facts. You will see such a wrong fact in chapter 5.</p>
+<p>A model also has no memory between two questions. Each question starts fresh. In chapter 8, you will give your app a memory, so that it can follow a conversation.</p>
+
+<h2>What LangChain is</h2>
+<p>LangChain is a Python library for apps that use language models. It gives you two things.</p>
+<p>The first is one common way to talk to many models. Gemini, OpenAI models and local models through Ollama all have their own interface. In LangChain, you call each of them with the same method, <code>invoke()</code>. You can then change the model by changing one line, and the rest of your app stays the same.</p>
+<p>The second is a set of building blocks for the parts around the model. A prompt template keeps your instructions in one place. A chain joins several steps into one. A memory keeps the conversation. You will learn each block in its own chapter, so that you understand what it does before you combine it with others.</p>
+
+<h2>The parts of a generative AI app</h2>
+<p>Every app in this track has the same four parts. The user types a question on a web page. Your program turns the question into a good prompt and sends it to the model. The answer then travels back the same way.</p>
+
+
+<figure class="diagram">
+  <div class="frame"><img src="../../assets/img/diagrams/lc-start-app.svg" alt="Four parts from left to right. The user types a question and reads the answer. The web page, made with Streamlit, has a text box, buttons and a chat window, and is added in chapter 4. Your program uses LangChain for the prompt template, the chain, the parser and the memory, and grows in chapters 5 to 14. The language model is in the cloud, such as Gemini or OpenAI, or local with Ollama, and is covered in chapters 1 to 3. The question travels to the right and the answer travels back to the left." loading="lazy"></div>
+  <figcaption>The four parts of an app in this track, and the chapters that add each part.</figcaption>
+</figure>
+
+<p>Chapters 1 to 3 connect your program to a model. Chapter 4 adds the web page. From chapter 5 on, your program grows, part by part.</p>
+
+<h2>Set up your project</h2>
+<p>Every chapter runs in the same project, so you set it up only once. You will create a separate Python environment, install the packages and the models, and create the files that keep your keys safe. At the end, you will run a quick check, so that you know that everything works before chapter 1.</p>
+
+
+<figure class="diagram">
+  <div class="frame"><img src="../../assets/img/diagrams/lc-start-layout.svg" alt="A folder named learning-langchain holds the files .env, .env.sample, .gitignore and requirements.txt and a folder named code. The .env file holds your real API keys and Git never uploads it. The .env.sample file has the same names with empty values, to share. The .gitignore file lists the files that Git must not upload. The requirements.txt file lists the packages and their versions. The code folder has one folder for each lesson, such as 03_using_ollama and 05_using_prompt_template, each with an app_ollama.py file. The folder number is the chapter number." loading="lazy"></div>
+  <figcaption>The project that you will create. It has the same layout as the repository.</figcaption>
+</figure>
+
+<h3 class="step"><span class="sn">Step 1</span>Install Anaconda</h3>
+
+<p>Anaconda manages Python and its packages. It gives each project its own environment, so that the packages of one project do not break another project. Download Anaconda from <a href="https://www.anaconda.com/download">anaconda.com/download</a> and install it. Then open a new terminal and check the installation.</p>
+
+<pre class="code" data-lang="bash"><code>conda --version</code></pre>
+
+<p>On Windows, use the Anaconda Prompt as your terminal. On macOS and Linux, use the normal terminal. The command shows the version of conda, such as <code>conda 24.9.2</code>.</p>
+
+<h3 class="step"><span class="sn">Step 2</span>Create the environment</h3>
+
+<p>Create an environment with the name <code>langchain</code> and Python 3.11. Then activate it.</p>
+
+<pre class="code" data-lang="bash"><code>conda create -n langchain python=3.11
+conda activate langchain
+python --version</code></pre>
+
+<ul class="explain">
+  <li><code>-n langchain</code> gives the environment its name. You will use this name each time you activate it.</li>
+  <li><code>python=3.11</code> installs Python 3.11 in the environment. The packages of this track need Python 3.10 or later.</li>
+  <li><code>conda activate langchain</code> makes this environment the active one. Your terminal then shows <code>(langchain)</code> at the start of the line.</li>
+  <li><code>python --version</code> must show <code>Python 3.11</code> and a number after it.</li>
+</ul>
+
+<div class="block note">
+  <div class="label">Activate the environment each time</div>
+  <p>Each new terminal starts without the environment. Run <code>conda activate langchain</code> before you run any program of this track. Most errors at the start come from a terminal where the environment is not active.</p>
+</div>
+
+<h3 class="step"><span class="sn">Step 3</span>Create the project folder</h3>
+
+<p>Create the folder of the project with a <code>code</code> folder inside it. Then make the project folder a Git repository, so that you can save each step of your work.</p>
+
+<pre class="code" data-lang="bash"><code>mkdir learning-langchain
+cd learning-langchain
+mkdir code
+git init</code></pre>
+
+<p>Run all commands of this track from this folder, the root folder of the project.</p>
+
+<h3 class="step"><span class="sn">Step 4</span>Install the packages</h3>
+
+<p>In the root folder, create the file <code>requirements.txt</code> with this content.</p>
+
+<pre class="code" data-lang="text" data-file="requirements.txt"><code>langchain-core==1.7.0
+langchain-community==0.4.2
+langchain-ollama==1.1.0
+langchain-google-genai==4.4.2
+langchain-openai==1.7.3
+streamlit==1.66.1
+python-decouple==3.8</code></pre>
+
+<ul class="explain">
+  <li><code>langchain-core</code> holds the building blocks, such as prompt templates, chains and output parsers.</li>
+  <li><code>langchain-ollama</code>, <code>langchain-google-genai</code> and <code>langchain-openai</code> connect LangChain to Ollama, Gemini and OpenAI.</li>
+  <li><code>langchain-community</code> holds extra parts, such as the chat history that you will use in chapter 8.</li>
+  <li><code>streamlit</code> makes the web pages, from chapter 4 on.</li>
+  <li><code>python-decouple</code> reads your API keys from the <code>.env</code> file.</li>
+  <li>Each package has a fixed version after <code>==</code>, so that your project uses the same versions as this track.</li>
+</ul>
+
+<p>Install all packages into the active environment.</p>
+
+<pre class="code" data-lang="bash"><code>pip install -r requirements.txt</code></pre>
+
+<p>The installation takes a few minutes. Anaconda keeps the packages inside the <code>langchain</code> environment, so they do not change other Python projects on your computer.</p>
+
+<h3 class="step"><span class="sn">Step 5</span>Create the files for your keys</h3>
+
+<p>Chapters 1 and 2 use cloud models, and each cloud model needs an API key. An API key is a secret text that identifies you to the service, so that the service knows whom to charge. You keep it in a <code>.env</code> file and never put it in your code.</p>
+
+<p>First, create the file <code>.env.sample</code>. It lists the names of the keys with example values, so that other people know which keys the project needs.</p>
+
+<pre class="code" data-lang="text" data-file=".env.sample"><code>GOOGLE_GEMINI_KEY='Your Key Here'
+OPENAI_KEY='Your Key Here'</code></pre>
+
+<p>Then copy it to <code>.env</code>. You will write your real keys in this copy in chapters 1 and 2.</p>
+
+<pre class="code" data-lang="bash"><code>cp .env.sample .env        # macOS and Linux
+copy .env.sample .env      # Windows</code></pre>
+
+<h3 class="step"><span class="sn">Step 6</span>Tell Git what to ignore</h3>
+
+<p>Create the file <code>.gitignore</code> in the root folder. Git reads this file and does not save the files that it lists.</p>
+
+<pre class="code" data-lang="text" data-file=".gitignore"><code>.DS_Store
+.env
+__pycache__
+.venv
+.vscode</code></pre>
+
+<ul class="explain">
+  <li><code>.env</code> keeps your real keys out of the repository, so that nobody can read them on GitHub.</li>
+  <li><code>.venv</code> and <code>__pycache__</code> are files that Python creates. Anyone can make them again, so they do not belong in the repository.</li>
+  <li><code>.DS_Store</code> and <code>.vscode</code> are files of macOS and of Visual Studio Code.</li>
+</ul>
+
+<h3 class="step"><span class="sn">Step 7</span>Install Ollama and download the models</h3>
+
+<p>Download Ollama from <a href="https://ollama.com/download">ollama.com/download</a> and install it. On Windows and macOS, Ollama then runs in the background. On Linux, the install script starts it as a service.</p>
+
+<p>Then download the two models that this track uses.</p>
+
+<pre class="code" data-lang="bash"><code>ollama pull gemma:2b
+ollama pull mistral
+ollama list</code></pre>
+
+<ul class="explain">
+  <li><code>gemma:2b</code> is a small model from Google, about 1.7 GB. It runs well on a normal laptop, so most chapters use it.</li>
+  <li><code>mistral</code> is a larger model, about 4 GB. Chapter 4 uses it.</li>
+  <li><code>ollama list</code> shows the models on your computer. Both names must be in the list.</li>
+</ul>
+
+<p>To try a model directly, ask it a question in the terminal.</p>
+
+<pre class="code" data-lang="bash"><code>ollama run gemma:2b "Say hello in one short sentence."</code></pre>
+
+<h3 class="step"><span class="sn">Step 8</span>Check the setup</h3>
+
+<p>Run this command in the active environment. It imports the main packages and prints one word if they load.</p>
+
+<pre class="code" data-lang="bash"><code>python -c "import langchain_core, langchain_ollama, streamlit; print('Ready')"</code></pre>
+
+<pre class="code" data-lang="output"><code>Ready</code></pre>
+
+<h3 class="step"><span class="sn">Step 9</span>Learn how to run a lesson</h3>
+
+<p>The lessons of this track run in two ways. A lesson that prints to the terminal runs with <code>python</code>, such as the lesson of chapter 3.</p>
+
+<pre class="code" data-lang="bash"><code>python code/03_using_ollama/app_ollama.py</code></pre>
+
+<p>A lesson with a web page runs with <code>streamlit run</code>. Streamlit starts a small web server and prints its address.</p>
+
+<pre class="code" data-lang="bash"><code>streamlit run code/05_using_prompt_template/app_ollama.py</code></pre>
+
+<pre class="code" data-lang="output"><code>  You can now view your Streamlit app in your browser.
+
+  Local URL: http://localhost:8501
+  Network URL: http://192.168.1.20:8501</code></pre>
+
+<p>Open the Local URL in your browser, if Streamlit does not open it for you. The page then shows the app. The Network URL is for other devices on the same network, and its numbers depend on your network. To stop the app, press <code>Ctrl+C</code> in the terminal.</p>
+
+<h3>If something fails</h3>
+<div class="table-wrap">
+  <table>
+    <thead><tr><th>What you see</th><th>Cause</th><th>Fix</th></tr></thead>
+    <tbody>
+      <tr><td><code>conda</code> is not found</td><td>The terminal does not know Anaconda</td><td>On Windows, use the Anaconda Prompt. On macOS and Linux, open a new terminal after the installation.</td></tr>
+      <tr><td><code>ModuleNotFoundError</code></td><td>The environment is not active</td><td>Run <code>conda activate langchain</code> and try again.</td></tr>
+      <tr><td><code>httpx.ConnectError</code> and "Connection refused"</td><td>Ollama does not run</td><td>Start the Ollama app, or run <code>ollama serve</code> in a second terminal.</td></tr>
+      <tr><td>An error that the model is not found</td><td>The model is not downloaded</td><td>Run <code>ollama pull gemma:2b</code> or <code>ollama pull mistral</code>.</td></tr>
+      <tr><td>Streamlit shows port 8502 and not 8501</td><td>Another app uses port 8501</td><td>Use the address that Streamlit prints, or stop the other app.</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="block security">
+  <div class="label">Security lens</div>
+  <p>An API key works like a password that can cost money. Keep it only in <code>.env</code>, and check that <code>.gitignore</code> lists <code>.env</code> before your first commit. If a key reaches GitHub by mistake, delete the key in the account of the provider at once and make a new one. Removing the file from the repository is not enough, because the old commit still holds the key.</p>
+</div>
+
+<h2>Check yourself</h2>
+<div class="quiz">
+  <details>
+    <summary><span class="qq">Why does an answer from a language model sometimes sound right and still be wrong?</span></summary>
+    <div class="ans"><p>The model predicts likely words from the text that it learned. It does not look up facts, so a fluent answer can contain a wrong fact.</p></div>
+  </details>
+  <details>
+    <summary><span class="qq">What does LangChain give you that a direct call to one model does not?</span></summary>
+    <div class="ans"><p>One common way to call many models, so that one line changes the model. It also gives building blocks, such as templates, chains and memory.</p></div>
+  </details>
+  <details>
+    <summary><span class="qq">You open a new terminal and get <code>ModuleNotFoundError</code>. What is the most likely cause?</span></summary>
+    <div class="ans"><p>The <code>langchain</code> environment is not active in the new terminal. Run <code>conda activate langchain</code>.</p></div>
+  </details>
+</div>
+
+<h2>Key terms at a glance</h2>
+<div class="table-wrap">
+  <table class="kw">
+    <thead><tr><th>Term</th><th>Meaning</th></tr></thead>
+    <tbody>
+      <tr><td>Large language model (LLM)</td><td>A program that learned from a large amount of text and writes text by predicting the next word</td></tr>
+      <tr><td>LangChain</td><td>A Python library with one common interface to many models and building blocks for AI apps</td></tr>
+      <tr><td>Anaconda environment</td><td>A separate set of Python and packages for one project, so that projects do not affect each other</td></tr>
+      <tr><td>Ollama</td><td>A free tool that runs language models on your own computer</td></tr>
+      <tr><td>API key</td><td>A secret text that identifies you to a cloud service</td></tr>
+      <tr><td><code>.gitignore</code></td><td>A file that lists the files that Git must not save, such as <code>.env</code></td></tr>
+      <tr><td>Local URL</td><td>The address of your Streamlit app on your own computer, such as <code>http://localhost:8501</code></td></tr>
+    </tbody>
+  </table>
+</div>
+
+<h2>Next</h2>
+<p>Your project is ready. Chapters 1 and 2 will connect your program to Gemini and OpenAI, and they will come soon. Until then, continue with <a href="03-using-ollama.html">chapter 3</a>, where you will send your first question to a model on your own computer.</p>
+</article>
+</main>
+
+<script src="../../assets/js/site.js?v=20261029d"></script>
+</body>
+</html>

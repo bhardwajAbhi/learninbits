@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 306" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">Streamlit runs the whole script again after each action</title>
+  <desc id="d">Every action on the page starts the script again from the first line to the last. Run 1, the page opens. The text box is empty, so the if statement is false and the model is not called. Run 2, the user types a question and presses Enter. Now query holds the question, the if statement is true and llm.invoke runs. At the end of run 2, st.write shows the answer below the text box. The script reaches st.write only after the model answers, so the page waits for the full answer. Streamlit keeps no variables between runs, and chapter 8 uses session state for that.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<text x="20" y="34" font-size="12.6" fill="#1c2230" text-anchor="start" font-weight="700">Every action on the page starts the script again, from the first line to the last</text>
+<rect x="20" y="52" width="260" height="170" rx="12" fill="#fff" stroke="#5d6b7e" stroke-width="1.6"/>
+<path d="M32 52 h236 a12 12 0 0 1 12 12 v22 h-260 v-22 a12 12 0 0 1 12 -12z" fill="#5d6b7e"/>
+<text x="34" y="73.464" font-size="12.4" fill="#fff" text-anchor="start" font-weight="700">Run 1, page opens</text>
+<text x="34" y="108" font-size="12" fill="#4a5263" text-anchor="start">Text box is empty</text>
+<text x="34" y="126.6" font-size="12" fill="#4a5263" text-anchor="start">if query is False</text>
+<text x="34" y="145.2" font-size="12" fill="#4a5263" text-anchor="start">No call to the model</text>
+<path d="M282 137 L 308 137" fill="none" stroke="#1c2230" stroke-width="1.6" marker-end="url(#m0)"/>
+<rect x="310" y="52" width="260" height="170" rx="12" fill="#fff" stroke="#2f62c8" stroke-width="1.6"/>
+<path d="M322 52 h236 a12 12 0 0 1 12 12 v22 h-260 v-22 a12 12 0 0 1 12 -12z" fill="#2f62c8"/>
+<text x="324" y="73.464" font-size="12.4" fill="#fff" text-anchor="start" font-weight="700">Run 2, user presses Enter</text>
+<text x="324" y="108" font-size="12" fill="#4a5263" text-anchor="start">query holds the question</text>
+<text x="324" y="126.6" font-size="12" fill="#4a5263" text-anchor="start">if query is True</text>
+<text x="324" y="145.2" font-size="12" fill="#4a5263" text-anchor="start">llm.invoke(query) runs</text>
+<path d="M572 137 L 598 137" fill="none" stroke="#1c2230" stroke-width="1.6" marker-end="url(#m0)"/>
+<rect x="600" y="52" width="260" height="170" rx="12" fill="#fff" stroke="#0f8a6a" stroke-width="1.6"/>
+<path d="M612 52 h236 a12 12 0 0 1 12 12 v22 h-260 v-22 a12 12 0 0 1 12 -12z" fill="#0f8a6a"/>
+<text x="614" y="73.464" font-size="12.4" fill="#fff" text-anchor="start" font-weight="700">Run 2, end of the script</text>
+<text x="614" y="108" font-size="12" fill="#4a5263" text-anchor="start">st.write(response.content)</text>
+<text x="614" y="126.6" font-size="12" fill="#4a5263" text-anchor="start">The answer appears</text>
+<text x="614" y="145.2" font-size="12" fill="#4a5263" text-anchor="start">below the text box</text>
+<rect x="20" y="240" width="840" height="52" rx="10" fill="#f2efe8"/>
+<text x="440" y="262" font-size="12" fill="#1c2230" text-anchor="middle" font-weight="600">The script reaches st.write only after the model answers, so the page waits for the full answer.</text>
+<text x="440" y="281" font-size="11.6" fill="#4a5263" text-anchor="middle">Streamlit keeps no variables between runs. Chapter 8 uses session state for that.</text>
+</svg>

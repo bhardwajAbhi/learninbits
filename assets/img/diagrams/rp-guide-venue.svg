@@ -1,0 +1,88 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 964" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">Choosing a venue for a paper</title>
+  <desc id="d">If the work is at an early stage, choose a workshop or symposium. If you need fast publication and live feedback, choose a conference. If the work is long, detailed and of archival value, choose a journal. If an editor invited a contribution with broader context, write a book chapter. Then check the publisher, the indexing, the fees and the scope, and write in its template from day one.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="70" y="34" width="360" height="64" rx="32" fill="#1c2230"/>
+<text x="250" y="59" font-size="13.6" fill="#fff" text-anchor="middle" font-weight="700">You have results</text>
+<text x="250" y="77" font-size="13.6" fill="#fff" text-anchor="middle" font-weight="700">that are worth sharing</text>
+<path d="M250 132 L430 184 L250 236 L70 184 Z" fill="#fff" stroke="#2f62c8" stroke-width="2"/>
+<text x="250" y="180" font-size="13.6" fill="#1f4a9e" text-anchor="middle" font-weight="700">Is the work at an early stage</text>
+<text x="250" y="198" font-size="13.6" fill="#1f4a9e" text-anchor="middle" font-weight="700">or still in progress?</text>
+<rect x="462" y="126.5" width="398" height="115" rx="12" fill="#fff" stroke="#b7791f" stroke-width="1.8"/>
+<rect x="462" y="126.5" width="6" height="115" rx="3" fill="#b7791f"/>
+<text x="482" y="154.5" font-size="14.2" fill="#8a5a12" text-anchor="start" font-weight="700">A workshop or a symposium</text>
+<text x="482" y="178.5" font-size="12.8" fill="#1c2230" text-anchor="start">Early feedback on a niche topic.</text>
+<text x="482" y="197.5" font-size="12.8" fill="#1c2230" text-anchor="start">Extend it later into a conference</text>
+<text x="482" y="216.5" font-size="12.8" fill="#1c2230" text-anchor="start">or journal paper.</text>
+<rect x="780" y="138.5" width="66" height="22" rx="11" fill="#fdf4e3" stroke="#b7791f" stroke-width="1.2"/>
+<text x="813" y="153.46" font-size="11" fill="#8a5a12" text-anchor="middle" font-weight="600">Part 4</text>
+<path d="M430 184 H456" fill="none" stroke="#b7791f" stroke-width="1.8" marker-end="url(#m6)"/>
+<text x="446" y="177" font-size="12" fill="#8a5a12" text-anchor="middle" font-weight="800">Yes</text>
+<path d="M250 275.5 L430 327.5 L250 379.5 L70 327.5 Z" fill="#fff" stroke="#2f62c8" stroke-width="2"/>
+<text x="250" y="323.5" font-size="13.6" fill="#1f4a9e" text-anchor="middle" font-weight="700">Do you need fast publication</text>
+<text x="250" y="341.5" font-size="13.6" fill="#1f4a9e" text-anchor="middle" font-weight="700">and live feedback?</text>
+<rect x="462" y="270" width="398" height="115" rx="12" fill="#fff" stroke="#0f8a6a" stroke-width="1.8"/>
+<rect x="462" y="270" width="6" height="115" rx="3" fill="#0f8a6a"/>
+<text x="482" y="298" font-size="14.2" fill="#0b6650" text-anchor="start" font-weight="700">A conference</text>
+<text x="482" y="322" font-size="12.8" fill="#1c2230" text-anchor="start">Publication in months, a talk,</text>
+<text x="482" y="341" font-size="12.8" fill="#1c2230" text-anchor="start">feedback and networking. Check</text>
+<text x="482" y="360" font-size="12.8" fill="#1c2230" text-anchor="start">the indexing of the proceedings.</text>
+<rect x="780" y="282" width="66" height="22" rx="11" fill="#e3f4ee" stroke="#0f8a6a" stroke-width="1.2"/>
+<text x="813" y="296.96" font-size="11" fill="#0b6650" text-anchor="middle" font-weight="600">Part 4</text>
+<path d="M430 327.5 H456" fill="none" stroke="#0f8a6a" stroke-width="1.8" marker-end="url(#m4)"/>
+<text x="446" y="320.5" font-size="12" fill="#0b6650" text-anchor="middle" font-weight="800">Yes</text>
+<path d="M250 419 L430 471 L250 523 L70 471 Z" fill="#fff" stroke="#2f62c8" stroke-width="2"/>
+<text x="250" y="467" font-size="13.6" fill="#1f4a9e" text-anchor="middle" font-weight="700">Is the work long, detailed</text>
+<text x="250" y="485" font-size="13.6" fill="#1f4a9e" text-anchor="middle" font-weight="700">and of archival value?</text>
+<rect x="462" y="413.5" width="398" height="115" rx="12" fill="#fff" stroke="#2f62c8" stroke-width="1.8"/>
+<rect x="462" y="413.5" width="6" height="115" rx="3" fill="#2f62c8"/>
+<text x="482" y="441.5" font-size="14.2" fill="#1f4a9e" text-anchor="start" font-weight="700">A journal</text>
+<text x="482" y="465.5" font-size="12.8" fill="#1c2230" text-anchor="start">Deep, rigorous peer review and</text>
+<text x="482" y="484.5" font-size="12.8" fill="#1c2230" text-anchor="start">a longer cycle, for complete and</text>
+<text x="482" y="503.5" font-size="12.8" fill="#1c2230" text-anchor="start">archival work.</text>
+<rect x="780" y="425.5" width="66" height="22" rx="11" fill="#eef3fb" stroke="#2f62c8" stroke-width="1.2"/>
+<text x="813" y="440.46" font-size="11" fill="#1f4a9e" text-anchor="middle" font-weight="600">Part 4</text>
+<path d="M430 471 H456" fill="none" stroke="#2f62c8" stroke-width="1.8" marker-end="url(#m3)"/>
+<text x="446" y="464" font-size="12" fill="#1f4a9e" text-anchor="middle" font-weight="800">Yes</text>
+<path d="M250 562.5 L430 614.5 L250 666.5 L70 614.5 Z" fill="#fff" stroke="#2f62c8" stroke-width="2"/>
+<text x="250" y="610.5" font-size="13.6" fill="#1f4a9e" text-anchor="middle" font-weight="700">Did an editor invite a chapter</text>
+<text x="250" y="628.5" font-size="13.6" fill="#1f4a9e" text-anchor="middle" font-weight="700">with broader context?</text>
+<rect x="462" y="566.5" width="398" height="96" rx="12" fill="#fff" stroke="#7a4fc2" stroke-width="1.8"/>
+<rect x="462" y="566.5" width="6" height="96" rx="3" fill="#7a4fc2"/>
+<text x="482" y="594.5" font-size="14.2" fill="#58378f" text-anchor="start" font-weight="700">A book chapter</text>
+<text x="482" y="618.5" font-size="12.8" fill="#1c2230" text-anchor="start">An invited contribution to an</text>
+<text x="482" y="637.5" font-size="12.8" fill="#1c2230" text-anchor="start">edited volume or collection.</text>
+<rect x="780" y="578.5" width="66" height="22" rx="11" fill="#f3f0fa" stroke="#7a4fc2" stroke-width="1.2"/>
+<text x="813" y="593.46" font-size="11" fill="#58378f" text-anchor="middle" font-weight="600">Part 4</text>
+<path d="M430 614.5 H456" fill="none" stroke="#7a4fc2" stroke-width="1.8" marker-end="url(#m5)"/>
+<text x="446" y="607.5" font-size="12" fill="#58378f" text-anchor="middle" font-weight="800">Yes</text>
+<rect x="70" y="700.5" width="360" height="64" rx="12" fill="#eef0f3" stroke="#5d6b7e" stroke-width="1.5"/>
+<text x="250" y="728.5" font-size="13.3" fill="#3f4a59" text-anchor="middle" font-weight="600">Check the venue before</text>
+<text x="250" y="746.5" font-size="13.3" fill="#3f4a59" text-anchor="middle" font-weight="600">you submit</text>
+<rect x="462" y="675" width="398" height="115" rx="12" fill="#fff" stroke="#5d6b7e" stroke-width="1.8"/>
+<rect x="462" y="675" width="6" height="115" rx="3" fill="#5d6b7e"/>
+<text x="482" y="703" font-size="14.2" fill="#3f4a59" text-anchor="start" font-weight="700">Four checks</text>
+<text x="482" y="727" font-size="12.8" fill="#1c2230" text-anchor="start">Publisher reputation (IEEE, ACM, Springer,</text>
+<text x="482" y="746" font-size="12.8" fill="#1c2230" text-anchor="start">Elsevier), indexing, fees (an APC for open</text>
+<text x="482" y="765" font-size="12.8" fill="#1c2230" text-anchor="start">access) and a scope that matches the topic.</text>
+<rect x="780" y="687" width="66" height="22" rx="11" fill="#eef0f3" stroke="#5d6b7e" stroke-width="1.2"/>
+<text x="813" y="701.96" font-size="11" fill="#3f4a59" text-anchor="middle" font-weight="600">Part 4</text>
+<path d="M430 732.5 H456" fill="none" stroke="#5d6b7e" stroke-width="1.6" marker-end="url(#m8)"/>
+<rect x="70" y="834" width="398" height="96" rx="12" fill="#fff" stroke="#0f8a6a" stroke-width="1.8"/>
+<rect x="70" y="834" width="6" height="96" rx="3" fill="#0f8a6a"/>
+<text x="90" y="862" font-size="14.2" fill="#0b6650" text-anchor="start" font-weight="700">Write in its template from day one</text>
+<text x="90" y="886" font-size="12.8" fill="#1c2230" text-anchor="start">Download the official template now.</text>
+<text x="90" y="905" font-size="12.8" fill="#1c2230" text-anchor="start">It saves hours of reformatting later.</text>
+<rect x="388" y="846" width="66" height="22" rx="11" fill="#e3f4ee" stroke="#0f8a6a" stroke-width="1.2"/>
+<text x="421" y="860.96" font-size="11" fill="#0b6650" text-anchor="middle" font-weight="600">Part 13</text>
+<path d="M250 98 V128" fill="none" stroke="#1c2230" stroke-width="1.8" marker-end="url(#m0)"/>
+<path d="M250 236 V271.5" fill="none" stroke="#1c2230" stroke-width="1.8" marker-end="url(#m0)"/>
+<text x="268" y="252" font-size="12" fill="#1c2230" text-anchor="middle" font-weight="800">No</text>
+<path d="M250 379.5 V415" fill="none" stroke="#1c2230" stroke-width="1.8" marker-end="url(#m0)"/>
+<text x="268" y="395.5" font-size="12" fill="#1c2230" text-anchor="middle" font-weight="800">No</text>
+<path d="M250 523 V558.5" fill="none" stroke="#1c2230" stroke-width="1.8" marker-end="url(#m0)"/>
+<text x="268" y="539" font-size="12" fill="#1c2230" text-anchor="middle" font-weight="800">No</text>
+<path d="M250 666.5 V696.5" fill="none" stroke="#1c2230" stroke-width="1.8" marker-end="url(#m0)"/>
+<text x="268" y="682.5" font-size="12" fill="#1c2230" text-anchor="middle" font-weight="800">No</text>
+<path d="M250 764.5 V830" fill="none" stroke="#1c2230" stroke-width="1.8" marker-end="url(#m0)"/>
+</svg>

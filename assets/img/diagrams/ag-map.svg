@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 410" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">The map of agentic reasoning, three layers and two ways to build them</title>
+  <desc id="d">A grid with three rows and two columns. The rows are the three layers. One agent plans, uses tools and searches. Agents that improve learn from feedback and memory. Many agents work in roles as a team. The columns are the two ways to build each layer. Prompting only keeps the model the same, with examples such as ReAct, Tree of thoughts, Self-Ask and IRCoT for one agent, Reflexion, Self-Refine, MemGPT and Voyager for agents that improve, and MetaGPT, AutoGen and CAMEL for many agents. Training the model moves the skill into the model, with Toolformer, ToolRL and Search-R1 for one agent, ReST, AgentTuning and Memory-R1 for agents that improve, and GPTSwarm and trained team topologies for many agents.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="250" y="20" width="290" height="56" rx="12" fill="#2f62c8"/>
+<text x="395" y="44" font-size="13.4" fill="#fff" text-anchor="middle" font-weight="700">Prompting only</text>
+<text x="395" y="63" font-size="11" fill="#ffffffdd" text-anchor="middle">the model stays the same</text>
+<rect x="560" y="20" width="290" height="56" rx="12" fill="#7a4fc2"/>
+<text x="705" y="44" font-size="13.4" fill="#fff" text-anchor="middle" font-weight="700">Training the model</text>
+<text x="705" y="63" font-size="11" fill="#ffffffdd" text-anchor="middle">the skill moves into the model</text>
+<rect x="20" y="92" width="214" height="80" rx="12" fill="#eef0f3" stroke="#5d6b7e" stroke-width="1.5"/>
+<text x="127" y="128" font-size="13.4" fill="#3f4a59" text-anchor="middle" font-weight="700">One agent</text>
+<text x="127" y="148" font-size="11" fill="#4a5263" text-anchor="middle">plan, use tools, search</text>
+<rect x="250" y="92" width="290" height="80" rx="12" fill="#fff" stroke="#d9d4c7" stroke-width="1.2"/>
+<text x="395" y="126" font-size="12" fill="#1c2230" text-anchor="middle" font-weight="600">ReAct, Tree of thoughts</text>
+<text x="395" y="148" font-size="12" fill="#4a5263" text-anchor="middle">Self-Ask, IRCoT</text>
+<rect x="560" y="92" width="290" height="80" rx="12" fill="#fff" stroke="#d9d4c7" stroke-width="1.2"/>
+<text x="705" y="126" font-size="12" fill="#1c2230" text-anchor="middle" font-weight="600">Toolformer, ToolRL</text>
+<text x="705" y="148" font-size="12" fill="#4a5263" text-anchor="middle">Search-R1</text>
+<rect x="20" y="188" width="214" height="80" rx="12" fill="#e3f4ee" stroke="#0f8a6a" stroke-width="1.5"/>
+<text x="127" y="224" font-size="13.4" fill="#0b6650" text-anchor="middle" font-weight="700">Agents that improve</text>
+<text x="127" y="244" font-size="11" fill="#4a5263" text-anchor="middle">feedback and memory</text>
+<rect x="250" y="188" width="290" height="80" rx="12" fill="#fff" stroke="#d9d4c7" stroke-width="1.2"/>
+<text x="395" y="222" font-size="12" fill="#1c2230" text-anchor="middle" font-weight="600">Reflexion, Self-Refine</text>
+<text x="395" y="244" font-size="12" fill="#4a5263" text-anchor="middle">MemGPT, Voyager</text>
+<rect x="560" y="188" width="290" height="80" rx="12" fill="#fff" stroke="#d9d4c7" stroke-width="1.2"/>
+<text x="705" y="222" font-size="12" fill="#1c2230" text-anchor="middle" font-weight="600">ReST, AgentTuning</text>
+<text x="705" y="244" font-size="12" fill="#4a5263" text-anchor="middle">Memory-R1</text>
+<rect x="20" y="284" width="214" height="80" rx="12" fill="#fdf4e3" stroke="#b7791f" stroke-width="1.5"/>
+<text x="127" y="320" font-size="13.4" fill="#8a5a12" text-anchor="middle" font-weight="700">Many agents</text>
+<text x="127" y="340" font-size="11" fill="#4a5263" text-anchor="middle">roles and teamwork</text>
+<rect x="250" y="284" width="290" height="80" rx="12" fill="#fff" stroke="#d9d4c7" stroke-width="1.2"/>
+<text x="395" y="318" font-size="12" fill="#1c2230" text-anchor="middle" font-weight="600">MetaGPT, AutoGen</text>
+<text x="395" y="340" font-size="12" fill="#4a5263" text-anchor="middle">CAMEL</text>
+<rect x="560" y="284" width="290" height="80" rx="12" fill="#fff" stroke="#d9d4c7" stroke-width="1.2"/>
+<text x="705" y="318" font-size="12" fill="#1c2230" text-anchor="middle" font-weight="600">GPTSwarm</text>
+<text x="705" y="340" font-size="12" fill="#4a5263" text-anchor="middle">trained team topologies</text>
+<text x="440" y="396" font-size="11.4" fill="#4a5263" text-anchor="middle" font-style="italic">Each cell names a few well-known examples from the survey.</text>
+</svg>

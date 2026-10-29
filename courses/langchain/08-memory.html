@@ -1,0 +1,596 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Chat history · LangChain, Step by Step · LearnInBits</title>
+  <meta name="description" content="Send the earlier messages with each new question, so that the app can follow a conversation. Two builds, a page that shows the history and a chat page with streamed answers.">
+  <link rel="icon" href="../../assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,500;0,8..60,600;1,8..60,500&display=swap">
+  <link rel="stylesheet" href="../../assets/css/style.css?v=20261029d">
+  <script>try{var t=localStorage.getItem("lib-theme");t=t?JSON.parse(t):(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+</head>
+<body data-root="../../" data-page="chapter" data-course="langchain" data-id="08-memory">
+
+<main id="main">
+<article>
+
+
+<div class="block oneline">
+  <div class="label">In one line</div>
+  <p>A chat history sends the earlier messages with each new question, so that the model can answer follow-up questions in a conversation.</p>
+</div>
+
+<section class="learn">
+  <h2>What you will learn</h2>
+  <ul>
+    <li>Why a model forgets each question, and how a chat history fixes that</li>
+    <li>How to build a chat prompt with a system message, a place for the history and the new question</li>
+    <li>How LangChain keeps and adds the history for you</li>
+    <li>How to build a chat page that shows each answer while the model writes it</li>
+  </ul>
+  <p class="needs">Read <a href="06-lcel.html">chapter 6</a> first, because this chapter uses a chain. <a href="04-streamlit-gui.html">Chapter 4</a> explains the reruns of Streamlit.</p>
+</section>
+
+<h2>The idea</h2>
+<p>A model has no memory. Each call starts fresh, and the model sees only what that call sends. If the user asks "What is a dangerous permission?" and then "Give me two examples of it", the second call does not know what "it" means.</p>
+<p>A chat history fixes this. The app keeps every question and every answer. With each new question, it sends the earlier messages too, so that the model can read the whole conversation. The model still has no memory, but each call now carries the context that it needs.</p>
+<p>Streamlit adds one more problem. It runs the whole script again after each action, so a normal Python list starts empty each time. Streamlit keeps data between reruns in session state, a store that lasts while the browser tab is open. LangChain can keep the history there.</p>
+
+
+<div class="block analogy">
+  <div class="label">Real-life analogy</div>
+  <p>Think of a support desk where a different person answers each call. If the notes of earlier calls are attached to each new call, the person can continue where the last one stopped. Without the notes, the caller must explain everything again.</p>
+</div>
+
+<figure class="diagram">
+  <div class="frame"><img src="../../assets/img/diagrams/lc-08-memory.svg" alt="Two columns. Without memory, call 1 sends the system message and question 1, what is a dangerous permission. Call 2 sends the system message and question 2, give me two examples of it. The model does not know what it means. With memory, call 1 is the same. Call 2 sends the system message, question 1, answer 1 and question 2. The model sees question 1 and answer 1, so it makes sense." loading="lazy"></div>
+  <figcaption>Without memory, the second call has no context. With memory, it carries the first question and answer.</figcaption>
+</figure>
+
+<figure class="diagram">
+  <div class="frame"><img src="../../assets/img/diagrams/lc-08-history.svg" alt="RunnableWithMessageHistory wraps the chain. A new question goes into the ChatPromptTemplate, which has a system message with your rules, a MessagesPlaceholder for chat_history and a human message with the input. First, the wrapper reads the history from StreamlitChatMessageHistory, which keeps the messages in st.session_state langchain_messages, and puts it into the placeholder. The model answers with the history. Second, the wrapper saves the new question and the answer back into the history." loading="lazy"></div>
+  <figcaption>The wrapper reads the history before the call and saves the new messages after it.</figcaption>
+</figure>
+
+<h2>What you will build</h2>
+<p>You will build two pages from the same chain. The first page shows the answer and, below it, the full history, so that you can see what the model receives. The second page is a chat window, like the apps that you already know, and it shows each answer while the model writes it.</p>
+
+
+<figure class="diagram">
+  <div class="frame"><img src="../../assets/img/diagrams/lc-08-flow.svg" alt="Template, ChatPromptTemplate.from_messages([...]), A system message, a MessagesPlaceholder and the human input. History, chat_with_history = RunnableWithMessageHistory(chain, ...), Reads and saves the messages in StreamlitChatMessageHistory. Page, for message in st.session_state[&quot;langchain_messages&quot;], Shows the earlier messages as chat bubbles after every rerun. Call, chat_with_history.stream({&quot;input&quot; question}, config=...), Runs when the user sends a message in st.chat_input. Stream, st.write_stream(response), The answer appears piece by piece." loading="lazy"></div>
+  <figcaption>The chat page shows the earlier messages, sends the new one with the history and streams the answer.</figcaption>
+</figure>
+
+<h2>Build the history page</h2>
+
+<h3 class="step"><span class="sn">Step 1</span>Create the file</h3>
+
+<p>In the <code>code</code> folder, create the folder <code>08_adding_memory</code> and in it the file <code>chat_history_example.py</code>.</p>
+
+<h3 class="step"><span class="sn">Step 2</span>Import the libraries</h3>
+
+<pre class="code" data-lang="python" data-file="code/08_adding_memory/chat_history_example.py"><code>from langchain_ollama.chat_models import ChatOllama
+
+# Adding history / memory
+from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
+from langchain_community.chat_message_histories import StreamlitChatMessageHistory
+from langchain_core.runnables.history import RunnableWithMessageHistory
+
+from langchain_core.globals import set_debug
+import streamlit as st</code></pre>
+
+<ul class="explain">
+  <li><code>ChatPromptTemplate</code> makes a template from a list of messages, each with a role, such as system or human.</li>
+  <li><code>MessagesPlaceholder</code> marks the place in the template where the history goes.</li>
+  <li><code>StreamlitChatMessageHistory</code> keeps the messages in the session state of Streamlit, so that they survive each rerun.</li>
+  <li><code>RunnableWithMessageHistory</code> wraps a chain. It adds the history before each call and saves the new messages after it.</li>
+</ul>
+
+<h3 class="step"><span class="sn">Step 3</span>Load the model and write the chat prompt</h3>
+
+<pre class="code" data-lang="python" data-file="code/08_adding_memory/chat_history_example.py"><code>set_debug(True)
+
+llm = ChatOllama(model="gemma:2b")
+
+prompt = ChatPromptTemplate.from_messages(
+    [
+        (
+        "system",
+            """
+            You are an Android Security and Secure Coding Assistant.
+
+            You help developers understand:
+            - Android Security
+            - Secure Coding Practices
+            - Android Internals
+            - Android Security Model
+            - Mobile Malware
+            - OWASP Mobile Top 10
+            - Privacy
+            - Reverse Engineering
+            - Android Architecture
+
+            Use the previous conversation to understand follow-up questions.
+
+            Keep your answers concise and technical.
+            """
+        ),
+        MessagesPlaceholder(variable_name="chat_history"),
+        ("human", "{input}")
+    ]
+)</code></pre>
+
+<ul class="explain">
+  <li>The system message gives the model its role and the topics that it covers. It is the same in every call, so that the assistant keeps one style.</li>
+  <li>"Use the previous conversation to understand follow-up questions." tells the model why the history is there.</li>
+  <li><code>MessagesPlaceholder(variable_name="chat_history")</code> is the place for the earlier messages. The name must match <code>history_messages_key</code> in the next step.</li>
+  <li><code>("human", "{input}")</code> is the new question. Its slot name must match <code>input_messages_key</code>.</li>
+</ul>
+
+<h3 class="step"><span class="sn">Step 4</span>Wrap the chain with the history</h3>
+
+<pre class="code" data-lang="python" data-file="code/08_adding_memory/chat_history_example.py"><code>chain = prompt | llm
+
+history = StreamlitChatMessageHistory()
+
+chat_with_history = RunnableWithMessageHistory(
+    chain, 
+    lambda session_id:history,
+    history_messages_key="chat_history",
+    input_messages_key="input",
+)</code></pre>
+
+<ul class="explain">
+  <li><code>chain = prompt | llm</code> is a normal chain, as in chapter 6.</li>
+  <li><code>StreamlitChatMessageHistory()</code> creates the history. It keeps the messages under the key <code>langchain_messages</code> in the session state.</li>
+  <li><code>lambda session_id: history</code> tells the wrapper which history to use for a session. This app has one user, so it always returns the same history.</li>
+  <li><code>history_messages_key</code> and <code>input_messages_key</code> connect the wrapper to the two slots of the template.</li>
+</ul>
+
+<h3 class="step"><span class="sn">Step 5</span>Build the page</h3>
+
+<pre class="code" data-lang="python" data-file="code/08_adding_memory/chat_history_example.py"><code>st.set_page_config(page_title="Android Security Assistant")
+
+st.title("Android Security Assistant")
+
+col1, col2 = st.columns([6, 1])
+
+with col1:
+    question = st.text_input(
+        label="Ask a question",
+        label_visibility="collapsed",
+        placeholder="Ask anything about Android security..."
+    )
+
+with col2:
+    ask_button = st.button(label="Send", use_container_width=True)</code></pre>
+
+<ul class="explain">
+  <li><code>st.columns([6, 1])</code> splits the row into two columns, a wide one for the text box and a narrow one for the button.</li>
+  <li><code>label_visibility="collapsed"</code> hides the label of the text box, so that the row looks like a search bar.</li>
+</ul>
+
+<h3 class="step"><span class="sn">Step 6</span>Ask the question and show the history</h3>
+
+<pre class="code" data-lang="python" data-file="code/08_adding_memory/chat_history_example.py"><code>if ask_button and question.strip():
+    with st.spinner("Thinking..."):
+        response = chat_with_history.invoke(
+            {"input": question},
+            config={"configurable": {"session_id": "any"}}
+        )
+    
+    st.subheader("Answer")
+    st.success(response.content)
+    st.divider()
+
+    # Chat history
+    st.subheader("History")
+    for message in st.session_state["langchain_messages"]:
+        if message.type == "human":
+            st.warning("Question: " + message.content)
+        else:
+            st.info("Answer: " + message.content)
+        
+    st.divider()</code></pre>
+
+<ul class="explain">
+  <li><code>config={"configurable": {"session_id": "any"}}</code> names the session. The wrapper passes this name to the lambda from Step 4.</li>
+  <li><code>st.success</code> shows the answer in a green box.</li>
+  <li>The loop reads <code>st.session_state["langchain_messages"]</code> and shows each message. Questions appear in yellow boxes and answers in blue boxes, so that you can see the full history.</li>
+</ul>
+
+<h3>Run it</h3>
+
+<pre class="code" data-lang="bash"><code>streamlit run code/08_adding_memory/chat_history_example.py</code></pre>
+
+<p>Streamlit will start a small web server and print its address.</p>
+
+<pre class="code" data-lang="output"><code>  You can now view your Streamlit app in your browser.
+
+  Local URL: http://localhost:8501
+  Network URL: http://192.168.1.20:8501</code></pre>
+
+<p>Open the Local URL. Ask <code>What is a dangerous permission?</code> and click Send. Then ask <code>Give me two examples of it.</code></p>
+
+<figure class="shot">
+  <div class="browser"><div class="bar"><i></i><i></i><i></i><span>localhost:8501</span></div><video autoplay muted loop playsinline preload="metadata" poster="https://raw.githubusercontent.com/bhardwajAbhi/learning-langchain/master/code/08_adding_memory/chat_history_example_output.png" aria-label="The Android Security Assistant page with a text box and a Send button. The follow-up question Give me two examples of it is in the box. The answer lists android.permission.CAMERA and android.permission.READ_PHONE_STATE as dangerous permissions. Below it, the History shows the first question, its answer, the follow-up question and its answer."><source src="https://raw.githubusercontent.com/bhardwajAbhi/learning-langchain/master/code/08_adding_memory/chat_history_example_output.webm" type="video/webm"><source src="https://raw.githubusercontent.com/bhardwajAbhi/learning-langchain/master/code/08_adding_memory/chat_history_example_output.mp4" type="video/mp4"></video></div>
+  <figcaption>The follow-up question works, because the history carries the first question and answer.</figcaption>
+</figure>
+
+<h2>Turn it into a chat page</h2>
+
+<p>The second file uses the same imports, template and wrapper. Only the page changes. Create <code>app_ollama.py</code> in the same folder and copy Steps 2 to 4 into it. Then add the page below.</p>
+
+<h3 class="step"><span class="sn">Step 7</span>Show the earlier messages as chat bubbles</h3>
+
+<pre class="code" data-lang="python" data-file="code/08_adding_memory/app_ollama.py"><code>st.set_page_config(page_title="Android Security Assistant")
+
+st.title("Android Security Assistant")
+
+st.caption(
+    "Ask questions about Android Security, Secure Coding, Android Internals, "
+    "OWASP Mobile Top 10, Malware Analysis, Privacy and Reverse Engineering."
+)
+
+# ----------------------------------------------------------
+# Display Previous Conversation
+# ----------------------------------------------------------
+for message in st.session_state["langchain_messages"]:
+
+    role = "user" if message.type == "human" else "assistant"
+
+    with st.chat_message(role):
+        st.markdown(message.content)</code></pre>
+
+<ul class="explain">
+  <li><code>st.caption</code> shows a short line in gray below the title.</li>
+  <li>The loop runs at the start of each rerun and draws all earlier messages again. Without it, the old messages disappear after each question.</li>
+  <li><code>st.chat_message(role)</code> draws a chat bubble with an icon for the user or the assistant.</li>
+</ul>
+
+<h3 class="step"><span class="sn">Step 8</span>Read the question and stream the answer</h3>
+
+<pre class="code" data-lang="python" data-file="code/08_adding_memory/app_ollama.py"><code>question = st.chat_input(
+    "Ask anything about Android Security..."
+)
+
+if question:
+
+    with st.chat_message("user"):
+        st.markdown(question)
+
+    with st.chat_message("assistant"):
+
+        with st.spinner("Thinking..."):
+
+            response = chat_with_history.stream(
+                {"input": question},
+                config={
+                    "configurable": {
+                        "session_id": "any"
+                    }
+                },
+            )
+
+            st.write_stream(response)</code></pre>
+
+<ul class="explain">
+  <li><code>st.chat_input</code> shows a chat box at the bottom of the page. It returns the text after the user presses Enter.</li>
+  <li>The question appears in a user bubble at once, so that the user sees it while the model works.</li>
+  <li><code>chat_with_history.stream(...)</code> works like <code>invoke()</code>, but returns the answer in small pieces while the model writes them.</li>
+  <li><code>st.write_stream(response)</code> shows each piece as it arrives, so that the user starts reading at once. In chapter 4, the user waited for the full answer.</li>
+</ul>
+
+<h3>Run it</h3>
+
+<pre class="code" data-lang="bash"><code>streamlit run code/08_adding_memory/app_ollama.py</code></pre>
+
+<p>Streamlit will start a small web server and print its address.</p>
+
+<pre class="code" data-lang="output"><code>  You can now view your Streamlit app in your browser.
+
+  Local URL: http://localhost:8501
+  Network URL: http://192.168.1.20:8501</code></pre>
+
+<p>Open the Local URL and ask the same two questions in the chat box.</p>
+
+<figure class="shot">
+  <div class="browser"><div class="bar"><i></i><i></i><i></i><span>localhost:8501</span></div><video autoplay muted loop playsinline preload="metadata" poster="https://raw.githubusercontent.com/bhardwajAbhi/learning-langchain/master/code/08_adding_memory/app_ollama_output.png" aria-label="The Android Security Assistant chat page. The user asks what is a dangerous permission, and the assistant answers in a chat bubble. The user then asks give me two examples of it, and the assistant lists android.permission.CAMERA and android.permission.READ_EXTERNAL_STORAGE. A chat box is at the bottom."><source src="https://raw.githubusercontent.com/bhardwajAbhi/learning-langchain/master/code/08_adding_memory/app_ollama_output.webm" type="video/webm"><source src="https://raw.githubusercontent.com/bhardwajAbhi/learning-langchain/master/code/08_adding_memory/app_ollama_output.mp4" type="video/mp4"></video></div>
+  <figcaption>The chat page shows each answer while the model writes it.</figcaption>
+</figure>
+
+<div class="block note">
+  <div class="label">Your output can be different</div>
+  <p>A language model does not always give the same answer. Your examples can be other permissions. The follow-up question will still work, because the history carries the first question.</p>
+</div>
+
+<h2>Look closely</h2>
+<p>In both runs, the model understood "it" in the second question and answered about dangerous permissions. That is the history at work.</p>
+<p>The facts are less reliable. The first page says that <code>READ_PHONE_STATE</code> gives access to the battery level and can take screenshots, which is not what that permission does. The model also defines a dangerous permission as one that gives "more access than necessary". On Android, a dangerous permission is one that protects private data, such as the camera or contacts, so the system asks the user first. A history makes a conversation possible, but it does not make a small model correct.</p>
+
+
+<details class="fold">
+  <summary><span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m16 18 6-6-6-6M8 6l-6 6 6 6"/></svg></span><span class="ft">Full code of the history page<small>code/08_adding_memory/chat_history_example.py</small></span><a class="gh-btn" href="https://github.com/bhardwajAbhi/learning-langchain/blob/master/code/08_adding_memory/chat_history_example.py"><svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M12 .5a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2.1c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1.1-.8.1-.8.1-.8 1.2.1 1.9 1.3 1.9 1.3 1.1 1.9 2.9 1.3 3.6 1 .1-.8.4-1.3.8-1.6-2.7-.3-5.5-1.3-5.5-6a4.7 4.7 0 0 1 1.3-3.2c-.1-.3-.6-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.7 1.7.2 2.9.1 3.2a4.7 4.7 0 0 1 1.3 3.2c0 4.6-2.8 5.6-5.5 6 .4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .5z"/></svg>View on GitHub</a></summary>
+  <div class="fold-body">
+<pre class="code" data-lang="python" data-file="code/08_adding_memory/chat_history_example.py"><code>from langchain_ollama.chat_models import ChatOllama
+
+# Adding history / memory
+from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
+from langchain_community.chat_message_histories import StreamlitChatMessageHistory
+from langchain_core.runnables.history import RunnableWithMessageHistory
+
+from langchain_core.globals import set_debug
+import streamlit as st
+
+# ----------------------------------------------------------
+# Enable LCEL Debug Logs
+# ----------------------------------------------------------
+set_debug(True)
+
+# ----------------------------------------------------------
+# Loading Ollama Model
+# ----------------------------------------------------------
+llm = ChatOllama(model="gemma:2b")
+
+# ----------------------------------------------------------
+# Prompt 
+# ----------------------------------------------------------
+prompt = ChatPromptTemplate.from_messages(
+    [
+        (
+        "system",
+            """
+            You are an Android Security and Secure Coding Assistant.
+
+            You help developers understand:
+            - Android Security
+            - Secure Coding Practices
+            - Android Internals
+            - Android Security Model
+            - Mobile Malware
+            - OWASP Mobile Top 10
+            - Privacy
+            - Reverse Engineering
+            - Android Architecture
+
+            Use the previous conversation to understand follow-up questions.
+
+            Keep your answers concise and technical.
+            """
+        ),
+        MessagesPlaceholder(variable_name="chat_history"),
+        ("human", "{input}")
+    ]
+)
+
+
+# ----------------------------------------------------------
+# LCEL Chain with conversation history (memory)
+# ----------------------------------------------------------
+chain = prompt | llm
+
+history = StreamlitChatMessageHistory()
+
+chat_with_history = RunnableWithMessageHistory(
+    chain, 
+    lambda session_id:history,
+    history_messages_key="chat_history",
+    input_messages_key="input",
+)
+
+# ----------------------------------------------------------
+# Building Streamlit UI
+# ----------------------------------------------------------
+st.set_page_config(page_title="Android Security Assistant")
+
+st.title("Android Security Assistant")
+
+col1, col2 = st.columns([6, 1])
+
+with col1:
+    question = st.text_input(
+        label="Ask a question",
+        label_visibility="collapsed",
+        placeholder="Ask anything about Android security..."
+    )
+
+with col2:
+    ask_button = st.button(label="Send", use_container_width=True)
+
+# ----------------------------------------------------------
+# Generating Response
+# ----------------------------------------------------------
+if ask_button and question.strip():
+    with st.spinner("Thinking..."):
+        response = chat_with_history.invoke(
+            {"input": question},
+            config={"configurable": {"session_id": "any"}}
+        )
+    
+    st.subheader("Answer")
+    st.success(response.content)
+    st.divider()
+
+    # Chat history
+    st.subheader("History")
+    for message in st.session_state["langchain_messages"]:
+        if message.type == "human":
+            st.warning("Question: " + message.content)
+        else:
+            st.info("Answer: " + message.content)
+        
+    st.divider()</code></pre>
+  </div>
+</details>
+
+<details class="fold">
+  <summary><span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m16 18 6-6-6-6M8 6l-6 6 6 6"/></svg></span><span class="ft">Full code of the chat page<small>code/08_adding_memory/app_ollama.py</small></span><a class="gh-btn" href="https://github.com/bhardwajAbhi/learning-langchain/blob/master/code/08_adding_memory/app_ollama.py"><svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M12 .5a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2.1c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1.1-.8.1-.8.1-.8 1.2.1 1.9 1.3 1.9 1.3 1.1 1.9 2.9 1.3 3.6 1 .1-.8.4-1.3.8-1.6-2.7-.3-5.5-1.3-5.5-6a4.7 4.7 0 0 1 1.3-3.2c-.1-.3-.6-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.7 1.7.2 2.9.1 3.2a4.7 4.7 0 0 1 1.3 3.2c0 4.6-2.8 5.6-5.5 6 .4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .5z"/></svg>View on GitHub</a></summary>
+  <div class="fold-body">
+<pre class="code" data-lang="python" data-file="code/08_adding_memory/app_ollama.py"><code>from langchain_ollama.chat_models import ChatOllama
+
+# Adding history / memory
+from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
+from langchain_community.chat_message_histories import StreamlitChatMessageHistory
+from langchain_core.runnables.history import RunnableWithMessageHistory
+
+from langchain_core.globals import set_debug
+import streamlit as st
+
+# ----------------------------------------------------------
+# Enable LCEL Debug Logs
+# ----------------------------------------------------------
+set_debug(True)
+
+# ----------------------------------------------------------
+# Loading Ollama Model
+# ----------------------------------------------------------
+llm = ChatOllama(model="gemma:2b")
+
+# ----------------------------------------------------------
+# Prompt
+# ----------------------------------------------------------
+prompt = ChatPromptTemplate.from_messages(
+    [
+        (
+            "system",
+            """
+            You are an Android Security and Secure Coding Assistant.
+
+            You help developers understand:
+
+            - Android Security
+            - Secure Coding Practices
+            - Android Internals
+            - Android Security Model
+            - Mobile Malware
+            - OWASP Mobile Top 10
+            - Privacy
+            - Reverse Engineering
+            - Android Architecture
+
+            Use the previous conversation to understand follow-up questions.
+
+            Keep your answers concise and technical.
+            """,
+        ),
+        MessagesPlaceholder(variable_name="chat_history"),
+        ("human", "{input}"),
+    ]
+)
+
+# ----------------------------------------------------------
+# LCEL Chain with Conversation History
+# ----------------------------------------------------------
+chain = prompt | llm
+
+history = StreamlitChatMessageHistory()
+
+chat_with_history = RunnableWithMessageHistory(
+    chain,
+    lambda session_id: history,
+    history_messages_key="chat_history",
+    input_messages_key="input",
+)
+
+# ----------------------------------------------------------
+# Building Streamlit UI
+# ----------------------------------------------------------
+st.set_page_config(page_title="Android Security Assistant")
+
+st.title("Android Security Assistant")
+
+st.caption(
+    "Ask questions about Android Security, Secure Coding, Android Internals, "
+    "OWASP Mobile Top 10, Malware Analysis, Privacy and Reverse Engineering."
+)
+
+# ----------------------------------------------------------
+# Display Previous Conversation
+# ----------------------------------------------------------
+for message in st.session_state["langchain_messages"]:
+
+    role = "user" if message.type == "human" else "assistant"
+
+    with st.chat_message(role):
+        st.markdown(message.content)
+
+# ----------------------------------------------------------
+# Chat Input
+# ----------------------------------------------------------
+
+question = st.chat_input(
+    "Ask anything about Android Security..."
+)
+
+# ----------------------------------------------------------
+# Generating Response
+# ----------------------------------------------------------
+if question:
+
+    with st.chat_message("user"):
+        st.markdown(question)
+
+    with st.chat_message("assistant"):
+
+        with st.spinner("Thinking..."):
+
+            response = chat_with_history.stream(
+                {"input": question},
+                config={
+                    "configurable": {
+                        "session_id": "any"
+                    }
+                },
+            )
+
+            st.write_stream(response)</code></pre>
+  </div>
+</details>
+
+<div class="block security">
+  <div class="label">Security lens</div>
+  <p>The history keeps everything that the user typed, including secrets, such as a password pasted by mistake, and sends it with every later question. The session state lasts while the tab is open, so close the tab or reload the page to clear it. This app also uses one fixed session name, <code>"any"</code>. In an app with many users, each user needs their own session name, or one user could read the history of another. Finally, the history grows with each message, so each call becomes slower and, with a cloud model, more expensive.</p>
+</div>
+
+<h2>Check yourself</h2>
+<div class="quiz">
+  <details>
+    <summary><span class="qq">Why does the second question fail without a history?</span></summary>
+    <div class="ans"><p>Each call starts fresh, so the model does not know what "it" refers to.</p></div>
+  </details>
+  <details>
+    <summary><span class="qq">Why does the app keep the history in the session state and not in a normal list?</span></summary>
+    <div class="ans"><p>Streamlit runs the whole script again after each action, so a normal list starts empty. The session state keeps data between reruns.</p></div>
+  </details>
+  <details>
+    <summary><span class="qq">What is the difference between <code>invoke()</code> and <code>stream()</code>?</span></summary>
+    <div class="ans"><p><code>invoke()</code> returns the full answer at the end. <code>stream()</code> returns the answer in pieces while the model writes it.</p></div>
+  </details>
+</div>
+
+<h2>Key terms at a glance</h2>
+<div class="table-wrap">
+  <table class="kw">
+    <thead><tr><th>Term</th><th>Meaning</th></tr></thead>
+    <tbody>
+      <tr><td>Chat history</td><td>The earlier messages of a conversation, sent with each new question so that the model has context</td></tr>
+      <tr><td><code>ChatPromptTemplate</code></td><td>A template made from a list of messages, each with a role</td></tr>
+      <tr><td><code>MessagesPlaceholder</code></td><td>The place in a chat template where the history goes</td></tr>
+      <tr><td><code>RunnableWithMessageHistory</code></td><td>A wrapper that adds the history before each call and saves the new messages after it</td></tr>
+      <tr><td>Session state</td><td>The store of Streamlit that keeps data between reruns while the tab is open</td></tr>
+      <tr><td>Streaming</td><td>Showing the answer in pieces while the model writes it</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<h2>Next</h2>
+<p>Your app can now hold a conversation. The next part of the track will give it new abilities. In chapter 9, the model will choose and use tools, so that it can do more than write text.</p>
+</article>
+</main>
+
+<script src="../../assets/js/site.js?v=20261029d"></script>
+</body>
+</html>

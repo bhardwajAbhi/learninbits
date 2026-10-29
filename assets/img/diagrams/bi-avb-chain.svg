@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 430" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">The chain of trust in Android Verified Boot</title>
+  <desc id="d">The Boot ROM holds a key hash fused into the chip and checks the bootloader. The bootloader runs libavb with avb_slot_verify. The vbmeta partition has a 256-byte header with the magic AVB0, flags and a rollback index, then authentication data with the signature, then auxiliary data with descriptors and the public key. A hash descriptor covers boot, vendor_boot and dtbo, checked as a whole at load. A hashtree descriptor covers system, vendor and product, checked block by block at read. A chain descriptor hands over to vbmeta_system with its own key. The rollback index is compared with a minimum in RPMB storage. A lower index gives ERROR_ROLLBACK_INDEX. If the result is OK, the device boots with dm-verity parameters. An error on a locked device stops the boot or shows a red warning. An error on an unlocked device boots with an orange warning.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="20" y="40" width="150" height="92" rx="12" fill="#fff" stroke="#5d6b7e" stroke-width="1.7"/>
+<rect x="20" y="40" width="6" height="92" rx="3" fill="#5d6b7e"/>
+<text x="40" y="68" font-size="13.5" fill="#3f4a59" text-anchor="start" font-weight="700">Boot ROM</text>
+<text x="40" y="92" font-size="12" fill="#4a5263" text-anchor="start">Key hash fused</text>
+<text x="40" y="111" font-size="12" fill="#4a5263" text-anchor="start">into the chip</text>
+<path d="M170 86 L 196 86" fill="none" stroke="#1c2230" stroke-width="1.8" marker-end="url(#m0)"/>
+<rect x="200" y="40" width="160" height="92" rx="12" fill="#fff" stroke="#2f62c8" stroke-width="1.7"/>
+<rect x="200" y="40" width="6" height="92" rx="3" fill="#2f62c8"/>
+<text x="220" y="68" font-size="13.5" fill="#1f4a9e" text-anchor="start" font-weight="700">Bootloader</text>
+<text x="220" y="92" font-size="12" fill="#4a5263" text-anchor="start">libavb with</text>
+<text x="220" y="111" font-size="12" fill="#4a5263" text-anchor="start">avb_slot_verify()</text>
+<path d="M360 86 L 386 86" fill="none" stroke="#1c2230" stroke-width="1.8" marker-end="url(#m0)"/>
+<text x="500" y="28" font-size="12.5" fill="#1c2230" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="700">vbmeta partition</text>
+<rect x="390" y="38" width="220" height="62" rx="8" fill="#f3f0fa" stroke="#7a4fc2" stroke-width="1.4"/>
+<text x="402" y="58" font-size="12.6" fill="#58378f" text-anchor="start" font-weight="700">Header, 256 bytes</text>
+<text x="402" y="76" font-size="11.4" fill="#4a5263" text-anchor="start">Magic AVB0, flags,</text>
+<text x="402" y="91" font-size="11.4" fill="#4a5263" text-anchor="start">rollback index</text>
+<rect x="390" y="104" width="220" height="62" rx="8" fill="#fbecec" stroke="#c2552d" stroke-width="1.4"/>
+<text x="402" y="124" font-size="12.6" fill="#963f1f" text-anchor="start" font-weight="700">Authentication data</text>
+<text x="402" y="142" font-size="11.4" fill="#4a5263" text-anchor="start">Signature and hash</text>
+<text x="402" y="157" font-size="11.4" fill="#4a5263" text-anchor="start">of header and aux data</text>
+<rect x="390" y="170" width="220" height="62" rx="8" fill="#fdf4e3" stroke="#b7791f" stroke-width="1.4"/>
+<text x="402" y="190" font-size="12.6" fill="#8a5a12" text-anchor="start" font-weight="700">Auxiliary data</text>
+<text x="402" y="208" font-size="11.4" fill="#4a5263" text-anchor="start">Descriptors and</text>
+<text x="402" y="223" font-size="11.4" fill="#4a5263" text-anchor="start">the public key</text>
+<rect x="652" y="24" width="208" height="70" rx="10" fill="#fff" stroke="#2f62c8" stroke-width="1.5"/>
+<text x="664" y="44" font-size="12.6" fill="#1f4a9e" text-anchor="start" font-weight="700">Hash descriptor</text>
+<text x="664" y="63" font-size="11.4" fill="#1c2230" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="600">boot, vendor_boot, dtbo</text>
+<text x="664" y="81" font-size="11.4" fill="#4a5263" text-anchor="start">Whole image checked at load</text>
+<path d="M610 201 C 636 201, 636 59, 648 59" fill="none" stroke="#b7791f" stroke-width="1.5" marker-end="url(#m6)"/>
+<rect x="652" y="104" width="208" height="70" rx="10" fill="#fff" stroke="#0f8a6a" stroke-width="1.5"/>
+<text x="664" y="124" font-size="12.6" fill="#0b6650" text-anchor="start" font-weight="700">Hashtree descriptor</text>
+<text x="664" y="143" font-size="11.4" fill="#1c2230" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="600">system, vendor, product</text>
+<text x="664" y="161" font-size="11.4" fill="#4a5263" text-anchor="start">Each block checked at read</text>
+<path d="M610 201 C 636 201, 636 139, 648 139" fill="none" stroke="#b7791f" stroke-width="1.5" marker-end="url(#m6)"/>
+<rect x="652" y="184" width="208" height="70" rx="10" fill="#fff" stroke="#7a4fc2" stroke-width="1.5"/>
+<text x="664" y="204" font-size="12.6" fill="#58378f" text-anchor="start" font-weight="700">Chain descriptor</text>
+<text x="664" y="223" font-size="11.4" fill="#1c2230" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="600">vbmeta_system</text>
+<text x="664" y="241" font-size="11.4" fill="#4a5263" text-anchor="start">Own key, own rollback slot</text>
+<path d="M610 201 C 636 201, 636 219, 648 219" fill="none" stroke="#b7791f" stroke-width="1.5" marker-end="url(#m6)"/>
+<rect x="200" y="170" width="160" height="86" rx="10" fill="#fff" stroke="#c2552d" stroke-width="1.5" stroke-dasharray="5 4"/>
+<text x="214" y="192" font-size="12.8" fill="#963f1f" text-anchor="start" font-weight="700">RPMB storage</text>
+<text x="214" y="212" font-size="11.6" fill="#4a5263" text-anchor="start">Stored minimum</text>
+<text x="214" y="228" font-size="11.6" fill="#4a5263" text-anchor="start">rollback index</text>
+<path d="M360 213 L 386 100" fill="none" stroke="#c2552d" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#m7)" marker-start="url(#m7)"/>
+<text x="280" y="276" font-size="11.6" fill="#963f1f" text-anchor="middle" font-weight="600">Index too low means</text>
+<text x="280" y="292" font-size="11.4" fill="#963f1f" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="600">ERROR_ROLLBACK_INDEX</text>
+<text x="20" y="330" font-size="13" fill="#1c2230" text-anchor="start" font-weight="700">Result of avb_slot_verify()</text>
+<rect x="20" y="344" width="272" height="72" rx="10" fill="#e3f4ee" stroke="#0f8a6a" stroke-width="1.4"/>
+<text x="34" y="366" font-size="12.8" fill="#0b6650" text-anchor="start" font-weight="700">OK</text>
+<text x="34" y="386" font-size="11.6" fill="#4a5263" text-anchor="start">Boot with the dm-verity</text>
+<text x="34" y="402" font-size="11.6" fill="#4a5263" text-anchor="start">parameters on the command line</text>
+<rect x="304" y="344" width="272" height="72" rx="10" fill="#fbecec" stroke="#c2552d" stroke-width="1.4"/>
+<text x="318" y="366" font-size="12.8" fill="#963f1f" text-anchor="start" font-weight="700">Error, device locked</text>
+<text x="318" y="386" font-size="11.6" fill="#4a5263" text-anchor="start">Refuse to boot, or show</text>
+<text x="318" y="402" font-size="11.6" fill="#4a5263" text-anchor="start">a red warning screen</text>
+<rect x="588" y="344" width="272" height="72" rx="10" fill="#fdf4e3" stroke="#b7791f" stroke-width="1.4"/>
+<text x="602" y="366" font-size="12.8" fill="#8a5a12" text-anchor="start" font-weight="700">Error, device unlocked</text>
+<text x="602" y="386" font-size="11.6" fill="#4a5263" text-anchor="start">Boot with an orange</text>
+<text x="602" y="402" font-size="11.6" fill="#4a5263" text-anchor="start">warning screen</text>
+</svg>

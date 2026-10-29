@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 480" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">HTTP and HTTPS on a public hotspot</title>
+  <desc id="d">Top, an app uses HTTP through a public hotspot. The hotspot reads the password and can add an ad or a script before the data reaches the server. Bottom, the app uses HTTPS. A TLS tunnel runs from the app to the server, and the hotspot sees only encrypted bytes and the server name. Below, a network security config sets cleartextTrafficPermitted to false, which is the default for apps that target Android 9 or later.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="20" y="30" width="840" height="130" rx="16" fill="#fbecec" fill-opacity="0.55"/>
+<rect x="20" y="30" width="840" height="130" rx="16" fill="none" stroke="#c2552d" stroke-width="1.2" stroke-dasharray="6 5"/>
+<rect x="36" y="17" width="210.4" height="26" rx="13" fill="#fff" stroke="#c2552d" stroke-width="1.2"/>
+<text x="141.2" y="34.5" font-size="12.5" fill="#963f1f" text-anchor="middle" font-weight="700">HTTP on a public hotspot</text>
+<rect x="40" y="60" width="140" height="70" rx="10" fill="#fff" stroke="#2f62c8" stroke-width="1.4"/>
+<text x="110" y="90" font-size="12.6" fill="#1f4a9e" text-anchor="middle" font-weight="700">Your app</text>
+<text x="110" y="110" font-size="11.2" fill="#1c2230" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="600">http://</text>
+<rect x="330" y="60" width="200" height="70" rx="10" fill="#fff" stroke="#c2552d" stroke-width="1.5"/>
+<text x="430" y="88" font-size="12.6" fill="#963f1f" text-anchor="middle" font-weight="700">Hotspot</text>
+<text x="430" y="106" font-size="10.8" fill="#4a5263" text-anchor="middle">Reads the password and</text>
+<text x="430" y="122" font-size="10.8" fill="#4a5263" text-anchor="middle">can add an ad or a script</text>
+<rect x="680" y="60" width="160" height="70" rx="10" fill="#fff" stroke="#5d6b7e" stroke-width="1.4"/>
+<text x="760" y="100" font-size="12.6" fill="#3f4a59" text-anchor="middle" font-weight="700">Server</text>
+<path d="M180 95 L 326 95" fill="none" stroke="#c2552d" stroke-width="1.8" marker-end="url(#m7)"/>
+<path d="M530 95 L 676 95" fill="none" stroke="#c2552d" stroke-width="1.8" marker-end="url(#m7)"/>
+<rect x="20" y="190" width="840" height="130" rx="16" fill="#e3f4ee" fill-opacity="0.55"/>
+<rect x="20" y="190" width="840" height="130" rx="16" fill="none" stroke="#0f8a6a" stroke-width="1.2" stroke-dasharray="6 5"/>
+<rect x="36" y="177" width="218" height="26" rx="13" fill="#fff" stroke="#0f8a6a" stroke-width="1.2"/>
+<text x="145" y="194.5" font-size="12.5" fill="#0b6650" text-anchor="middle" font-weight="700">HTTPS on the same hotspot</text>
+<rect x="40" y="220" width="140" height="70" rx="10" fill="#fff" stroke="#2f62c8" stroke-width="1.4"/>
+<text x="110" y="250" font-size="12.6" fill="#1f4a9e" text-anchor="middle" font-weight="700">Your app</text>
+<text x="110" y="270" font-size="11.2" fill="#1c2230" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="600">https://</text>
+<rect x="330" y="220" width="200" height="70" rx="10" fill="#fff" stroke="#0f8a6a" stroke-width="1.5"/>
+<text x="430" y="248" font-size="12.6" fill="#0b6650" text-anchor="middle" font-weight="700">Hotspot</text>
+<text x="430" y="266" font-size="10.8" fill="#4a5263" text-anchor="middle">Sees only encrypted bytes</text>
+<text x="430" y="282" font-size="10.8" fill="#4a5263" text-anchor="middle">and the server name</text>
+<rect x="680" y="220" width="160" height="70" rx="10" fill="#fff" stroke="#5d6b7e" stroke-width="1.4"/>
+<text x="760" y="260" font-size="12.6" fill="#3f4a59" text-anchor="middle" font-weight="700">Server</text>
+<path d="M180 255 L 326 255" fill="none" stroke="#0f8a6a" stroke-width="1.8" marker-end="url(#m4)"/>
+<path d="M530 255 L 676 255" fill="none" stroke="#0f8a6a" stroke-width="1.8" marker-end="url(#m4)"/>
+<rect x="186" y="242" width="136" height="26" rx="6" fill="#1c2230"/>
+<text x="254" y="259" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">TLS tunnel</text>
+<rect x="536" y="242" width="136" height="26" rx="6" fill="#1c2230"/>
+<text x="604" y="259" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">TLS tunnel</text>
+<rect x="20" y="340" width="840" height="126" rx="12" fill="#1f2633"/>
+<path d="M32 340 h816 a12 12 0 0 1 12 12 v22 h-840 v-22 a12 12 0 0 1 12 -12z" fill="#0f8a6a"/>
+<text x="36" y="363" font-size="13.5" fill="#fff" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">res/xml/network_security_config.xml</text>
+<text x="36" y="396" font-size="11.2" fill="#e8ecf3" text-anchor="start" font-family="JetBrains Mono, monospace">&lt;network-security-config&gt;</text>
+<text x="36" y="414" font-size="11.2" fill="#e8ecf3" text-anchor="start" font-family="JetBrains Mono, monospace">  &lt;base-config cleartextTrafficPermitted=&quot;false&quot; /&gt;</text>
+<text x="36" y="432" font-size="11.2" fill="#e8ecf3" text-anchor="start" font-family="JetBrains Mono, monospace">&lt;/network-security-config&gt;</text>
+<text x="36" y="450" font-size="11.2" fill="#9aa6b8" text-anchor="start" font-family="JetBrains Mono, monospace">// Default for apps that target Android 9 or later. Keep it, and do not add exceptions.</text>
+</svg>

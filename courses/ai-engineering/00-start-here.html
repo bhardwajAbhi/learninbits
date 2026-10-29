@@ -1,0 +1,338 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Start here · AI Engineering · LearnInBits</title>
+  <meta name="description" content="How the AI Engineering course works, and how to set up your project with uv, API keys and a local model.">
+  <link rel="icon" href="../../assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,500;0,8..60,600;1,8..60,500&display=swap">
+  <link rel="stylesheet" href="../../assets/css/style.css?v=20261029d">
+  <script>try{var t=localStorage.getItem("lib-theme");t=t?JSON.parse(t):(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+</head>
+<body data-root="../../" data-page="chapter" data-course="ai-engineering" data-id="00-start-here">
+
+<main id="main">
+<article>
+
+  <div class="block oneline">
+    <div class="label">In one line</div>
+    <p>This course teaches AI engineering with real code. This chapter shows how the course works. Then you set up the same project on your own computer.</p>
+  </div>
+
+  <section class="learn">
+    <h2>What you will learn</h2>
+    <ul>
+      <li>How the course works and how each chapter is organized</li>
+      <li>How to make a Python project with <code>uv</code></li>
+      <li>How to get API keys for Gemini and OpenRouter and keep them safe</li>
+      <li>How to run a model on your own computer with Ollama</li>
+      <li>How to check that everything works, with one small program</li>
+    </ul>
+    <p class="needs">You need basic Python: variables, functions, lists, loops and <code>import</code>. You do not need to know anything about AI.</p>
+  </section>
+
+  <!-- ================= PART A ================= -->
+  <section class="example" style="--ex:#7a4fc2">
+    <div class="example-banner">
+      <div class="eb-tag">Part A</div>
+      <h2 data-toc="Part A: How this course works">How this course works</h2>
+      <p>One idea per chapter. Two working programs for each idea. Then a problem for you.</p>
+      <div class="eb-row">
+        <span class="eb-chip">Code first</span>
+        <span class="eb-chip">Two examples in every chapter</span>
+        <span class="eb-chip">Your turn at the end</span>
+      </div>
+    </div>
+
+    <h3 class="step"><span class="sn">1</span>Code first</h3>
+    <p>Every idea in this course is a program that works. You do not only read about a prompt pattern. You build it, run it and see the result. Each chapter builds its program step by step, and explains every statement in the order that you type it.</p>
+
+    <h3 class="step"><span class="sn">2</span>Two examples in every chapter</h3>
+    <p>Each chapter builds the same idea <strong>two times, on two different problems</strong>:</p>
+    <ul class="explain">
+      <li><strong>Example 1</strong> uses a <strong>Gemini</strong> model from Google.</li>
+      <li><strong>Example 2</strong> uses an open model through <strong>OpenRouter</strong>.</li>
+    </ul>
+    <p>The two examples look at the idea from two sides. For instance, in the chapter on zero-shot prompts, one example sorts food reviews by feeling and the other example sorts security events by threat. When the same pattern works on two different problems, you understand the pattern, not only one example.</p>
+
+    <div class="block analogy">
+      <div class="label">Real-life analogy</div>
+      <p>Think of a cooking class. In each lesson, the teacher cooks one recipe two times, with different ingredients. You see what stays the same and what changes. At the end of the lesson, you cook a new dish yourself.</p>
+    </div>
+
+    <h3 class="step"><span class="sn">3</span>How each chapter is organized</h3>
+    <p>Every chapter has the same parts, in the same order. When you know the order, you always know where to look.</p>
+    <ol class="anatomy">
+      <li style="--ac:#5d6b7e"><b>In one line</b><span>The idea in one sentence</span></li>
+      <li style="--ac:#5d6b7e"><b>What you will learn</b><span>The goals of the chapter</span></li>
+      <li style="--ac:#b7791f"><b>The idea</b><span>What and why, with a real-life analogy</span></li>
+      <li style="--ac:#b7791f"><b>How it flows</b><span>A diagram of the flow of data</span></li>
+      <li style="--ac:#b7791f"><b>What we build</b><span>Aim, problem, input and expected output of both examples</span></li>
+      <li style="--ac:#2f62c8"><b>Example 1</b><span>A guided build, step by step, then the run and the output</span></li>
+      <li style="--ac:#2f62c8"><b>Inside one call</b><span>What happens when the program talks to the model</span></li>
+      <li style="--ac:#0f8a6a"><b>Example 2</b><span>The same guided build, on a different problem</span></li>
+      <li style="--ac:#7a4fc2"><b>Side by side</b><span>The two examples compared</span></li>
+      <li style="--ac:#7a4fc2"><b>When it works</b><span>The limits of the idea</span></li>
+      <li style="--ac:#c0453f"><b>Security lens</b><span>What can go wrong and how to prevent it</span></li>
+      <li style="--ac:#2f7d55"><b>Check yourself</b><span>Three questions, with hidden answers</span></li>
+      <li style="--ac:#2f7d55"><b>Your turn</b><span>A new problem for you, on a local model</span></li>
+      <li style="--ac:#5d6b7e"><b>Key terms at a glance</b><span>Each new word, in one line</span></li>
+    </ol>
+    <p>Each example has a <strong>View on GitHub</strong> button for the original code. The full code and the full output are in boxes that open with a click, and each code block has a <strong>Copy</strong> button.</p>
+
+    <h3 class="step"><span class="sn">4</span>The path through the course</h3>
+    <p>The course goes from your first call to a model up to AI systems in production:</p>
+    <ol class="course-path">
+      <li><div><b>Getting started</b><span>Talk to a model, build your first chain, see why answers change</span></div></li>
+      <li><div><b>Talk to the model well</b><span>Roles, zero-shot and few-shot prompts, structured output</span></div></li>
+      <li><div><b>Make the model think</b><span>Chain of thought and other reasoning patterns</span></div></li>
+      <li><div><b>Build chains</b><span>Join steps, run them in parallel and handle errors</span></div></li>
+      <li><div><b>Manage the context</b><span>Decide what the model sees</span></div></li>
+      <li><div><b>Answer from your documents</b><span>Retrieval-augmented generation (RAG)</span></div></li>
+      <li><div><b>Agents and tools</b><span>Let the model use tools and decide the next step</span></div></li>
+      <li><div><b>Guardrails</b><span>Keep the model safe and inside its rules</span></div></li>
+      <li><div><b>MCP</b><span>Connect tools in a standard way</span></div></li>
+      <li><div><b>Measure quality</b><span>Test your AI app with data</span></div></li>
+      <li><div><b>LangGraph</b><span>Build agents as graphs</span></div></li>
+      <li><div><b>Many agents</b><span>Teams of agents that work together</span></div></li>
+      <li><div><b>Production</b><span>Observability, reliability and cost</span></div></li>
+      <li class="more"><div><b>Learn More</b><span>Extra topics at the end</span></div></li>
+    </ol>
+    <p>Read the chapters in order, because each chapter uses the ideas of the chapters before it. When you finish a chapter, click <strong>Mark this chapter as finished</strong>. The course page then shows your progress.</p>
+  </section>
+
+  <!-- ================= PART B ================= -->
+  <section class="example" style="--ex:#2f62c8">
+    <div class="example-banner">
+      <div class="eb-tag">Part B</div>
+      <h2 data-toc="Part B: Set up your workspace">Set up your workspace</h2>
+      <p>Your project gets the same structure as the course repository on GitHub. Then one program tests all three model services.</p>
+      <div class="eb-row">
+        <span class="eb-chip">uv and Python 3.11</span>
+        <span class="eb-chip">Gemini, OpenRouter and Ollama</span>
+        <a class="gh-btn" href="https://github.com/bhardwajAbhi/ai-engineering"><svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M12 .5a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2.1c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1.1-.8.1-.8.1-.8 1.2.1 1.9 1.3 1.9 1.3 1.1 1.9 2.9 1.3 3.6 1 .1-.8.4-1.3.8-1.6-2.7-.3-5.5-1.3-5.5-6a4.7 4.7 0 0 1 1.3-3.2c-.1-.3-.6-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.7 1.7.2 2.9.1 3.2a4.7 4.7 0 0 1 1.3 3.2c0 4.6-2.8 5.6-5.5 6 .4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .5z"/></svg>Course repository</a>
+      </div>
+    </div>
+
+    <p>Here is what you will have when you finish:</p>
+    <figure class="diagram">
+      <div class="frame"><img src="../../assets/img/diagrams/ai-setup-overview.svg" alt="On your computer, the project folder ai-engineering holds the programs in src, the secret keys in .env and the environment that uv makes. The programs talk to three model services. Gemini and OpenRouter are on the internet and need an API key: Gemini is used in Example 1 and OpenRouter in Example 2. Ollama runs on your own computer, needs no key and keeps the data on your computer. It is used in Your turn."></div>
+      <figcaption>Your project and the three model services that the course uses.</figcaption>
+    </figure>
+
+    <h3 class="step"><span class="sn">Step 1</span>Install uv</h3>
+    <p><code>uv</code> is a fast tool that manages Python projects. It installs the correct Python version, makes a private environment for your project and installs the libraries.</p>
+    <p><strong>Linux and macOS:</strong></p>
+<pre class="code" data-lang="bash"><code>curl -LsSf https://astral.sh/uv/install.sh | sh</code></pre>
+    <p><strong>Windows (PowerShell):</strong></p>
+<pre class="code" data-lang="bash"><code>powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"</code></pre>
+    <p>Close the terminal and open it again. Then check that uv works:</p>
+<pre class="code" data-lang="bash"><code>uv --version</code></pre>
+
+    <h3 class="step"><span class="sn">Step 2</span>Create the project</h3>
+<pre class="code" data-lang="bash"><code>uv init ai-engineering --python 3.11
+cd ai-engineering</code></pre>
+    <ul class="explain">
+      <li><code>uv init ai-engineering</code> makes a new folder <code>ai-engineering</code> with the start files of a project.</li>
+      <li><code>--python 3.11</code> sets Python 3.11 for this project. If Python 3.11 is not on your computer, uv downloads it for you.</li>
+      <li><code>cd ai-engineering</code> moves you into the new folder.</li>
+    </ul>
+    <p>uv made these files:</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>File</th><th>Its job</th></tr></thead>
+        <tbody>
+          <tr><td><code>pyproject.toml</code></td><td>The settings of the project: its name, the Python version and the libraries</td></tr>
+          <tr><td><code>.python-version</code></td><td>The Python version of this project: <code>3.11</code></td></tr>
+          <tr><td><code>README.md</code></td><td>A short text about the project</td></tr>
+          <tr><td><code>.gitignore</code></td><td>The files that Git must not save</td></tr>
+          <tr><td><code>main.py</code></td><td>A small start program. You do not need it, so delete it.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Now make the folder for your programs:</p>
+<pre class="code" data-lang="bash"><code>mkdir src</code></pre>
+
+    <h3 class="step"><span class="sn">Step 3</span>Add the libraries</h3>
+<pre class="code" data-lang="bash"><code>uv add langchain-core langchain-google-genai langchain-openai langchain-openrouter langgraph python-dotenv langchain-ollama</code></pre>
+    <p><code>uv add</code> installs the libraries and writes them in <code>pyproject.toml</code>. It also makes <code>uv.lock</code>, with the exact version of each library, and <code>.venv/</code>, the private environment of the project.</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Library</th><th>Its job in this course</th></tr></thead>
+        <tbody>
+          <tr><td><code>langchain-core</code></td><td>The base parts: prompts, parsers and chains</td></tr>
+          <tr><td><code>langchain-google-genai</code></td><td>Talks to the Gemini models of Google</td></tr>
+          <tr><td><code>langchain-openrouter</code></td><td>Talks to models from many companies through OpenRouter</td></tr>
+          <tr><td><code>langchain-openai</code></td><td>Talks to services that use the OpenAI format</td></tr>
+          <tr><td><code>langgraph</code></td><td>Builds agents as graphs, in later chapters</td></tr>
+          <tr><td><code>python-dotenv</code></td><td>Reads your secret keys from the <code>.env</code> file</td></tr>
+          <tr><td><code>langchain-ollama</code></td><td>Talks to Ollama on your own computer, for "Your turn"</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 class="step"><span class="sn">Step 4</span>Get your API keys</h3>
+    <p>An <strong>API key</strong> is a secret password that lets your program use a model service. You need two keys:</p>
+    <ul class="explain">
+      <li><strong>Gemini:</strong> sign in at <a href="https://aistudio.google.com/app/apikey">Google AI Studio</a> and click <strong>Create API key</strong>.</li>
+      <li><strong>OpenRouter:</strong> make an account at <a href="https://openrouter.ai">openrouter.ai</a> and create a key on the <strong>Keys</strong> page.</li>
+    </ul>
+    <p>Both services have free options to start with. Their limits change, so check their pages.</p>
+
+    <h3 class="step"><span class="sn">Step 5</span>Store the keys safely</h3>
+    <p>Create a file with the name <code>.env.example</code>. It shows which keys the project needs, with no values:</p>
+<pre class="code" data-lang="text" data-file=".env.example"><code># OPEN ROUTER
+OPENROUTER_API_KEY=
+
+# GOOGLE GEMINI
+GOOGLE_API_KEY=</code></pre>
+    <p>Copy it to <code>.env</code>:</p>
+<pre class="code" data-lang="bash"><code>cp .env.example .env</code></pre>
+    <p>Open <code>.env</code> and put your keys after the <code>=</code> signs. Do not use quotes and do not add spaces. Then open <code>.gitignore</code> and make sure that it contains this line. If it does not, add it:</p>
+<pre class="code" data-lang="text" data-file=".gitignore"><code>.env</code></pre>
+    <div class="block security">
+      <div class="label">Security lens</div>
+      <p><code>.env</code> holds your secret keys. The line in <code>.gitignore</code> tells Git to ignore this file. Thus, your keys never go to GitHub. <code>.env.example</code> has no secrets, so it can go to GitHub.</p>
+    </div>
+
+    <h3 class="step"><span class="sn">Step 6</span>Install Ollama for local models</h3>
+    <p><strong>Ollama</strong> runs language models on your own computer. You need no API key, and no internet after the download. You use it in each "Your turn" section.</p>
+    <p><strong>Linux:</strong></p>
+<pre class="code" data-lang="bash"><code>curl -fsSL https://ollama.com/install.sh | sh</code></pre>
+    <p><strong>macOS and Windows:</strong> download the installer from <a href="https://ollama.com/download">ollama.com/download</a> and run it.</p>
+    <p>Then download a small model and test it:</p>
+<pre class="code" data-lang="bash"><code>ollama pull llama3.2:3b
+ollama run llama3.2:3b "Say hello in one word."</code></pre>
+    <ul class="explain">
+      <li><code>ollama pull</code> downloads the model. It is about 2 GB.</li>
+      <li><code>ollama run</code> sends one message to the model and prints the answer.</li>
+    </ul>
+    <p>If your computer has little memory, use a smaller model, for example <code>llama3.2:1b</code>.</p>
+
+    <h3 class="step"><span class="sn">Step 7</span>Check your folder</h3>
+    <p>Your project must look like this:</p>
+    <pre class="tree"><span class="d">ai-engineering/</span>
+├── <span class="d">.venv/</span>            <span class="m">the private environment, made by uv</span>
+├── <span class="d">src/</span>              <span class="m">your programs go here</span>
+├── <span class="s">.env</span>              <span class="m">your secret keys, never share this file</span>
+├── .env.example      <span class="m">the list of keys, with no values</span>
+├── .gitignore
+├── .python-version
+├── pyproject.toml
+├── README.md
+└── uv.lock</pre>
+
+    <h3 class="step"><span class="sn">Step 8</span>Test everything with one program</h3>
+    <p>Create the file <code>src/00_check_setup.py</code> and add this code:</p>
+<pre class="code" data-lang="python" data-file="src/00_check_setup.py"><code>"""
+Title: Check the setup
+uv run python src/00_check_setup.py
+"""
+
+from dotenv import load_dotenv
+from langchain_core.output_parsers import StrOutputParser
+from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_openrouter import ChatOpenRouter
+from langchain_ollama import ChatOllama
+
+
+def check(name, llm):
+    chain = llm | StrOutputParser()
+    try:
+        answer = chain.invoke("Reply with only the word OK.")
+        print(f"{name:&lt;12} works. Answer: {answer.strip()}")
+    except Exception as error:
+        print(f"{name:&lt;12} does not work. Error: {error}")
+
+
+def main():
+    load_dotenv()
+    check("Gemini", ChatGoogleGenerativeAI(model="gemini-3.1-flash-lite", temperature=0))
+    check("OpenRouter", ChatOpenRouter(model="qwen/qwen-2.5-7b-instruct", temperature=0))
+    check("Ollama", ChatOllama(model="llama3.2:3b", temperature=0))
+
+
+if __name__ == "__main__":
+    main()</code></pre>
+    <ul class="explain">
+      <li><code>load_dotenv()</code> reads your keys from <code>.env</code>.</li>
+      <li><code>check(name, llm)</code> sends one short message to one model and prints the result.</li>
+      <li><code>llm | StrOutputParser()</code> makes a small chain that returns plain text. Chapter 2 explains chains in detail.</li>
+      <li><code>try</code> and <code>except</code> catch an error. Thus, one broken service does not stop the check of the other services.</li>
+      <li><code>{name:&lt;12}</code> writes the name in a column of 12 characters, so the results line up.</li>
+      <li><code>main()</code> checks the three services, one after the other.</li>
+    </ul>
+    <p>Run it:</p>
+<pre class="code" data-lang="bash"><code>uv run python src/00_check_setup.py</code></pre>
+<pre class="code" data-lang="output"><code>Gemini       works. Answer: OK
+OpenRouter   works. Answer: OK
+Ollama       works. Answer: OK</code></pre>
+    <div class="block note">
+      <div class="label">Your output can be different</div>
+      <p>Your answers can be a little different, for example <code>OK.</code> with a period. Language models do not always answer the same way. That is normal.</p>
+    </div>
+    <p>If one line says "does not work," read the error:</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>The error contains</th><th>What to do</th></tr></thead>
+        <tbody>
+          <tr><td><code>API key</code> or <code>401</code></td><td>Check the key in <code>.env</code>: no spaces, no quotes and the correct name</td></tr>
+          <tr><td><code>Connection refused</code> (Ollama)</td><td>Start Ollama with <code>ollama serve</code>, or open the Ollama app</td></tr>
+          <tr><td><code>model not found</code> (Ollama)</td><td>Run <code>ollama pull llama3.2:3b</code></td></tr>
+          <tr><td><code>No module named</code></td><td>Run the <code>uv add</code> command of Step 3 again</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <div class="block security">
+    <div class="label">Security lens</div>
+    <ul>
+      <li><strong>Your API keys are like passwords.</strong> A person with your key can use your account and your money. Keep keys only in <code>.env</code>. Never paste them into code, chats or screenshots.</li>
+      <li><strong>If a key leaks,</strong> delete it at once on the website of the service, and create a new key.</li>
+      <li><strong>Cloud models see your data.</strong> All text that you send to Gemini or OpenRouter goes to their servers. Do not send passwords or personal data in your tests. With Ollama, your data stays on your computer.</li>
+    </ul>
+  </div>
+
+  <h2>Check yourself</h2>
+  <div class="quiz">
+    <details>
+      <summary><span class="qq">Why must <code>.env</code> be in <code>.gitignore</code>, but <code>.env.example</code> must not?</span></summary>
+      <div class="ans"><p><code>.env</code> holds your real keys, so it must never go to GitHub. <code>.env.example</code> holds only the names of the keys, with no values. It tells other people which keys the project needs.</p></div>
+    </details>
+    <details>
+      <summary><span class="qq">What does <code>uv add</code> change in your project?</span></summary>
+      <div class="ans"><p>It installs the libraries in <code>.venv/</code>, writes them in <code>pyproject.toml</code> and records the exact versions in <code>uv.lock</code>.</p></div>
+    </details>
+    <details>
+      <summary><span class="qq">Which of the three model services works with no internet connection?</span></summary>
+      <div class="ans"><p>Ollama. It runs the model on your own computer. Gemini and OpenRouter run on servers on the internet.</p></div>
+    </details>
+  </div>
+
+  <h2>Key terms at a glance</h2>
+  <div class="table-wrap">
+    <table class="kw">
+      <thead><tr><th>Term</th><th>Meaning</th></tr></thead>
+      <tbody>
+        <tr><td>uv</td><td>A tool that manages Python, the environment and the libraries of a project.</td></tr>
+        <tr><td>Environment</td><td>A private folder (<code>.venv</code>) with the Python and the libraries of one project.</td></tr>
+        <tr><td>pyproject.toml</td><td>The settings file of the project.</td></tr>
+        <tr><td>uv.lock</td><td>The exact versions of all libraries.</td></tr>
+        <tr><td>API key</td><td>A secret password that lets a program use a model service.</td></tr>
+        <tr><td>.env</td><td>The file that holds your secret keys.</td></tr>
+        <tr><td>OpenRouter</td><td>One service that gives access to models from many companies.</td></tr>
+        <tr><td>Ollama</td><td>A program that runs models on your own computer.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+</article>
+</main>
+
+<script src="../../assets/js/site.js?v=20261029d"></script>
+</body>
+</html>

@@ -1,0 +1,91 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 891" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">Lane A, store and process data inside</title>
+  <desc id="d">Always apply the Rule 6 baseline of encryption, access control, logs kept for one year, backups and processor contracts. If systems need the original format, use format-preserving encryption, else AES-GCM. If teams must join records without identities, use pseudonymization with a key vault. If you are a Significant Data Fiduciary or the flow is high risk, run an augmented DPIA and a yearly audit. If the purpose ended or consent was withdrawn, erase the data and tell processors. Then keep the logs and review.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="85" y="34" width="330" height="54" rx="27" fill="#5d6b7e"/>
+<text x="250" y="55" font-size="12.5" fill="#fff" text-anchor="middle" font-weight="700">Lane A</text>
+<text x="250" y="71" font-size="12.5" fill="#fff" text-anchor="middle" font-weight="700">store and process inside</text>
+<rect x="470" y="-2" width="390" height="126" rx="12" fill="#fff" stroke="#5d6b7e" stroke-width="1.8"/>
+<rect x="470" y="-2" width="6" height="126" rx="3" fill="#5d6b7e"/>
+<text x="488" y="22" font-size="13" fill="#3f4a59" text-anchor="start" font-weight="700">The baseline for every flow (Rule 6)</text>
+<text x="488" y="42" font-size="11.5" fill="#1c2230" text-anchor="start">Encryption at rest and in transit</text>
+<text x="488" y="58" font-size="11.5" fill="#1c2230" text-anchor="start">Access control on the systems that you use</text>
+<text x="488" y="74" font-size="11.5" fill="#1c2230" text-anchor="start">Logs, monitoring and review, kept one year</text>
+<text x="488" y="90" font-size="11.5" fill="#1c2230" text-anchor="start">Backups for continued processing</text>
+<text x="488" y="106" font-size="11.5" fill="#1c2230" text-anchor="start">Safeguard terms in each processor contract</text>
+<rect x="786" y="8" width="62" height="20" rx="10" fill="#eef0f3" stroke="#5d6b7e" stroke-width="1.2"/>
+<text x="817" y="21.78" font-size="10.5" fill="#3f4a59" text-anchor="middle" font-weight="600">Part 4</text>
+<path d="M415 61 H464" fill="none" stroke="#5d6b7e" stroke-width="1.6" marker-end="url(#m8)"/>
+<path d="M250 158 L415 204 L250 250 L85 204 Z" fill="#fff" stroke="#2f62c8" stroke-width="2"/>
+<text x="250" y="201" font-size="12.3" fill="#1f4a9e" text-anchor="middle" font-weight="700">Must the encrypted value</text>
+<text x="250" y="217" font-size="12.3" fill="#1f4a9e" text-anchor="middle" font-weight="700">keep its original format?</text>
+<rect x="470" y="165" width="390" height="78" rx="12" fill="#fff" stroke="#7a4fc2" stroke-width="1.8"/>
+<rect x="470" y="165" width="6" height="78" rx="3" fill="#7a4fc2"/>
+<text x="488" y="189" font-size="13" fill="#58378f" text-anchor="start" font-weight="700">Format-preserving encryption (FPE)</text>
+<text x="488" y="209" font-size="11.5" fill="#1c2230" text-anchor="start">A 16-digit card number stays 16 digits.</text>
+<text x="488" y="225" font-size="11.5" fill="#1c2230" text-anchor="start">Old systems and checks keep working.</text>
+<rect x="786" y="175" width="62" height="20" rx="10" fill="#f3f0fa" stroke="#7a4fc2" stroke-width="1.2"/>
+<text x="817" y="188.78" font-size="10.5" fill="#58378f" text-anchor="middle" font-weight="600">Part 4</text>
+<path d="M415 204 H464" fill="none" stroke="#7a4fc2" stroke-width="1.8" marker-end="url(#m5)"/>
+<text x="442.5" y="197" font-size="11" fill="#58378f" text-anchor="middle" font-weight="800">Yes</text>
+<rect x="85" y="284" width="330" height="54" rx="10" fill="#f3f0fa" stroke="#7a4fc2" stroke-width="1.5"/>
+<text x="250" y="308" font-size="12" fill="#58378f" text-anchor="middle" font-weight="600">Else use AES-GCM</text>
+<text x="250" y="324" font-size="12" fill="#58378f" text-anchor="middle" font-weight="600">(secret and tamper-evident)</text>
+<path d="M250 372 L415 418 L250 464 L85 418 Z" fill="#fff" stroke="#2f62c8" stroke-width="2"/>
+<text x="250" y="415" font-size="12.3" fill="#1f4a9e" text-anchor="middle" font-weight="700">Must teams join records but</text>
+<text x="250" y="431" font-size="12.3" fill="#1f4a9e" text-anchor="middle" font-weight="700">not see who the person is?</text>
+<rect x="470" y="371" width="390" height="94" rx="12" fill="#fff" stroke="#2f62c8" stroke-width="1.8"/>
+<rect x="470" y="371" width="6" height="94" rx="3" fill="#2f62c8"/>
+<text x="488" y="395" font-size="13" fill="#1f4a9e" text-anchor="start" font-weight="700">Pseudonymization or tokenization</text>
+<text x="488" y="415" font-size="11.5" fill="#1c2230" text-anchor="start">Replace identifiers with tokens (John = P001).</text>
+<text x="488" y="431" font-size="11.5" fill="#1c2230" text-anchor="start">Keep the mapping in a key vault.</text>
+<text x="488" y="447" font-size="11.5" fill="#1c2230" text-anchor="start">The result is still personal data.</text>
+<rect x="786" y="381" width="62" height="20" rx="10" fill="#eef3fb" stroke="#2f62c8" stroke-width="1.2"/>
+<text x="817" y="394.78" font-size="10.5" fill="#1f4a9e" text-anchor="middle" font-weight="600">Part 4</text>
+<path d="M415 418 H464" fill="none" stroke="#2f62c8" stroke-width="1.8" marker-end="url(#m3)"/>
+<text x="442.5" y="411" font-size="11" fill="#1f4a9e" text-anchor="middle" font-weight="800">Yes</text>
+<path d="M250 499 L415 545 L250 591 L85 545 Z" fill="#fff" stroke="#2f62c8" stroke-width="2"/>
+<text x="250" y="542" font-size="12.3" fill="#1f4a9e" text-anchor="middle" font-weight="700">Are you a Significant Data</text>
+<text x="250" y="558" font-size="12.3" fill="#1f4a9e" text-anchor="middle" font-weight="700">Fiduciary, or is the flow risky?</text>
+<rect x="470" y="498" width="390" height="94" rx="12" fill="#fff" stroke="#0f8a6a" stroke-width="1.8"/>
+<rect x="470" y="498" width="6" height="94" rx="3" fill="#0f8a6a"/>
+<text x="488" y="522" font-size="13" fill="#0b6650" text-anchor="start" font-weight="700">Augmented DPIA and a yearly audit</text>
+<text x="488" y="542" font-size="11.5" fill="#1c2230" text-anchor="start">Measure the risk with threat modeling.</text>
+<text x="488" y="558" font-size="11.5" fill="#1c2230" text-anchor="start">DPO approval for each flow (Rule 13).</text>
+<text x="488" y="574" font-size="11.5" fill="#1c2230" text-anchor="start">Algorithm due diligence (Rule 13(3)).</text>
+<rect x="786" y="508" width="62" height="20" rx="10" fill="#e3f4ee" stroke="#0f8a6a" stroke-width="1.2"/>
+<text x="817" y="521.78" font-size="10.5" fill="#0b6650" text-anchor="middle" font-weight="600">Part 3</text>
+<path d="M415 545 H464" fill="none" stroke="#0f8a6a" stroke-width="1.8" marker-end="url(#m4)"/>
+<text x="442.5" y="538" font-size="11" fill="#0b6650" text-anchor="middle" font-weight="800">Yes</text>
+<path d="M250 626 L415 672 L250 718 L85 672 Z" fill="#fff" stroke="#2f62c8" stroke-width="2"/>
+<text x="250" y="669" font-size="12.3" fill="#1f4a9e" text-anchor="middle" font-weight="700">Did the purpose end, or did</text>
+<text x="250" y="685" font-size="12.3" fill="#1f4a9e" text-anchor="middle" font-weight="700">the person withdraw consent?</text>
+<rect x="470" y="625" width="390" height="94" rx="12" fill="#fff" stroke="#c2552d" stroke-width="1.8"/>
+<rect x="470" y="625" width="6" height="94" rx="3" fill="#c2552d"/>
+<text x="488" y="649" font-size="13" fill="#963f1f" text-anchor="start" font-weight="700">Erase, and tell the processors</text>
+<text x="488" y="669" font-size="11.5" fill="#1c2230" text-anchor="start">Erase at the earlier event (Act 8(7)).</text>
+<text x="488" y="685" font-size="11.5" fill="#1c2230" text-anchor="start">Third Schedule platforms warn 48 hours</text>
+<text x="488" y="701" font-size="11.5" fill="#1c2230" text-anchor="start">before erasure (Rule 8).</text>
+<rect x="786" y="635" width="62" height="20" rx="10" fill="#fbecec" stroke="#c2552d" stroke-width="1.2"/>
+<text x="817" y="648.78" font-size="10.5" fill="#963f1f" text-anchor="middle" font-weight="600">Part 2</text>
+<path d="M415 672 H464" fill="none" stroke="#c2552d" stroke-width="1.8" marker-end="url(#m7)"/>
+<text x="442.5" y="665" font-size="11" fill="#963f1f" text-anchor="middle" font-weight="800">Yes</text>
+<rect x="85" y="763" width="390" height="94" rx="12" fill="#fff" stroke="#5d6b7e" stroke-width="1.8"/>
+<rect x="85" y="763" width="6" height="94" rx="3" fill="#5d6b7e"/>
+<text x="103" y="787" font-size="13" fill="#3f4a59" text-anchor="start" font-weight="700">Keep the flow under review</text>
+<text x="103" y="807" font-size="11.5" fill="#1c2230" text-anchor="start">Keep logs for one year.</text>
+<text x="103" y="823" font-size="11.5" fill="#1c2230" text-anchor="start">Answer rights tickets in time (Rule 14).</text>
+<text x="103" y="839" font-size="11.5" fill="#1c2230" text-anchor="start">Report a breach to the Board and the people.</text>
+<rect x="401" y="773" width="62" height="20" rx="10" fill="#eef0f3" stroke="#5d6b7e" stroke-width="1.2"/>
+<text x="432" y="786.78" font-size="10.5" fill="#3f4a59" text-anchor="middle" font-weight="600">Part 2</text>
+<path d="M250 88 V154" fill="none" stroke="#1c2230" stroke-width="1.8" marker-end="url(#m0)"/>
+<path d="M250 250 V280" fill="none" stroke="#1c2230" stroke-width="1.8" marker-end="url(#m0)"/>
+<text x="268" y="266" font-size="11" fill="#1c2230" text-anchor="middle" font-weight="800">No</text>
+<path d="M250 338 V368" fill="none" stroke="#1c2230" stroke-width="1.8" marker-end="url(#m0)"/>
+<path d="M250 464 V495" fill="none" stroke="#1c2230" stroke-width="1.8" marker-end="url(#m0)"/>
+<text x="268" y="480" font-size="11" fill="#1c2230" text-anchor="middle" font-weight="800">No</text>
+<path d="M250 591 V622" fill="none" stroke="#1c2230" stroke-width="1.8" marker-end="url(#m0)"/>
+<text x="268" y="607" font-size="11" fill="#1c2230" text-anchor="middle" font-weight="800">No</text>
+<path d="M250 718 V759" fill="none" stroke="#1c2230" stroke-width="1.8" marker-end="url(#m0)"/>
+<text x="268" y="734" font-size="11" fill="#1c2230" text-anchor="middle" font-weight="800">No</text>
+</svg>

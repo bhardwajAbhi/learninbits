@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 746" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">Pick a prompting pattern for your task</title>
+  <desc id="d">A guide to pick a prompting pattern. Look at your task and find the line that describes it best. A fixed role, tone or set of rules for every answer leads to System message, chapter 4. A simple task that you can describe clearly leads to Zero-shot, chapter 5. Your own labels or rules, easier to show than to explain leads to Few-shot, chapter 6. An answer that your code must read leads to Structured output, chapter 7. One clear path to the answer, with several steps leads to Chain of thought, chapter 8. Several possible options to compare leads to Tree of thought, chapter 9. Parts that depend on each other leads to Graph of thought, chapter 10. A specific case of a general rule leads to Step-back, chapter 11. A long problem with many simple parts leads to Least-to-most, chapter 12. An exact number from a formula leads to Program of thought, chapter 13. A short answer that you want to confirm with several tries leads to Self-consistency, chapter 14.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="20" y="20" width="840" height="44" rx="12" fill="#f2efe8"/>
+<text x="440" y="48" font-size="13.2" fill="#1c2230" text-anchor="middle" font-weight="700">Look at your task. Find the line that describes it best.</text>
+<text x="20" y="98" font-size="11.2" fill="#4a5263" text-anchor="start" letter-spacing="1" font-weight="700">TALK TO THE MODEL WELL</text>
+<rect x="20" y="110" width="470" height="44" rx="10" fill="#fff" stroke="#5d6b7e" stroke-width="1.2"/>
+<text x="38" y="137" font-size="12.2" fill="#1c2230" text-anchor="start" font-weight="600">A fixed role, tone or set of rules for every answer</text>
+<path d="M494 132 L 560 132" fill="none" stroke="#1c2230" stroke-width="1.6" marker-end="url(#m0)"/>
+<rect x="566" y="110" width="294" height="44" rx="10" fill="#f8eaf1" stroke="#b0457a" stroke-width="1.4"/>
+<text x="584" y="137" font-size="12.8" fill="#7d2a55" text-anchor="start" font-weight="700">System message</text>
+<text x="844" y="137" font-size="11.4" fill="#7d2a55" text-anchor="end" font-weight="600">Chapter 4</text>
+<rect x="20" y="164" width="470" height="44" rx="10" fill="#fff" stroke="#5d6b7e" stroke-width="1.2"/>
+<text x="38" y="191" font-size="12.2" fill="#1c2230" text-anchor="start" font-weight="600">A simple task that you can describe clearly</text>
+<path d="M494 186 L 560 186" fill="none" stroke="#1c2230" stroke-width="1.6" marker-end="url(#m0)"/>
+<rect x="566" y="164" width="294" height="44" rx="10" fill="#eef0f3" stroke="#5d6b7e" stroke-width="1.4"/>
+<text x="584" y="191" font-size="12.8" fill="#3f4a59" text-anchor="start" font-weight="700">Zero-shot</text>
+<text x="844" y="191" font-size="11.4" fill="#3f4a59" text-anchor="end" font-weight="600">Chapter 5</text>
+<rect x="20" y="218" width="470" height="44" rx="10" fill="#fff" stroke="#5d6b7e" stroke-width="1.2"/>
+<text x="38" y="245" font-size="12.2" fill="#1c2230" text-anchor="start" font-weight="600">Your own labels or rules, easier to show than to explain</text>
+<path d="M494 240 L 560 240" fill="none" stroke="#1c2230" stroke-width="1.6" marker-end="url(#m0)"/>
+<rect x="566" y="218" width="294" height="44" rx="10" fill="#f3f0fa" stroke="#7a4fc2" stroke-width="1.4"/>
+<text x="584" y="245" font-size="12.8" fill="#58378f" text-anchor="start" font-weight="700">Few-shot</text>
+<text x="844" y="245" font-size="11.4" fill="#58378f" text-anchor="end" font-weight="600">Chapter 6</text>
+<rect x="20" y="272" width="470" height="44" rx="10" fill="#fff" stroke="#5d6b7e" stroke-width="1.2"/>
+<text x="38" y="299" font-size="12.2" fill="#1c2230" text-anchor="start" font-weight="600">An answer that your code must read</text>
+<path d="M494 294 L 560 294" fill="none" stroke="#1c2230" stroke-width="1.6" marker-end="url(#m0)"/>
+<rect x="566" y="272" width="294" height="44" rx="10" fill="#eef3fb" stroke="#2f62c8" stroke-width="1.4"/>
+<text x="584" y="299" font-size="12.8" fill="#1f4a9e" text-anchor="start" font-weight="700">Structured output</text>
+<text x="844" y="299" font-size="11.4" fill="#1f4a9e" text-anchor="end" font-weight="600">Chapter 7</text>
+<text x="20" y="350" font-size="11.2" fill="#4a5263" text-anchor="start" letter-spacing="1" font-weight="700">MAKE THE MODEL THINK</text>
+<rect x="20" y="362" width="470" height="44" rx="10" fill="#fff" stroke="#5d6b7e" stroke-width="1.2"/>
+<text x="38" y="389" font-size="12.2" fill="#1c2230" text-anchor="start" font-weight="600">One clear path to the answer, with several steps</text>
+<path d="M494 384 L 560 384" fill="none" stroke="#1c2230" stroke-width="1.6" marker-end="url(#m0)"/>
+<rect x="566" y="362" width="294" height="44" rx="10" fill="#eef0f3" stroke="#5d6b7e" stroke-width="1.4"/>
+<text x="584" y="389" font-size="12.8" fill="#3f4a59" text-anchor="start" font-weight="700">Chain of thought</text>
+<text x="844" y="389" font-size="11.4" fill="#3f4a59" text-anchor="end" font-weight="600">Chapter 8</text>
+<rect x="20" y="416" width="470" height="44" rx="10" fill="#fff" stroke="#5d6b7e" stroke-width="1.2"/>
+<text x="38" y="443" font-size="12.2" fill="#1c2230" text-anchor="start" font-weight="600">Several possible options to compare</text>
+<path d="M494 438 L 560 438" fill="none" stroke="#1c2230" stroke-width="1.6" marker-end="url(#m0)"/>
+<rect x="566" y="416" width="294" height="44" rx="10" fill="#f3f0fa" stroke="#7a4fc2" stroke-width="1.4"/>
+<text x="584" y="443" font-size="12.8" fill="#58378f" text-anchor="start" font-weight="700">Tree of thought</text>
+<text x="844" y="443" font-size="11.4" fill="#58378f" text-anchor="end" font-weight="600">Chapter 9</text>
+<rect x="20" y="470" width="470" height="44" rx="10" fill="#fff" stroke="#5d6b7e" stroke-width="1.2"/>
+<text x="38" y="497" font-size="12.2" fill="#1c2230" text-anchor="start" font-weight="600">Parts that depend on each other</text>
+<path d="M494 492 L 560 492" fill="none" stroke="#1c2230" stroke-width="1.6" marker-end="url(#m0)"/>
+<rect x="566" y="470" width="294" height="44" rx="10" fill="#eef3fb" stroke="#2f62c8" stroke-width="1.4"/>
+<text x="584" y="497" font-size="12.8" fill="#1f4a9e" text-anchor="start" font-weight="700">Graph of thought</text>
+<text x="844" y="497" font-size="11.4" fill="#1f4a9e" text-anchor="end" font-weight="600">Chapter 10</text>
+<rect x="20" y="524" width="470" height="44" rx="10" fill="#fff" stroke="#5d6b7e" stroke-width="1.2"/>
+<text x="38" y="551" font-size="12.2" fill="#1c2230" text-anchor="start" font-weight="600">A specific case of a general rule</text>
+<path d="M494 546 L 560 546" fill="none" stroke="#1c2230" stroke-width="1.6" marker-end="url(#m0)"/>
+<rect x="566" y="524" width="294" height="44" rx="10" fill="#fdf4e3" stroke="#b7791f" stroke-width="1.4"/>
+<text x="584" y="551" font-size="12.8" fill="#8a5a12" text-anchor="start" font-weight="700">Step-back</text>
+<text x="844" y="551" font-size="11.4" fill="#8a5a12" text-anchor="end" font-weight="600">Chapter 11</text>
+<rect x="20" y="578" width="470" height="44" rx="10" fill="#fff" stroke="#5d6b7e" stroke-width="1.2"/>
+<text x="38" y="605" font-size="12.2" fill="#1c2230" text-anchor="start" font-weight="600">A long problem with many simple parts</text>
+<path d="M494 600 L 560 600" fill="none" stroke="#1c2230" stroke-width="1.6" marker-end="url(#m0)"/>
+<rect x="566" y="578" width="294" height="44" rx="10" fill="#e3f4ee" stroke="#0f8a6a" stroke-width="1.4"/>
+<text x="584" y="605" font-size="12.8" fill="#0b6650" text-anchor="start" font-weight="700">Least-to-most</text>
+<text x="844" y="605" font-size="11.4" fill="#0b6650" text-anchor="end" font-weight="600">Chapter 12</text>
+<rect x="20" y="632" width="470" height="44" rx="10" fill="#fff" stroke="#5d6b7e" stroke-width="1.2"/>
+<text x="38" y="659" font-size="12.2" fill="#1c2230" text-anchor="start" font-weight="600">An exact number from a formula</text>
+<path d="M494 654 L 560 654" fill="none" stroke="#1c2230" stroke-width="1.6" marker-end="url(#m0)"/>
+<rect x="566" y="632" width="294" height="44" rx="10" fill="#e6f3f4" stroke="#0e7c86" stroke-width="1.4"/>
+<text x="584" y="659" font-size="12.8" fill="#095a61" text-anchor="start" font-weight="700">Program of thought</text>
+<text x="844" y="659" font-size="11.4" fill="#095a61" text-anchor="end" font-weight="600">Chapter 13</text>
+<rect x="20" y="686" width="470" height="44" rx="10" fill="#fff" stroke="#5d6b7e" stroke-width="1.2"/>
+<text x="38" y="713" font-size="12.2" fill="#1c2230" text-anchor="start" font-weight="600">A short answer that you want to confirm with several tries</text>
+<path d="M494 708 L 560 708" fill="none" stroke="#1c2230" stroke-width="1.6" marker-end="url(#m0)"/>
+<rect x="566" y="686" width="294" height="44" rx="10" fill="#f8eaf1" stroke="#b0457a" stroke-width="1.4"/>
+<text x="584" y="713" font-size="12.8" fill="#7d2a55" text-anchor="start" font-weight="700">Self-consistency</text>
+<text x="844" y="713" font-size="11.4" fill="#7d2a55" text-anchor="end" font-weight="600">Chapter 14</text>
+</svg>

@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 370" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">Chain of thought compared with program of thought</title>
+  <desc id="d">Two columns. On the left, chain of thought from chapter 8. A security calculation in words goes to the language model, which reasons in words and also does the math in its own text, digit by digit, for example 12,400 times 4.5 times 3. The model computes, and the result is a number that looks right. On the right, program of thought from this chapter. The model reasons in code, writes the formula as a small Python program, for example rate times 4.5 times 3, and stops there. Python computes, and the result is 167400, exact every time.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="20" y="24" width="400" height="330" rx="14" fill="#fff" stroke="#5d6b7e" stroke-width="1.7"/>
+<rect x="20" y="24" width="400" height="44" rx="14" fill="#5d6b7e"/>
+<rect x="20" y="50" width="400" height="18" rx="0" fill="#5d6b7e"/>
+<text x="220" y="52" font-size="14" fill="#fff" text-anchor="middle" font-weight="700">Chain of thought, chapter 8</text>
+<rect x="44" y="86" width="352" height="40" rx="10" fill="#f2efe8"/>
+<text x="220" y="111" font-size="12.2" fill="#1c2230" text-anchor="middle" font-weight="600">A security calculation in words</text>
+<path d="M220 126 L 220 142" fill="none" stroke="#1c2230" stroke-width="1.5" marker-end="url(#m0)"/>
+<rect x="44" y="146" width="352" height="82" rx="10" fill="#eef3fb" stroke="#2f62c8" stroke-width="1.3"/>
+<text x="60" y="168" font-size="12.6" fill="#1f4a9e" text-anchor="start" font-weight="700">Language model</text>
+<text x="60" y="188" font-size="11.4" fill="#1c2230" text-anchor="start">The model reasons in words.</text>
+<text x="60" y="204" font-size="11.4" fill="#1c2230" text-anchor="start">The model also does the math</text>
+<text x="60" y="220" font-size="11.4" fill="#1c2230" text-anchor="start">in its own text, digit by digit.</text>
+<path d="M220 228 L 220 244" fill="none" stroke="#1c2230" stroke-width="1.5" marker-end="url(#m0)"/>
+<rect x="44" y="248" width="352" height="40" rx="10" fill="#fff" stroke="#5d6b7e" stroke-width="1.2"/>
+<text x="220" y="273" font-size="12.4" fill="#1c2230" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="600">12,400 × 4.5 × 3 = ?</text>
+<path d="M220 288 L 220 304" fill="none" stroke="#1c2230" stroke-width="1.5" marker-end="url(#m0)"/>
+<rect x="44" y="308" width="170" height="30" rx="15" fill="#fbecec" stroke="#c2552d" stroke-width="1.2"/>
+<text x="129" y="327.176" font-size="11.6" fill="#963f1f" text-anchor="middle" font-weight="700">The model computes</text>
+<text x="396" y="328" font-size="11.8" fill="#963f1f" text-anchor="end" font-weight="700">A number that looks right</text>
+<rect x="460" y="24" width="400" height="330" rx="14" fill="#fff" stroke="#0f8a6a" stroke-width="1.7"/>
+<rect x="460" y="24" width="400" height="44" rx="14" fill="#0f8a6a"/>
+<rect x="460" y="50" width="400" height="18" rx="0" fill="#0f8a6a"/>
+<text x="660" y="52" font-size="14" fill="#fff" text-anchor="middle" font-weight="700">Program of thought, this chapter</text>
+<rect x="484" y="86" width="352" height="40" rx="10" fill="#f2efe8"/>
+<text x="660" y="111" font-size="12.2" fill="#1c2230" text-anchor="middle" font-weight="600">A security calculation in words</text>
+<path d="M660 126 L 660 142" fill="none" stroke="#1c2230" stroke-width="1.5" marker-end="url(#m0)"/>
+<rect x="484" y="146" width="352" height="82" rx="10" fill="#eef3fb" stroke="#2f62c8" stroke-width="1.3"/>
+<text x="500" y="168" font-size="12.6" fill="#1f4a9e" text-anchor="start" font-weight="700">Language model</text>
+<text x="500" y="188" font-size="11.4" fill="#1c2230" text-anchor="start">The model reasons in code.</text>
+<text x="500" y="204" font-size="11.4" fill="#1c2230" text-anchor="start">It writes the formula as a small</text>
+<text x="500" y="220" font-size="11.4" fill="#1c2230" text-anchor="start">Python program and stops there.</text>
+<path d="M660 228 L 660 244" fill="none" stroke="#1c2230" stroke-width="1.5" marker-end="url(#m0)"/>
+<rect x="484" y="248" width="352" height="40" rx="10" fill="#1f2633"/>
+<text x="660" y="273" font-size="12.4" fill="#e8ecf3" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="600">rate * 4.5 * 3</text>
+<path d="M660 288 L 660 304" fill="none" stroke="#1c2230" stroke-width="1.5" marker-end="url(#m0)"/>
+<rect x="484" y="308" width="170" height="30" rx="15" fill="#e3f4ee" stroke="#0f8a6a" stroke-width="1.2"/>
+<text x="569" y="327.176" font-size="11.6" fill="#0b6650" text-anchor="middle" font-weight="700">Python computes</text>
+<text x="836" y="328" font-size="11.8" fill="#0b6650" text-anchor="end" font-weight="700">167400, exact every time</text>
+</svg>
