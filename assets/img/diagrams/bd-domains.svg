@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 310" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">The three Binder domains</title>
+  <desc id="d">Three domains. The framework domain uses /dev/binder with servicemanager and AIDL. Apps, system_server and native services use it, and since Android 11 also the AIDL HALs of the vendor. It is in use. The HAL domain uses /dev/hwbinder with hwservicemanager and HIDL. Framework and vendor talk to HIDL HALs there. It is kept only for devices that still ship them and is deprecated. The vendor domain uses /dev/vndbinder with vndservicemanager and AIDL, for vendor process to vendor process calls. AOSP now advises stable AIDL on /dev/binder, and the domain is deprecated.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="20" y="20" width="260" height="270" rx="14" fill="#fff" stroke="#2f62c8" stroke-width="1.6"/>
+<rect x="20" y="20" width="260" height="40" rx="14" fill="#2f62c8"/>
+<rect x="20" y="44" width="260" height="16" rx="0" fill="#2f62c8"/>
+<text x="150" y="46" font-size="13.4" fill="#fff" text-anchor="middle" font-weight="700">Framework domain</text>
+<text x="38" y="88" font-size="11" fill="#4a5263" text-anchor="start" font-weight="700">Device</text>
+<text x="116" y="88" font-size="11.6" fill="#1c2230" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="600">/dev/binder</text>
+<text x="38" y="114" font-size="11" fill="#4a5263" text-anchor="start" font-weight="700">Manager</text>
+<text x="116" y="114" font-size="11.6" fill="#1c2230" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="600">servicemanager</text>
+<text x="38" y="140" font-size="11" fill="#4a5263" text-anchor="start" font-weight="700">Language</text>
+<text x="116" y="140" font-size="11.6" fill="#1c2230" text-anchor="start" font-weight="600">AIDL</text>
+<text x="38" y="182" font-size="11.2" fill="#1c2230" text-anchor="start">Apps, system_server and native</text>
+<text x="38" y="200" font-size="11.2" fill="#1c2230" text-anchor="start">services. Since Android 11 also</text>
+<text x="38" y="218" font-size="11.2" fill="#1c2230" text-anchor="start">the AIDL HALs of the vendor.</text>
+<rect x="80" y="246" width="140" height="28" rx="14" fill="#e3f4ee" stroke="#0f8a6a" stroke-width="1.2"/>
+<text x="150" y="264.176" font-size="11.6" fill="#0b6650" text-anchor="middle" font-weight="700">In use</text>
+<rect x="310" y="20" width="260" height="270" rx="14" fill="#fff" stroke="#b7791f" stroke-width="1.6"/>
+<rect x="310" y="20" width="260" height="40" rx="14" fill="#b7791f"/>
+<rect x="310" y="44" width="260" height="16" rx="0" fill="#b7791f"/>
+<text x="440" y="46" font-size="13.4" fill="#fff" text-anchor="middle" font-weight="700">HAL domain</text>
+<text x="328" y="88" font-size="11" fill="#4a5263" text-anchor="start" font-weight="700">Device</text>
+<text x="406" y="88" font-size="11.6" fill="#1c2230" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="600">/dev/hwbinder</text>
+<text x="328" y="114" font-size="11" fill="#4a5263" text-anchor="start" font-weight="700">Manager</text>
+<text x="406" y="114" font-size="11.6" fill="#1c2230" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="600">hwservicemanager</text>
+<text x="328" y="140" font-size="11" fill="#4a5263" text-anchor="start" font-weight="700">Language</text>
+<text x="406" y="140" font-size="11.6" fill="#1c2230" text-anchor="start" font-weight="600">HIDL</text>
+<text x="328" y="182" font-size="11.2" fill="#1c2230" text-anchor="start">Framework and vendor talk to</text>
+<text x="328" y="200" font-size="11.2" fill="#1c2230" text-anchor="start">HIDL HALs. Kept only for</text>
+<text x="328" y="218" font-size="11.2" fill="#1c2230" text-anchor="start">devices that still ship them.</text>
+<rect x="370" y="246" width="140" height="28" rx="14" fill="#fbecec" stroke="#c2552d" stroke-width="1.2"/>
+<text x="440" y="264.176" font-size="11.6" fill="#963f1f" text-anchor="middle" font-weight="700">Deprecated</text>
+<rect x="600" y="20" width="260" height="270" rx="14" fill="#fff" stroke="#0e7c86" stroke-width="1.6"/>
+<rect x="600" y="20" width="260" height="40" rx="14" fill="#0e7c86"/>
+<rect x="600" y="44" width="260" height="16" rx="0" fill="#0e7c86"/>
+<text x="730" y="46" font-size="13.4" fill="#fff" text-anchor="middle" font-weight="700">Vendor domain</text>
+<text x="618" y="88" font-size="11" fill="#4a5263" text-anchor="start" font-weight="700">Device</text>
+<text x="696" y="88" font-size="11.6" fill="#1c2230" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="600">/dev/vndbinder</text>
+<text x="618" y="114" font-size="11" fill="#4a5263" text-anchor="start" font-weight="700">Manager</text>
+<text x="696" y="114" font-size="11.6" fill="#1c2230" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="600">vndservicemanager</text>
+<text x="618" y="140" font-size="11" fill="#4a5263" text-anchor="start" font-weight="700">Language</text>
+<text x="696" y="140" font-size="11.6" fill="#1c2230" text-anchor="start" font-weight="600">AIDL</text>
+<text x="618" y="182" font-size="11.2" fill="#1c2230" text-anchor="start">Vendor process to vendor</text>
+<text x="618" y="200" font-size="11.2" fill="#1c2230" text-anchor="start">process. AOSP now advises</text>
+<text x="618" y="218" font-size="11.2" fill="#1c2230" text-anchor="start">stable AIDL on /dev/binder.</text>
+<rect x="660" y="246" width="140" height="28" rx="14" fill="#fbecec" stroke="#c2552d" stroke-width="1.2"/>
+<text x="730" y="264.176" font-size="11.6" fill="#963f1f" text-anchor="middle" font-weight="700">Deprecated</text>
+</svg>

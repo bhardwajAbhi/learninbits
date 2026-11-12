@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 286" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">The encryption layers on /data and the unlock path of the CE key</title>
+  <desc id="d">On the left, three layers. Metadata encryption uses dm-default-key with AES-256-XTS or Adiantum, works from boot and protects the file system structure, sizes and times. Device Encrypted storage has one key for each user, works from boot and holds alarms, telephony and accessibility data. Credential Encrypted storage has one key for each user, works after the first unlock and holds app data, contacts and messages. The wrapped keys live in /data/misc/vold/user_keys/ce and de. On the right, the unlock path. The user enters a PIN, Gatekeeper or Weaver checks it, the synthetic password is recovered, vold unwraps the CE key and installs it in the kernel fscrypt keyring. The CE key never exists unwrapped without the credential.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="20" y="30" width="470" height="62" rx="12" fill="#eef0f3" stroke="#5d6b7e" stroke-width="1.4"/>
+<text x="36" y="55" font-size="13" fill="#3f4a59" text-anchor="start" font-weight="700">Metadata encryption</text>
+<text x="36" y="76" font-size="11.2" fill="#1c2230" text-anchor="start">dm-default-key, AES-256-XTS or Adiantum</text>
+<rect x="320" y="40" width="156" height="22" rx="11" fill="#fff" stroke="#5d6b7e" stroke-width="1.2"/>
+<text x="398" y="54.888" font-size="10.8" fill="#3f4a59" text-anchor="middle" font-weight="700">From boot</text>
+<text x="472" y="80" font-size="10.6" fill="#4a5263" text-anchor="end">File system structure, sizes, times</text>
+<rect x="20" y="104" width="470" height="62" rx="12" fill="#eef3fb" stroke="#2f62c8" stroke-width="1.4"/>
+<text x="36" y="129" font-size="13" fill="#1f4a9e" text-anchor="start" font-weight="700">Device Encrypted (DE)</text>
+<text x="36" y="150" font-size="11.2" fill="#1c2230" text-anchor="start">One key for each user</text>
+<rect x="320" y="114" width="156" height="22" rx="11" fill="#fff" stroke="#2f62c8" stroke-width="1.2"/>
+<text x="398" y="128.888" font-size="10.8" fill="#1f4a9e" text-anchor="middle" font-weight="700">From boot</text>
+<text x="472" y="154" font-size="10.6" fill="#4a5263" text-anchor="end">Alarms, telephony, accessibility</text>
+<rect x="20" y="178" width="470" height="62" rx="12" fill="#e3f4ee" stroke="#0f8a6a" stroke-width="1.4"/>
+<text x="36" y="203" font-size="13" fill="#0b6650" text-anchor="start" font-weight="700">Credential Encrypted (CE)</text>
+<text x="36" y="224" font-size="11.2" fill="#1c2230" text-anchor="start">One key for each user</text>
+<rect x="320" y="188" width="156" height="22" rx="11" fill="#fff" stroke="#0f8a6a" stroke-width="1.2"/>
+<text x="398" y="202.888" font-size="10.8" fill="#0b6650" text-anchor="middle" font-weight="700">After the first unlock</text>
+<text x="472" y="228" font-size="10.6" fill="#4a5263" text-anchor="end">App data, contacts, messages</text>
+<text x="255" y="270" font-size="11" fill="#4a5263" text-anchor="middle" font-family="JetBrains Mono, monospace">/data/misc/vold/user_keys/ce and de hold the wrapped keys.</text>
+<rect x="560" y="30" width="300" height="34" rx="17" fill="#fff" stroke="#2f62c8" stroke-width="1.4"/>
+<text x="710" y="52" font-size="12" fill="#1f4a9e" text-anchor="middle" font-weight="700">User enters a PIN</text>
+<path d="M710 64 L 710 74" fill="none" stroke="#1c2230" stroke-width="1.4" marker-end="url(#m0)"/>
+<rect x="560" y="76" width="300" height="34" rx="17" fill="#fff" stroke="#7a4fc2" stroke-width="1.4"/>
+<text x="710" y="98" font-size="12" fill="#58378f" text-anchor="middle" font-weight="700">Gatekeeper or Weaver</text>
+<path d="M710 110 L 710 120" fill="none" stroke="#1c2230" stroke-width="1.4" marker-end="url(#m0)"/>
+<rect x="560" y="122" width="300" height="34" rx="17" fill="#fff" stroke="#b7791f" stroke-width="1.4"/>
+<text x="710" y="144" font-size="12" fill="#8a5a12" text-anchor="middle" font-weight="700">Synthetic password</text>
+<path d="M710 156 L 710 166" fill="none" stroke="#1c2230" stroke-width="1.4" marker-end="url(#m0)"/>
+<rect x="560" y="168" width="300" height="34" rx="17" fill="#fff" stroke="#0f8a6a" stroke-width="1.4"/>
+<text x="710" y="190" font-size="12" fill="#0b6650" text-anchor="middle" font-weight="700">vold unwraps the CE key</text>
+<path d="M710 202 L 710 212" fill="none" stroke="#1c2230" stroke-width="1.4" marker-end="url(#m0)"/>
+<rect x="560" y="214" width="300" height="34" rx="17" fill="#fff" stroke="#5d6b7e" stroke-width="1.4"/>
+<text x="710" y="236" font-size="12" fill="#3f4a59" text-anchor="middle" font-weight="700">Kernel fscrypt keyring</text>
+<text x="710" y="270" font-size="11" fill="#4a5263" text-anchor="middle" font-style="italic">The CE key never exists unwrapped without the credential.</text>
+</svg>

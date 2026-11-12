@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 452" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">The Soong modules that connect a flag to the code that uses it</title>
+  <desc id="d">The release configuration variable RELEASE_ACONFIG_VALUE_SETS names aconfig_value_set modules, which hold aconfig_values modules for package A and package B. Each aconfig_declarations module with .aconfig files, a package and a container gets the matching values as an implicit dependency, and create-cache makes one cache per package. From it, java_aconfig_library, cc_aconfig_library and rust_aconfig_library generate libraries that a Java or Kotlin module uses through static_libs, a C++ module through shared_libs and a Rust module through rustlibs. Across the whole tree, all_aconfig_declarations makes one file with every flag, the storage files and the list of finalized flags, and exported_java_aconfig_library makes android-flags.jar in the SDK for apps outside the platform.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="24" y="24" width="250" height="52" rx="10" fill="#fff" stroke="#c2552d" stroke-width="1.6"/>
+<rect x="24" y="24" width="6" height="52" rx="3" fill="#c2552d"/>
+<text x="152" y="46" font-size="12.3" fill="#963f1f" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="700">RELEASE_ACONFIG_VALUE_SETS</text>
+<text x="152" y="65" font-size="11.5" fill="#4a5263" text-anchor="middle">release configuration</text>
+<path d="M149 76 L 149 100" fill="none" stroke="#c2552d" stroke-width="1.6" marker-end="url(#m7)"/>
+<rect x="24" y="104" width="250" height="40" rx="10" fill="#fff" stroke="#b7791f" stroke-width="1.6"/>
+<rect x="24" y="104" width="6" height="40" rx="3" fill="#b7791f"/>
+<text x="152" y="129" font-size="12.3" fill="#8a5a12" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="700">aconfig_value_set</text>
+<path d="M90 144 L 90 176" fill="none" stroke="#b7791f" stroke-width="1.6" marker-end="url(#m6)"/>
+<path d="M208 144 L 208 176" fill="none" stroke="#b7791f" stroke-width="1.6" marker-end="url(#m6)"/>
+<rect x="24" y="180" width="120" height="52" rx="10" fill="#fff" stroke="#b7791f" stroke-width="1.6"/>
+<rect x="24" y="180" width="6" height="52" rx="3" fill="#b7791f"/>
+<text x="87" y="202" font-size="12.3" fill="#8a5a12" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="700">aconfig_values</text>
+<text x="87" y="221" font-size="11.5" fill="#4a5263" text-anchor="middle">package A</text>
+<rect x="154" y="180" width="120" height="52" rx="10" fill="#fff" stroke="#b7791f" stroke-width="1.6"/>
+<rect x="154" y="180" width="6" height="52" rx="3" fill="#b7791f"/>
+<text x="217" y="202" font-size="12.3" fill="#8a5a12" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="700">aconfig_values</text>
+<text x="217" y="221" font-size="11.5" fill="#4a5263" text-anchor="middle">package B</text>
+<rect x="330" y="100" width="250" height="52" rx="10" fill="#fff" stroke="#2f62c8" stroke-width="1.6"/>
+<rect x="330" y="100" width="6" height="52" rx="3" fill="#2f62c8"/>
+<text x="458" y="122" font-size="12.3" fill="#1f4a9e" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="700">aconfig_declarations</text>
+<text x="458" y="141" font-size="11.5" fill="#4a5263" text-anchor="middle">.aconfig files, package, container</text>
+<path d="M274 206 C 300 206, 300 130, 326 130" fill="none" stroke="#b7791f" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#m6)"/>
+<text x="24" y="260" font-size="11.5" fill="#8a5a12" text-anchor="start" font-weight="600">Same package,</text>
+<text x="24" y="276" font-size="11.5" fill="#8a5a12" text-anchor="start" font-weight="600">implicit dependency</text>
+<path d="M455 152 L 455 176" fill="none" stroke="#2f62c8" stroke-width="1.6" marker-end="url(#m3)"/>
+<rect x="330" y="180" width="250" height="40" rx="10" fill="#f2efe8"/>
+<text x="455" y="205" font-size="12" fill="#1c2230" text-anchor="middle" font-weight="600">create-cache, one cache per package</text>
+<path d="M455 220 C 455 260, 154 260, 154 316" fill="none" stroke="#0f8a6a" stroke-width="1.6" marker-end="url(#m4)"/>
+<rect x="24" y="320" width="260" height="40" rx="10" fill="#fff" stroke="#0f8a6a" stroke-width="1.6"/>
+<rect x="24" y="320" width="6" height="40" rx="3" fill="#0f8a6a"/>
+<text x="157" y="345" font-size="12.3" fill="#0b6650" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="700">java_aconfig_library</text>
+<path d="M154 360 L 154 388" fill="none" stroke="#1c2230" stroke-width="1.6" marker-end="url(#m0)"/>
+<text x="164" y="378" font-size="11.5" fill="#4a5263" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="600">static_libs</text>
+<rect x="24" y="392" width="260" height="40" rx="10" fill="#fff" stroke="#2f62c8" stroke-width="1.6"/>
+<rect x="24" y="392" width="6" height="40" rx="3" fill="#2f62c8"/>
+<text x="157" y="417" font-size="12.3" fill="#1f4a9e" text-anchor="middle" font-weight="700">Java or Kotlin module</text>
+<path d="M455 220 C 455 260, 438 260, 438 316" fill="none" stroke="#0f8a6a" stroke-width="1.6" marker-end="url(#m4)"/>
+<rect x="308" y="320" width="260" height="40" rx="10" fill="#fff" stroke="#0f8a6a" stroke-width="1.6"/>
+<rect x="308" y="320" width="6" height="40" rx="3" fill="#0f8a6a"/>
+<text x="441" y="345" font-size="12.3" fill="#0b6650" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="700">cc_aconfig_library</text>
+<path d="M438 360 L 438 388" fill="none" stroke="#1c2230" stroke-width="1.6" marker-end="url(#m0)"/>
+<text x="448" y="378" font-size="11.5" fill="#4a5263" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="600">shared_libs</text>
+<rect x="308" y="392" width="260" height="40" rx="10" fill="#fff" stroke="#2f62c8" stroke-width="1.6"/>
+<rect x="308" y="392" width="6" height="40" rx="3" fill="#2f62c8"/>
+<text x="441" y="417" font-size="12.3" fill="#1f4a9e" text-anchor="middle" font-weight="700">C++ module</text>
+<path d="M455 220 C 455 260, 722 260, 722 316" fill="none" stroke="#0f8a6a" stroke-width="1.6" marker-end="url(#m4)"/>
+<rect x="592" y="320" width="260" height="40" rx="10" fill="#fff" stroke="#0f8a6a" stroke-width="1.6"/>
+<rect x="592" y="320" width="6" height="40" rx="3" fill="#0f8a6a"/>
+<text x="725" y="345" font-size="12.3" fill="#0b6650" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="700">rust_aconfig_library</text>
+<path d="M722 360 L 722 388" fill="none" stroke="#1c2230" stroke-width="1.6" marker-end="url(#m0)"/>
+<text x="732" y="378" font-size="11.5" fill="#4a5263" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="600">rustlibs</text>
+<rect x="592" y="392" width="260" height="40" rx="10" fill="#fff" stroke="#2f62c8" stroke-width="1.6"/>
+<rect x="592" y="392" width="6" height="40" rx="3" fill="#2f62c8"/>
+<text x="725" y="417" font-size="12.3" fill="#1f4a9e" text-anchor="middle" font-weight="700">Rust module</text>
+<rect x="612" y="24" width="244" height="196" rx="12" fill="#fbfaf6" stroke="#7a4fc2" stroke-width="1.3" stroke-dasharray="5 4"/>
+<text x="628" y="50" font-size="13.5" fill="#58378f" text-anchor="start" font-weight="700">Across the whole tree</text>
+<text x="628" y="74" font-size="11.8" fill="#1c2230" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">all_aconfig_declarations</text>
+<text x="628" y="94" font-size="12" fill="#4a5263" text-anchor="start">One file with every flag, the</text>
+<text x="628" y="111" font-size="12" fill="#4a5263" text-anchor="start">storage files and the list of</text>
+<text x="628" y="128" font-size="12" fill="#4a5263" text-anchor="start">finalized flags.</text>
+<text x="628" y="164" font-size="11.3" fill="#1c2230" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">exported_java_aconfig_library</text>
+<text x="628" y="184" font-size="12" fill="#4a5263" text-anchor="start">android-flags.jar in the SDK</text>
+<text x="628" y="201" font-size="12" fill="#4a5263" text-anchor="start">for apps outside the platform.</text>
+<path d="M580 126 L 608 126" fill="none" stroke="#7a4fc2" stroke-width="1.4" stroke-dasharray="4 4" marker-end="url(#m5)"/>
+</svg>

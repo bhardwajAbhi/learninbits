@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 378" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">What Zygote preloads and how its children share it</title>
+  <desc id="d">On the left, the memory of Zygote after preload. It holds the ART runtime and boot class path, about 19,000 preloaded classes, class loaders for old libraries, system resources, app HALs and the graphics driver, libandroid and libjnigraphics, WebView and crypto providers. Zygote then waits in runSelectLoop on /dev/socket/zygote. On the right, three children. system_server is the first child, with uid 1000, and closes the Zygote socket. App processes start on request of the activity manager, each with its own uid, and start a binder thread pool in onZygoteInit. All children share the preloaded pages with copy-on-write until they write to them. fork copies only the page tables. A USAP pool lets Zygote fork spare children in advance and specialize one on request.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<text x="20" y="34" font-size="14" fill="#1c2230" text-anchor="start" font-weight="700">Zygote, after preload()</text>
+<rect x="20" y="52" width="270" height="30" rx="6" fill="#eef0f3" stroke="#5d6b7e" stroke-width="1.2"/>
+<text x="32" y="72" font-size="11.8" fill="#3f4a59" text-anchor="start" font-weight="600">ART runtime and boot class path</text>
+<rect x="20" y="86" width="270" height="30" rx="6" fill="#eef3fb" stroke="#2f62c8" stroke-width="1.2"/>
+<text x="32" y="106" font-size="11.8" fill="#1f4a9e" text-anchor="start" font-weight="600">About 19,000 preloaded classes</text>
+<rect x="20" y="120" width="270" height="30" rx="6" fill="#eef3fb" stroke="#2f62c8" stroke-width="1.2"/>
+<text x="32" y="140" font-size="11.8" fill="#1f4a9e" text-anchor="start" font-weight="600">Class loaders for old libraries</text>
+<rect x="20" y="154" width="270" height="30" rx="6" fill="#f3f0fa" stroke="#7a4fc2" stroke-width="1.2"/>
+<text x="32" y="174" font-size="11.8" fill="#58378f" text-anchor="start" font-weight="600">System resources</text>
+<rect x="20" y="188" width="270" height="30" rx="6" fill="#fdf4e3" stroke="#b7791f" stroke-width="1.2"/>
+<text x="32" y="208" font-size="11.8" fill="#8a5a12" text-anchor="start" font-weight="600">App HALs and the graphics driver</text>
+<rect x="20" y="222" width="270" height="30" rx="6" fill="#e3f4ee" stroke="#0f8a6a" stroke-width="1.2"/>
+<text x="32" y="242" font-size="11.8" fill="#0b6650" text-anchor="start" font-weight="600">libandroid and libjnigraphics</text>
+<rect x="20" y="256" width="270" height="30" rx="6" fill="#fbecec" stroke="#c2552d" stroke-width="1.2"/>
+<text x="32" y="276" font-size="11.8" fill="#963f1f" text-anchor="start" font-weight="600">WebView and crypto providers</text>
+<rect x="20" y="296" width="270" height="46" rx="8" fill="#1c2230"/>
+<text x="32" y="315" font-size="11.8" fill="#fff" text-anchor="start" font-weight="600">runSelectLoop() on</text>
+<text x="32" y="332" font-size="11.8" fill="#ffffffcc" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="600">/dev/socket/zygote</text>
+<rect x="390" y="60" width="148" height="230" rx="10" fill="#fff" stroke="#0f8a6a" stroke-width="1.6"/>
+<text x="402" y="82" font-size="12.8" fill="#0b6650" text-anchor="start" font-weight="700">system_server</text>
+<text x="402" y="100" font-size="11" fill="#7b8292" text-anchor="start" font-style="italic">First child</text>
+<rect x="402" y="110" width="124" height="86" rx="6" fill="#eef0f3" stroke="#5d6b7e" stroke-width="1" stroke-dasharray="4 3"/>
+<text x="464" y="148" font-size="11.4" fill="#3f4a59" text-anchor="middle" font-weight="700">Shared pages</text>
+<text x="464" y="166" font-size="11" fill="#4a5263" text-anchor="middle">copy-on-write</text>
+<text x="402" y="220" font-size="11.2" fill="#4a5263" text-anchor="start">uid 1000, nice name</text>
+<text x="402" y="238" font-size="11.2" fill="#4a5263" text-anchor="start">system_server</text>
+<text x="402" y="256" font-size="11.2" fill="#4a5263" text-anchor="start">Closes the Zygote socket</text>
+<path d="M464 44 L 464 57" fill="none" stroke="#0f8a6a" stroke-width="1.6" marker-end="url(#m4)"/>
+<rect x="550" y="60" width="148" height="230" rx="10" fill="#fff" stroke="#2f62c8" stroke-width="1.6"/>
+<text x="562" y="82" font-size="12.8" fill="#1f4a9e" text-anchor="start" font-weight="700">App process</text>
+<text x="562" y="100" font-size="11" fill="#7b8292" text-anchor="start" font-style="italic">On request of AMS</text>
+<rect x="562" y="110" width="124" height="86" rx="6" fill="#eef0f3" stroke="#5d6b7e" stroke-width="1" stroke-dasharray="4 3"/>
+<text x="624" y="148" font-size="11.4" fill="#3f4a59" text-anchor="middle" font-weight="700">Shared pages</text>
+<text x="624" y="166" font-size="11" fill="#4a5263" text-anchor="middle">copy-on-write</text>
+<text x="562" y="220" font-size="11.2" fill="#4a5263" text-anchor="start">uid of the app</text>
+<text x="562" y="238" font-size="11.2" fill="#4a5263" text-anchor="start">Starts a binder thread</text>
+<text x="562" y="256" font-size="11.2" fill="#4a5263" text-anchor="start">pool in onZygoteInit()</text>
+<path d="M624 44 L 624 57" fill="none" stroke="#2f62c8" stroke-width="1.6" marker-end="url(#m3)"/>
+<rect x="710" y="60" width="148" height="230" rx="10" fill="#fff" stroke="#2f62c8" stroke-width="1.6"/>
+<text x="722" y="82" font-size="12.8" fill="#1f4a9e" text-anchor="start" font-weight="700">App process</text>
+<text x="722" y="100" font-size="11" fill="#7b8292" text-anchor="start" font-style="italic">On request of AMS</text>
+<rect x="722" y="110" width="124" height="86" rx="6" fill="#eef0f3" stroke="#5d6b7e" stroke-width="1" stroke-dasharray="4 3"/>
+<text x="784" y="148" font-size="11.4" fill="#3f4a59" text-anchor="middle" font-weight="700">Shared pages</text>
+<text x="784" y="166" font-size="11" fill="#4a5263" text-anchor="middle">copy-on-write</text>
+<text x="722" y="220" font-size="11.2" fill="#4a5263" text-anchor="start">Another uid</text>
+<text x="722" y="238" font-size="11.2" fill="#4a5263" text-anchor="start">Same shared pages</text>
+<text x="722" y="256" font-size="11.2" fill="#4a5263" text-anchor="start">until it writes them</text>
+<path d="M784 44 L 784 57" fill="none" stroke="#2f62c8" stroke-width="1.6" marker-end="url(#m3)"/>
+<line x1="290" y1="160" x2="318" y2="160" stroke="#1c2230" stroke-width="1.8"/>
+<rect x="318" y="148" width="54" height="24" rx="12" fill="#1c2230" stroke="#1c2230" stroke-width="1.2"/>
+<text x="345" y="164.104" font-size="11.4" fill="#fff" text-anchor="middle" font-weight="700">fork()</text>
+<path d="M372 160 L 378 160 L 378 44 L 784 44" fill="none" stroke="#1c2230" stroke-width="1.8"/>
+<rect x="390" y="306" width="468" height="58" rx="10" fill="#f2efe8"/>
+<text x="406" y="328" font-size="12.6" fill="#1c2230" text-anchor="start" font-weight="700">USAP pool</text>
+<text x="406" y="348" font-size="11.4" fill="#4a5263" text-anchor="start">Zygote can fork spare children in advance and specialize one on request.</text>
+<text x="155" y="372" font-size="11.4" fill="#4a5263" text-anchor="middle" font-style="italic">fork() copies only the page tables.</text>
+</svg>

@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 382" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">Rights of the individual in the DPDP Act and the GDPR</title>
+  <desc id="d">A table of nine rights. Access, correction and erasure exist in both laws. Grievance redressal is the first step under DPDP, while GDPR allows a complaint to the authority. Nomination after death or incapacity exists only in DPDP. Data portability, restriction of processing, objection and limits on automated decisions exist only in GDPR. DPDP requests get an answer within 90 days under Rule 14, and GDPR requests within one month, extendable by two months.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<text x="560" y="30" font-size="13" fill="#8a5a12" text-anchor="middle" font-weight="700">DPDP Act</text>
+<text x="760" y="30" font-size="13" fill="#1f4a9e" text-anchor="middle" font-weight="700">GDPR</text>
+<rect x="20" y="42" width="840" height="30" rx="6" fill="#faf8f2"/>
+<text x="34" y="62" font-size="12.2" fill="#1c2230" text-anchor="start" font-weight="600">Access or information</text>
+<rect x="530" y="46" width="60" height="22" rx="11" fill="#e3f4ee" stroke="#0f8a6a" stroke-width="1.2"/>
+<text x="560" y="60.96" font-size="11" fill="#0b6650" text-anchor="middle" font-weight="700">Yes</text>
+<rect x="730" y="46" width="60" height="22" rx="11" fill="#e3f4ee" stroke="#0f8a6a" stroke-width="1.2"/>
+<text x="760" y="60.96" font-size="11" fill="#0b6650" text-anchor="middle" font-weight="700">Yes</text>
+<rect x="20" y="76" width="840" height="30" rx="6" fill="#fff"/>
+<text x="34" y="96" font-size="12.2" fill="#1c2230" text-anchor="start" font-weight="600">Correction and completion</text>
+<rect x="530" y="80" width="60" height="22" rx="11" fill="#e3f4ee" stroke="#0f8a6a" stroke-width="1.2"/>
+<text x="560" y="94.96" font-size="11" fill="#0b6650" text-anchor="middle" font-weight="700">Yes</text>
+<rect x="730" y="80" width="60" height="22" rx="11" fill="#e3f4ee" stroke="#0f8a6a" stroke-width="1.2"/>
+<text x="760" y="94.96" font-size="11" fill="#0b6650" text-anchor="middle" font-weight="700">Yes</text>
+<rect x="20" y="110" width="840" height="30" rx="6" fill="#faf8f2"/>
+<text x="34" y="130" font-size="12.2" fill="#1c2230" text-anchor="start" font-weight="600">Erasure</text>
+<rect x="530" y="114" width="60" height="22" rx="11" fill="#e3f4ee" stroke="#0f8a6a" stroke-width="1.2"/>
+<text x="560" y="128.96" font-size="11" fill="#0b6650" text-anchor="middle" font-weight="700">Yes</text>
+<rect x="730" y="114" width="60" height="22" rx="11" fill="#e3f4ee" stroke="#0f8a6a" stroke-width="1.2"/>
+<text x="760" y="128.96" font-size="11" fill="#0b6650" text-anchor="middle" font-weight="700">Yes</text>
+<rect x="20" y="144" width="840" height="30" rx="6" fill="#fff"/>
+<text x="34" y="164" font-size="12.2" fill="#1c2230" text-anchor="start" font-weight="600">Grievance redressal</text>
+<rect x="494" y="148" width="132" height="22" rx="11" fill="#e3f4ee" stroke="#0f8a6a" stroke-width="1.2"/>
+<text x="560" y="162.96" font-size="11" fill="#0b6650" text-anchor="middle" font-weight="700">Yes, first step</text>
+<rect x="668.8" y="148" width="182.4" height="22" rx="11" fill="#fdf4e3" stroke="#b7791f" stroke-width="1.2"/>
+<text x="760" y="162.96" font-size="11" fill="#8a5a12" text-anchor="middle" font-weight="700">Complaint to authority</text>
+<rect x="20" y="178" width="840" height="30" rx="6" fill="#faf8f2"/>
+<text x="34" y="198" font-size="12.2" fill="#1c2230" text-anchor="start" font-weight="600">Nomination after death or incapacity</text>
+<rect x="530" y="182" width="60" height="22" rx="11" fill="#e3f4ee" stroke="#0f8a6a" stroke-width="1.2"/>
+<text x="560" y="196.96" font-size="11" fill="#0b6650" text-anchor="middle" font-weight="700">Yes</text>
+<rect x="730" y="182" width="60" height="22" rx="11" fill="#fbecec" stroke="#c2552d" stroke-width="1.2"/>
+<text x="760" y="196.96" font-size="11" fill="#963f1f" text-anchor="middle" font-weight="700">No</text>
+<rect x="20" y="212" width="840" height="30" rx="6" fill="#fff"/>
+<text x="34" y="232" font-size="12.2" fill="#1c2230" text-anchor="start" font-weight="600">Data portability</text>
+<rect x="530" y="216" width="60" height="22" rx="11" fill="#fbecec" stroke="#c2552d" stroke-width="1.2"/>
+<text x="560" y="230.96" font-size="11" fill="#963f1f" text-anchor="middle" font-weight="700">No</text>
+<rect x="730" y="216" width="60" height="22" rx="11" fill="#e3f4ee" stroke="#0f8a6a" stroke-width="1.2"/>
+<text x="760" y="230.96" font-size="11" fill="#0b6650" text-anchor="middle" font-weight="700">Yes</text>
+<rect x="20" y="246" width="840" height="30" rx="6" fill="#faf8f2"/>
+<text x="34" y="266" font-size="12.2" fill="#1c2230" text-anchor="start" font-weight="600">Restriction of processing</text>
+<rect x="530" y="250" width="60" height="22" rx="11" fill="#fbecec" stroke="#c2552d" stroke-width="1.2"/>
+<text x="560" y="264.96" font-size="11" fill="#963f1f" text-anchor="middle" font-weight="700">No</text>
+<rect x="730" y="250" width="60" height="22" rx="11" fill="#e3f4ee" stroke="#0f8a6a" stroke-width="1.2"/>
+<text x="760" y="264.96" font-size="11" fill="#0b6650" text-anchor="middle" font-weight="700">Yes</text>
+<rect x="20" y="280" width="840" height="30" rx="6" fill="#fff"/>
+<text x="34" y="300" font-size="12.2" fill="#1c2230" text-anchor="start" font-weight="600">Objection</text>
+<rect x="530" y="284" width="60" height="22" rx="11" fill="#fbecec" stroke="#c2552d" stroke-width="1.2"/>
+<text x="560" y="298.96" font-size="11" fill="#963f1f" text-anchor="middle" font-weight="700">No</text>
+<rect x="730" y="284" width="60" height="22" rx="11" fill="#e3f4ee" stroke="#0f8a6a" stroke-width="1.2"/>
+<text x="760" y="298.96" font-size="11" fill="#0b6650" text-anchor="middle" font-weight="700">Yes</text>
+<rect x="20" y="314" width="840" height="30" rx="6" fill="#faf8f2"/>
+<text x="34" y="334" font-size="12.2" fill="#1c2230" text-anchor="start" font-weight="600">Limits on automated decisions</text>
+<rect x="530" y="318" width="60" height="22" rx="11" fill="#fbecec" stroke="#c2552d" stroke-width="1.2"/>
+<text x="560" y="332.96" font-size="11" fill="#963f1f" text-anchor="middle" font-weight="700">No</text>
+<rect x="730" y="318" width="60" height="22" rx="11" fill="#e3f4ee" stroke="#0f8a6a" stroke-width="1.2"/>
+<text x="760" y="332.96" font-size="11" fill="#0b6650" text-anchor="middle" font-weight="700">Yes</text>
+<text x="20" y="368" font-size="11.2" fill="#4a5263" text-anchor="start" font-style="italic">DPDP requests get an answer within 90 days under Rule 14. GDPR requests get an answer within one month, extendable by two.</text>
+</svg>

@@ -1,0 +1,858 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Negative prompting · AI Engineering · LearnInBits</title>
+  <meta name="description" content="Tell a model what to avoid as well as what to do. Two guided builds compare the same request with and without limits.">
+  <!-- og:start -->
+  <meta property="og:site_name" content="LearnInBits">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Negative prompting · AI Engineering">
+  <meta property="og:description" content="Tell a model what to avoid as well as what to do. Two guided builds compare the same request with and without limits.">
+  <meta property="og:url" content="https://learninbits.in/courses/ai-engineering/17-negative-prompting.html">
+  <meta property="og:image" content="https://learninbits.in/assets/img/og/courses-ai-engineering-17-negative-prompting.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Negative prompting · AI Engineering">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Negative prompting · AI Engineering">
+  <meta name="twitter:description" content="Tell a model what to avoid as well as what to do. Two guided builds compare the same request with and without limits.">
+  <meta name="twitter:image" content="https://learninbits.in/assets/img/og/courses-ai-engineering-17-negative-prompting.png">
+  <link rel="canonical" href="https://learninbits.in/courses/ai-engineering/17-negative-prompting.html">
+  <!-- og:end -->
+  <link rel="icon" href="../../assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,500;0,8..60,600;1,8..60,500&display=swap">
+  <link rel="stylesheet" href="../../assets/css/style.css?v=20261112">
+  <script>try{var t=localStorage.getItem("lib-theme");t=t?JSON.parse(t):(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+</head>
+<body data-root="../../" data-page="chapter" data-course="ai-engineering" data-id="17-negative-prompting">
+
+<main id="main">
+<article>
+
+  <div class="block oneline">
+    <div class="label">In one line</div>
+    <p>Negative prompting tells the model what to avoid, so that the answer stays within clear limits.</p>
+  </div>
+
+  <section class="learn">
+    <h2>What you will learn</h2>
+    <ul>
+      <li>What a negative prompt is, and why it works best next to clear requirements</li>
+      <li>How to compare the same request with and without limits</li>
+      <li>How to check each limit in an answer, one by one</li>
+      <li>Why a number, such as a word limit, is harder for a model than a ban</li>
+      <li>What limits cost, and why a hard limit belongs in code</li>
+    </ul>
+    <p class="needs">Read <a href="05-zero-shot-prompts.html">chapter 5</a> first. This chapter starts from a zero-shot prompt of the same kind and adds limits to it.</p>
+  </section>
+
+  <h2>The idea</h2>
+  <p>In <a href="16-self-reflection.html">chapter 16</a>, the model improved its answer after it wrote it. This chapter shapes the answer before the model writes it. A plain request leaves the model free to choose the length, the format and the words. A model often uses that freedom to write a long, complete answer with headings and lists. Such an answer suits an expert, but not a busy founder who wants the main point in a minute.</p>
+  <p><strong>Negative prompting</strong> adds limits to the request. One part lists what the answer must do, such as a word limit or the kind of examples. The other part lists what the answer must not do, such as jargon, bullet points or exact amounts. Together, the two lists fit the answer to one reader.</p>
+  <p>The "do not" part needs some care, because a model reads every word of the prompt, including the words that you ban. A study by Joel Jang and colleagues, <a href="https://arxiv.org/abs/2209.12711">"Can Large Language Models Truly Understand Prompts?"</a>, found that models often handle negated instructions worse than positive ones. The <a href="https://arxiv.org/abs/2402.07896">"pink elephant" study</a> by Louis Castricato and colleagues looked at the same problem from the other side. It trained models to steer away from a banned topic and toward a preferred one. Both studies are clear, practical and worth reading for anyone who writes prompts.</p>
+  <p>Both point to the same habit. Pair every "do not" with a "do", so that the model knows what to write instead. The <a href="https://www.promptingguide.ai/introduction/tips">Prompt Engineering Guide</a> gives the same advice. Both programs of this chapter follow it.</p>
+
+  <div class="block analogy">
+    <div class="label">Real-life analogy</div>
+    <p>A family in Jaipur books a caterer for a wedding of 200 guests. They give clear rules. The budget is ₹1 lakh and the food must be mild. No dish can have onion or garlic. These rules alone do not make a menu, so the family also says what they want, such as dal baati churma and two sweets. A good brief says both what to avoid and what to make, and a good prompt does the same.</p>
+  </div>
+
+  <h2>The idea in one picture</h2>
+  <p>The same topic goes into two prompts. Only the second prompt sets limits.</p>
+  <figure class="diagram">
+      <div class="frame"><img src="../../assets/img/diagrams/ai-17-idea.svg" alt="One topic for one reader goes into two prompts. The plain request gives only the task and the reader, and gets a long answer of any length, any format and any words. The request with limits adds REQUIREMENTS, what to do, and DO NOT, what to avoid. It gets a short answer fitted to one reader and one purpose. Pair every DO NOT with a requirement, so that the model knows what to write instead." loading="lazy"></div>
+      <figcaption>A plain request and a request with limits, for the same topic and the same reader.</figcaption>
+    </figure>
+
+  <div class="table-wrap">
+      <table>
+        <thead><tr><th></th><th>Plain request</th><th>Request with limits</th></tr></thead>
+        <tbody>
+          <tr><td>What the prompt says</td><td>The task and the reader</td><td>The task, the reader, the requirements and a DO NOT list</td></tr>
+          <tr><td>Length of the answer</td><td>Free, often long</td><td>Set by a limit</td></tr>
+          <tr><td>Format and words</td><td>Chosen by the model</td><td>Set by the prompt</td></tr>
+          <tr><td>Best for</td><td>A first, full overview</td><td>An answer for one reader and one purpose</td></tr>
+          <tr><td>Calls to the model</td><td>One</td><td>One</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+  <h2>What we build in this chapter</h2>
+  <p>Each program sends the same request twice, first as a plain request and then with limits. It prints both answers with their word counts, so that you can compare them side by side. Only the model, the topic and the limits change between the two programs.</p>
+
+  <div class="build-cards">
+    <div class="build-card" style="--ex:#2f62c8">
+      <span class="ex-tag"><b>1</b>Example 1</span>
+      <h3>The DPDP Act with Gemini</h3>
+      <dl>
+        <dt>Aim</dt><dd>Gemini explains consent under India's DPDP Act to a startup founder, once without limits and once with them.</dd>
+        <dt>Problem</dt><dd>The founder needs a short, plain answer that says what to do and what is at risk, without legal terms.</dd>
+        <dt>Input</dt><dd>One topic in plain text, used in both prompts.</dd>
+        <dt>Expected output</dt><dd>Two answers with their word counts, for example<code class="expect">[Word count: <b>97</b>]</code></dd>
+        <dt>Model</dt><dd><span class="model-chip">Gemini 3.1 Flash Lite</span></dd>
+      </dl>
+    </div>
+    <div class="build-card" style="--ex:#0f8a6a">
+      <span class="ex-tag"><b>2</b>Example 2</span>
+      <h3>Certificate pinning with Llama</h3>
+      <dl>
+        <dt>Aim</dt><dd>Llama explains certificate pinning to a product manager, once without limits and once with them.</dd>
+        <dt>Problem</dt><dd>The product manager needs to know what pinning protects and why it matters to users, without technical terms.</dd>
+        <dt>Input</dt><dd>One topic in plain text, used in both prompts.</dd>
+        <dt>Expected output</dt><dd>The same two parts as Example 1.</dd>
+        <dt>Model</dt><dd><span class="model-chip">Llama 3.1 8B, through OpenRouter</span></dd>
+      </dl>
+    </div>
+  </div>
+  <p>DPDP stands for the Digital Personal Data Protection Act of India, from 2023. Certificate pinning makes an app trust only the server certificates that it already knows, so that a fake server cannot pass as the real one.</p>
+
+  <!-- ================= EXAMPLE 1 ================= -->
+  <section class="example" style="--ex:#2f62c8">
+
+    <div class="example-banner">
+      <div class="eb-tag">Example 1 · Guided build</div>
+      <h2 data-toc="Example 1, the DPDP Act">Explaining the DPDP Act to a startup founder</h2>
+      <p>Gemini explains consent under the DPDP Act to a startup founder, first without limits and then with them.</p>
+      <div class="eb-row">
+        <span class="eb-chip">Gemini 3.1 Flash Lite</span>
+        <span class="eb-chip">src/16_negative_prompting_google.py</span>
+        <a class="gh-btn" href="https://github.com/bhardwajAbhi/ai-engineering/blob/main/src/16_negative_prompting_google.py"><svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M12 .5a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2.1c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1.1-.8.1-.8.1-.8 1.2.1 1.9 1.3 1.9 1.3 1.1 1.9 2.9 1.3 3.6 1 .1-.8.4-1.3.8-1.6-2.7-.3-5.5-1.3-5.5-6a4.7 4.7 0 0 1 1.3-3.2c-.1-.3-.6-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.7 1.7.2 2.9.1 3.2a4.7 4.7 0 0 1 1.3 3.2c0 4.6-2.8 5.6-5.5 6 .4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .5z"/></svg>View on GitHub</a>
+      </div>
+    </div>
+
+    <figure class="diagram">
+      <div class="frame"><img src="../../assets/img/diagrams/ai-17-ex1-flow.svg" alt="Setup, llm = ChatGoogleGenerativeAI(model=&quot;gemini-3.1-flash-lite&quot;, ...), temperature=0.3, so that the wording varies a little. Input, topic = &quot;...&quot;, The DPDP Act and consent for mobile apps, for a startup founder. Plain, unconstrained_prompt, Explain {topic} to .... Call, (unconstrained_prompt | llm | parser).invoke(...), The answer without limits. Count, len(result.split()), Prints the answer and its word count. Limits, constrained_prompt, The same request, plus REQUIREMENTS and DO NOT. Call, (constrained_prompt | llm | parser).invoke(...), The answer with limits. Count, len(result.split()), Prints the answer and its word count, to compare with the limit of 100 words." loading="lazy"></div>
+      <figcaption>The program of Example 1, from the topic to the two answers.</figcaption>
+    </figure>
+
+    <h3 class="step"><span class="sn">Step 1</span>Create the file</h3>
+    <p>In your project folder, create the file <code>src/16_negative_prompting_google.py</code>. The docstring states the idea in two sentences. It also says how the program shows the effect, namely the same request with and without limits.</p>
+<pre class="code" data-lang="python" data-file="src/16_negative_prompting_google.py"><code>"""
+Title: Negative Prompting (Google Generative AI)
+
+Negative prompting tells the model what NOT to do as well as what to do,
+by adding clear limits such as a word limit and a list of things to avoid.
+The same request is run with and without these limits so you can compare.
+
+uv run python src/16_negative_prompting_google.py
+"""</code></pre>
+
+    <h3 class="step"><span class="sn">Step 2</span>Import what you need</h3>
+<pre class="code" data-lang="python"><code>from dotenv import load_dotenv
+from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.output_parsers import StrOutputParser</code></pre>
+    <ul class="explain">
+      <li><code>load_dotenv</code> reads your API key from the <code>.env</code> file, as in every chapter.</li>
+      <li><code>ChatGoogleGenerativeAI</code>, <code>ChatPromptTemplate</code> and <code>StrOutputParser</code> are the model, the prompt and the parser of chapter 2.</li>
+    </ul>
+
+    <h3 class="step"><span class="sn">Step 3</span>Create the model and the parser</h3>
+<pre class="code" data-lang="python"><code>def main():
+    load_dotenv()
+
+    # Initialize the model
+    llm = ChatGoogleGenerativeAI(
+        model="gemini-3.1-flash-lite",
+        temperature=0.3,
+    )</code></pre>
+<pre class="code" data-lang="python"><code>    # Parser to extract the text from the model response
+    parser = StrOutputParser()</code></pre>
+    <ul class="explain">
+      <li><code>temperature=0.3</code> is new. In chapters 15 and 16, you used 0, so that each step gave a steady result. Here, a little variety gives more natural wording. Your answers will therefore differ a little from the output below.</li>
+      <li><code>StrOutputParser</code> turns each reply into plain text, so that you can print it and count its words.</li>
+    </ul>
+
+    <h3 class="step"><span class="sn">Step 4</span>Set the topic</h3>
+<pre class="code" data-lang="python"><code>    topic = "India's DPDP Act, 2023 and consent for mobile apps"</code></pre>
+    <ul class="explain">
+      <li>The topic sits in one variable, so that both prompts get exactly the same text. Only the limits differ, so any change in the answer comes from the limits.</li>
+    </ul>
+
+    <h3 class="step"><span class="sn">Step 5</span>Write the plain request</h3>
+<pre class="code" data-lang="python"><code>    # Without constraints
+    unconstrained_prompt = ChatPromptTemplate.from_template(
+        "Explain {topic} to a startup founder."
+    )</code></pre>
+    <ul class="explain">
+      <li>"Explain {topic} to a startup founder" names the task and the reader, but sets no limits. The model chooses the length, the format and the words.</li>
+    </ul>
+
+    <h3 class="step"><span class="sn">Step 6</span>Write the request with limits</h3>
+<pre class="code" data-lang="python"><code>    # With negative constraints
+    constrained_prompt = ChatPromptTemplate.from_template("""
+        Explain {topic} to a startup founder.
+
+        REQUIREMENTS:
+        - Maximum 100 words
+        - Use everyday business analogies, not legal ones
+        - Focus on what the founder must do and the cost of getting it wrong
+
+        DO NOT:
+        - Use legal jargon (no "data fiduciary", "data principal", "Schedule", "Section")
+        - Include code or technical terms
+        - Use bullet points
+        - Quote exact penalty amounts
+
+        Write in a conversational, professional tone.
+    """)</code></pre>
+    <ul class="explain">
+      <li>The first line is the same request, so the task does not change.</li>
+      <li>REQUIREMENTS lists what the answer must do. "Maximum 100 words" sets the length. "Use everyday business analogies, not legal ones" tells the model how to explain, and the last requirement picks the content.</li>
+      <li>DO NOT lists what the answer must avoid. The banned terms are words that a founder does not need, such as "data fiduciary" and "Section".</li>
+      <li>"Quote exact penalty amounts" is banned too. An amount from memory can be wrong, and a founder can act on a wrong number.</li>
+      <li>Each "do not" has a matching "do". "No legal jargon" pairs with everyday analogies, and "no bullet points" pairs with the conversational tone of the last line.</li>
+    </ul>
+
+    <h3 class="step"><span class="sn">Step 7</span>Run both prompts and count the words</h3>
+<pre class="code" data-lang="python"><code>    print("\n--- WITHOUT CONSTRAINTS ---")
+    result = (unconstrained_prompt | llm | parser).invoke({"topic": topic})
+    print(result)
+    word_count = len(result.split())
+    print(f"\n[Word count: {word_count}]")
+
+    print("\n" + "=" * 60)
+
+    print("\n--- WITH CONSTRAINTS ---")
+    result = (constrained_prompt | llm | parser).invoke({"topic": topic})
+    print(result)
+    word_count = len(result.split())
+    print(f"\n[Word count: {word_count}]")</code></pre>
+    <ul class="explain">
+      <li><code>(unconstrained_prompt | llm | parser)</code> builds the chain inside the brackets. It is the same three-part chain of chapter 2, written in one line.</li>
+      <li><code>.invoke({"topic": topic})</code> fills the <code>{topic}</code> placeholder and sends the prompt.</li>
+      <li><code>len(result.split())</code> splits the answer at spaces and counts the pieces. It is a rough word count, but good enough to check a limit.</li>
+      <li>Both runs print the answer and its word count, so that you can compare them.</li>
+    </ul>
+<pre class="code" data-lang="python"><code>if __name__ == "__main__":
+    main()</code></pre>
+<pre class="code" data-lang="bash"><code>uv run python src/16_negative_prompting_google.py</code></pre>
+<details class="fold">
+      <summary><span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m16 18 6-6-6-6M8 6l-6 6 6 6"/></svg></span><span class="ft">Show the full output<small>61 lines</small></span></summary>
+      <div class="fold-body">
+<pre class="code" data-lang="output"><code>============================================================
+NEGATIVE PROMPTING: WITH AND WITHOUT CONSTRAINTS
+============================================================
+
+--- WITHOUT CONSTRAINTS ---
+Direct use of automatic function calling (AFC) in Models.generate_content is not recommended. Instead, we recommend to use AFC in Chat.send_message. Similarly, direct use of AFC in Models.generate_content_stream is not recommended. Instead, we recommend to use AFC in Chat.send_message_stream.
+
+For a startup founder, the **Digital Personal Data Protection (DPDP) Act, 2023** is not just a legal hurdle—it is a fundamental shift in how you must design your product. 
+
+Think of it as the "GDPR of India." If you handle user data, you are now a **Data Fiduciary**, and your users are **Data Principals**.
+
+Here is the breakdown of what you need to know, specifically regarding **Consent** for your mobile app.
+
+---
+
+### 1. The Core Philosophy: "Privacy by Design"
+The Act mandates that you can only process data for a **specific, lawful purpose** that the user has clearly consented to. You can no longer collect "everything just in case we need it later."
+
+### 2. The "Consent" Requirements (The Rules of the Game)
+Under the DPDP Act, consent must be **free, specific, informed, unconditional, and unambiguous.**
+
+*   **The "Notice" Requirement:** Before or at the time of asking for consent, you must provide a **Notice** (in plain language, and ideally in English + the 22 languages of the 8th Schedule of the Constitution). This notice must state:
+    *   What data you are collecting.
+    *   Why you are collecting it (the purpose).
+    *   How they can withdraw consent.
+    *   How they can file a grievance with your Data Protection Officer (DPO).
+*   **Actionable Consent:** You cannot use "pre-ticked boxes" or "silence" as consent. The user must perform a clear, affirmative action (e.g., clicking "I Agree" after reading the notice).
+*   **Withdrawal:** It must be **as easy to withdraw consent as it was to give it.** If a user clicks "Withdraw," you must stop processing their data and delete it (unless another law requires you to keep it).
+
+### 3. What this means for your Mobile App UX
+Stop using "Dark Patterns." The Act explicitly discourages deceptive design.
+
+*   **Granular Consent:** Don’t bundle permissions. If your app needs Location for a delivery feature but also wants to track Contacts for "marketing," you must ask for these separately. Do not force the user to accept both to use the app.
+*   **The "Consent Manager":** The Act introduces a "Consent Manager"—a platform or entity registered with the Data Protection Board that acts as a single point for users to manage their consents across different apps. You will eventually need to integrate with these systems.
+*   **Data Minimization:** Only collect what is strictly necessary for the service. If you are a food delivery app, you don't need access to the user's photo gallery. If you ask for it, you will have to justify it legally.
+
+### 4. Critical "Startup" Checklist
+1.  **Appoint a DPO:** If you are a significant data fiduciary (or handle large volumes of data), you must appoint a Data Protection Officer based in India.
+2.  **Update your Privacy Policy:** Your current "Terms &amp; Conditions" are likely insufficient. Rewrite them to be transparent, simple, and specific to the DPDP Act.
+3.  **Data Audit:** Map your data flow. Where is it stored? Who has access? How long do you keep it? If you don't know where your data is, you cannot comply.
+4.  **Children’s Data:** **Huge Red Flag.** You cannot track, target, or process the data of anyone under 18 in a way that causes "detrimental effect." You must obtain verifiable parental consent. If your app is for kids, the compliance bar is significantly higher.
+5.  **Grievance Redressal:** You must have a clear mechanism for users to complain. If a user asks to delete their data, you must have a technical process to wipe it from your servers and your third-party vendors (e.g., AWS, Firebase, Mixpanel).
+
+### 5. The Risk: Why you should care
+The penalties under the DPDP Act are massive—up to **₹250 Crore** for failing to prevent a data breach. Beyond the fines, the reputational damage and the potential for the Data Protection Board to order you to stop processing data (effectively shutting down your app) are existential threats to a startup.
+
+### Founder’s Advice:
+*   **Don't treat this as a "legal" task; treat it as a "product" task.** Build the consent flow into your onboarding UX.
+*   **Talk to your Devs:** Ensure your database architecture allows for "Right to Erasure" (deleting a user's data upon request).
+*   **Consult a specialist:** This is not a DIY job. Spend the money to have a legal expert review your data flow once before you scale.
+
+***Disclaimer:** I am an AI, not a lawyer. The DPDP Act is complex and subject to upcoming rules. Please consult with a legal professional specializing in Indian tech law before finalizing your compliance strategy.*
+
+[Word count: 755]
+
+============================================================
+
+--- WITH CONSTRAINTS ---
+Think of the DPDP Act as a "digital handshake" agreement. You are now legally required to ask users for clear, specific permission before collecting their personal info, just like asking for a guest’s coat before hanging it up. You must explain exactly why you need their data and let them take it back whenever they want. If you treat user data like a borrowed item rather than your own property, you’ll stay safe. If you ignore these rules, you risk massive fines that could bankrupt your startup and destroy the trust you’ve worked so hard to build.
+
+[Word count: 97]</code></pre>
+      </div>
+    </details>
+
+    <h3 class="step"><span class="sn">Read</span>Read the two answers</h3>
+    <p>The output starts with a line that the model did not write. "Direct use of automatic function calling (AFC) ..." is a log message from the Google library that LangChain uses. It appears in the terminal, but it is not part of the answer. The word count of 755 counts only the answer.</p>
+    <p><strong>The answer without limits.</strong> The answer has 755 words, with headings, many bullet points and a checklist. It uses "Data Fiduciary", "Data Principals" and "₹250 Crore", which are exactly the things that the second prompt bans. Most of its content is useful, but a founder needs about ten minutes to read it.</p>
+    <p>A long answer also has more facts to check. Most of them are right, but two are not.</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Claim in the long answer</th><th>Against the Act</th></tr></thead>
+        <tbody>
+          <tr><td>Consent must be free, specific, informed, unconditional and unambiguous</td><td>Correct. Section 6(1)</td></tr>
+          <tr><td>Users can withdraw consent as easily as they gave it</td><td>Correct. Section 6(4)</td></tr>
+          <tr><td>A Consent Manager is registered with the Data Protection Board</td><td>Correct. Section 6(7) and 6(9)</td></tr>
+          <tr><td>A significant data fiduciary appoints a Data Protection Officer in India</td><td>Correct. Section 10(2)</td></tr>
+          <tr><td>Up to ₹250 crore for failing to prevent a data breach</td><td>Correct. The Schedule of the Act</td></tr>
+          <tr><td>"The Act explicitly discourages" dark patterns</td><td>Not correct. The Act does not mention dark patterns. Separate consumer protection guidelines of 2023 cover them.</td></tr>
+          <tr><td>The Board can order you to stop processing data</td><td>Not quite. Under Section 37, the government can block an app on a reference from the Board, after penalties in two or more cases.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p><strong>The answer with limits.</strong> The second answer is one paragraph.</p>
+<pre class="code" data-lang="output"><code>Think of the DPDP Act as a "digital handshake" agreement. You are now
+legally required to ask users for clear, specific permission before
+collecting their personal info, just like asking for a guest’s coat before
+hanging it up. You must explain exactly why you need their data and let them
+take it back whenever they want. If you treat user data like a borrowed item
+rather than your own property, you’ll stay safe. If you ignore these rules,
+you risk massive fines that could bankrupt your startup and destroy the
+trust you’ve worked so hard to build.</code></pre>
+    <p>Now check each limit of the prompt against this answer.</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Limit</th><th>Result</th><th>In the answer</th></tr></thead>
+        <tbody>
+          <tr><td>Maximum 100 words</td><td>Kept</td><td>97 words</td></tr>
+          <tr><td>Everyday business analogies</td><td>Kept</td><td>A handshake, a guest's coat and a borrowed item</td></tr>
+          <tr><td>What the founder must do and the cost</td><td>Kept</td><td>Ask for permission and explain why. The risk is fines and lost trust.</td></tr>
+          <tr><td>No legal jargon</td><td>Kept</td><td>No legal terms at all</td></tr>
+          <tr><td>No code or technical terms</td><td>Kept</td><td>None</td></tr>
+          <tr><td>No bullet points</td><td>Kept</td><td>One paragraph</td></tr>
+          <tr><td>No exact penalty amounts</td><td>Kept</td><td>"Massive fines", with no amount</td></tr>
+          <tr><td>Conversational, professional tone</td><td>Kept</td><td>Plain and friendly</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Every limit held. The answer is short, clear and right for its reader. The guest's coat is a home example rather than a business one, but it still makes the point.</p>
+    <p><strong>What the limits cost.</strong> The short answer leaves out children's data, the notice to users and the Consent Manager. For a first talk with a founder, that is a fair trade. For a compliance plan, the long answer serves better. The limits decide what the reader gets, so choose them for the reader and the purpose.</p>
+
+    <h3 class="step"><span class="sn">Learn</span>What this run teaches</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>What happened</th><th>Example</th><th>What it means</th></tr></thead>
+        <tbody>
+          <tr><td>The plain request gave a long, expert answer</td><td>755 words, headings and lists</td><td>Without limits, the model picks the format</td></tr>
+          <tr><td>Every limit held</td><td>97 words, no jargon, no amounts</td><td>A strong model follows clear limits well</td></tr>
+          <tr><td>The banned words did not appear</td><td>No "data fiduciary"</td><td>Here, naming a banned word did not pull it in</td></tr>
+          <tr><td>Useful content was lost</td><td>Children's data, the notice</td><td>Each limit removes something</td></tr>
+          <tr><td>The long answer had two errors</td><td>"Dark patterns"</td><td>Check facts in any answer, long or short</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 class="step"><span class="sn">Inside</span>What happens inside one run</h3>
+    <p>The program makes two calls, one for each prompt. After each call, it counts the words.</p>
+    <figure class="diagram">
+      <div class="frame"><img src="../../assets/img/diagrams/ai-17-ex1-seq.svg" alt="A sequence diagram with the lanes main(), two chains, Gemini API. Step 1, main() to two chains, (unconstrained_prompt | llm | parser).invoke(...), the plain request. Step 2, two chains to Gemini API, call 1. Step 3, Gemini API to main(), answer, 755 words. Step 4, main() to main(), len(result.split()), 755 words. Step 5, main() to two chains, (constrained_prompt | llm | parser).invoke(...), the request with limits. Step 6, two chains to Gemini API, call 2. Step 7, Gemini API to main(), answer, 97 words, one paragraph. Step 8, main() to main(), len(result.split()), 97 words, within the limit of 100." loading="lazy"></div>
+      <figcaption>Inside one run of Example 1, step by step.</figcaption>
+    </figure>
+
+    <details class="fold">
+      <summary><span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m16 18 6-6-6-6M8 6l-6 6 6 6"/></svg></span><span class="ft">Full code of Example 1<small>src/16_negative_prompting_google.py</small></span><a class="gh-btn" href="https://github.com/bhardwajAbhi/ai-engineering/blob/main/src/16_negative_prompting_google.py"><svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M12 .5a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2.1c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1.1-.8.1-.8.1-.8 1.2.1 1.9 1.3 1.9 1.3 1.1 1.9 2.9 1.3 3.6 1 .1-.8.4-1.3.8-1.6-2.7-.3-5.5-1.3-5.5-6a4.7 4.7 0 0 1 1.3-3.2c-.1-.3-.6-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.7 1.7.2 2.9.1 3.2a4.7 4.7 0 0 1 1.3 3.2c0 4.6-2.8 5.6-5.5 6 .4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .5z"/></svg>GitHub</a></summary>
+      <div class="fold-body">
+<pre class="code" data-lang="python" data-file="src/16_negative_prompting_google.py"><code>"""
+Title: Negative Prompting (Google Generative AI)
+
+Negative prompting tells the model what NOT to do as well as what to do,
+by adding clear limits such as a word limit and a list of things to avoid.
+The same request is run with and without these limits so you can compare.
+
+uv run python src/16_negative_prompting_google.py
+"""
+
+from dotenv import load_dotenv
+from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.output_parsers import StrOutputParser
+
+
+def main():
+    load_dotenv()
+
+    # Initialize the model
+    llm = ChatGoogleGenerativeAI(
+        model="gemini-3.1-flash-lite",
+        temperature=0.3,
+    )
+
+    # Parser to extract the text from the model response
+    parser = StrOutputParser()
+
+    print("=" * 60)
+    print("NEGATIVE PROMPTING: WITH AND WITHOUT CONSTRAINTS")
+    print("=" * 60)
+
+    topic = "India's DPDP Act, 2023 and consent for mobile apps"
+
+    # Without constraints
+    unconstrained_prompt = ChatPromptTemplate.from_template(
+        "Explain {topic} to a startup founder."
+    )
+
+    # With negative constraints
+    constrained_prompt = ChatPromptTemplate.from_template("""
+        Explain {topic} to a startup founder.
+
+        REQUIREMENTS:
+        - Maximum 100 words
+        - Use everyday business analogies, not legal ones
+        - Focus on what the founder must do and the cost of getting it wrong
+
+        DO NOT:
+        - Use legal jargon (no "data fiduciary", "data principal", "Schedule", "Section")
+        - Include code or technical terms
+        - Use bullet points
+        - Quote exact penalty amounts
+
+        Write in a conversational, professional tone.
+    """)
+
+    print("\n--- WITHOUT CONSTRAINTS ---")
+    result = (unconstrained_prompt | llm | parser).invoke({"topic": topic})
+    print(result)
+    word_count = len(result.split())
+    print(f"\n[Word count: {word_count}]")
+
+    print("\n" + "=" * 60)
+
+    print("\n--- WITH CONSTRAINTS ---")
+    result = (constrained_prompt | llm | parser).invoke({"topic": topic})
+    print(result)
+    word_count = len(result.split())
+    print(f"\n[Word count: {word_count}]")
+
+
+if __name__ == "__main__":
+    main()
+</code></pre>
+      </div>
+    </details>
+  </section>
+
+  <!-- ================= EXAMPLE 2 ================= -->
+  <section class="example" style="--ex:#0f8a6a">
+
+    <div class="example-banner">
+      <div class="eb-tag">Example 2 · Guided build</div>
+      <h2 data-toc="Example 2, certificate pinning">Explaining certificate pinning to a product manager</h2>
+      <p>Llama explains certificate pinning to a product manager, first without limits and then with them.</p>
+      <div class="eb-row">
+        <span class="eb-chip">Llama 3.1 8B, through OpenRouter</span>
+        <span class="eb-chip">src/16_negative_prompting_openrouter.py</span>
+        <a class="gh-btn" href="https://github.com/bhardwajAbhi/ai-engineering/blob/main/src/16_negative_prompting_openrouter.py"><svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M12 .5a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2.1c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1.1-.8.1-.8.1-.8 1.2.1 1.9 1.3 1.9 1.3 1.1 1.9 2.9 1.3 3.6 1 .1-.8.4-1.3.8-1.6-2.7-.3-5.5-1.3-5.5-6a4.7 4.7 0 0 1 1.3-3.2c-.1-.3-.6-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.7 1.7.2 2.9.1 3.2a4.7 4.7 0 0 1 1.3 3.2c0 4.6-2.8 5.6-5.5 6 .4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .5z"/></svg>View on GitHub</a>
+      </div>
+    </div>
+
+    <figure class="diagram">
+      <div class="frame"><img src="../../assets/img/diagrams/ai-17-ex2-flow.svg" alt="Setup, llm = ChatOpenRouter(model=&quot;meta-llama/llama-3.1-8b-instruct&quot;, ...), temperature=0.3, so that the wording varies a little. Input, topic = &quot;...&quot;, Certificate pinning in mobile apps, for a product manager. Plain, unconstrained_prompt, Explain {topic} to .... Call, (unconstrained_prompt | llm | parser).invoke(...), The answer without limits. Count, len(result.split()), Prints the answer and its word count. Limits, constrained_prompt, The same request, plus REQUIREMENTS and DO NOT. Call, (constrained_prompt | llm | parser).invoke(...), The answer with limits. Count, len(result.split()), Prints the answer and its word count, to compare with the limit of 80 words." loading="lazy"></div>
+      <figcaption>The program of Example 2, from the topic to the two answers.</figcaption>
+    </figure>
+
+    <p>A <span class="same">Same</span> mark tells you that a part has the same job as in Example 1. A <span class="new">New</span> mark tells you what is different.</p>
+
+    <h3 class="step"><span class="sn">Steps 1 and 2</span>File and imports</h3>
+<pre class="code" data-lang="python" data-file="src/16_negative_prompting_openrouter.py"><code>from dotenv import load_dotenv
+from langchain_openrouter import ChatOpenRouter
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.output_parsers import StrOutputParser</code></pre>
+    <ul class="explain">
+      <li><span class="new">New</span><code>ChatOpenRouter</code> instead of <code>ChatGoogleGenerativeAI</code>.</li>
+      <li><span class="same">Same</span><code>load_dotenv</code>, the prompt template and the parser.</li>
+    </ul>
+
+    <h3 class="step"><span class="sn">Step 3</span>Create the model</h3>
+<pre class="code" data-lang="python"><code>    # Initialize the model
+    llm = ChatOpenRouter(
+        #model="qwen/qwen-2.5-7b-instruct",
+        model="meta-llama/llama-3.1-8b-instruct",
+        temperature=0.3,
+    )</code></pre>
+    <ul class="explain">
+      <li><span class="new">New</span>The model is Llama 3.1 8B, a small model, through OpenRouter.</li>
+      <li><span class="new">New</span>The file keeps the line for Qwen 2.5 7B as a comment. Qwen was not available on OpenRouter at the time of this run, so the program uses Llama 3.1 8B instead. To switch back, move the comment mark from one line to the other.</li>
+      <li><span class="same">Same</span><code>temperature=0.3</code> and the parser.</li>
+    </ul>
+
+    <h3 class="step"><span class="sn">Steps 4 to 6</span>Topic and prompts</h3>
+<pre class="code" data-lang="python"><code>    topic = "certificate pinning in mobile apps"
+
+    # Without constraints
+    unconstrained_prompt = ChatPromptTemplate.from_template(
+        "Explain {topic} to a non-technical product manager."
+    )
+
+    # With negative constraints
+    constrained_prompt = ChatPromptTemplate.from_template("""
+        Explain {topic} to a non-technical product manager.
+
+        REQUIREMENTS:
+        - Maximum 80 words
+        - Use an everyday analogy, not a technical one
+        - Focus on what it protects and why it matters to users
+
+        DO NOT:
+        - Use technical jargon (no "man-in-the-middle", "public key", "TLS", "handshake")
+        - Include code examples
+        - Use bullet points
+        - Mention specific libraries or tools
+
+        Write in a conversational, professional tone.
+    """)</code></pre>
+    <ul class="explain">
+      <li><span class="new">New</span>The topic is certificate pinning, and the reader is a product manager without a technical background.</li>
+      <li><span class="new">New</span>"Maximum 80 words" is a tighter limit than in Example 1.</li>
+      <li><span class="new">New</span>The other requirements ask for one everyday analogy and for what pinning protects, seen from the side of the users.</li>
+      <li><span class="new">New</span>The banned terms are the words of a security engineer, such as "man-in-the-middle" and "TLS". Libraries and tools are banned too, because a product manager decides on features, not on libraries.</li>
+      <li><span class="same">Same</span>No bullet points, no code and the tone line at the end.</li>
+    </ul>
+
+    <h3 class="step"><span class="sn">Step 7</span>Run it</h3>
+    <p><span class="same">Same</span>The two runs and the word counts are the same as in Example 1.</p>
+<pre class="code" data-lang="bash"><code>uv run python src/16_negative_prompting_openrouter.py</code></pre>
+<details class="fold">
+      <summary><span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m16 18 6-6-6-6M8 6l-6 6 6 6"/></svg></span><span class="ft">Show the full output<small>44 lines</small></span></summary>
+      <div class="fold-body">
+<pre class="code" data-lang="output"><code>============================================================
+NEGATIVE PROMPTING: WITH AND WITHOUT CONSTRAINTS
+============================================================
+
+--- WITHOUT CONSTRAINTS ---
+Certificate pinning is a security feature in mobile apps that helps prevent malicious activities, such as man-in-the-middle (MITM) attacks. I'll explain it in a way that's easy to understand, even if you're not a technical expert.
+
+**What is a certificate?**
+
+In the context of mobile apps, a certificate is like a digital ID that proves the app's authenticity. It's issued by a trusted authority, like a certificate authority (CA), and contains information about the app's identity, such as its name, version, and other details.
+
+**What is a MITM attack?**
+
+Imagine you're trying to access a secure website, but your internet connection is being intercepted by a malicious person. They can then see and modify the data you're sending, which is a big security risk. A MITM attack is like this, but on a mobile app. An attacker can intercept the communication between your app and the server, allowing them to steal sensitive data or inject malware.
+
+**How does certificate pinning prevent MITM attacks?**
+
+Certificate pinning is a technique that ensures the app only communicates with the server using a specific, trusted certificate. Here's how it works:
+
+1. The app is configured to only accept connections from a specific certificate, which is "pinned" to the app.
+2. When the app tries to connect to the server, it checks the server's certificate against the pinned certificate.
+3. If the server's certificate matches the pinned certificate, the app allows the connection to proceed.
+4. If the server's certificate doesn't match the pinned certificate, the app refuses the connection and displays an error message to the user.
+
+**Why is certificate pinning important?**
+
+Certificate pinning is essential because it prevents an attacker from intercepting the communication between the app and the server. Even if an attacker manages to obtain a valid certificate, the app will still refuse the connection because the certificate doesn't match the pinned one.
+
+**Example scenario**
+
+Let's say you're a product manager for a banking app. You want to ensure that the app only communicates with the bank's server using a specific, trusted certificate. You configure the app to pin this certificate, so that even if an attacker tries to intercept the communication, the app will still refuse the connection and display an error message to the user.
+
+In summary, certificate pinning is a security feature that helps prevent MITM attacks by ensuring that the app only communicates with the server using a specific, trusted certificate. It's an essential security measure for mobile apps that handle sensitive data or require high security.
+
+[Word count: 420]
+
+============================================================
+
+--- WITH CONSTRAINTS ---
+Here's an explanation of certificate pinning in mobile apps that a non-technical product manager can understand:
+
+Imagine you're meeting a friend at a coffee shop. You've met before, so you know what they look like. If someone else showed up claiming to be your friend, you'd be suspicious. Certificate pinning is like verifying the identity of a website or app by checking its digital "face" or signature, ensuring it's the real deal and not an imposter. This protects users from fake or malicious sites that try to impersonate trusted ones.
+
+[Word count: 90]</code></pre>
+      </div>
+    </details>
+
+    <h3 class="step"><span class="sn">Read</span>Read the two answers</h3>
+    <p><strong>The answer without limits.</strong> The answer has 420 words, with headings, a numbered list and the term "MITM". It explains the attack and the check clearly. One detail is wrong. It says that a certificate proves "the app's authenticity" and holds the app's name and version. In fact, a certificate proves the identity of the server and names its domain.</p>
+    <p>This is a gap in the model's memory, not a fault of the prompt. A model that can read the documentation can check such details.</p>
+    <p><strong>The answer with limits.</strong> The second answer is one short paragraph after an opening line.</p>
+<pre class="code" data-lang="output"><code>Here's an explanation of certificate pinning in mobile apps that a
+non-technical product manager can understand:
+
+Imagine you're meeting a friend at a coffee shop. You've met before, so you
+know what they look like. If someone else showed up claiming to be your
+friend, you'd be suspicious. Certificate pinning is like verifying the
+identity of a website or app by checking its digital "face" or signature,
+ensuring it's the real deal and not an imposter. This protects users from
+fake or malicious sites that try to impersonate trusted ones.</code></pre>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Limit</th><th>Result</th><th>In the answer</th></tr></thead>
+        <tbody>
+          <tr><td>Maximum 80 words</td><td>Broken</td><td>90 words, 16 of them in the opening line</td></tr>
+          <tr><td>An everyday analogy</td><td>Kept</td><td>A friend at a coffee shop</td></tr>
+          <tr><td>What it protects and why</td><td>Kept</td><td>It protects users from fake sites</td></tr>
+          <tr><td>No technical jargon</td><td>Kept</td><td>None of the four banned terms</td></tr>
+          <tr><td>No code examples</td><td>Kept</td><td>None</td></tr>
+          <tr><td>No bullet points</td><td>Kept</td><td>One paragraph</td></tr>
+          <tr><td>No libraries or tools</td><td>Kept</td><td>None</td></tr>
+          <tr><td>Conversational, professional tone</td><td>Kept</td><td>Friendly and clear</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>The answer opens with "Here's an explanation of certificate pinning ... can understand". That line tells the reader nothing and uses 16 words. Without it, the answer has 74 words and keeps the limit. The answer also says "a website or app" where it means the server.</p>
+    <p>Llama 3.1 8B is a small model from 2024. Small models follow simple bans well, but they often miss exact numbers. A newer model usually keeps to the limit, and the check in <em>Your turn</em> catches a miss with any model.</p>
+
+    <h3 class="step"><span class="sn">Learn</span>What this run teaches</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>What happened</th><th>Example</th><th>What it means</th></tr></thead>
+        <tbody>
+          <tr><td>The plain request gave a long answer with jargon</td><td>420 words, "MITM"</td><td>The same pattern as in Example 1</td></tr>
+          <tr><td>The bans held</td><td>No "TLS", no bullet points</td><td>Simple bans are easy to follow</td></tr>
+          <tr><td>The word limit broke</td><td>90 words against 80</td><td>A number is harder to follow than a ban</td></tr>
+          <tr><td>An opening line used up the words</td><td>"Here's an explanation ..."</td><td>Add a "do", such as "Start directly with the answer"</td></tr>
+          <tr><td>The long answer had a wrong detail</td><td>"The app's authenticity"</td><td>Check facts against a source</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 class="step"><span class="sn">Inside</span>What happens inside one run</h3>
+    <p>The calls are the same as in Example 1, two calls and two word counts.</p>
+    <figure class="diagram">
+      <div class="frame"><img src="../../assets/img/diagrams/ai-17-ex2-seq.svg" alt="A sequence diagram with the lanes main(), two chains, OpenRouter API. Step 1, main() to two chains, (unconstrained_prompt | llm | parser).invoke(...), the plain request. Step 2, two chains to OpenRouter API, call 1. Step 3, OpenRouter API to main(), answer, 420 words. Step 4, main() to main(), len(result.split()), 420 words. Step 5, main() to two chains, (constrained_prompt | llm | parser).invoke(...), the request with limits. Step 6, two chains to OpenRouter API, call 2. Step 7, OpenRouter API to main(), answer, 90 words, one paragraph. Step 8, main() to main(), len(result.split()), 90 words, over the limit of 80." loading="lazy"></div>
+      <figcaption>Inside one run of Example 2, step by step.</figcaption>
+    </figure>
+
+    <details class="fold">
+      <summary><span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m16 18 6-6-6-6M8 6l-6 6 6 6"/></svg></span><span class="ft">Full code of Example 2<small>src/16_negative_prompting_openrouter.py</small></span><a class="gh-btn" href="https://github.com/bhardwajAbhi/ai-engineering/blob/main/src/16_negative_prompting_openrouter.py"><svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M12 .5a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2.1c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1.1-.8.1-.8.1-.8 1.2.1 1.9 1.3 1.9 1.3 1.1 1.9 2.9 1.3 3.6 1 .1-.8.4-1.3.8-1.6-2.7-.3-5.5-1.3-5.5-6a4.7 4.7 0 0 1 1.3-3.2c-.1-.3-.6-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.7 1.7.2 2.9.1 3.2a4.7 4.7 0 0 1 1.3 3.2c0 4.6-2.8 5.6-5.5 6 .4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .5z"/></svg>GitHub</a></summary>
+      <div class="fold-body">
+<pre class="code" data-lang="python" data-file="src/16_negative_prompting_openrouter.py"><code>"""
+Title: Negative Prompting (OpenRouter)
+
+Negative prompting tells the model what NOT to do as well as what to do,
+by adding clear limits such as a word limit and a list of things to avoid.
+The same request is run with and without these limits so you can compare.
+
+uv run python src/16_negative_prompting_openrouter.py
+"""
+
+from dotenv import load_dotenv
+from langchain_openrouter import ChatOpenRouter
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.output_parsers import StrOutputParser
+
+
+def main():
+    load_dotenv()
+
+    # Initialize the model
+    llm = ChatOpenRouter(
+        #model="qwen/qwen-2.5-7b-instruct",
+        model="meta-llama/llama-3.1-8b-instruct",
+        temperature=0.3,
+    )
+
+    # Parser to extract the text from the model response
+    parser = StrOutputParser()
+
+    print("=" * 60)
+    print("NEGATIVE PROMPTING: WITH AND WITHOUT CONSTRAINTS")
+    print("=" * 60)
+
+    topic = "certificate pinning in mobile apps"
+
+    # Without constraints
+    unconstrained_prompt = ChatPromptTemplate.from_template(
+        "Explain {topic} to a non-technical product manager."
+    )
+
+    # With negative constraints
+    constrained_prompt = ChatPromptTemplate.from_template("""
+        Explain {topic} to a non-technical product manager.
+
+        REQUIREMENTS:
+        - Maximum 80 words
+        - Use an everyday analogy, not a technical one
+        - Focus on what it protects and why it matters to users
+
+        DO NOT:
+        - Use technical jargon (no "man-in-the-middle", "public key", "TLS", "handshake")
+        - Include code examples
+        - Use bullet points
+        - Mention specific libraries or tools
+
+        Write in a conversational, professional tone.
+    """)
+
+    print("\n--- WITHOUT CONSTRAINTS ---")
+    result = (unconstrained_prompt | llm | parser).invoke({"topic": topic})
+    print(result)
+    word_count = len(result.split())
+    print(f"\n[Word count: {word_count}]")
+
+    print("\n" + "=" * 60)
+
+    print("\n--- WITH CONSTRAINTS ---")
+    result = (constrained_prompt | llm | parser).invoke({"topic": topic})
+    print(result)
+    word_count = len(result.split())
+    print(f"\n[Word count: {word_count}]")
+
+
+if __name__ == "__main__":
+    main()
+</code></pre>
+      </div>
+    </details>
+  </section>
+
+  <h2>What the two runs teach together</h2>
+  <p>Both plain requests gave long, expert answers that used the very terms that the second prompts ban. Both requests with limits gave one short paragraph for the right reader. The bans on words and format held in both runs. The word limit held for Gemini, but not for Llama.</p>
+  <p>The models in this course are small and fast, and they work without tools such as web search. This choice keeps the code short and puts the focus on the prompt. A newer or larger model, or one that can look up facts, usually gives better answers. When an output looks weak, the cause is often the model, not the technique. One limit stays with every model, though. A model reads and writes tokens, not words, so an exact word count is best checked in code.</p>
+  <p>Limits also have a cost that no model removes. Every limit leaves something out, so a short answer for a founder is not a compliance plan. Choose the limits for the reader and the purpose, and keep the long version where the details matter.</p>
+
+  <h2>Two examples, side by side</h2>
+  <div class="table-wrap">
+    <table class="compare" style="--e1:#2f62c8;--e2:#0f8a6a">
+      <thead><tr><th></th><th class="e1">Example 1</th><th class="e2">Example 2</th></tr></thead>
+      <tbody>
+        <tr><td>Domain</td><td>Data protection, the DPDP Act</td><td>App security, certificate pinning</td></tr>
+        <tr><td>Reader</td><td>A startup founder</td><td>A product manager without a technical background</td></tr>
+        <tr><td>Model</td><td>Gemini 3.1 Flash Lite</td><td>Llama 3.1 8B, through OpenRouter</td></tr>
+        <tr><td>Answer without limits</td><td>755 words</td><td>420 words</td></tr>
+        <tr><td>Word limit</td><td>100</td><td>80</td></tr>
+        <tr><td>Answer with limits</td><td>97 words, kept</td><td>90 words, broken</td></tr>
+        <tr><td>Bans on words and format</td><td>All kept</td><td>All kept</td></tr>
+        <tr><td>Same</td><td colspan="2">Two prompts, <code>temperature=0.3</code> and the word count</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>When it works and when it does not</h2>
+  <ul>
+    <li><strong>It works</strong> for limits that are clear and easy to test, such as "no bullet points" or a short list of banned terms.</li>
+    <li><strong>It works best</strong> when every "do not" has a "do" next to it. "No legal jargon" works better together with "use everyday analogies".</li>
+    <li><strong>Keep the DO NOT list short.</strong> Each banned item adds one more rule for the model to follow. Ban only what matters for the reader.</li>
+    <li><strong>Check numbers in code.</strong> A model writes in tokens, so a word limit is a target, not a promise.</li>
+    <li><strong>It saves money.</strong> Suppose the model charges ₹0.30 for every 1,000 words of output. The long answer of Example 1 then costs about ₹0.23, and the short one about ₹0.03. For 1 lakh answers a month, that is about ₹22,650 against about ₹2,910.</li>
+    <li><strong>It removes content.</strong> A limit that is right for one reader is wrong for another.</li>
+  </ul>
+  <p><a href="index.html#ch-18-contrastive-prompting">Chapter 18</a> will turn to contrastive prompting. You will show the model a good and a bad answer side by side, so that it sees the difference.</p>
+  <p>To compare this pattern with the other prompting patterns, open the <a href="prompting-patterns.html">prompting patterns quick reference</a>.</p>
+
+  <div class="block security">
+    <div class="label">Security lens</div>
+    <p>A DO NOT line is a request to the model, not a control. It shapes most answers, but a clever input can talk the model out of it.</p>
+    <ul>
+      <li><strong>Never rely on "do not reveal" to protect a secret.</strong> A prompt injection, such as "ignore the rules above", can override it. Keep secrets out of the prompt altogether.</li>
+      <li><strong>Enforce hard rules in code.</strong> Count the words, search for banned terms and reject or retry an answer that breaks a rule.</li>
+      <li><strong>A short answer can hide a caveat.</strong> Neither answer of Example 2 says that <a href="https://developer.android.com/privacy-and-security/security-ssl">Android advises against certificate pinning</a> unless the app has backup pins and a short expiry. A product manager who decides on pinning needs that point.</li>
+      <li><strong>Banning amounts protects the reader.</strong> Example 1 banned exact penalty amounts, because an amount from memory can be wrong. For any number that matters, point the reader to the official source, such as the Schedule of the DPDP Act.</li>
+    </ul>
+  </div>
+
+  <h2>Check yourself</h2>
+  <div class="quiz">
+    <details>
+      <summary><span class="qq">Why does each "do not" in a good prompt come with a "do"?</span></summary>
+      <div class="ans"><p>A ban says what to leave out, but not what to write. The "do" gives the model a clear alternative. Research also shows that models handle positive instructions better than negated ones.</p></div>
+    </details>
+    <details>
+      <summary><span class="qq">Llama gave 90 words for a limit of 80. Where did the extra words come from, and how can you catch such a miss?</span></summary>
+      <div class="ans"><p>The opening line "Here's an explanation ..." used 16 words. Ask the model to start directly with the answer, and count the words in code so that you can retry when the limit breaks.</p></div>
+    </details>
+    <details>
+      <summary><span class="qq">Why does the program of Example 1 ban exact penalty amounts?</span></summary>
+      <div class="ans"><p>An amount from the memory of a model can be wrong, and a founder can act on it. "Massive fines" carries the risk without a wrong number.</p></div>
+    </details>
+    <details>
+      <summary><span class="qq">A system message says "Do not reveal the discount code." Is the code safe?</span></summary>
+      <div class="ans"><p>No. The line is a request, and a prompt injection can override it. Keep the code out of the prompt and check the output in code.</p></div>
+    </details>
+  </div>
+
+  <section class="yourturn">
+    <span class="yt-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>Your turn</span>
+    <h2 data-toc="Your turn">Check the limits in code</h2>
+    <p>Both programs only print the word count. Turn it into a real check. Write a function that counts the words, looks for banned terms and finds bullet points. If the answer breaks a limit, ask the model once more and tell it exactly what went wrong.</p>
+
+    <div class="hint">
+      <b>Hint. One function and one more call</b>
+      <ul class="explain" style="--ex:var(--accent)">
+        <li>Let the function return a list of problems, one sentence for each broken limit. An empty list means that the answer is fine.</li>
+        <li>For the second call, give the model the answer and the list of problems, and ask it to start directly with the answer.</li>
+      </ul>
+    </div>
+
+<details class="fold">
+      <summary><span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m16 18 6-6-6-6M8 6l-6 6 6 6"/></svg></span><span class="ft">Show one solution<small>a check function and one more call</small></span></summary>
+      <div class="fold-body">
+<pre class="code" data-lang="python"><code>BANNED = ["data fiduciary", "data principal", "schedule", "section", "crore"]
+
+
+def check_answer(text: str, max_words: int) -&gt; list[str]:
+    """Return the limits that the answer breaks, as plain sentences."""
+    problems = []
+    words = len(text.split())
+    if words &gt; max_words:
+        problems.append(f"It has {words} words, but the limit is {max_words}.")
+    for term in BANNED:
+        if term in text.lower():
+            problems.append(f"It uses the banned term '{term}'.")
+    if any(line.lstrip().startswith(("-", "*")) for line in text.splitlines()):
+        problems.append("It uses bullet points.")
+    return problems</code></pre>
+<pre class="code" data-lang="python"><code>    # Inside main(), after the answer with limits
+    problems = check_answer(result, 100)
+    if problems:
+        # Ask once more and say exactly what went wrong
+        fix_prompt = ChatPromptTemplate.from_template("""
+            Rewrite this answer so that it fixes these problems.
+            Keep its meaning and its tone.
+            Start directly with the answer.
+
+            PROBLEMS: {problems}
+
+            ANSWER:
+            {answer}
+        """)
+        result = (fix_prompt | llm | parser).invoke(
+            {"problems": " ".join(problems), "answer": result}
+        )
+        print(f"\n--- FIXED ---\n{result}")
+        print(f"\n[Word count: {len(result.split())}]")</code></pre>
+        <p>The check turns each limit into a test that your code can run. The second call names exactly what to fix, which works better than repeating the whole list of rules. For Example 2, use a limit of 80 and the four banned terms of that prompt. A check in code works the same way with any model, small or large.</p>
+      </div>
+    </details>
+  </section>
+
+  <h2>Key terms at a glance</h2>
+  <div class="table-wrap">
+    <table class="kw">
+      <thead><tr><th>Term</th><th>Meaning</th></tr></thead>
+      <tbody>
+        <tr><td>Negative prompting</td><td>A prompting method that tells the model what to avoid, so that the answer stays within clear limits.</td></tr>
+        <tr><td>Constraint</td><td>Any limit in a prompt, such as a word limit, a format or a banned term.</td></tr>
+        <tr><td>Requirement</td><td>A limit that says what the answer must do, such as "Maximum 100 words".</td></tr>
+        <tr><td>Banned term</td><td>A word or phrase that the answer must not use.</td></tr>
+        <tr><td>Pink elephant problem</td><td>The risk that naming a banned topic pulls the model toward it.</td></tr>
+        <tr><td>Token</td><td>A small piece of text that a model reads and writes. One word can be one token or several.</td></tr>
+        <tr><td>Prompt injection</td><td>Text in the input that tries to make the model ignore its instructions.</td></tr>
+        <tr><td>Certificate pinning</td><td>An app setting that trusts only known server certificates, so that a fake server cannot pass as the real one.</td></tr>
+        <tr><td>DPDP Act</td><td>The Digital Personal Data Protection Act of India, from 2023.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+</article>
+</main>
+
+<script src="../../assets/js/site.js?v=20261112"></script>
+</body>
+</html>

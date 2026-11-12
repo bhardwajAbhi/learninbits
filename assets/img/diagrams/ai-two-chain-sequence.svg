@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 454" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">What happens when two chains work in turn</title>
+  <desc id="d">A sequence with four lanes, namely your code, the first chain, the second chain and the model service. One, your code invokes the first chain with the question. Two, the first chain calls the model with the first prompt. Three, the model returns principles or subproblems. Four, your code gets a plain string. Five, your code invokes the second chain with the question and that string. Six, the second chain calls the model with both inputs. Seven, the model returns the final answer. Eight, your code gets a plain string.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="21" y="18" width="158" height="44" rx="10" fill="#eef3fb" stroke="#2f62c8" stroke-width="1.4"/>
+<text x="100" y="45" font-size="12.6" fill="#1f4a9e" text-anchor="middle" font-weight="700">Your code</text>
+<line x1="100" y1="62" x2="100" y2="434" stroke="#d9d4c7" stroke-width="1.6" stroke-dasharray="5 5"/>
+<rect x="241" y="18" width="158" height="44" rx="10" fill="#f3f0fa" stroke="#7a4fc2" stroke-width="1.4"/>
+<text x="320" y="45" font-size="12.6" fill="#58378f" text-anchor="middle" font-weight="700">First chain</text>
+<line x1="320" y1="62" x2="320" y2="434" stroke="#d9d4c7" stroke-width="1.6" stroke-dasharray="5 5"/>
+<rect x="461" y="18" width="158" height="44" rx="10" fill="#fdf4e3" stroke="#b7791f" stroke-width="1.4"/>
+<text x="540" y="45" font-size="12.6" fill="#8a5a12" text-anchor="middle" font-weight="700">Second chain</text>
+<line x1="540" y1="62" x2="540" y2="434" stroke="#d9d4c7" stroke-width="1.6" stroke-dasharray="5 5"/>
+<rect x="691" y="18" width="158" height="44" rx="10" fill="#e3f4ee" stroke="#0f8a6a" stroke-width="1.4"/>
+<text x="770" y="45" font-size="12.6" fill="#0b6650" text-anchor="middle" font-weight="700">Model service</text>
+<line x1="770" y1="62" x2="770" y2="434" stroke="#d9d4c7" stroke-width="1.6" stroke-dasharray="5 5"/>
+<path d="M104 104 L 314 104" fill="none" stroke="#2f62c8" stroke-width="1.7" marker-end="url(#m3)"/>
+<circle cx="118" cy="90" r="10" fill="#2f62c8"/>
+<text x="118" y="93.96" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">1</text>
+<text x="134" y="95" font-size="12" fill="#1f4a9e" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="600">invoke({&quot;question&quot;: ...})</text>
+<path d="M324 148 L 764 148" fill="none" stroke="#7a4fc2" stroke-width="1.7" marker-end="url(#m5)"/>
+<circle cx="338" cy="134" r="10" fill="#7a4fc2"/>
+<text x="338" y="137.96" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">2</text>
+<text x="354" y="139" font-size="12" fill="#58378f" text-anchor="start" font-weight="600">Call 1 with the first prompt</text>
+<path d="M766 192 L 326 192" fill="none" stroke="#0f8a6a" stroke-width="1.7" stroke-dasharray="6 4" marker-end="url(#m4)"/>
+<circle cx="338" cy="178" r="10" fill="#0f8a6a"/>
+<text x="338" y="181.96" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">3</text>
+<text x="354" y="183" font-size="12" fill="#0b6650" text-anchor="start" font-weight="600">Principles or subproblems</text>
+<path d="M316 236 L 106 236" fill="none" stroke="#7a4fc2" stroke-width="1.7" stroke-dasharray="6 4" marker-end="url(#m5)"/>
+<circle cx="118" cy="222" r="10" fill="#7a4fc2"/>
+<text x="118" y="225.96" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">4</text>
+<text x="134" y="227" font-size="12" fill="#58378f" text-anchor="start" font-weight="600">A plain string</text>
+<path d="M104 290 L 534 290" fill="none" stroke="#2f62c8" stroke-width="1.7" marker-end="url(#m3)"/>
+<circle cx="118" cy="276" r="10" fill="#2f62c8"/>
+<text x="118" y="279.96" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">5</text>
+<text x="134" y="281" font-size="12" fill="#1f4a9e" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="600">invoke({..., &quot;principles&quot;: ...})</text>
+<path d="M544 334 L 764 334" fill="none" stroke="#b7791f" stroke-width="1.7" marker-end="url(#m6)"/>
+<circle cx="558" cy="320" r="10" fill="#b7791f"/>
+<text x="558" y="323.96" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">6</text>
+<text x="574" y="325" font-size="12" fill="#8a5a12" text-anchor="start" font-weight="600">Call 2 with both inputs</text>
+<path d="M766 378 L 546 378" fill="none" stroke="#0f8a6a" stroke-width="1.7" stroke-dasharray="6 4" marker-end="url(#m4)"/>
+<circle cx="558" cy="364" r="10" fill="#0f8a6a"/>
+<text x="558" y="367.96" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">7</text>
+<text x="574" y="369" font-size="12" fill="#0b6650" text-anchor="start" font-weight="600">The final answer</text>
+<path d="M536 422 L 106 422" fill="none" stroke="#b7791f" stroke-width="1.7" stroke-dasharray="6 4" marker-end="url(#m6)"/>
+<circle cx="118" cy="408" r="10" fill="#b7791f"/>
+<text x="118" y="411.96" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">8</text>
+<text x="134" y="413" font-size="12" fill="#8a5a12" text-anchor="start" font-weight="600">A plain string</text>
+</svg>

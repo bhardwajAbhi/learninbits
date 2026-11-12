@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 340" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">How RunnableWithMessageHistory adds memory</title>
+  <desc id="d">RunnableWithMessageHistory wraps the chain. A new question goes into the ChatPromptTemplate, which has a system message with your rules, a MessagesPlaceholder for chat_history and a human message with the input. First, the wrapper reads the history from StreamlitChatMessageHistory, which keeps the messages in st.session_state langchain_messages, and puts it into the placeholder. The model answers with the history. Second, the wrapper saves the new question and the answer back into the history.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="20" y="20" width="840" height="300" rx="14" fill="#fff" stroke="#7a4fc2" stroke-width="1.6" stroke-dasharray="6 4"/>
+<text x="40" y="46" font-size="13" fill="#58378f" text-anchor="start" font-weight="700">RunnableWithMessageHistory wraps the chain</text>
+<rect x="40" y="70" width="190" height="70" rx="10" fill="#eef0f3" stroke="#5d6b7e" stroke-width="1.3"/>
+<text x="135" y="98" font-size="12.6" fill="#3f4a59" text-anchor="middle" font-weight="700">New question</text>
+<text x="135" y="118" font-size="10.8" fill="#1c2230" text-anchor="middle" font-family="JetBrains Mono, monospace">{&quot;input&quot;: question}</text>
+<path d="M232 105 L 262 105" fill="none" stroke="#1c2230" stroke-width="1.5" marker-end="url(#m0)"/>
+<rect x="266" y="60" width="330" height="120" rx="10" fill="#fff" stroke="#7a4fc2" stroke-width="1.3"/>
+<text x="280" y="82" font-size="12" fill="#58378f" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">ChatPromptTemplate</text>
+<rect x="280" y="92" width="300" height="22" rx="6" fill="#eef0f3" stroke="#5d6b7e" stroke-width="1"/>
+<text x="290" y="107" font-size="10.8" fill="#3f4a59" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="600">system  your rules</text>
+<rect x="280" y="120" width="300" height="22" rx="6" fill="#fdf4e3" stroke="#b7791f" stroke-width="1"/>
+<text x="290" y="135" font-size="10.8" fill="#8a5a12" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="600">MessagesPlaceholder  chat_history</text>
+<rect x="280" y="148" width="300" height="22" rx="6" fill="#eef3fb" stroke="#2f62c8" stroke-width="1"/>
+<text x="290" y="163" font-size="10.8" fill="#1f4a9e" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="600">human  {input}</text>
+<path d="M598 120 L 628 120" fill="none" stroke="#1c2230" stroke-width="1.5" marker-end="url(#m0)"/>
+<rect x="632" y="85" width="200" height="70" rx="10" fill="#eef3fb" stroke="#2f62c8" stroke-width="1.3"/>
+<text x="732" y="113" font-size="12.6" fill="#1f4a9e" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="700">llm</text>
+<text x="732" y="133" font-size="11" fill="#4a5263" text-anchor="middle">answers with the history</text>
+<rect x="266" y="220" width="330" height="80" rx="10" fill="#fdf4e3" stroke="#b7791f" stroke-width="1.3"/>
+<text x="431" y="244" font-size="12" fill="#8a5a12" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="700">StreamlitChatMessageHistory</text>
+<text x="431" y="264" font-size="11" fill="#4a5263" text-anchor="middle">keeps the messages in</text>
+<text x="431" y="282" font-size="10.8" fill="#1c2230" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="600">st.session_state[&quot;langchain_messages&quot;]</text>
+<path d="M400 218 L 400 172" fill="none" stroke="#b7791f" stroke-width="1.5" marker-end="url(#m6)"/>
+<text x="392" y="200" font-size="11" fill="#8a5a12" text-anchor="end" font-weight="700">1. reads the history</text>
+<path d="M732 157 C 732 260, 650 260, 600 260" fill="none" stroke="#b7791f" stroke-width="1.5" marker-end="url(#m6)"/>
+<text x="722" y="205" font-size="11" fill="#8a5a12" text-anchor="end" font-weight="700">2. saves the question and the answer</text>
+</svg>

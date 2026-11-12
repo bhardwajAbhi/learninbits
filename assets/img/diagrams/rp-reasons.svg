@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 410" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">Six reasons to write a research paper</title>
+  <desc id="d">Six benefits lead to impact. Credibility, structured thinking, recognition, career growth, communication skills and a contribution to society.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="24" y="24" width="264" height="120" rx="14" fill="#fff" stroke="#2f62c8" stroke-width="1.8"/>
+<rect x="24" y="24" width="7" height="120" rx="3" fill="#2f62c8"/>
+<text x="48" y="58" font-size="15.5" fill="#1f4a9e" text-anchor="start" font-weight="700">Credibility</text>
+<text x="48" y="84" font-size="13.5" fill="#4a5263" text-anchor="start">Recognized expertise</text>
+<text x="48" y="104" font-size="13.5" fill="#4a5263" text-anchor="start">in your domain</text>
+
+<rect x="308" y="24" width="264" height="120" rx="14" fill="#fff" stroke="#7a4fc2" stroke-width="1.8"/>
+<rect x="308" y="24" width="7" height="120" rx="3" fill="#7a4fc2"/>
+<text x="332" y="58" font-size="15.5" fill="#58378f" text-anchor="start" font-weight="700">Structured thinking</text>
+<text x="332" y="84" font-size="13.5" fill="#4a5263" text-anchor="start">Systematic, logical</text>
+<text x="332" y="104" font-size="13.5" fill="#4a5263" text-anchor="start">problem solving</text>
+
+<rect x="592" y="24" width="264" height="120" rx="14" fill="#fff" stroke="#b7791f" stroke-width="1.8"/>
+<rect x="592" y="24" width="7" height="120" rx="3" fill="#b7791f"/>
+<text x="616" y="58" font-size="15.5" fill="#8a5a12" text-anchor="start" font-weight="700">Recognition</text>
+<text x="616" y="84" font-size="13.5" fill="#4a5263" text-anchor="start">Citations, awards</text>
+<text x="616" y="104" font-size="13.5" fill="#4a5263" text-anchor="start">and visibility</text>
+
+<rect x="24" y="170" width="264" height="120" rx="14" fill="#fff" stroke="#0f8a6a" stroke-width="1.8"/>
+<rect x="24" y="170" width="7" height="120" rx="3" fill="#0f8a6a"/>
+<text x="48" y="204" font-size="15.5" fill="#0b6650" text-anchor="start" font-weight="700">Career growth</text>
+<text x="48" y="230" font-size="13.5" fill="#4a5263" text-anchor="start">Promotions, degrees,</text>
+<text x="48" y="250" font-size="13.5" fill="#4a5263" text-anchor="start">invitations, new roles</text>
+<path d="M156 290 L440 330" fill="none" stroke="#0f8a6a" stroke-width="1.3" stroke-dasharray="4 5" marker-end="url(#m4)"/>
+<rect x="308" y="170" width="264" height="120" rx="14" fill="#fff" stroke="#c2552d" stroke-width="1.8"/>
+<rect x="308" y="170" width="7" height="120" rx="3" fill="#c2552d"/>
+<text x="332" y="204" font-size="15.5" fill="#963f1f" text-anchor="start" font-weight="700">Communication</text>
+<text x="332" y="230" font-size="13.5" fill="#4a5263" text-anchor="start">Complex ideas explained</text>
+<text x="332" y="250" font-size="13.5" fill="#4a5263" text-anchor="start">clearly and persuasively</text>
+<path d="M440 290 L440 330" fill="none" stroke="#c2552d" stroke-width="1.3" stroke-dasharray="4 5" marker-end="url(#m7)"/>
+<rect x="592" y="170" width="264" height="120" rx="14" fill="#fff" stroke="#5d6b7e" stroke-width="1.8"/>
+<rect x="592" y="170" width="7" height="120" rx="3" fill="#5d6b7e"/>
+<text x="616" y="204" font-size="15.5" fill="#3f4a59" text-anchor="start" font-weight="700">Contribution</text>
+<text x="616" y="230" font-size="13.5" fill="#4a5263" text-anchor="start">Real solutions that</text>
+<text x="616" y="250" font-size="13.5" fill="#4a5263" text-anchor="start">advance knowledge</text>
+<path d="M724 290 L440 330" fill="none" stroke="#5d6b7e" stroke-width="1.3" stroke-dasharray="4 5" marker-end="url(#m8)"/>
+<rect x="240" y="334" width="400" height="62" rx="31" fill="#1c2230"/>
+<text x="440" y="372" font-size="15.5" fill="#fff" text-anchor="middle" font-weight="700">Impact on you and on the field</text>
+</svg>

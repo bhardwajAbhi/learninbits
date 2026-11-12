@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 450" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">Roles around a manuscript</title>
+  <desc id="d">A manuscript in the center. Authors made direct intellectual contributions and are responsible for content and validity. A contributing author helped with parts such as data, code or sections. The corresponding author submits the paper and answers reviewers, editors and readers. The affiliation is the institution where the work was done.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="340" y="150" width="200" height="150" rx="12" fill="#fff" stroke="#1c2230" stroke-width="2"/>
+<line x1="362" y1="196" x2="518" y2="196" stroke="#d9d4c7" stroke-width="3"/>
+<line x1="362" y1="212" x2="488" y2="212" stroke="#d9d4c7" stroke-width="3"/>
+<line x1="362" y1="228" x2="518" y2="228" stroke="#d9d4c7" stroke-width="3"/>
+<line x1="362" y1="244" x2="488" y2="244" stroke="#d9d4c7" stroke-width="3"/>
+<line x1="362" y1="260" x2="518" y2="260" stroke="#d9d4c7" stroke-width="3"/>
+<text x="440" y="182" font-size="15.5" fill="#1c2230" text-anchor="middle" font-weight="700">Manuscript</text>
+<text x="440" y="326" font-size="12.5" fill="#4a5263" text-anchor="middle">the draft that you submit</text>
+<rect x="24" y="30" width="236" height="130" rx="14" fill="#fff" stroke="#2f62c8" stroke-width="1.8"/>
+<rect x="24" y="30" width="7" height="130" rx="3" fill="#2f62c8"/>
+<text x="48" y="64" font-size="15.5" fill="#1f4a9e" text-anchor="start" font-weight="700">Authors</text>
+<text x="48" y="90" font-size="13.5" fill="#4a5263" text-anchor="start">Direct intellectual work.</text>
+<text x="48" y="110" font-size="13.5" fill="#4a5263" text-anchor="start">Responsible for content</text>
+<text x="48" y="130" font-size="13.5" fill="#4a5263" text-anchor="start">and validity.</text>
+<rect x="24" y="300" width="236" height="130" rx="14" fill="#fff" stroke="#7a4fc2" stroke-width="1.8"/>
+<rect x="24" y="300" width="7" height="130" rx="3" fill="#7a4fc2"/>
+<text x="48" y="334" font-size="15.5" fill="#58378f" text-anchor="start" font-weight="700">Contributing author</text>
+<text x="48" y="360" font-size="13.5" fill="#4a5263" text-anchor="start">Helped with parts, such as</text>
+<text x="48" y="380" font-size="13.5" fill="#4a5263" text-anchor="start">data, code or sections.</text>
+<rect x="620" y="30" width="236" height="130" rx="14" fill="#fff" stroke="#0f8a6a" stroke-width="1.8"/>
+<rect x="620" y="30" width="7" height="130" rx="3" fill="#0f8a6a"/>
+<text x="644" y="64" font-size="15.5" fill="#0b6650" text-anchor="start" font-weight="700">Corresponding author</text>
+<text x="644" y="90" font-size="13.5" fill="#4a5263" text-anchor="start">Submits, answers reviewers</text>
+<text x="644" y="110" font-size="13.5" fill="#4a5263" text-anchor="start">and editors, and readers</text>
+<text x="644" y="130" font-size="13.5" fill="#4a5263" text-anchor="start">after publication.</text>
+<rect x="620" y="300" width="236" height="130" rx="14" fill="#fff" stroke="#b7791f" stroke-width="1.8"/>
+<rect x="620" y="300" width="7" height="130" rx="3" fill="#b7791f"/>
+<text x="644" y="334" font-size="15.5" fill="#8a5a12" text-anchor="start" font-weight="700">Affiliation</text>
+<text x="644" y="360" font-size="13.5" fill="#4a5263" text-anchor="start">The institution where the</text>
+<text x="644" y="380" font-size="13.5" fill="#4a5263" text-anchor="start">work was done. Shows where</text>
+<text x="644" y="400" font-size="13.5" fill="#4a5263" text-anchor="start">the credit belongs.</text>
+<path d="M260 95 H334 V150" fill="none" stroke="#2f62c8" stroke-width="1.6" marker-end="url(#m3)"/>
+<path d="M260 360 H334 V306" fill="none" stroke="#7a4fc2" stroke-width="1.6" marker-end="url(#m5)"/>
+<path d="M620 95 H546 V150" fill="none" stroke="#0f8a6a" stroke-width="1.6" marker-end="url(#m4)" marker-start="url(#m4)"/>
+<path d="M620 360 H546 V306" fill="none" stroke="#b7791f" stroke-width="1.6" marker-end="url(#m6)"/>
+</svg>

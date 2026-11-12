@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 350" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">Two data protection laws and one app store around an app</title>
+  <desc id="d">On the left, the DPDP Act of India, with the Act of 2023 and the Rules of November 2025. It covers digital personal data only, allows processing on consent or a listed legitimate use, requires a report for every breach and applies in full from May 2027. On the right, the GDPR of the European Union, Regulation 2016/679 in force since 2018. It covers digital and paper records, has six lawful bases, requires breach reports based on risk and allows fines up to 4% of turnover. In the middle, an app with users in India and in Europe. Below, Google Play policies such as the Data safety form, account deletion and consent tools turn many duties into store rules.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="20" y="30" width="330" height="210" rx="14" fill="#fdf4e3" stroke="#b7791f" stroke-width="1.6"/>
+<text x="36" y="58" font-size="15" fill="#8a5a12" text-anchor="start" font-weight="700">DPDP Act, India</text>
+<text x="36" y="88" font-size="12" fill="#1c2230" text-anchor="start">Act of 2023, Rules of November 2025</text>
+<text x="36" y="114" font-size="12" fill="#1c2230" text-anchor="start">Digital personal data only</text>
+<text x="36" y="140" font-size="12" fill="#1c2230" text-anchor="start">Consent or a listed legitimate use</text>
+<text x="36" y="166" font-size="12" fill="#1c2230" text-anchor="start">Every breach is reported</text>
+<text x="36" y="192" font-size="12" fill="#1c2230" text-anchor="start">Full duties from May 2027</text>
+<rect x="530" y="30" width="330" height="210" rx="14" fill="#eef3fb" stroke="#2f62c8" stroke-width="1.6"/>
+<text x="546" y="58" font-size="15" fill="#1f4a9e" text-anchor="start" font-weight="700">GDPR, European Union</text>
+<text x="546" y="88" font-size="12" fill="#1c2230" text-anchor="start">Regulation 2016/679, in force 2018</text>
+<text x="546" y="114" font-size="12" fill="#1c2230" text-anchor="start">Digital and paper records</text>
+<text x="546" y="140" font-size="12" fill="#1c2230" text-anchor="start">Six lawful bases</text>
+<text x="546" y="166" font-size="12" fill="#1c2230" text-anchor="start">Breaches reported by risk</text>
+<text x="546" y="192" font-size="12" fill="#1c2230" text-anchor="start">Fines up to 4% of turnover</text>
+<rect x="370" y="70" width="140" height="130" rx="14" fill="#fff" stroke="#0f8a6a" stroke-width="1.8"/>
+<text x="440" y="106" font-size="13.5" fill="#0b6650" text-anchor="middle" font-weight="700">Your app</text>
+<text x="440" y="128" font-size="11" fill="#4a5263" text-anchor="middle">users in India</text>
+<text x="440" y="144" font-size="11" fill="#4a5263" text-anchor="middle">and in Europe</text>
+<path d="M350 120 L 366 120" fill="none" stroke="#b7791f" stroke-width="1.6" marker-end="url(#m6)"/>
+<path d="M530 120 L 514 120" fill="none" stroke="#2f62c8" stroke-width="1.6" marker-end="url(#m3)"/>
+<rect x="220" y="270" width="440" height="64" rx="12" fill="#1c2230"/>
+<text x="440" y="296" font-size="13.5" fill="#fff" text-anchor="middle" font-weight="700">Google Play policies</text>
+<text x="440" y="316" font-size="11.4" fill="#ffffffcc" text-anchor="middle">Data safety form, account deletion, consent tools</text>
+<path d="M440 270 L 440 204" fill="none" stroke="#1c2230" stroke-width="1.6" marker-end="url(#m0)"/>
+<text x="452" y="246" font-size="11" fill="#4a5263" text-anchor="start" font-weight="600">turn many duties into store rules</text>
+</svg>

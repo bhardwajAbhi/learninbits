@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 552" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">An AIDL HAL starts and a client finds it</title>
+  <desc id="d">A sequence diagram with the lanes init, HAL process, servicemanager, Client. Step 1, init to HAL process, start from the .rc file, class hal. Step 2, HAL process to servicemanager, AServiceManager_addService(...), name IFoo/default. Step 3, servicemanager to servicemanager, is the name in the VINTF manifest?, and can this domain add it?. Step 4, servicemanager to HAL process, STATUS_OK, or an error if not declared. Step 5, HAL process to HAL process, ABinderProcess_joinThreadPool(), wait for calls. Step 6, Client to servicemanager, AServiceManager_waitForService(...). Step 7, servicemanager to Client, binder of the HAL. Step 8, Client to HAL process, setLightState(...), a normal Binder call.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="15" y="18" width="150" height="42" rx="10" fill="#eef0f3" stroke="#5d6b7e" stroke-width="1.4"/>
+<text x="90" y="44" font-size="11.8" fill="#3f4a59" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="700">init</text>
+<line x1="90" y1="60" x2="90" y2="536" stroke="#d9d4c7" stroke-width="1.6" stroke-dasharray="5 5"/>
+<rect x="248.333" y="18" width="150" height="42" rx="10" fill="#f8eaf1" stroke="#b0457a" stroke-width="1.4"/>
+<text x="323.333" y="44" font-size="12.3" fill="#7d2a55" text-anchor="middle" font-weight="700">HAL process</text>
+<line x1="323.333" y1="60" x2="323.333" y2="536" stroke="#d9d4c7" stroke-width="1.6" stroke-dasharray="5 5"/>
+<rect x="481.667" y="18" width="150" height="42" rx="10" fill="#f3f0fa" stroke="#7a4fc2" stroke-width="1.4"/>
+<text x="556.667" y="44" font-size="11.8" fill="#58378f" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="700">servicemanager</text>
+<line x1="556.667" y1="60" x2="556.667" y2="536" stroke="#d9d4c7" stroke-width="1.6" stroke-dasharray="5 5"/>
+<rect x="715" y="18" width="150" height="42" rx="10" fill="#eef3fb" stroke="#2f62c8" stroke-width="1.4"/>
+<text x="790" y="44" font-size="12.3" fill="#1f4a9e" text-anchor="middle" font-weight="700">Client</text>
+<line x1="790" y1="60" x2="790" y2="536" stroke="#d9d4c7" stroke-width="1.6" stroke-dasharray="5 5"/>
+<path d="M94 98 L 317.333 98" fill="none" stroke="#5d6b7e" stroke-width="1.7" marker-end="url(#m8)"/>
+<circle cx="108" cy="85" r="10" fill="#5d6b7e"/>
+<text x="108" y="88.96" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">1</text>
+<text x="124" y="90" font-size="12" fill="#3f4a59" text-anchor="start" font-weight="700">start from the .rc file</text>
+<text x="124" y="114" font-size="11.3" fill="#4a5263" text-anchor="start">class hal</text>
+<path d="M327.333 154 L 550.667 154" fill="none" stroke="#b0457a" stroke-width="1.7" marker-end="url(#m0)"/>
+<circle cx="341.333" cy="141" r="10" fill="#b0457a"/>
+<text x="341.333" y="144.96" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">2</text>
+<text x="357.333" y="146" font-size="12" fill="#7d2a55" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">AServiceManager_addService(...)</text>
+<text x="357.333" y="170" font-size="11.3" fill="#4a5263" text-anchor="start">name IFoo/default</text>
+<path d="M556.667 200 h34 v18 h-30" fill="none" stroke="#7a4fc2" stroke-width="1.6"/>
+<path d="M564.667 218 L 558.667 218" fill="none" stroke="#7a4fc2" stroke-width="1.6" marker-end="url(#m5)"/>
+<circle cx="612.667" cy="209" r="10" fill="#7a4fc2"/>
+<text x="612.667" y="212.96" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">3</text>
+<text x="628.667" y="213" font-size="12" fill="#58378f" text-anchor="start" font-weight="700">is the name in the VINTF manifest?</text>
+<text x="628.667" y="229" font-size="11.3" fill="#4a5263" text-anchor="start">and can this domain add it?</text>
+<path d="M552.667 266 L 329.333 266" fill="none" stroke="#7a4fc2" stroke-width="1.7" stroke-dasharray="6 4" marker-end="url(#m5)"/>
+<circle cx="341.333" cy="253" r="10" fill="#7a4fc2"/>
+<text x="341.333" y="256.96" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">4</text>
+<text x="357.333" y="258" font-size="12" fill="#58378f" text-anchor="start" font-weight="700">STATUS_OK</text>
+<text x="357.333" y="282" font-size="11.3" fill="#4a5263" text-anchor="start">or an error if not declared</text>
+<path d="M323.333 312 h34 v18 h-30" fill="none" stroke="#b0457a" stroke-width="1.6"/>
+<path d="M331.333 330 L 325.333 330" fill="none" stroke="#b0457a" stroke-width="1.6" marker-end="url(#m0)"/>
+<circle cx="379.333" cy="321" r="10" fill="#b0457a"/>
+<text x="379.333" y="324.96" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">5</text>
+<text x="395.333" y="325" font-size="12" fill="#7d2a55" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">ABinderProcess_joinThreadPool()</text>
+<text x="395.333" y="341" font-size="11.3" fill="#4a5263" text-anchor="start">wait for calls</text>
+<path d="M786 378 L 562.667 378" fill="none" stroke="#2f62c8" stroke-width="1.7" marker-end="url(#m3)"/>
+<circle cx="574.667" cy="365" r="10" fill="#2f62c8"/>
+<text x="574.667" y="368.96" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">6</text>
+<text x="590.667" y="370" font-size="12" fill="#1f4a9e" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">AServiceManager_waitForService(...)</text>
+<path d="M560.667 434 L 784 434" fill="none" stroke="#7a4fc2" stroke-width="1.7" stroke-dasharray="6 4" marker-end="url(#m5)"/>
+<circle cx="574.667" cy="421" r="10" fill="#7a4fc2"/>
+<text x="574.667" y="424.96" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">7</text>
+<text x="590.667" y="426" font-size="12" fill="#58378f" text-anchor="start" font-weight="700">binder of the HAL</text>
+<path d="M786 490 L 329.333 490" fill="none" stroke="#2f62c8" stroke-width="1.7" marker-end="url(#m3)"/>
+<circle cx="341.333" cy="477" r="10" fill="#2f62c8"/>
+<text x="341.333" y="480.96" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">8</text>
+<text x="357.333" y="482" font-size="12" fill="#1f4a9e" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">setLightState(...)</text>
+<text x="357.333" y="506" font-size="11.3" fill="#4a5263" text-anchor="start">a normal Binder call</text>
+</svg>

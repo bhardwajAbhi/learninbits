@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 370" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">How least-to-most prompting uses two chains</title>
+  <desc id="d">A problem about shift sizes and the night shift share goes to decompose_chain, call 1, which lists the subproblems in order. The subproblems, simplest first, are the morning shift 12 plus 25 percent, the afternoon shift 10 plus 4, the night shift 6 minus 2, the total staff and the night share. They go with the problem to solve_chain, call 2, which solves them in order and reuses each result. The final answer is 15 plus 14 plus 4 equals 33 staff and 4 divided by 33 equals 12.12 percent. Each small answer is easy to check, and the next subproblem builds on it.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="20" y="120" width="180" height="92" rx="12" fill="#fff" stroke="#5d6b7e" stroke-width="1.7"/>
+<text x="36" y="147" font-size="14" fill="#3f4a59" text-anchor="start" font-weight="700">Problem</text>
+<text x="36" y="170" font-size="11.8" fill="#4a5263" text-anchor="start">Shift sizes change.</text>
+<text x="36" y="188" font-size="11.8" fill="#4a5263" text-anchor="start">Night shift share?</text>
+<path d="M200 150 C 230 150, 230 80, 258 80" fill="none" stroke="#7a4fc2" stroke-width="1.6" marker-end="url(#m5)"/>
+<rect x="262" y="30" width="230" height="100" rx="12" fill="#fff" stroke="#7a4fc2" stroke-width="1.7"/>
+<text x="278" y="57" font-size="13" fill="#58378f" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">decompose_chain</text>
+<text x="278" y="80" font-size="12" fill="#4a5263" text-anchor="start">Call 1. List the</text>
+<text x="278" y="98" font-size="12" fill="#4a5263" text-anchor="start">subproblems in order</text>
+<path d="M492 80 L 520 80" fill="none" stroke="#7a4fc2" stroke-width="1.6" marker-end="url(#m5)"/>
+<rect x="524" y="20" width="336" height="180" rx="12" fill="#fff" stroke="#b7791f" stroke-width="1.6"/>
+<text x="540" y="44" font-size="13.5" fill="#8a5a12" text-anchor="start" font-weight="700">Subproblems, simplest first</text>
+<rect x="540" y="56" width="120" height="22" rx="6" fill="#fdf4e3"/>
+<text x="550" y="72" font-size="12" fill="#1c2230" text-anchor="start" font-weight="600">1  Morning, 12 + 25%</text>
+<rect x="540" y="83" width="160" height="22" rx="6" fill="#fdf4e3"/>
+<text x="550" y="99" font-size="12" fill="#1c2230" text-anchor="start" font-weight="600">2  Afternoon, 10 + 4</text>
+<rect x="540" y="110" width="200" height="22" rx="6" fill="#fdf4e3"/>
+<text x="550" y="126" font-size="12" fill="#1c2230" text-anchor="start" font-weight="600">3  Night, 6 - 2</text>
+<rect x="540" y="137" width="240" height="22" rx="6" fill="#fdf4e3"/>
+<text x="550" y="153" font-size="12" fill="#1c2230" text-anchor="start" font-weight="600">4  Total staff</text>
+<rect x="540" y="164" width="280" height="22" rx="6" fill="#fdf4e3"/>
+<text x="550" y="180" font-size="12" fill="#1c2230" text-anchor="start" font-weight="600">5  Night share</text>
+<path d="M692 200 C 692 230, 520 226, 496 250" fill="none" stroke="#b7791f" stroke-width="1.6" marker-end="url(#m6)"/>
+<path d="M200 180 C 230 180, 230 266, 258 266" fill="none" stroke="#5d6b7e" stroke-width="1.6" marker-end="url(#m8)"/>
+<rect x="262" y="220" width="230" height="100" rx="12" fill="#fff" stroke="#2f62c8" stroke-width="1.7"/>
+<text x="278" y="247" font-size="13" fill="#1f4a9e" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">solve_chain</text>
+<text x="278" y="270" font-size="12" fill="#4a5263" text-anchor="start">Call 2. Solve in order,</text>
+<text x="278" y="288" font-size="12" fill="#4a5263" text-anchor="start">reuse each result</text>
+<path d="M492 270 L 528 270" fill="none" stroke="#2f62c8" stroke-width="1.6" marker-end="url(#m3)"/>
+<rect x="532" y="228" width="328" height="84" rx="12" fill="#fff" stroke="#0f8a6a" stroke-width="1.7"/>
+<text x="548" y="255" font-size="14" fill="#0b6650" text-anchor="start" font-weight="700">Final answer</text>
+<text x="548" y="278" font-size="12.3" fill="#4a5263" text-anchor="start">15 + 14 + 4 = 33 staff</text>
+<text x="548" y="296" font-size="12.3" fill="#4a5263" text-anchor="start">4 / 33 = 12.12%</text>
+<text x="440" y="350" font-size="12.3" fill="#4a5263" text-anchor="middle" font-style="italic">Each small answer is easy to check, and the next subproblem builds on it.</text>
+</svg>

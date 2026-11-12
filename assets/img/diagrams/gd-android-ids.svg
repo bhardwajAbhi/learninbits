@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 322" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">Android identifiers grouped by access and advice</title>
+  <desc id="d">Three groups. Not available to normal apps are the IMEI and serial number, restricted since Android 10, the ICCID of the SIM, where apps use the subscription ID instead, and the MAC address, which is hidden or randomized. Available with care are the Android ID, scoped to the app signing key and user, the phone number, which needs a runtime permission, and precise location, which is sensitive. Recommended are the advertising ID, resettable and for ads only, the app set ID for analytics across own apps and the Firebase installation ID, scoped to one install and resettable. Every identifier counts as personal data under GDPR and DPDP once it can be linked to a person.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="20" y="30" width="270" height="250" rx="14" fill="#fff" stroke="#c2552d" stroke-width="1.6"/>
+<rect x="20" y="30" width="270" height="38" rx="14" fill="#c2552d"/>
+<rect x="20" y="52" width="270" height="16" rx="0" fill="#c2552d"/>
+<text x="36" y="55" font-size="13" fill="#fff" text-anchor="start" font-weight="700">Not available to normal apps</text>
+<rect x="34" y="86" width="242" height="52" rx="8" fill="#fbecec"/>
+<text x="46" y="108" font-size="12.2" fill="#963f1f" text-anchor="start" font-weight="700">IMEI, serial number</text>
+<text x="46" y="126" font-size="11" fill="#4a5263" text-anchor="start">Restricted since Android 10</text>
+<rect x="34" y="148" width="242" height="52" rx="8" fill="#fbecec"/>
+<text x="46" y="170" font-size="12.2" fill="#963f1f" text-anchor="start" font-weight="700">ICCID of the SIM</text>
+<text x="46" y="188" font-size="11" fill="#4a5263" text-anchor="start">Use the subscription ID</text>
+<rect x="34" y="210" width="242" height="52" rx="8" fill="#fbecec"/>
+<text x="46" y="232" font-size="12.2" fill="#963f1f" text-anchor="start" font-weight="700">MAC address</text>
+<text x="46" y="250" font-size="11" fill="#4a5263" text-anchor="start">Hidden or randomized</text>
+<rect x="310" y="30" width="270" height="250" rx="14" fill="#fff" stroke="#b7791f" stroke-width="1.6"/>
+<rect x="310" y="30" width="270" height="38" rx="14" fill="#b7791f"/>
+<rect x="310" y="52" width="270" height="16" rx="0" fill="#b7791f"/>
+<text x="326" y="55" font-size="13" fill="#fff" text-anchor="start" font-weight="700">Available, with care</text>
+<rect x="324" y="86" width="242" height="52" rx="8" fill="#fdf4e3"/>
+<text x="336" y="108" font-size="12.2" fill="#8a5a12" text-anchor="start" font-weight="700">Android ID (SSAID)</text>
+<text x="336" y="126" font-size="11" fill="#4a5263" text-anchor="start">Per app signing key and user</text>
+<rect x="324" y="148" width="242" height="52" rx="8" fill="#fdf4e3"/>
+<text x="336" y="170" font-size="12.2" fill="#8a5a12" text-anchor="start" font-weight="700">Phone number</text>
+<text x="336" y="188" font-size="11" fill="#4a5263" text-anchor="start">Needs a runtime permission</text>
+<rect x="324" y="210" width="242" height="52" rx="8" fill="#fdf4e3"/>
+<text x="336" y="232" font-size="12.2" fill="#8a5a12" text-anchor="start" font-weight="700">Precise location</text>
+<text x="336" y="250" font-size="11" fill="#4a5263" text-anchor="start">Sensitive in Google Checks</text>
+<rect x="600" y="30" width="270" height="250" rx="14" fill="#fff" stroke="#0f8a6a" stroke-width="1.6"/>
+<rect x="600" y="30" width="270" height="38" rx="14" fill="#0f8a6a"/>
+<rect x="600" y="52" width="270" height="16" rx="0" fill="#0f8a6a"/>
+<text x="616" y="55" font-size="13" fill="#fff" text-anchor="start" font-weight="700">Recommended</text>
+<rect x="614" y="86" width="242" height="52" rx="8" fill="#e3f4ee"/>
+<text x="626" y="108" font-size="12.2" fill="#0b6650" text-anchor="start" font-weight="700">Advertising ID</text>
+<text x="626" y="126" font-size="11" fill="#4a5263" text-anchor="start">Resettable, for ads only</text>
+<rect x="614" y="148" width="242" height="52" rx="8" fill="#e3f4ee"/>
+<text x="626" y="170" font-size="12.2" fill="#0b6650" text-anchor="start" font-weight="700">App set ID</text>
+<text x="626" y="188" font-size="11" fill="#4a5263" text-anchor="start">Analytics across own apps</text>
+<rect x="614" y="210" width="242" height="52" rx="8" fill="#e3f4ee"/>
+<text x="626" y="232" font-size="12.2" fill="#0b6650" text-anchor="start" font-weight="700">Firebase installation ID</text>
+<text x="626" y="250" font-size="11" fill="#4a5263" text-anchor="start">Per install, resettable</text>
+<text x="440" y="306" font-size="11.8" fill="#4a5263" text-anchor="middle" font-style="italic">Every identifier counts as personal data under GDPR and DPDP once it can be linked to a person.</text>
+</svg>

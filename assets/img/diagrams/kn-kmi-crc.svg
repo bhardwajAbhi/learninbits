@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 232" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">The symbol check when a vendor module loads</title>
+  <desc id="d">A vendor module vendor_cam.ko needs the symbol dma_buf_get with a given CRC. The running GKI kernel exports dma_buf_get with its own CRC. If the CRC matches for every symbol, the module loads. If not, the load is refused with the message disagrees about version of symbol. The CRC comes from the full prototype of the symbol, so a changed type gives a new CRC even with the same name.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="20" y="40" width="200" height="80" rx="10" fill="#fff" stroke="#2f62c8" stroke-width="1.5"/>
+<text x="36" y="66" font-size="13" fill="#1f4a9e" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">vendor_cam.ko</text>
+<text x="36" y="88" font-size="11.2" fill="#4a5263" text-anchor="start" font-family="JetBrains Mono, monospace">needs dma_buf_get</text>
+<text x="36" y="106" font-size="11.2" fill="#1c2230" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="600">CRC 0x6f2a91c4</text>
+<rect x="270" y="40" width="200" height="80" rx="10" fill="#fff" stroke="#0f8a6a" stroke-width="1.5"/>
+<text x="286" y="66" font-size="13" fill="#0b6650" text-anchor="start" font-weight="700">Running GKI kernel</text>
+<text x="286" y="88" font-size="11.2" fill="#4a5263" text-anchor="start" font-family="JetBrains Mono, monospace">exports dma_buf_get</text>
+<text x="286" y="106" font-size="11.2" fill="#1c2230" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="600">CRC 0x6f2a91c4</text>
+<path d="M600 38 L695 80 L600 122 L505 80 Z" fill="#fff" stroke="#b7791f" stroke-width="2"/>
+<text x="600" y="76.5" font-size="12.4" fill="#8a5a12" text-anchor="middle" font-weight="700">Same CRC for</text>
+<text x="600" y="93.5" font-size="12.4" fill="#8a5a12" text-anchor="middle" font-weight="700">every symbol?</text>
+<path d="M220 80 L 266 80" fill="none" stroke="#1c2230" stroke-width="1.4" marker-end="url(#m0)"/>
+<path d="M470 80 L 503 80" fill="none" stroke="#1c2230" stroke-width="1.4" marker-end="url(#m0)"/>
+<rect x="730" y="30" width="130" height="44" rx="10" fill="#e3f4ee" stroke="#0f8a6a" stroke-width="1.3"/>
+<text x="795" y="57" font-size="12" fill="#0b6650" text-anchor="middle" font-weight="700">Module loads</text>
+<path d="M690 70 C 710 60, 712 52, 726 52" fill="none" stroke="#0f8a6a" stroke-width="1.6" marker-end="url(#m4)"/>
+<text x="706" y="46" font-size="12" fill="#0b6650" text-anchor="middle" font-weight="800">Yes</text>
+<rect x="560" y="150" width="300" height="66" rx="10" fill="#fbecec" stroke="#c2552d" stroke-width="1.3"/>
+<text x="574" y="174" font-size="12.4" fill="#963f1f" text-anchor="start" font-weight="700">Load refused</text>
+<text x="574" y="196" font-size="11" fill="#1c2230" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="600">disagrees about version of symbol</text>
+<path d="M600 122 L 600 146" fill="none" stroke="#c2552d" stroke-width="1.6" marker-end="url(#m7)"/>
+<text x="616" y="140" font-size="12" fill="#963f1f" text-anchor="start" font-weight="800">No</text>
+<text x="20" y="150" font-size="11.8" fill="#4a5263" text-anchor="start" font-weight="600">The values are examples.</text>
+<text x="20" y="170" font-size="11.8" fill="#4a5263" text-anchor="start">The CRC comes from the full prototype of the symbol.</text>
+<text x="20" y="190" font-size="11.8" fill="#4a5263" text-anchor="start">A changed type gives a new CRC, even with the same name.</text>
+</svg>

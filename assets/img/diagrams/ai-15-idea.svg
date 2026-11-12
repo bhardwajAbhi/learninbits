@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 290" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">Write, list, check and fix</title>
+  <desc id="d">Four steps in a row. First, the model writes the first answer with generate_chain. Second, it lists the facts in that answer with extract_chain, for example the assent on 11 August 2023, that the Act applies outside India too and up to 250 crore rupees for weak security. Third, verify_chain checks each fact alone, with one call for each fact, and labels it VERIFIED, INCORRECT or UNCERTAIN. Fourth, revise_chain fixes the wrong facts. It runs only if a check says INCORRECT, and it keeps the facts that passed.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="20" y="30" width="194" height="96" rx="12" fill="#eef3fb" stroke="#2f62c8" stroke-width="1.5"/>
+<text x="117" y="62" font-size="14" fill="#1f4a9e" text-anchor="middle" font-weight="700">1. Write</text>
+<text x="117" y="82" font-size="11.6" fill="#4a5263" text-anchor="middle">the first answer</text>
+<text x="117" y="108" font-size="11" fill="#1c2230" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="600">generate_chain</text>
+<path d="M216 78 L 234 78" fill="none" stroke="#1c2230" stroke-width="1.6" marker-end="url(#m0)"/>
+<rect x="236" y="30" width="194" height="96" rx="12" fill="#f3f0fa" stroke="#7a4fc2" stroke-width="1.5"/>
+<text x="333" y="62" font-size="14" fill="#58378f" text-anchor="middle" font-weight="700">2. List</text>
+<text x="333" y="82" font-size="11.6" fill="#4a5263" text-anchor="middle">the facts in it</text>
+<text x="333" y="108" font-size="11" fill="#1c2230" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="600">extract_chain</text>
+<path d="M432 78 L 450 78" fill="none" stroke="#1c2230" stroke-width="1.6" marker-end="url(#m0)"/>
+<rect x="452" y="30" width="194" height="96" rx="12" fill="#e6f3f4" stroke="#0e7c86" stroke-width="1.5"/>
+<text x="549" y="62" font-size="14" fill="#095a61" text-anchor="middle" font-weight="700">3. Check</text>
+<text x="549" y="82" font-size="11.6" fill="#4a5263" text-anchor="middle">each fact alone</text>
+<text x="549" y="108" font-size="11" fill="#1c2230" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="600">verify_chain</text>
+<path d="M648 78 L 666 78" fill="none" stroke="#1c2230" stroke-width="1.6" marker-end="url(#m0)"/>
+<rect x="668" y="30" width="194" height="96" rx="12" fill="#e3f4ee" stroke="#0f8a6a" stroke-width="1.5"/>
+<text x="765" y="62" font-size="14" fill="#0b6650" text-anchor="middle" font-weight="700">4. Fix</text>
+<text x="765" y="82" font-size="11.6" fill="#4a5263" text-anchor="middle">the wrong facts</text>
+<text x="765" y="108" font-size="11" fill="#1c2230" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="600">revise_chain</text>
+<rect x="236" y="150" width="194" height="26" rx="7" fill="#fff" stroke="#7a4fc2" stroke-width="1"/>
+<text x="248" y="167" font-size="10.8" fill="#1c2230" text-anchor="start">Assent on 11 August 2023</text>
+<rect x="236" y="184" width="194" height="26" rx="7" fill="#fff" stroke="#7a4fc2" stroke-width="1"/>
+<text x="248" y="201" font-size="10.8" fill="#1c2230" text-anchor="start">Applies outside India too</text>
+<rect x="236" y="218" width="194" height="26" rx="7" fill="#fff" stroke="#7a4fc2" stroke-width="1"/>
+<text x="248" y="235" font-size="10.8" fill="#1c2230" text-anchor="start">Up to ₹250 crore for weak security</text>
+<rect x="470" y="150" width="142" height="26" rx="13" fill="#e3f4ee" stroke="#0f8a6a" stroke-width="1.2"/>
+<text x="541" y="166.96" font-size="11" fill="#0b6650" text-anchor="middle" font-weight="700">VERIFIED</text>
+<path d="M432 163 L 466 163" fill="none" stroke="#d9d4c7" stroke-width="1.2" marker-end="url(#m0)"/>
+<rect x="470" y="184" width="142" height="26" rx="13" fill="#fbecec" stroke="#c2552d" stroke-width="1.2"/>
+<text x="541" y="200.96" font-size="11" fill="#963f1f" text-anchor="middle" font-weight="700">INCORRECT</text>
+<path d="M432 197 L 466 197" fill="none" stroke="#d9d4c7" stroke-width="1.2" marker-end="url(#m0)"/>
+<rect x="470" y="218" width="142" height="26" rx="13" fill="#fdf4e3" stroke="#b7791f" stroke-width="1.2"/>
+<text x="541" y="234.96" font-size="11" fill="#8a5a12" text-anchor="middle" font-weight="700">UNCERTAIN</text>
+<path d="M432 231 L 466 231" fill="none" stroke="#d9d4c7" stroke-width="1.2" marker-end="url(#m0)"/>
+<text x="541" y="270" font-size="11" fill="#4a5263" text-anchor="middle" font-style="italic">one call for each fact</text>
+<rect x="668" y="150" width="194" height="94" rx="10" fill="#f2efe8"/>
+<text x="682" y="172" font-size="11" fill="#1c2230" text-anchor="start">Runs only if a check</text>
+<text x="682" y="189" font-size="11" fill="#1c2230" text-anchor="start">says INCORRECT.</text>
+<text x="682" y="206" font-size="11" fill="#1c2230" text-anchor="start">Keeps the facts that</text>
+<text x="682" y="223" font-size="11" fill="#1c2230" text-anchor="start">passed.</text>
+</svg>

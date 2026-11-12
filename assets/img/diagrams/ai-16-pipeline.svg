@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 489" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">One pipeline, one call</title>
+  <desc id="d">Input, {&quot;question&quot; question}, One key goes in. Add, RunnablePassthrough.assign(draft=draft_chain), Adds draft and keeps question. Add, RunnablePassthrough.assign(critique=critique_chain), Adds critique and keeps question and draft. Add, RunnablePassthrough.assign(revised=revise_chain), Adds revised and keeps every earlier key. Output, result[&quot;draft&quot;], result[&quot;critique&quot;], result[&quot;revised&quot;], One invoke() gives back every part.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="20" y="34" width="92" height="26" rx="13" fill="#eef0f3" stroke="#5d6b7e" stroke-width="1.2"/>
+<text x="66" y="51.32" font-size="12" fill="#3f4a59" text-anchor="middle" font-weight="700">Input</text>
+<rect x="126" y="24" width="680" height="65" rx="12" fill="#fff" stroke="#5d6b7e" stroke-width="1.6"/>
+<rect x="126" y="24" width="6" height="65" rx="3" fill="#5d6b7e"/>
+<text x="146" y="52" font-size="13.6" fill="#3f4a59" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">{&quot;question&quot;: question}</text>
+<text x="146" y="74" font-size="12.2" fill="#4a5263" text-anchor="start">One key goes in</text>
+<path d="M466 91 L 466 109" fill="none" stroke="#1c2230" stroke-width="1.6" marker-end="url(#m0)"/>
+<rect x="20" y="123" width="92" height="26" rx="13" fill="#e6f3f4" stroke="#0e7c86" stroke-width="1.2"/>
+<text x="66" y="140.32" font-size="12" fill="#095a61" text-anchor="middle" font-weight="700">Add</text>
+<rect x="126" y="113" width="680" height="65" rx="12" fill="#fff" stroke="#0e7c86" stroke-width="1.6"/>
+<rect x="126" y="113" width="6" height="65" rx="3" fill="#0e7c86"/>
+<text x="146" y="141" font-size="13.6" fill="#095a61" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">RunnablePassthrough.assign(draft=draft_chain)</text>
+<text x="146" y="163" font-size="12.2" fill="#4a5263" text-anchor="start">Adds draft and keeps question</text>
+<path d="M466 180 L 466 198" fill="none" stroke="#1c2230" stroke-width="1.6" marker-end="url(#m0)"/>
+<rect x="20" y="212" width="92" height="26" rx="13" fill="#e6f3f4" stroke="#0e7c86" stroke-width="1.2"/>
+<text x="66" y="229.32" font-size="12" fill="#095a61" text-anchor="middle" font-weight="700">Add</text>
+<rect x="126" y="202" width="680" height="65" rx="12" fill="#fff" stroke="#0e7c86" stroke-width="1.6"/>
+<rect x="126" y="202" width="6" height="65" rx="3" fill="#0e7c86"/>
+<text x="146" y="230" font-size="13.6" fill="#095a61" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">RunnablePassthrough.assign(critique=critique_chain)</text>
+<text x="146" y="252" font-size="12.2" fill="#4a5263" text-anchor="start">Adds critique and keeps question and draft</text>
+<path d="M466 269 L 466 287" fill="none" stroke="#1c2230" stroke-width="1.6" marker-end="url(#m0)"/>
+<rect x="20" y="301" width="92" height="26" rx="13" fill="#e6f3f4" stroke="#0e7c86" stroke-width="1.2"/>
+<text x="66" y="318.32" font-size="12" fill="#095a61" text-anchor="middle" font-weight="700">Add</text>
+<rect x="126" y="291" width="680" height="65" rx="12" fill="#fff" stroke="#0e7c86" stroke-width="1.6"/>
+<rect x="126" y="291" width="6" height="65" rx="3" fill="#0e7c86"/>
+<text x="146" y="319" font-size="13.6" fill="#095a61" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">RunnablePassthrough.assign(revised=revise_chain)</text>
+<text x="146" y="341" font-size="12.2" fill="#4a5263" text-anchor="start">Adds revised and keeps every earlier key</text>
+<path d="M466 358 L 466 376" fill="none" stroke="#1c2230" stroke-width="1.6" marker-end="url(#m0)"/>
+<rect x="20" y="390" width="92" height="26" rx="13" fill="#e3f4ee" stroke="#0f8a6a" stroke-width="1.2"/>
+<text x="66" y="407.32" font-size="12" fill="#0b6650" text-anchor="middle" font-weight="700">Output</text>
+<rect x="126" y="380" width="680" height="65" rx="12" fill="#fff" stroke="#0f8a6a" stroke-width="1.6"/>
+<rect x="126" y="380" width="6" height="65" rx="3" fill="#0f8a6a"/>
+<text x="146" y="408" font-size="13.6" fill="#0b6650" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">result[&quot;draft&quot;], result[&quot;critique&quot;], result[&quot;revised&quot;]</text>
+<text x="146" y="430" font-size="12.2" fill="#4a5263" text-anchor="start">One invoke() gives back every part</text>
+<text x="466" y="467" font-size="12.2" fill="#4a5263" text-anchor="middle" font-style="italic">Each step sees all the keys of the steps before it.</text>
+</svg>

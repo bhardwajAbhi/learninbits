@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 570" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">The split of first-stage mount in Android 17</title>
+  <desc id="d">At the top, the base class FirstStageMount with Create, DoCreateDevices and DoFirstStageMount. It reads the fstab, creates block devices and mounts the partitions, and it offers virtual hooks such as MountOverlays, UseDsuIfPresent and GetExtraBlockDevices. The subclass FirstStageMountAndroid in first_stage_mount_android.cpp adds logical super partitions, DSU, snapuserd, overlays and dm-verity, and it adds the userdata device for apexd. The Microdroid build uses first_stage_mount_microdroid.cpp, where Create returns the plain base class over a small fstab. Below, a timeline. Before, apexd activated APEX packages after the mount of /data. In Android 17, with the build flag mount_before_data, apexd activates them before /data is mounted. This path is not used on DSU or GSI boots.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="250" y="24" width="380" height="162" rx="12" fill="#1f2633"/>
+<path d="M262 24 h356 a12 12 0 0 1 12 12 v22 h-380 v-22 a12 12 0 0 1 12 -12z" fill="#2f62c8"/>
+<text x="266" y="47" font-size="13.5" fill="#fff" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">FirstStageMount</text>
+<text x="616" y="46" font-size="11" fill="#ffffffcc" text-anchor="end" font-style="italic" font-weight="600">base class</text>
+<text x="266" y="80" font-size="11.2" fill="#e8ecf3" text-anchor="start" font-family="JetBrains Mono, monospace">Create(cmdline)  DoCreateDevices()</text>
+<text x="266" y="98" font-size="11.2" fill="#e8ecf3" text-anchor="start" font-family="JetBrains Mono, monospace">DoFirstStageMount()</text>
+<text x="266" y="116" font-size="11.2" fill="#9aa6b8" text-anchor="start" font-family="JetBrains Mono, monospace">// reads the fstab, creates block devices,</text>
+<text x="266" y="134" font-size="11.2" fill="#9aa6b8" text-anchor="start" font-family="JetBrains Mono, monospace">// mounts the partitions</text>
+<text x="266" y="152" font-size="11.2" fill="#e8ecf3" text-anchor="start" font-family="JetBrains Mono, monospace">virtual hooks, MountOverlays(),</text>
+<text x="266" y="170" font-size="11.2" fill="#e8ecf3" text-anchor="start" font-family="JetBrains Mono, monospace">UseDsuIfPresent(), GetExtraBlockDevices()</text>
+<rect x="20" y="230" width="400" height="150" rx="12" fill="#fff" stroke="#0f8a6a" stroke-width="1.6"/>
+<rect x="20" y="230" width="400" height="34" rx="12" fill="#0f8a6a"/>
+<rect x="20" y="250" width="400" height="14" rx="0" fill="#0f8a6a"/>
+<text x="36" y="253" font-size="13" fill="#fff" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">FirstStageMountAndroid</text>
+<text x="36" y="288" font-size="11.4" fill="#4a5263" text-anchor="start">first_stage_mount_android.cpp</text>
+<text x="36" y="306" font-size="11.4" fill="#4a5263" text-anchor="start">Logical super partitions, DSU, snapuserd,</text>
+<text x="36" y="324" font-size="11.4" fill="#4a5263" text-anchor="start">overlays and dm-verity.</text>
+<text x="36" y="342" font-size="11.4" fill="#4a5263" text-anchor="start">Adds the userdata device for apexd.</text>
+<rect x="460" y="230" width="400" height="150" rx="12" fill="#fff" stroke="#7a4fc2" stroke-width="1.6"/>
+<rect x="460" y="230" width="400" height="34" rx="12" fill="#7a4fc2"/>
+<rect x="460" y="250" width="400" height="14" rx="0" fill="#7a4fc2"/>
+<text x="476" y="253" font-size="13" fill="#fff" text-anchor="start" font-weight="700">Microdroid build</text>
+<text x="476" y="288" font-size="11.4" fill="#4a5263" text-anchor="start">first_stage_mount_microdroid.cpp</text>
+<text x="476" y="306" font-size="11.4" fill="#4a5263" text-anchor="start">Its Create() returns the plain base class</text>
+<text x="476" y="324" font-size="11.4" fill="#4a5263" text-anchor="start">over a small fstab for the virtual machine.</text>
+<text x="476" y="342" font-size="11.4" fill="#4a5263" text-anchor="start">No Android-only mount code.</text>
+<path d="M220 226 L 330 190" fill="none" stroke="#0f8a6a" stroke-width="1.6" marker-end="url(#m4)"/>
+<path d="M660 226 L 550 190" fill="none" stroke="#7a4fc2" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#m5)"/>
+<text x="196" y="206" font-size="11.4" fill="#0b6650" text-anchor="middle" font-weight="700">subclass</text>
+<text x="690" y="206" font-size="11.4" fill="#58378f" text-anchor="middle" font-weight="700">uses the base</text>
+<text x="20" y="424" font-size="12.5" fill="#1c2230" text-anchor="start" font-weight="700">Mount before data, with the build flag mount_before_data</text>
+<text x="20" y="466" font-size="12" fill="#4a5263" text-anchor="start" font-weight="700">Before</text>
+<rect x="110" y="444" width="220" height="32" rx="8" fill="#eef0f3" stroke="#5d6b7e" stroke-width="1.2"/>
+<text x="220" y="465" font-size="11.4" fill="#3f4a59" text-anchor="middle" font-weight="600">First stage</text>
+<rect x="334" y="444" width="196" height="32" rx="8" fill="#eef0f3" stroke="#5d6b7e" stroke-width="1.2"/>
+<text x="432" y="465" font-size="11.4" fill="#3f4a59" text-anchor="middle" font-weight="600">Mount /data</text>
+<rect x="534" y="444" width="236" height="32" rx="8" fill="#fdf4e3" stroke="#b7791f" stroke-width="1.2"/>
+<text x="652" y="465" font-size="11.4" fill="#8a5a12" text-anchor="middle" font-weight="600">apexd activates APEX</text>
+<text x="20" y="512" font-size="12" fill="#4a5263" text-anchor="start" font-weight="700">Android 17</text>
+<rect x="110" y="490" width="220" height="32" rx="8" fill="#eef0f3" stroke="#5d6b7e" stroke-width="1.2"/>
+<text x="220" y="511" font-size="11.4" fill="#3f4a59" text-anchor="middle" font-weight="600">First stage</text>
+<rect x="334" y="490" width="236" height="32" rx="8" fill="#e3f4ee" stroke="#0f8a6a" stroke-width="1.2"/>
+<text x="452" y="511" font-size="11.4" fill="#0b6650" text-anchor="middle" font-weight="600">apexd activates APEX</text>
+<rect x="574" y="490" width="196" height="32" rx="8" fill="#eef0f3" stroke="#5d6b7e" stroke-width="1.2"/>
+<text x="672" y="511" font-size="11.4" fill="#3f4a59" text-anchor="middle" font-weight="600">Mount /data</text>
+<text x="440" y="554" font-size="11.6" fill="#4a5263" text-anchor="middle" font-style="italic">Not used on DSU or GSI boots, where the partition layout differs.</text>
+</svg>

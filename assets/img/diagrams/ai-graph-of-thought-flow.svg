@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 370" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">How a graph of thought links sub-questions</title>
+  <desc id="d">Four nodes from the malware detection example. Node 1, features, has no dependency. Node 2, model design, depends on node 1. Node 3, false positives, depends on node 1 and node 2. Node 4, orchestration, depends on node 2 and node 3. Node 4 leads to a synthesis, one answer. An arrow carries a result to the next node, and the model solves a node only after the nodes that point to it. A chain of thought has no such links.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<path d="M226 90 L 354 90" fill="none" stroke="#5d6b7e" stroke-width="1.7" marker-end="url(#m8)"/>
+<path d="M185 132 L 245 188" fill="none" stroke="#5d6b7e" stroke-width="1.7" marker-end="url(#m8)"/>
+<path d="M395 132 L 335 188" fill="none" stroke="#5d6b7e" stroke-width="1.7" marker-end="url(#m8)"/>
+<path d="M485 132 L 545 188" fill="none" stroke="#5d6b7e" stroke-width="1.7" marker-end="url(#m8)"/>
+<path d="M376 230 L 504 230" fill="none" stroke="#5d6b7e" stroke-width="1.7" marker-end="url(#m8)"/>
+<rect x="60" y="54" width="160" height="72" rx="36" fill="#eef3fb" stroke="#2f62c8" stroke-width="1.8"/>
+<text x="140" y="86" font-size="13" fill="#1f4a9e" text-anchor="middle" font-weight="700">Node 1</text>
+<text x="140" y="106" font-size="12.3" fill="#1c2230" text-anchor="middle">Features</text>
+<rect x="360" y="54" width="160" height="72" rx="36" fill="#f3f0fa" stroke="#7a4fc2" stroke-width="1.8"/>
+<text x="440" y="86" font-size="13" fill="#58378f" text-anchor="middle" font-weight="700">Node 2</text>
+<text x="440" y="106" font-size="12.3" fill="#1c2230" text-anchor="middle">Model design</text>
+<rect x="210" y="194" width="160" height="72" rx="36" fill="#fdf4e3" stroke="#b7791f" stroke-width="1.8"/>
+<text x="290" y="226" font-size="13" fill="#8a5a12" text-anchor="middle" font-weight="700">Node 3</text>
+<text x="290" y="246" font-size="12.3" fill="#1c2230" text-anchor="middle">False positives</text>
+<rect x="510" y="194" width="160" height="72" rx="36" fill="#fbecec" stroke="#c2552d" stroke-width="1.8"/>
+<text x="590" y="226" font-size="13" fill="#963f1f" text-anchor="middle" font-weight="700">Node 4</text>
+<text x="590" y="246" font-size="12.3" fill="#1c2230" text-anchor="middle">Orchestration</text>
+<path d="M670 230 L 720 230" fill="none" stroke="#0f8a6a" stroke-width="1.8" marker-end="url(#m4)"/>
+<rect x="724" y="190" width="140" height="80" rx="14" fill="#0f8a6a"/>
+<text x="794" y="226" font-size="14" fill="#fff" text-anchor="middle" font-weight="700">Synthesis</text>
+<text x="794" y="246" font-size="12" fill="#ffffffdd" text-anchor="middle">one answer</text>
+<text x="20" y="330" font-size="12.3" fill="#4a5263" text-anchor="start">An arrow carries a result to the next node. The model solves a node only after the nodes that point to it.</text>
+<text x="20" y="350" font-size="12.3" fill="#4a5263" text-anchor="start">Node 3 uses the results of node 1 and node 2. A chain of thought has no such links.</text>
+</svg>

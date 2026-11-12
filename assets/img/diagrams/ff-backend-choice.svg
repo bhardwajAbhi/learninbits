@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 416" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">How create-cache chooses the storage backend of a flag</title>
+  <desc id="d">create-cache sets metadata.storage for each parsed flag. If the permission is READ_ONLY, the backend is NONE, so there is no runtime read and the value is part of the code. Else, if the flag is in a Mainline Beta namespace, the backend is DEVICE_CONFIG and reads go through DeviceConfig. Else, the backend is ACONFIGD, with memory-mapped files under /metadata/aconfig. A note says that a declaration cannot set storage, and the parser rejects a .aconfig file that tries.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="24" y="30" width="210" height="92" rx="12" fill="#fff" stroke="#5d6b7e" stroke-width="1.7"/>
+<rect x="24" y="30" width="6" height="92" rx="3" fill="#5d6b7e"/>
+<text x="44" y="58" font-size="15" fill="#3f4a59" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">create-cache</text>
+<text x="44" y="82" font-size="13" fill="#4a5263" text-anchor="start">sets metadata.storage</text>
+<text x="44" y="101" font-size="13" fill="#4a5263" text-anchor="start">for each parsed flag</text>
+<path d="M234 76 L 262 76" fill="none" stroke="#1c2230" stroke-width="1.6" marker-end="url(#m0)"/>
+<path d="M370 30 L475 76 L370 122 L265 76 Z" fill="#fff" stroke="#2f62c8" stroke-width="2"/>
+<text x="370" y="72.5" font-size="12.5" fill="#1f4a9e" text-anchor="middle" font-weight="700">Permission is</text>
+<text x="370" y="89.5" font-size="12.5" fill="#1f4a9e" text-anchor="middle" font-weight="700">READ_ONLY?</text>
+<path d="M475 76 L 600 76" fill="none" stroke="#2f62c8" stroke-width="1.8" marker-end="url(#m3)"/>
+<text x="520" y="68" font-size="12" fill="#1f4a9e" text-anchor="middle" font-weight="800">Yes</text>
+<rect x="604" y="30" width="252" height="92" rx="12" fill="#fff" stroke="#2f62c8" stroke-width="1.7"/>
+<rect x="604" y="30" width="6" height="92" rx="3" fill="#2f62c8"/>
+<text x="624" y="58" font-size="15" fill="#1f4a9e" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">NONE</text>
+<text x="624" y="82" font-size="12.3" fill="#4a5263" text-anchor="start">No runtime read. The value</text>
+<text x="624" y="100" font-size="12.3" fill="#4a5263" text-anchor="start">is part of the code.</text>
+<path d="M370 122 L 370 168" fill="none" stroke="#1c2230" stroke-width="1.6" marker-end="url(#m0)"/>
+<text x="384" y="150" font-size="12" fill="#1c2230" text-anchor="start" font-weight="800">No</text>
+<path d="M370 170 L475 216 L370 262 L265 216 Z" fill="#fff" stroke="#b7791f" stroke-width="2"/>
+<text x="370" y="212.5" font-size="12.5" fill="#8a5a12" text-anchor="middle" font-weight="700">In a Mainline</text>
+<text x="370" y="229.5" font-size="12.5" fill="#8a5a12" text-anchor="middle" font-weight="700">Beta namespace?</text>
+<path d="M475 216 L 600 216" fill="none" stroke="#b7791f" stroke-width="1.8" marker-end="url(#m6)"/>
+<text x="520" y="208" font-size="12" fill="#8a5a12" text-anchor="middle" font-weight="800">Yes</text>
+<rect x="604" y="170" width="252" height="92" rx="12" fill="#fff" stroke="#b7791f" stroke-width="1.7"/>
+<rect x="604" y="170" width="6" height="92" rx="3" fill="#b7791f"/>
+<text x="624" y="198" font-size="15" fill="#8a5a12" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">DEVICE_CONFIG</text>
+<text x="624" y="222" font-size="12.3" fill="#4a5263" text-anchor="start">Reads go through</text>
+<text x="624" y="240" font-size="12.3" fill="#4a5263" text-anchor="start">DeviceConfig.</text>
+<path d="M370 262 L 370 300" fill="none" stroke="#1c2230" stroke-width="1.6" marker-end="url(#m0)"/>
+<text x="384" y="286" font-size="12" fill="#1c2230" text-anchor="start" font-weight="800">No</text>
+<rect x="240" y="304" width="260" height="92" rx="12" fill="#fff" stroke="#0f8a6a" stroke-width="1.7"/>
+<rect x="240" y="304" width="6" height="92" rx="3" fill="#0f8a6a"/>
+<text x="260" y="332" font-size="15" fill="#0b6650" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">ACONFIGD</text>
+<text x="260" y="356" font-size="12.3" fill="#4a5263" text-anchor="start">Memory-mapped files</text>
+<text x="260" y="374" font-size="12.3" fill="#4a5263" text-anchor="start">under /metadata/aconfig.</text>
+<rect x="604" y="304" width="252" height="92" rx="12" fill="#fbfaf6" stroke="#c2552d" stroke-width="1.3" stroke-dasharray="5 4"/>
+<text x="620" y="330" font-size="12.3" fill="#963f1f" text-anchor="start">A declaration cannot set</text>
+<text x="620" y="349" font-size="12.3" fill="#963f1f" text-anchor="start">storage. The parser rejects</text>
+<text x="620" y="368" font-size="12.3" fill="#963f1f" text-anchor="start">a .aconfig file that tries.</text>
+</svg>

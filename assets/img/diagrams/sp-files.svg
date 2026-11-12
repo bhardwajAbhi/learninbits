@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 340" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">The property files in memory</title>
+  <desc id="d">The folder /dev/__properties__ lives in RAM. It holds property_info, which says which SELinux context each property name has, properties_serial, one counter for all changes, and one file for each context, for example build_prop for ro.build values, debug_prop for debug values and system_prop for sys and persist.sys values. Init maps every file for reading and writing. Other processes map them read only and shared. SELinux checks each file, and a process without read access sees the property as missing.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="20" y="20" width="400" height="300" rx="14" fill="#fff" stroke="#5d6b7e" stroke-width="1.4"/>
+<text x="220" y="46" font-size="12.8" fill="#3f4a59" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="700">/dev/__properties__/ (in RAM)</text>
+<rect x="40" y="62" width="360" height="34" rx="8" fill="#f3f0fa" stroke="#7a4fc2" stroke-width="1.1"/>
+<text x="54" y="84" font-size="10.8" fill="#58378f" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="600">property_info</text>
+<text x="388" y="84" font-size="10.2" fill="#4a5263" text-anchor="end">which context each name has</text>
+<rect x="40" y="104" width="360" height="34" rx="8" fill="#fdf4e3" stroke="#b7791f" stroke-width="1.1"/>
+<text x="54" y="126" font-size="10.8" fill="#8a5a12" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="600">properties_serial</text>
+<text x="388" y="126" font-size="10.2" fill="#4a5263" text-anchor="end">one counter for all changes</text>
+<rect x="40" y="146" width="360" height="34" rx="8" fill="#e3f4ee" stroke="#0f8a6a" stroke-width="1.1"/>
+<text x="54" y="168" font-size="10.8" fill="#0b6650" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="600">u:object_r:build_prop:s0</text>
+<text x="388" y="168" font-size="10.2" fill="#4a5263" text-anchor="end">ro.build.* values</text>
+<rect x="40" y="188" width="360" height="34" rx="8" fill="#e3f4ee" stroke="#0f8a6a" stroke-width="1.1"/>
+<text x="54" y="210" font-size="10.8" fill="#0b6650" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="600">u:object_r:debug_prop:s0</text>
+<text x="388" y="210" font-size="10.2" fill="#4a5263" text-anchor="end">debug.* values</text>
+<rect x="40" y="230" width="360" height="34" rx="8" fill="#e3f4ee" stroke="#0f8a6a" stroke-width="1.1"/>
+<text x="54" y="252" font-size="10.8" fill="#0b6650" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="600">u:object_r:system_prop:s0</text>
+<text x="388" y="252" font-size="10.2" fill="#4a5263" text-anchor="end">sys.*, persist.sys.* values</text>
+<rect x="40" y="272" width="360" height="34" rx="8" fill="#eef0f3" stroke="#5d6b7e" stroke-width="1.1"/>
+<text x="54" y="294" font-size="10.8" fill="#3f4a59" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="600">... one file for each context</text>
+<rect x="500" y="40" width="360" height="70" rx="10" fill="#eef3fb" stroke="#2f62c8" stroke-width="1.4"/>
+<text x="680" y="72" font-size="12.8" fill="#1f4a9e" text-anchor="middle" font-weight="700">init maps every file</text>
+<text x="680" y="90" font-size="11" fill="#4a5263" text-anchor="middle">read and write, PROT_READ | PROT_WRITE</text>
+<rect x="500" y="140" width="360" height="70" rx="10" fill="#e3f4ee" stroke="#0f8a6a" stroke-width="1.4"/>
+<text x="680" y="172" font-size="12.8" fill="#0b6650" text-anchor="middle" font-weight="700">Other processes map them</text>
+<text x="680" y="190" font-size="11" fill="#4a5263" text-anchor="middle">read only, PROT_READ, MAP_SHARED</text>
+<rect x="500" y="240" width="360" height="70" rx="10" fill="#fbecec" stroke="#c2552d" stroke-width="1.4"/>
+<text x="680" y="272" font-size="12.8" fill="#963f1f" text-anchor="middle" font-weight="700">SELinux checks each file</text>
+<text x="680" y="290" font-size="11" fill="#4a5263" text-anchor="middle">no read access means the property seems missing</text>
+<path d="M422 90 L 496 76" fill="none" stroke="#1c2230" stroke-width="1.4" marker-end="url(#m0)"/>
+<path d="M422 170 L 496 176" fill="none" stroke="#1c2230" stroke-width="1.4" marker-end="url(#m0)"/>
+<path d="M422 260 L 496 274" fill="none" stroke="#1c2230" stroke-width="1.4" marker-end="url(#m0)"/>
+</svg>

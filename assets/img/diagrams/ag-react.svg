@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 392" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">Thought, action and observation, the loop of a tool-using agent</title>
+  <desc id="d">A tool-using agent books a train ticket in a loop. Thought, I need a seat on Tuesday, so search the trains first. Action, search trains from Hyderabad to Pune on Tuesday. Observation, two trains, and both show a waitlist of 40 and more. Thought, a waitlist is risky, so try Wednesday instead. Action, search again for Wednesday. Observation, one train has 12 seats free. Answer, book the Wednesday train, because it has seats. The loop repeats until the agent can answer, and each observation changes the next thought.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="20" y="28" width="120" height="28" rx="14" fill="#f3f0fa" stroke="#7a4fc2" stroke-width="1.2"/>
+<text x="80" y="46.32" font-size="12" fill="#58378f" text-anchor="middle" font-weight="700">Thought</text>
+<rect x="156" y="20" width="560" height="44" rx="10" fill="#fff" stroke="#7a4fc2" stroke-width="1.3"/>
+<text x="172" y="47" font-size="11.6" fill="#1c2230" text-anchor="start">I need a seat on Tuesday. Search the trains first.</text>
+<path d="M80 57 L 80 79" fill="none" stroke="#d9d4c7" stroke-width="1.3" marker-end="url(#m0)"/>
+<rect x="20" y="80" width="120" height="28" rx="14" fill="#eef3fb" stroke="#2f62c8" stroke-width="1.2"/>
+<text x="80" y="98.32" font-size="12" fill="#1f4a9e" text-anchor="middle" font-weight="700">Action</text>
+<rect x="156" y="72" width="560" height="44" rx="10" fill="#fff" stroke="#2f62c8" stroke-width="1.3"/>
+<text x="172" y="99" font-size="11.6" fill="#1c2230" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="600">search_trains(from=&quot;Hyderabad&quot;, to=&quot;Pune&quot;, date=&quot;Tuesday&quot;)</text>
+<path d="M80 109 L 80 131" fill="none" stroke="#d9d4c7" stroke-width="1.3" marker-end="url(#m0)"/>
+<rect x="20" y="132" width="120" height="28" rx="14" fill="#fdf4e3" stroke="#b7791f" stroke-width="1.2"/>
+<text x="80" y="150.32" font-size="12" fill="#8a5a12" text-anchor="middle" font-weight="700">Observation</text>
+<rect x="156" y="124" width="560" height="44" rx="10" fill="#fff" stroke="#b7791f" stroke-width="1.3"/>
+<text x="172" y="151" font-size="11.6" fill="#1c2230" text-anchor="start">Two trains. Both show waitlist 40 and more.</text>
+<path d="M80 161 L 80 183" fill="none" stroke="#d9d4c7" stroke-width="1.3" marker-end="url(#m0)"/>
+<rect x="20" y="184" width="120" height="28" rx="14" fill="#f3f0fa" stroke="#7a4fc2" stroke-width="1.2"/>
+<text x="80" y="202.32" font-size="12" fill="#58378f" text-anchor="middle" font-weight="700">Thought</text>
+<rect x="156" y="176" width="560" height="44" rx="10" fill="#fff" stroke="#7a4fc2" stroke-width="1.3"/>
+<text x="172" y="203" font-size="11.6" fill="#1c2230" text-anchor="start">Waitlist is risky. Try Wednesday instead.</text>
+<path d="M80 213 L 80 235" fill="none" stroke="#d9d4c7" stroke-width="1.3" marker-end="url(#m0)"/>
+<rect x="20" y="236" width="120" height="28" rx="14" fill="#eef3fb" stroke="#2f62c8" stroke-width="1.2"/>
+<text x="80" y="254.32" font-size="12" fill="#1f4a9e" text-anchor="middle" font-weight="700">Action</text>
+<rect x="156" y="228" width="560" height="44" rx="10" fill="#fff" stroke="#2f62c8" stroke-width="1.3"/>
+<text x="172" y="255" font-size="11.6" fill="#1c2230" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="600">search_trains(..., date=&quot;Wednesday&quot;)</text>
+<path d="M80 265 L 80 287" fill="none" stroke="#d9d4c7" stroke-width="1.3" marker-end="url(#m0)"/>
+<rect x="20" y="288" width="120" height="28" rx="14" fill="#fdf4e3" stroke="#b7791f" stroke-width="1.2"/>
+<text x="80" y="306.32" font-size="12" fill="#8a5a12" text-anchor="middle" font-weight="700">Observation</text>
+<rect x="156" y="280" width="560" height="44" rx="10" fill="#fff" stroke="#b7791f" stroke-width="1.3"/>
+<text x="172" y="307" font-size="11.6" fill="#1c2230" text-anchor="start">One train has 12 seats free.</text>
+<path d="M80 317 L 80 339" fill="none" stroke="#d9d4c7" stroke-width="1.3" marker-end="url(#m0)"/>
+<rect x="20" y="340" width="120" height="28" rx="14" fill="#e3f4ee" stroke="#0f8a6a" stroke-width="1.2"/>
+<text x="80" y="358.32" font-size="12" fill="#0b6650" text-anchor="middle" font-weight="700">Answer</text>
+<rect x="156" y="332" width="560" height="44" rx="10" fill="#fff" stroke="#0f8a6a" stroke-width="1.3"/>
+<text x="172" y="359" font-size="11.6" fill="#1c2230" text-anchor="start">Book the Wednesday train, it has seats.</text>
+<rect x="736" y="20" width="124" height="356" rx="12" fill="#f2efe8"/>
+<text x="798" y="52" font-size="11.4" fill="#1c2230" text-anchor="middle" font-weight="700">The loop</text>
+<text x="798" y="72" font-size="11.4" fill="#1c2230" text-anchor="middle">repeats until</text>
+<text x="798" y="92" font-size="11.4" fill="#1c2230" text-anchor="middle">the agent can</text>
+<text x="798" y="112" font-size="11.4" fill="#1c2230" text-anchor="middle">answer. Each</text>
+<text x="798" y="132" font-size="11.4" fill="#1c2230" text-anchor="middle">observation</text>
+<text x="798" y="152" font-size="11.4" fill="#1c2230" text-anchor="middle">changes the</text>
+<text x="798" y="172" font-size="11.4" fill="#1c2230" text-anchor="middle">next thought.</text>
+</svg>

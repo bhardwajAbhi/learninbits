@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 460" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">Sources of research ideas</title>
+  <desc id="d">Curiosity leads to six sources of ideas, namely workplace problems, experimental anomalies, comparisons and benchmarks, performance improvements, gaps in the literature and new frameworks or datasets. They reveal a gap that nobody solved, which becomes a hypothesis to test.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="24" y="186" width="150" height="88" rx="16" fill="#1c2230"/>
+<text x="99" y="224" font-size="15.5" fill="#fff" text-anchor="middle" font-weight="700">Curiosity</text>
+<text x="99" y="248" font-size="12.5" fill="#ffffffcc" text-anchor="middle">the starting point</text>
+<rect x="230" y="20" width="300" height="56" rx="12" fill="#eef3fb" stroke="#2f62c8" stroke-width="1.6"/>
+<text x="250" y="54" font-size="14" fill="#1f4a9e" text-anchor="start" font-weight="700">Workplace problems</text>
+<path d="M174 230 C200 230 200 48 224 48" fill="none" stroke="#2f62c8" stroke-width="1.6"/>
+<path d="M530 48 C560 48 560 230 590 230" fill="none" stroke="#2f62c8" stroke-width="1.6"/>
+<rect x="230" y="92" width="300" height="56" rx="12" fill="#f3f0fa" stroke="#7a4fc2" stroke-width="1.6"/>
+<text x="250" y="126" font-size="14" fill="#58378f" text-anchor="start" font-weight="700">Experimental anomalies</text>
+<path d="M174 230 C200 230 200 120 224 120" fill="none" stroke="#7a4fc2" stroke-width="1.6"/>
+<path d="M530 120 C560 120 560 230 590 230" fill="none" stroke="#7a4fc2" stroke-width="1.6"/>
+<rect x="230" y="164" width="300" height="56" rx="12" fill="#fdf4e3" stroke="#b7791f" stroke-width="1.6"/>
+<text x="250" y="198" font-size="14" fill="#8a5a12" text-anchor="start" font-weight="700">Comparisons, benchmarks</text>
+<path d="M174 230 C200 230 200 192 224 192" fill="none" stroke="#b7791f" stroke-width="1.6"/>
+<path d="M530 192 C560 192 560 230 590 230" fill="none" stroke="#b7791f" stroke-width="1.6"/>
+<rect x="230" y="236" width="300" height="56" rx="12" fill="#e3f4ee" stroke="#0f8a6a" stroke-width="1.6"/>
+<text x="250" y="270" font-size="14" fill="#0b6650" text-anchor="start" font-weight="700">Performance improvements</text>
+<path d="M174 230 C200 230 200 264 224 264" fill="none" stroke="#0f8a6a" stroke-width="1.6"/>
+<path d="M530 264 C560 264 560 230 590 230" fill="none" stroke="#0f8a6a" stroke-width="1.6"/>
+<rect x="230" y="308" width="300" height="56" rx="12" fill="#fbecec" stroke="#c2552d" stroke-width="1.6"/>
+<text x="250" y="342" font-size="14" fill="#963f1f" text-anchor="start" font-weight="700">Gaps in the literature</text>
+<path d="M174 230 C200 230 200 336 224 336" fill="none" stroke="#c2552d" stroke-width="1.6"/>
+<path d="M530 336 C560 336 560 230 590 230" fill="none" stroke="#c2552d" stroke-width="1.6"/>
+<rect x="230" y="380" width="300" height="56" rx="12" fill="#eef0f3" stroke="#5d6b7e" stroke-width="1.6"/>
+<text x="250" y="414" font-size="14" fill="#3f4a59" text-anchor="start" font-weight="700">New frameworks, datasets</text>
+<path d="M174 230 C200 230 200 408 224 408" fill="none" stroke="#5d6b7e" stroke-width="1.6"/>
+<path d="M530 408 C560 408 560 230 590 230" fill="none" stroke="#5d6b7e" stroke-width="1.6"/>
+<rect x="594" y="176" width="120" height="108" rx="16" fill="#fdf4e3" stroke="#b7791f" stroke-width="1.8"/>
+<text x="654" y="222" font-size="15.5" fill="#8a5a12" text-anchor="middle" font-weight="700">A gap</text>
+<text x="654" y="246" font-size="12.5" fill="#4a5263" text-anchor="middle">nobody solved</text>
+<path d="M714 230 H742" fill="none" stroke="#1c2230" stroke-width="2" marker-end="url(#m0)"/>
+<rect x="748" y="176" width="112" height="108" rx="16" fill="#0f8a6a"/>
+<text x="804" y="222" font-size="14.5" fill="#fff" text-anchor="middle" font-weight="700">Hypothesis</text>
+<text x="804" y="246" font-size="12.5" fill="#ffffffd9" text-anchor="middle">to test</text>
+</svg>

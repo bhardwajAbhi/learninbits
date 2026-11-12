@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 380" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">The prefix decides the behavior</title>
+  <desc id="d">Eight prefixes and what they mean. ro is set once at boot and never changed, for example ro.build.fingerprint. persist is saved in /data and survives a reboot, for example persist.sys.locale. next_boot is staged now and applied at the next boot. sys is runtime state that is lost at reboot, for example sys.boot_completed. vendor is owned by the vendor partition. debug is for developers, and the shell can set it, for example debug.hwui.overdraw. ctl is a command to init that is never stored, for example ctl.restart equals adbd. init.svc is written by init and holds the state of a service, for example init.svc.adbd equals running.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="20" y="24" width="120" height="30" rx="15" fill="#e3f4ee" stroke="#0f8a6a" stroke-width="1.2"/>
+<text x="80" y="43.32" font-size="12" fill="#0b6650" text-anchor="middle" font-weight="700">ro.</text>
+<text x="160" y="44" font-size="12" fill="#1c2230" text-anchor="start">Set once at boot, never changed</text>
+<rect x="560" y="20" width="300" height="38" rx="8" fill="#fff" stroke="#d9d4c7" stroke-width="1"/>
+<text x="576" y="44" font-size="11" fill="#1c2230" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="600">ro.build.fingerprint</text>
+<rect x="20" y="68" width="120" height="30" rx="15" fill="#eef3fb" stroke="#2f62c8" stroke-width="1.2"/>
+<text x="80" y="87.32" font-size="12" fill="#1f4a9e" text-anchor="middle" font-weight="700">persist.</text>
+<text x="160" y="88" font-size="12" fill="#1c2230" text-anchor="start">Saved in /data, survives a reboot</text>
+<rect x="560" y="64" width="300" height="38" rx="8" fill="#fff" stroke="#d9d4c7" stroke-width="1"/>
+<text x="576" y="88" font-size="11" fill="#1c2230" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="600">persist.sys.locale</text>
+<rect x="20" y="112" width="120" height="30" rx="15" fill="#eef3fb" stroke="#2f62c8" stroke-width="1.2"/>
+<text x="80" y="131.32" font-size="12" fill="#1f4a9e" text-anchor="middle" font-weight="700">next_boot.</text>
+<text x="160" y="132" font-size="12" fill="#1c2230" text-anchor="start">Staged now, applied at the next boot</text>
+<rect x="560" y="108" width="300" height="38" rx="8" fill="#fff" stroke="#d9d4c7" stroke-width="1"/>
+<text x="576" y="132" font-size="11" fill="#1c2230" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="600">next_boot.persist.sys.locale</text>
+<rect x="20" y="156" width="120" height="30" rx="15" fill="#f3f0fa" stroke="#7a4fc2" stroke-width="1.2"/>
+<text x="80" y="175.32" font-size="12" fill="#58378f" text-anchor="middle" font-weight="700">sys.</text>
+<text x="160" y="176" font-size="12" fill="#1c2230" text-anchor="start">Runtime state, lost at reboot</text>
+<rect x="560" y="152" width="300" height="38" rx="8" fill="#fff" stroke="#d9d4c7" stroke-width="1"/>
+<text x="576" y="176" font-size="11" fill="#1c2230" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="600">sys.boot_completed</text>
+<rect x="20" y="200" width="120" height="30" rx="15" fill="#fdf4e3" stroke="#b7791f" stroke-width="1.2"/>
+<text x="80" y="219.32" font-size="12" fill="#8a5a12" text-anchor="middle" font-weight="700">vendor.</text>
+<text x="160" y="220" font-size="12" fill="#1c2230" text-anchor="start">Owned by the vendor partition</text>
+<rect x="560" y="196" width="300" height="38" rx="8" fill="#fff" stroke="#d9d4c7" stroke-width="1"/>
+<text x="576" y="220" font-size="11" fill="#1c2230" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="600">vendor.example.feature</text>
+<rect x="20" y="244" width="120" height="30" rx="15" fill="#eef0f3" stroke="#5d6b7e" stroke-width="1.2"/>
+<text x="80" y="263.32" font-size="12" fill="#3f4a59" text-anchor="middle" font-weight="700">debug.</text>
+<text x="160" y="264" font-size="12" fill="#1c2230" text-anchor="start">For developers, the shell can set it</text>
+<rect x="560" y="240" width="300" height="38" rx="8" fill="#fff" stroke="#d9d4c7" stroke-width="1"/>
+<text x="576" y="264" font-size="11" fill="#1c2230" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="600">debug.hwui.overdraw</text>
+<rect x="20" y="288" width="120" height="30" rx="15" fill="#fbecec" stroke="#c2552d" stroke-width="1.2"/>
+<text x="80" y="307.32" font-size="12" fill="#963f1f" text-anchor="middle" font-weight="700">ctl.</text>
+<text x="160" y="308" font-size="12" fill="#1c2230" text-anchor="start">A command to init, never stored</text>
+<rect x="560" y="284" width="300" height="38" rx="8" fill="#fff" stroke="#d9d4c7" stroke-width="1"/>
+<text x="576" y="308" font-size="11" fill="#1c2230" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="600">ctl.restart = adbd</text>
+<rect x="20" y="332" width="120" height="30" rx="15" fill="#e6f3f4" stroke="#0e7c86" stroke-width="1.2"/>
+<text x="80" y="351.32" font-size="12" fill="#095a61" text-anchor="middle" font-weight="700">init.svc.</text>
+<text x="160" y="352" font-size="12" fill="#1c2230" text-anchor="start">Written by init, the state of a service</text>
+<rect x="560" y="328" width="300" height="38" rx="8" fill="#fff" stroke="#d9d4c7" stroke-width="1"/>
+<text x="576" y="352" font-size="11" fill="#1c2230" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="600">init.svc.adbd = running</text>
+</svg>

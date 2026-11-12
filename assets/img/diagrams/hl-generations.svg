@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 276" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">Three generations of HAL</title>
+  <desc id="d">Three generations from left to right. The legacy HAL from Android 1.0 in 2008, a shared library loaded with dlopen into the framework process, with no IPC and no versions that the system checks. It is still present for a few modules. HIDL from Android 8.0 in 2017, with separate HAL processes on /dev/hwbinder or passthrough in the client, and versions such as 2.4 per package. It is deprecated and kept for old vendors. The AIDL HAL from Android 11 in 2020, with separate HAL processes on /dev/binder and stable AIDL, one language for framework services and HALs. It is the standard for all new HALs.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="20" y="20" width="260" height="236" rx="14" fill="#fff" stroke="#5d6b7e" stroke-width="1.6"/>
+<rect x="20" y="20" width="260" height="52" rx="14" fill="#5d6b7e"/>
+<rect x="20" y="56" width="260" height="16" rx="0" fill="#5d6b7e"/>
+<text x="150" y="44" font-size="13.6" fill="#fff" text-anchor="middle" font-weight="700">Legacy HAL</text>
+<text x="150" y="64" font-size="11" fill="#ffffffdd" text-anchor="middle" font-weight="600">Android 1.0, 2008</text>
+<text x="38" y="100" font-size="11.4" fill="#1c2230" text-anchor="start">A shared library loaded with</text>
+<text x="38" y="119" font-size="11.4" fill="#1c2230" text-anchor="start">dlopen() into the framework</text>
+<text x="38" y="138" font-size="11.4" fill="#1c2230" text-anchor="start">process. No IPC, no versions</text>
+<text x="38" y="157" font-size="11.4" fill="#1c2230" text-anchor="start">that the system checks.</text>
+<text x="150" y="226" font-size="11.2" fill="#3f4a59" text-anchor="middle" font-weight="700">Still present for a few modules</text>
+<path d="M282 138 L 308 138" fill="none" stroke="#1c2230" stroke-width="1.6" marker-end="url(#m0)"/>
+<rect x="310" y="20" width="260" height="236" rx="14" fill="#fff" stroke="#b7791f" stroke-width="1.6"/>
+<rect x="310" y="20" width="260" height="52" rx="14" fill="#b7791f"/>
+<rect x="310" y="56" width="260" height="16" rx="0" fill="#b7791f"/>
+<text x="440" y="44" font-size="13.6" fill="#fff" text-anchor="middle" font-weight="700">HIDL</text>
+<text x="440" y="64" font-size="11" fill="#ffffffdd" text-anchor="middle" font-weight="600">Android 8.0, 2017</text>
+<text x="328" y="100" font-size="11.4" fill="#1c2230" text-anchor="start">Separate HAL processes on</text>
+<text x="328" y="119" font-size="11.4" fill="#1c2230" text-anchor="start">/dev/hwbinder, or passthrough</text>
+<text x="328" y="138" font-size="11.4" fill="#1c2230" text-anchor="start">in the client. Versions such</text>
+<text x="328" y="157" font-size="11.4" fill="#1c2230" text-anchor="start">as 2.4 per package.</text>
+<text x="440" y="226" font-size="11.2" fill="#8a5a12" text-anchor="middle" font-weight="700">Deprecated, kept for old vendors</text>
+<path d="M572 138 L 598 138" fill="none" stroke="#1c2230" stroke-width="1.6" marker-end="url(#m0)"/>
+<rect x="600" y="20" width="260" height="236" rx="14" fill="#fff" stroke="#0f8a6a" stroke-width="1.6"/>
+<rect x="600" y="20" width="260" height="52" rx="14" fill="#0f8a6a"/>
+<rect x="600" y="56" width="260" height="16" rx="0" fill="#0f8a6a"/>
+<text x="730" y="44" font-size="13.6" fill="#fff" text-anchor="middle" font-weight="700">AIDL HAL</text>
+<text x="730" y="64" font-size="11" fill="#ffffffdd" text-anchor="middle" font-weight="600">Android 11, 2020</text>
+<text x="618" y="100" font-size="11.4" fill="#1c2230" text-anchor="start">Separate HAL processes on</text>
+<text x="618" y="119" font-size="11.4" fill="#1c2230" text-anchor="start">/dev/binder with stable AIDL.</text>
+<text x="618" y="138" font-size="11.4" fill="#1c2230" text-anchor="start">One language for framework</text>
+<text x="618" y="157" font-size="11.4" fill="#1c2230" text-anchor="start">services and HALs.</text>
+<text x="730" y="226" font-size="11.2" fill="#0b6650" text-anchor="middle" font-weight="700">The standard for all new HALs</text>
+</svg>

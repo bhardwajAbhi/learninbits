@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 360" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">How a zero-shot chain flows</title>
+  <desc id="d">A loop takes one item from a list. The prompt template puts the item into the placeholder, after the instruction and the allowed labels. The model reads the prompt and writes a reply. The parser takes the plain text out of the reply. The program prints one label, then the loop takes the next item.</desc>
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker>
+    <marker id="g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker>
+  </defs>
+
+  <!-- items -->
+  <rect x="16" y="70" width="150" height="190" rx="14" fill="#f2efe8" stroke="#cfc9bb"/>
+  <text x="91" y="98" font-size="14" font-weight="700" text-anchor="middle" fill="#1c2230">Your items</text>
+  <g font-size="11" fill="#4a5263">
+    <rect x="30" y="112" width="122" height="26" rx="6" fill="#fff" stroke="#e4e0d6"/><text x="40" y="129">item 1</text>
+    <rect x="30" y="144" width="122" height="26" rx="6" fill="#fff" stroke="#7a4fc2" stroke-width="2"/><text x="40" y="161" fill="#58378f" font-weight="700">item 2  (now)</text>
+    <rect x="30" y="176" width="122" height="26" rx="6" fill="#fff" stroke="#e4e0d6"/><text x="40" y="193">item 3</text>
+    <rect x="30" y="208" width="122" height="26" rx="6" fill="#fff" stroke="#e4e0d6"/><text x="40" y="225">...</text>
+  </g>
+
+  <!-- prompt template -->
+  <rect x="200" y="50" width="230" height="230" rx="14" fill="#ffffff" stroke="#2f62c8" stroke-width="2"/>
+  <text x="315" y="78" font-size="14" font-weight="700" text-anchor="middle" fill="#1f448f">Prompt template</text>
+  <rect x="216" y="92" width="198" height="46" rx="8" fill="#eef3fb"/>
+  <text x="226" y="111" font-size="11" font-weight="700" fill="#1f448f">1  Task and labels</text>
+  <text x="226" y="128" font-size="10.5" fill="#4a5263">Classify ... as A, B or C.</text>
+  <rect x="216" y="144" width="198" height="40" rx="8" fill="#eef3fb"/>
+  <text x="226" y="162" font-size="11" font-weight="700" fill="#1f448f">2  Output rule</text>
+  <text x="226" y="177" font-size="10.5" fill="#4a5263">Respond with only the label.</text>
+  <rect x="216" y="190" width="198" height="40" rx="8" fill="#f3f0fa" stroke="#7a4fc2" stroke-dasharray="4 3"/>
+  <text x="226" y="208" font-size="11" font-weight="700" fill="#58378f">3  Placeholder</text>
+  <text x="226" y="223" font-size="10.5" font-family="JetBrains Mono, monospace" fill="#58378f">{item}</text>
+  <rect x="216" y="236" width="198" height="32" rx="8" fill="#eef3fb"/>
+  <text x="226" y="257" font-size="11" font-weight="700" fill="#1f448f">4  Cue    <tspan font-weight="400" font-family="JetBrains Mono, monospace" fill="#4a5263">Label:</tspan></text>
+
+  <!-- model -->
+  <rect x="466" y="110" width="150" height="110" rx="14" fill="#7a4fc2"/>
+  <text x="541" y="152" font-size="15" font-weight="700" text-anchor="middle" fill="#fff">Model</text>
+  <text x="541" y="174" font-size="11.5" text-anchor="middle" fill="#e9defa">Gemini, OpenRouter</text>
+  <text x="541" y="191" font-size="11.5" text-anchor="middle" fill="#e9defa">or Ollama</text>
+
+  <!-- parser -->
+  <rect x="652" y="122" width="110" height="86" rx="14" fill="#ffffff" stroke="#b7791f" stroke-width="2"/>
+  <text x="707" y="160" font-size="14" font-weight="700" text-anchor="middle" fill="#7a4f10">Parser</text>
+  <text x="707" y="180" font-size="11" text-anchor="middle" fill="#4a5263">keeps the text</text>
+
+  <!-- label -->
+  <rect x="786" y="138" width="80" height="54" rx="12" fill="#0f8a6a"/>
+  <text x="826" y="160" font-size="10.5" text-anchor="middle" fill="#d8f2ea">one label</text>
+  <text x="826" y="179" font-size="12.5" font-weight="700" text-anchor="middle" fill="#fff">MALWARE</text>
+
+  <!-- arrows -->
+  <line x1="168" y1="157" x2="196" y2="157" stroke="#4a5263" stroke-width="2" marker-end="url(#a)"/>
+  <line x1="432" y1="165" x2="462" y2="165" stroke="#4a5263" stroke-width="2" marker-end="url(#a)"/>
+  <line x1="618" y1="165" x2="648" y2="165" stroke="#4a5263" stroke-width="2" marker-end="url(#a)"/>
+  <line x1="764" y1="165" x2="782" y2="165" stroke="#4a5263" stroke-width="2" marker-end="url(#a)"/>
+
+  <!-- chain bracket -->
+  <path d="M200 296 L200 306 L762 306 L762 296" fill="none" stroke="#7a4fc2" stroke-width="2"/>
+  <text x="481" y="326" font-size="13" font-weight="700" text-anchor="middle" fill="#58378f" font-family="JetBrains Mono, monospace">chain = prompt | llm | parser</text>
+
+  <!-- loop -->
+  <path d="M826 136 C826 20 91 20 91 66" fill="none" stroke="#7a4fc2" stroke-width="2" stroke-dasharray="7 5" marker-end="url(#g)"/>
+  <rect x="380" y="10" width="200" height="26" rx="13" fill="#f3f0fa"/>
+  <text x="480" y="28" font-size="12" font-weight="700" text-anchor="middle" fill="#58378f">Then the next item</text>
+</svg>

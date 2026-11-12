@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 734" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">Inside the nine calls of Example 1</title>
+  <desc id="d">A sequence diagram with the lanes Your code, llm_zero, llm_balanced, llm_creative, Gemini API. Step 1, Your code to llm_zero, invoke(prompt), temperature 0. Step 2, llm_zero to Gemini API, Request, the most likely token each time. Step 3, Gemini API to Your code, response.text, three identical sentences. Step 4, Your code to llm_balanced, invoke(prompt), temperature 0.7. Step 5, llm_balanced to Gemini API, Request, likely tokens, with some chance. Step 6, Gemini API to Your code, response.text, a few words change. Step 7, Your code to llm_creative, invoke(prompt), temperature 1.5. Step 8, llm_creative to Gemini API, Request, unlikely tokens get a real chance. Step 9, Gemini API to Your code, response.text, more variety, still correct. Steps 1 to 3 repeat, 3 runs at 0. Steps 4 to 6 repeat, 3 runs at 0.7. Steps 7 to 9 repeat, 3 runs at 1.5.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="15" y="18" width="150" height="42" rx="10" fill="#eef0f3" stroke="#5d6b7e" stroke-width="1.4"/>
+<text x="90" y="44" font-size="12.3" fill="#3f4a59" text-anchor="middle" font-weight="700">Your code</text>
+<line x1="90" y1="60" x2="90" y2="718" stroke="#d9d4c7" stroke-width="1.6" stroke-dasharray="5 5"/>
+<rect x="190" y="18" width="150" height="42" rx="10" fill="#eef3fb" stroke="#2f62c8" stroke-width="1.4"/>
+<text x="265" y="44" font-size="11.8" fill="#1f4a9e" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="700">llm_zero</text>
+<line x1="265" y1="60" x2="265" y2="718" stroke="#d9d4c7" stroke-width="1.6" stroke-dasharray="5 5"/>
+<rect x="365" y="18" width="150" height="42" rx="10" fill="#f3f0fa" stroke="#7a4fc2" stroke-width="1.4"/>
+<text x="440" y="44" font-size="11.8" fill="#58378f" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="700">llm_balanced</text>
+<line x1="440" y1="60" x2="440" y2="718" stroke="#d9d4c7" stroke-width="1.6" stroke-dasharray="5 5"/>
+<rect x="540" y="18" width="150" height="42" rx="10" fill="#fbecec" stroke="#c2552d" stroke-width="1.4"/>
+<text x="615" y="44" font-size="11.8" fill="#963f1f" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="700">llm_creative</text>
+<line x1="615" y1="60" x2="615" y2="718" stroke="#d9d4c7" stroke-width="1.6" stroke-dasharray="5 5"/>
+<rect x="715" y="18" width="150" height="42" rx="10" fill="#fdf4e3" stroke="#b7791f" stroke-width="1.4"/>
+<text x="790" y="44" font-size="12.3" fill="#8a5a12" text-anchor="middle" font-weight="700">Gemini API</text>
+<line x1="790" y1="60" x2="790" y2="718" stroke="#d9d4c7" stroke-width="1.6" stroke-dasharray="5 5"/>
+<rect x="14" y="78" width="852" height="192" rx="10" fill="none" stroke="#5d6b7e" stroke-width="1.2" stroke-dasharray="6 4"/>
+<rect x="14" y="78" width="103" height="22" rx="10" fill="#5d6b7e"/>
+<text x="26" y="93" font-size="11.5" fill="#fff" text-anchor="start" font-weight="700">3 runs at 0</text>
+<rect x="14" y="288" width="852" height="192" rx="10" fill="none" stroke="#5d6b7e" stroke-width="1.2" stroke-dasharray="6 4"/>
+<rect x="14" y="288" width="117" height="22" rx="10" fill="#5d6b7e"/>
+<text x="26" y="303" font-size="11.5" fill="#fff" text-anchor="start" font-weight="700">3 runs at 0.7</text>
+<rect x="14" y="498" width="852" height="192" rx="10" fill="none" stroke="#5d6b7e" stroke-width="1.2" stroke-dasharray="6 4"/>
+<rect x="14" y="498" width="117" height="22" rx="10" fill="#5d6b7e"/>
+<text x="26" y="513" font-size="11.5" fill="#fff" text-anchor="start" font-weight="700">3 runs at 1.5</text>
+<path d="M94 128 L 259 128" fill="none" stroke="#5d6b7e" stroke-width="1.7" marker-end="url(#m8)"/>
+<circle cx="108" cy="115" r="10" fill="#5d6b7e"/>
+<text x="108" y="118.96" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">1</text>
+<text x="124" y="120" font-size="12" fill="#3f4a59" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">invoke(prompt)</text>
+<text x="124" y="144" font-size="11.3" fill="#4a5263" text-anchor="start">temperature 0</text>
+<path d="M269 184 L 784 184" fill="none" stroke="#2f62c8" stroke-width="1.7" marker-end="url(#m3)"/>
+<circle cx="283" cy="171" r="10" fill="#2f62c8"/>
+<text x="283" y="174.96" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">2</text>
+<text x="299" y="176" font-size="12" fill="#1f4a9e" text-anchor="start" font-weight="700">Request</text>
+<text x="299" y="200" font-size="11.3" fill="#4a5263" text-anchor="start">the most likely token each time</text>
+<path d="M786 240 L 96 240" fill="none" stroke="#b7791f" stroke-width="1.7" stroke-dasharray="6 4" marker-end="url(#m6)"/>
+<circle cx="108" cy="227" r="10" fill="#b7791f"/>
+<text x="108" y="230.96" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">3</text>
+<text x="124" y="232" font-size="12" fill="#8a5a12" text-anchor="start" font-weight="700">response.text</text>
+<text x="124" y="256" font-size="11.3" fill="#4a5263" text-anchor="start">three identical sentences</text>
+<path d="M94 338 L 434 338" fill="none" stroke="#5d6b7e" stroke-width="1.7" marker-end="url(#m8)"/>
+<circle cx="108" cy="325" r="10" fill="#5d6b7e"/>
+<text x="108" y="328.96" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">4</text>
+<text x="124" y="330" font-size="12" fill="#3f4a59" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">invoke(prompt)</text>
+<text x="124" y="354" font-size="11.3" fill="#4a5263" text-anchor="start">temperature 0.7</text>
+<path d="M444 394 L 784 394" fill="none" stroke="#7a4fc2" stroke-width="1.7" marker-end="url(#m5)"/>
+<circle cx="458" cy="381" r="10" fill="#7a4fc2"/>
+<text x="458" y="384.96" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">5</text>
+<text x="474" y="386" font-size="12" fill="#58378f" text-anchor="start" font-weight="700">Request</text>
+<text x="474" y="410" font-size="11.3" fill="#4a5263" text-anchor="start">likely tokens, with some chance</text>
+<path d="M786 450 L 96 450" fill="none" stroke="#b7791f" stroke-width="1.7" stroke-dasharray="6 4" marker-end="url(#m6)"/>
+<circle cx="108" cy="437" r="10" fill="#b7791f"/>
+<text x="108" y="440.96" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">6</text>
+<text x="124" y="442" font-size="12" fill="#8a5a12" text-anchor="start" font-weight="700">response.text</text>
+<text x="124" y="466" font-size="11.3" fill="#4a5263" text-anchor="start">a few words change</text>
+<path d="M94 548 L 609 548" fill="none" stroke="#5d6b7e" stroke-width="1.7" marker-end="url(#m8)"/>
+<circle cx="108" cy="535" r="10" fill="#5d6b7e"/>
+<text x="108" y="538.96" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">7</text>
+<text x="124" y="540" font-size="12" fill="#3f4a59" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">invoke(prompt)</text>
+<text x="124" y="564" font-size="11.3" fill="#4a5263" text-anchor="start">temperature 1.5</text>
+<path d="M619 604 L 784 604" fill="none" stroke="#c2552d" stroke-width="1.7" marker-end="url(#m7)"/>
+<circle cx="633" cy="591" r="10" fill="#c2552d"/>
+<text x="633" y="594.96" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">8</text>
+<text x="649" y="596" font-size="12" fill="#963f1f" text-anchor="start" font-weight="700">Request</text>
+<text x="649" y="620" font-size="11.3" fill="#4a5263" text-anchor="start">unlikely tokens get a real chance</text>
+<path d="M786 660 L 96 660" fill="none" stroke="#b7791f" stroke-width="1.7" stroke-dasharray="6 4" marker-end="url(#m6)"/>
+<circle cx="108" cy="647" r="10" fill="#b7791f"/>
+<text x="108" y="650.96" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">9</text>
+<text x="124" y="652" font-size="12" fill="#8a5a12" text-anchor="start" font-weight="700">response.text</text>
+<text x="124" y="676" font-size="11.3" fill="#4a5263" text-anchor="start">more variety, still correct</text>
+</svg>

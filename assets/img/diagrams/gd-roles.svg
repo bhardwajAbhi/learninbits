@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 360" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">Roles in the DPDP Act and their GDPR counterparts</title>
+  <desc id="d">Five rows. A Data Principal in DPDP is a data subject in GDPR, the person the data is about, and DPDP also includes the parent of a child and the guardian of a person with a disability. A Data Fiduciary is a controller, which decides the purpose and the means. A Data Processor is a processor, which acts on behalf of the fiduciary. A Significant Data Fiduciary has no GDPR equivalent. The government names it, and it has extra duties such as a DPO in India, yearly audits and impact assessments. A Consent Manager has no GDPR equivalent. It is registered with the Board and gives one place to give, review and withdraw consent.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<text x="140" y="30" font-size="13" fill="#8a5a12" text-anchor="middle" font-weight="700">DPDP Act</text>
+<text x="400" y="30" font-size="13" fill="#1f4a9e" text-anchor="middle" font-weight="700">GDPR</text>
+<rect x="20" y="44" width="240" height="50" rx="8" fill="#fdf4e3" stroke="#b7791f" stroke-width="1.2"/>
+<text x="140" y="74" font-size="12.4" fill="#8a5a12" text-anchor="middle" font-weight="700">Data Principal</text>
+<rect x="290" y="44" width="220" height="50" rx="8" fill="#eef3fb" stroke="#2f62c8" stroke-width="1.2"/>
+<text x="400" y="74" font-size="12.4" fill="#1f4a9e" text-anchor="middle" font-weight="700">Data subject</text>
+<text x="530" y="66" font-size="11" fill="#1c2230" text-anchor="start">The person the data is about. DPDP includes the parent of a child</text>
+<text x="530" y="82" font-size="11" fill="#1c2230" text-anchor="start">and the guardian of a person with a disability.</text>
+<rect x="20" y="106" width="240" height="50" rx="8" fill="#fdf4e3" stroke="#b7791f" stroke-width="1.2"/>
+<text x="140" y="136" font-size="12.4" fill="#8a5a12" text-anchor="middle" font-weight="700">Data Fiduciary</text>
+<rect x="290" y="106" width="220" height="50" rx="8" fill="#eef3fb" stroke="#2f62c8" stroke-width="1.2"/>
+<text x="400" y="136" font-size="12.4" fill="#1f4a9e" text-anchor="middle" font-weight="700">Controller</text>
+<text x="530" y="128" font-size="11" fill="#1c2230" text-anchor="start">Decides the purpose and the means of processing.</text>
+<text x="530" y="144" font-size="11" fill="#1c2230" text-anchor="start"></text>
+<rect x="20" y="168" width="240" height="50" rx="8" fill="#fdf4e3" stroke="#b7791f" stroke-width="1.2"/>
+<text x="140" y="198" font-size="12.4" fill="#8a5a12" text-anchor="middle" font-weight="700">Data Processor</text>
+<rect x="290" y="168" width="220" height="50" rx="8" fill="#eef3fb" stroke="#2f62c8" stroke-width="1.2"/>
+<text x="400" y="198" font-size="12.4" fill="#1f4a9e" text-anchor="middle" font-weight="700">Processor</text>
+<text x="530" y="190" font-size="11" fill="#1c2230" text-anchor="start">Processes data on behalf of the fiduciary or controller.</text>
+<text x="530" y="206" font-size="11" fill="#1c2230" text-anchor="start"></text>
+<rect x="20" y="230" width="240" height="50" rx="8" fill="#fdf4e3" stroke="#b7791f" stroke-width="1.2"/>
+<text x="140" y="260" font-size="12.4" fill="#8a5a12" text-anchor="middle" font-weight="700">Significant Data Fiduciary</text>
+<rect x="290" y="230" width="220" height="50" rx="8" fill="#eef0f3" stroke="#5d6b7e" stroke-width="1.2" stroke-dasharray="4 3"/>
+<text x="400" y="260" font-size="12.4" fill="#3f4a59" text-anchor="middle" font-weight="700">No equivalent</text>
+<text x="530" y="252" font-size="11" fill="#1c2230" text-anchor="start">Named by the government. Extra duties such as a DPO in</text>
+<text x="530" y="268" font-size="11" fill="#1c2230" text-anchor="start">India, yearly audits and impact assessments.</text>
+<rect x="20" y="292" width="240" height="50" rx="8" fill="#fdf4e3" stroke="#b7791f" stroke-width="1.2"/>
+<text x="140" y="322" font-size="12.4" fill="#8a5a12" text-anchor="middle" font-weight="700">Consent Manager</text>
+<rect x="290" y="292" width="220" height="50" rx="8" fill="#eef0f3" stroke="#5d6b7e" stroke-width="1.2" stroke-dasharray="4 3"/>
+<text x="400" y="322" font-size="12.4" fill="#3f4a59" text-anchor="middle" font-weight="700">No equivalent</text>
+<text x="530" y="314" font-size="11" fill="#1c2230" text-anchor="start">Registered with the Board. One place to give, review</text>
+<text x="530" y="330" font-size="11" fill="#1c2230" text-anchor="start">and withdraw consent.</text>
+</svg>

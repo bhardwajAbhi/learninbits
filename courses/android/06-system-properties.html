@@ -1,0 +1,608 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>System properties · Inside Android · LearnInBits</title>
+  <meta name="description" content="How Android keeps a small store of device settings that every process reads fast and only init writes, from shared memory and SELinux labels to the property service, the APIs and sysprop_library.">
+  <!-- og:start -->
+  <meta property="og:site_name" content="LearnInBits">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="System properties · Inside Android">
+  <meta property="og:description" content="How Android keeps a small store of device settings that every process reads fast and only init writes, from shared memory and SELinux labels to the property service, the APIs and sysprop_library.">
+  <meta property="og:url" content="https://learninbits.in/courses/android/06-system-properties.html">
+  <meta property="og:image" content="https://learninbits.in/assets/img/og/courses-android-06-system-properties.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="System properties · Inside Android">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="System properties · Inside Android">
+  <meta name="twitter:description" content="How Android keeps a small store of device settings that every process reads fast and only init writes, from shared memory and SELinux labels to the property service, the APIs and sysprop_library.">
+  <meta name="twitter:image" content="https://learninbits.in/assets/img/og/courses-android-06-system-properties.png">
+  <link rel="canonical" href="https://learninbits.in/courses/android/06-system-properties.html">
+  <!-- og:end -->
+  <link rel="icon" href="../../assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,500;0,8..60,600;1,8..60,500&display=swap">
+  <link rel="stylesheet" href="../../assets/css/style.css?v=20261112">
+  <script>try{var t=localStorage.getItem("lib-theme");t=t?JSON.parse(t):(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+</head>
+<body data-root="../../" data-page="chapter" data-course="android" data-id="06-system-properties">
+
+<main id="main">
+<article>
+
+
+  <div class="block oneline">
+    <div class="label">In one line</div>
+    <p>System properties are a small key-value store that every process can read quickly, while one trusted process controls every change.</p>
+  </div>
+
+  <p>An Android device needs many small facts that many processes must know. Which build runs on this device? Which language did the user pick? Has the boot finished? Is this a debug build? Android keeps such facts as <strong>system properties</strong>, short pairs of a name and a value, such as <code>ro.build.version.sdk=37</code> or <code>sys.boot_completed=1</code>.</p>
+  <p>In <a href="04-boot-and-init.html">chapter 4</a>, you saw the property system briefly, as one of the jobs of <code>init</code>. This chapter opens it up. It starts with the reasons for its design and with the shared memory where the values live. It continues with the prefixes of the names, the SELinux rules for reading and writing and the work of the property service at boot. It ends with the APIs in Java, C and Rust, typed properties with <code>sysprop_library</code> and the changes in Android 17.</p>
+
+  <h2>What a system property is</h2>
+  <p>A system property is a name and a value, both plain text. The name is split into parts by dots, such as <code>persist.sys.locale</code>. The first part, the prefix, decides how the property behaves. The value is short, at most 91 bytes for a property that can change.</p>
+  <p>Properties appear in every layer of Android. The bootloader passes some of them to the kernel. <code>init</code> loads hundreds of them from files at boot. Native daemons read them to decide how to start. The Java framework reads them to learn about the build and the device. Developers set some of them with <code>adb</code> to turn on debug features.</p>
+<pre class="code" data-lang="bash" data-file="Terminal"><code>$ adb shell getprop ro.product.model
+sdk_gphone64_x86_64
+$ adb shell getprop sys.boot_completed
+1
+$ adb shell getprop          # every property the shell can read, as [name]: [value]</code></pre>
+  <p>The store is small on purpose. It does not hold user data or large settings. Those belong in files, databases or the settings provider of the framework. Properties hold the few facts that must be available everywhere, fast and early in the boot.</p>
+
+  <h2>Many readers, one writer</h2>
+  <p>The whole design follows from one pattern. Almost every process reads properties, often and in hot code paths. Very few processes write them, and a wrong write can harm the whole device. Android therefore makes reads as cheap as possible and puts every write through one guarded door.</p>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../../assets/img/diagrams/sp-overview.svg" alt="Apps, native daemons and the shell read properties directly from shared memory under /dev/__properties__, with no inter-process communication. Examples of values there are ro.build.fingerprint, persist.sys.locale and sys.boot_completed. To change a value, they send a set request through the property_service Unix socket. SELinux checks the request, and init, process 1, is the only process that writes to the shared memory." loading="lazy"></div>
+    <figcaption>Every process reads the shared memory directly. Every change goes through init.</figcaption>
+  </figure>
+
+  <ul>
+    <li><strong>Reads without a lock or IPC.</strong> Each process maps the property files into its own memory. A read is a lookup in that memory, with no call to another process. This keeps reads fast, so that code can check a property even in a busy loop.</li>
+    <li><strong>One writer.</strong> Only <code>init</code>, the process with ID 1, writes to the shared memory. Every other process sends a request through a socket. This keeps the data consistent, because two writers can never collide.</li>
+    <li><strong>SELinux on both paths.</strong> The policy decides which process can set which property and which process can read which group of properties. A broken or hostile app then cannot change the device configuration.</li>
+    <li><strong>Values that never change.</strong> A property that starts with <code>ro.</code> can be set once and then stays fixed until the next boot. Code can trust such values, such as the build type.</li>
+    <li><strong>Values that survive a reboot.</strong> A property that starts with <code>persist.</code> is also saved to storage, so that settings such as the system language come back after a restart.</li>
+  </ul>
+
+  <div class="block analogy">
+    <div class="label">Real-life analogy</div>
+    <p>Think of the notice board of a housing society. Every resident can walk past and read it at any time, without asking anyone. Only the society office pins up or changes notices. A resident who wants a change hands a request to the office, and the secretary checks whether that resident can make it. Some notices, such as the registration number of the society, are painted on and never change. System properties work the same way, with <code>init</code> as the office.</p>
+  </div>
+
+  <h2>Where properties live</h2>
+  <p>The values live in a set of files under <code>/dev/__properties__/</code>. This folder sits on a <code>tmpfs</code> file system, so it exists only in RAM and disappears at shutdown. <code>init</code> creates it early in the second stage of boot, before it loads any value.</p>
+<pre class="code" data-lang="cpp" data-file="system/core/init/property_service.cpp"><code>void PropertyInit() {
+    ...
+    mkdir("/dev/__properties__", S_IRWXU | S_IXGRP | S_IXOTH);
+    CreateSerializedPropertyInfo();
+    if (__system_property_area_init()) {
+        LOG(FATAL) &lt;&lt; "Failed to initialize property area";
+    }
+    if (!property_info_area.LoadDefaultPath()) {
+        LOG(FATAL) &lt;&lt; "Failed to load serialized property info file";
+    }
+    ...
+}</code></pre>
+  <p>The folder holds one file for each SELinux context of properties, so that SELinux can control reads per group. It also holds two special files. <code>property_info</code> says which context each property name belongs to. <code>properties_serial</code> holds one counter that grows with every change of any property.</p>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../../assets/img/diagrams/sp-files.svg" alt="The folder /dev/__properties__ lives in RAM. It holds property_info, which says which SELinux context each property name has, properties_serial, one counter for all changes, and one file for each context, for example build_prop for ro.build values, debug_prop for debug values and system_prop for sys and persist.sys values. Init maps every file for reading and writing. Other processes map them read only and shared. SELinux checks each file, and a process without read access sees the property as missing." loading="lazy"></div>
+    <figcaption>One file for each SELinux context, plus an index and a change counter.</figcaption>
+  </figure>
+
+  <p>Each property file has a fixed size, normally 128 KB. Bionic, the C library of Android, creates and maps the files. <code>init</code> maps them for reading and writing. Every other process maps them read-only. The flag <code>MAP_SHARED</code> lets all processes see the same physical pages, so a change by <code>init</code> is visible to every reader at once, without any copy.</p>
+<pre class="code" data-lang="cpp" data-file="bionic/libc/system_properties/prop_area.cpp"><code>constexpr size_t PA_SIZE = 128 * 1024;              // 1 MB with LARGE_SYSTEM_PROPERTY_NODE
+constexpr uint32_t PROP_AREA_MAGIC = 0x504f5250;    // "PROP"
+
+prop_area* prop_area::map_fd_ro(const int fd) {
+    struct stat fd_stat;
+    if (fstat(fd, &amp;fd_stat) &lt; 0) return nullptr;
+    if ((fd_stat.st_uid != 0) || (fd_stat.st_gid != 0) ||
+        ((fd_stat.st_mode &amp; (S_IWGRP | S_IWOTH)) != 0) ||
+        (fd_stat.st_size &lt; static_cast&lt;off_t&gt;(sizeof(prop_area)))) {
+        return nullptr;            // refuse files that root does not own
+    }
+    void* const map_result = mmap(nullptr, pa_size_, PROT_READ, MAP_SHARED, fd, 0);
+    ...
+}</code></pre>
+  <p>Before a reader maps a file, it checks that root owns the file and that nobody else can write to it. A file that fails this check is not a real property file, so the reader refuses it. This protects processes from a fake property file that an attacker places in their way.</p>
+
+  <h3>A tree of name parts</h3>
+  <p>Each file starts with a small header and then holds a tree. Bionic splits each property name at its dots, and every part becomes a node. The node <code>ro</code> has children such as <code>build</code> and <code>product</code>, and <code>build</code> has children such as <code>fingerprint</code> and <code>type</code>. Names that share a start, such as all <code>ro.build.</code> names, share the upper nodes, so the tree stays small.</p>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../../assets/img/diagrams/sp-trie.svg" alt="Property names are split at each dot, and each part becomes a node in a tree. Under the root are debug, persist, ro and sys, and siblings at one level form a binary search tree. Under ro are boot, build and product. Under build are fingerprint and type. The node type points to a prop_info that holds ro.build.type equals user. To find ro.build.type, the reader finds ro under the root, build under ro and type under build, then reads its prop_info." loading="lazy"></div>
+    <figcaption>Each dot starts a new level. Siblings on one level are sorted, so a search is quick.</figcaption>
+  </figure>
+
+  <p>A tree of this kind is called a trie. The children of one node are kept as a binary search tree, sorted by name, so that the search at each level is quick. A lookup of <code>ro.build.type</code> therefore needs only a few comparisons, however many properties exist. Each node holds its links as offsets inside the file, not as pointers, so that the same file works at any address in any process.</p>
+<pre class="code" data-lang="cpp" data-file="bionic/libc/system_properties/include/system_properties/prop_area.h"><code>struct prop_trie_node {
+    uint32_t namelen;
+    atomic_uint_least32_t prop;       // offset of the prop_info, if a property ends here
+    atomic_uint_least32_t left;       // smaller sibling
+    atomic_uint_least32_t right;      // larger sibling
+    atomic_uint_least32_t children;   // first node of the next level
+    char name[0];                     // this part of the name
+};</code></pre>
+  <p>The links are atomic values. <code>init</code> can add a new node while other processes read the tree, and a reader never follows a link that is only half written.</p>
+
+  <h3>One property in memory</h3>
+  <p>At the end of each full name, the node points to a <code>prop_info</code>. This 96-byte structure holds the value and a 32-bit field called <code>serial</code>.</p>
+<pre class="code" data-lang="cpp" data-file="bionic/libc/system_properties/include/system_properties/prop_info.h"><code>struct prop_info {
+    atomic_uint_least32_t serial;
+    union {
+        char value[PROP_VALUE_MAX];          // 92 bytes, the value and its end mark
+        struct {
+            char error_message[56];
+            uint32_t offset;                 // where a long value lives
+        } long_property;
+    };
+    char name[0];                            // the full name follows
+};</code></pre>
+  <p>The field <code>serial</code> packs several facts into one number, so that a reader can learn all of them with one atomic read.</p>
+  <ul>
+    <li><strong>Bit 0, the dirty bit.</strong> It is set while <code>init</code> writes a new value.</li>
+    <li><strong>Bit 16, the long flag.</strong> It is set when the value is longer than the normal limit.</li>
+    <li><strong>Bits 24 to 31.</strong> They hold the length of the current value.</li>
+    <li><strong>The other bits.</strong> They form a counter that grows with each change.</li>
+  </ul>
+
+  <h3>Reading while init writes</h3>
+  <p>A reader never waits for a lock, yet it never sees half of an old value mixed with half of a new one. Two small tricks make this work, a backup copy of the old value and the dirty bit.</p>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../../assets/img/diagrams/sp-dirty.svg" alt="A sequence diagram with the lanes init, the writer, prop_info in memory, a reader. Step 1, init, the writer to prop_info in memory, copy the old value to the backup area, readers can still use it. Step 2, init, the writer to prop_info in memory, set the dirty bit in serial, a write is in progress. Step 3, a reader to prop_info in memory, read serial, dirty bit is set. Step 4, prop_info in memory to a reader, old value from the backup area, never a half-written value. Step 5, init, the writer to prop_info in memory, copy the new value. Step 6, init, the writer to prop_info in memory, new serial, dirty bit clear, length and counter updated. Step 7, a reader to prop_info in memory, read serial again, it changed, so read once more. Step 8, prop_info in memory to a reader, new value, serial unchanged, the read is done. Step 9, init, the writer to a reader, futex wake, wake processes that wait for a change." loading="lazy"></div>
+    <figcaption>The reader uses the backup while a write runs, then checks that nothing changed during its read.</figcaption>
+  </figure>
+
+  <p><code>init</code> first copies the old value into a backup area at the start of the file. Then it sets the dirty bit, writes the new value and finally stores a new serial with the dirty bit clear.</p>
+  <p>A reader loads the serial first. If the dirty bit is set, it copies the value from the backup area. Then it loads the serial again. If the serial did not change, the copy is consistent. If it changed, the reader simply reads once more.</p>
+<pre class="code" data-lang="cpp" data-file="bionic/libc/system_properties/system_properties.cpp"><code>uint32_t SystemProperties::ReadMutablePropertyValue(const prop_info* pi, char* value) {
+    uint32_t new_serial = load_const_atomic(&amp;pi-&gt;serial, memory_order_acquire);
+    uint32_t serial;
+    for (;;) {
+        serial = new_serial;
+        unsigned int len = SERIAL_VALUE_LEN(serial);
+        if (SERIAL_DIRTY(serial)) {
+            // a write is running, so use the backup copy of the old value
+            prop_area* pa = contexts_-&gt;GetPropAreaForName(pi-&gt;name);
+            memcpy(value, pa-&gt;dirty_backup_area(), len + 1);
+        } else {
+            memcpy(value, pi-&gt;value, len + 1);
+        }
+        atomic_thread_fence(memory_order_acquire);
+        new_serial = load_const_atomic(&amp;pi-&gt;serial, memory_order_relaxed);
+        if (serial == new_serial) break;     // nothing changed during the read
+    }
+    return serial;
+}</code></pre>
+  <p>After the write, <code>init</code> wakes every process that waits for a change of this property, with a futex, a fast kernel wait queue. It also increases the global counter in <code>properties_serial</code>. A process can therefore wait for one property or watch for any change at all, without polling.</p>
+  <p>Properties that start with <code>ro.</code> skip all of this. They never change after the first set, so a reader can copy the value directly, without any check.</p>
+
+  <div class="block note">
+    <div class="label">Long values</div>
+    <p>A value that can change is limited to 91 bytes, plus the end mark. Some <code>ro.</code> properties need more, such as a long build fingerprint. For these, bionic stores the value in a separate place in the file and sets the long flag in the serial. The <code>prop_info</code> then holds only the offset of the value. This works only for <code>ro.</code> properties, because their values never change.</p>
+  </div>
+
+  <h3>Every read takes two lookups</h3>
+  <p>A reader does not search every file for a name. It first asks <code>property_info</code>, which holds a second, separate tree. That tree maps names and prefixes to SELinux contexts and to value types. With the context, the reader knows which file holds the property. Then it searches the tree in that one file.</p>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../../assets/img/diagrams/sp-lookup.svg" alt="A read of debug.myapp.trace takes three steps. First, the reader looks up the name in property_info and finds that debug maps to the context debug_prop. Second, it opens the file for that context. Third, it walks the tree in that file, finds the prop_info and reads it. SELinux checks the second step. A process without read access to debug_prop cannot map the file, so the property looks as if it does not exist." loading="lazy"></div>
+    <figcaption>First find the right file, then find the value inside it.</figcaption>
+  </figure>
+
+  <p><code>init</code> builds <code>property_info</code> at boot from the <code>property_contexts</code> files of all partitions, which the next sections cover. The split into one file per context is the key to read control. The kernel checks whether a process can open and map each file, so the policy decides who can read which group of properties.</p>
+
+  <h2>The prefix decides the behavior</h2>
+  <p>A property has no separate type field for its behavior. The first part of its name carries that meaning. Each prefix is a contract that <code>init</code> and the rest of the system follow. Everyone then knows at a glance whether a value can change, whether it survives a reboot and who owns it.</p>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../../assets/img/diagrams/sp-namespaces.svg" alt="Eight prefixes and what they mean. ro is set once at boot and never changed, for example ro.build.fingerprint. persist is saved in /data and survives a reboot, for example persist.sys.locale. next_boot is staged now and applied at the next boot. sys is runtime state that is lost at reboot, for example sys.boot_completed. vendor is owned by the vendor partition. debug is for developers, and the shell can set it, for example debug.hwui.overdraw. ctl is a command to init that is never stored, for example ctl.restart equals adbd. init.svc is written by init and holds the state of a service, for example init.svc.adbd equals running." loading="lazy"></div>
+    <figcaption>Eight prefixes, eight behaviors.</figcaption>
+  </figure>
+
+  <h3>ro., set once</h3>
+  <p>A property that starts with <code>ro.</code> is not really read-only. It is write-once. <code>init</code> can create it, but after that, any attempt to set it again fails.</p>
+<pre class="code" data-lang="cpp" data-file="system/core/init/property_service.cpp, PropertySet()"><code>prop_info* pi = (prop_info*)__system_property_find(name.c_str());
+if (pi != nullptr) {
+    // ro.* properties are actually "write-once".
+    if (StartsWith(name, "ro.")) {
+        *error = "Read-only property was already set";
+        return {PROP_ERROR_READ_ONLY_PROPERTY};
+    }
+    __system_property_update(pi, value.c_str(), valuelen);
+} else {
+    int rc = __system_property_add(name.c_str(), name.size(), value.c_str(), valuelen);
+    ...
+}</code></pre>
+  <p>Most <code>ro.</code> values come from the build or the bootloader, such as <code>ro.build.type</code>, <code>ro.product.model</code> or <code>ro.boot.verifiedbootstate</code>. Because they cannot change, the rest of the system can base decisions on them. A security check that reads <code>ro.debuggable</code> knows that no app changed the value after boot.</p>
+
+  <h3>persist., saved across reboots</h3>
+  <p>A property that starts with <code>persist.</code> lives in memory like any other, but <code>init</code> also writes it to <code>/data/property/persistent_properties</code>. That file uses Protocol Buffers, a compact binary format. At every boot, after <code>/data</code> is mounted, <code>init</code> loads the saved values back.</p>
+  <p>The write is careful, because a half-written file after a power cut can lose every saved setting. <code>init</code> writes the whole set into a temporary file, forces it to storage with <code>fsync()</code> and then renames it over the old file. A rename is atomic, so the file on storage is always either the complete old version or the complete new one.</p>
+<pre class="code" data-lang="cpp" data-file="system/core/init/persistent_properties.cpp"><code>const std::string temp_filename = persistent_property_filename + ".tmp";
+unique_fd fd(open(temp_filename.c_str(), O_WRONLY | O_CREAT | O_NOFOLLOW | O_TRUNC | O_CLOEXEC, 0600));
+...
+WriteStringToFd(serialized_string, fd);
+fsync(fd.get());
+rename(temp_filename.c_str(), persistent_property_filename.c_str());   // atomic</code></pre>
+  <p>A device can set <code>ro.property_service.async_persist_writes</code> to <code>true</code>. A separate thread then does this disk work, so that one caller does not hold up the property service for others.</p>
+
+  <h3>next_boot., staged for later</h3>
+  <p>A property that starts with <code>next_boot.</code> stages a change for the next boot. <code>init</code> saves it in the same file as the <code>persist.</code> values. At the next boot, it applies the staged value to the real name and removes the staged entry. For example, <code>next_boot.persist.sys.locale=fr-FR</code> sets <code>persist.sys.locale</code> to <code>fr-FR</code> after the restart. This lets the system prepare a change that must not take effect while the device runs.</p>
+
+  <h3>sys., state of the running system</h3>
+  <p>Properties under <code>sys.</code> describe the current state and are lost at a reboot. <code>sys.boot_completed</code> becomes <code>1</code> when the boot finishes, and many services wait for it. <code>sys.powerctl</code> is special. Setting it starts a reboot or a shutdown, and <code>init</code> logs which process asked for it. You can then trace an unexpected restart to its cause.</p>
+
+  <h3>vendor. and debug.</h3>
+  <p>The prefix <code>vendor.</code> marks properties of the vendor partition, and <code>persist.vendor.</code> marks saved ones. Since Project Treble, which <a href="10-hal.html">chapter 10</a> described, the system and the vendor side keep their properties apart, as a later section shows.</p>
+  <p>The prefix <code>debug.</code> is for developers. The policy lets the shell set these values, so you can turn on a debug feature with <code>adb shell setprop</code>. An example is <code>debug.hwui.overdraw=show</code>, which colors the screen by how often each pixel is drawn.</p>
+
+  <h3>ctl. and init.svc., talking to init</h3>
+  <p>A name that starts with <code>ctl.</code> is never stored. It is a command for <code>init</code>. Setting <code>ctl.start</code>, <code>ctl.stop</code> or <code>ctl.restart</code> to the name of a service starts, stops or restarts that service. <code>init</code> checks the permission against the SELinux context of the target service, not of the property. A process can then control only the services that the policy allows.</p>
+  <p><code>init</code> reports the result in <code>init.svc.</code> properties. For each service, <code>init.svc.&lt;name&gt;</code> holds one of four states, namely <code>stopped</code>, <code>running</code>, <code>stopping</code> or <code>restarting</code>.</p>
+<pre class="code" data-lang="bash" data-file="Terminal"><code>$ adb shell getprop init.svc.adbd
+running
+$ adb shell getprop | grep "init.svc" | head</code></pre>
+
+  <h2>Who can read and who can write</h2>
+  <p>Properties control important behavior, such as debug features, the USB mode or a reboot. SELinux therefore guards both paths. On the write path, <code>init</code> asks SELinux before every change. On the read path, the kernel checks access to each property file. Both checks use the same labels, which come from <code>property_contexts</code> files.</p>
+
+  <h3>property_contexts</h3>
+  <p>A <code>property_contexts</code> file maps names or prefixes to SELinux labels. A line can also say that only an exact name matches and which type the value must have.</p>
+<pre class="code" data-lang="text" data-file="system/sepolicy/private/property_contexts (excerpt)"><code># name or prefix             label                                  match  type
+net.                         u:object_r:system_prop:s0
+debug.                       u:object_r:debug_prop:s0
+debug.db.                    u:object_r:debuggerd_prop:s0
+sys.powerctl                 u:object_r:powerctl_prop:s0
+persist.bluetooth.           u:object_r:bluetooth_prop:s0
+ro.build.type                u:object_r:build_prop:s0               exact  string
+persist.profcollectd.enabled u:object_r:profcollectd_enabled_prop:s0 exact bool</code></pre>
+  <p>The longest match wins. <code>debug.db.uid</code> gets the label <code>debuggerd_prop</code>, not <code>debug_prop</code>, because <code>debug.db.</code> is more specific than <code>debug.</code>. Each partition brings its own file, such as <code>plat_property_contexts</code> for the system side and <code>vendor_property_contexts</code> for the vendor side. <code>init</code> merges all of them into the <code>property_info</code> tree at boot, so that each partition can label its own properties without changing the platform policy.</p>
+
+  <h3>The write check</h3>
+  <p>A process sets a property through a Unix socket, as the next section shows in detail. The socket tells <code>init</code> who the caller is, and <code>init</code> runs three checks before it changes anything.</p>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../../assets/img/diagrams/sp-setflow.svg" alt="A sequence diagram with the lanes caller, socket, init, SELinux, shared memory. Step 1, caller to socket, __system_property_set(name, value), connect and send name and value. Step 2, socket to init, accept4(), SO_PEERCRED, pid, uid and gid of the caller. Step 3, init to init, getpeercon(), the SELinux context of the caller. Step 4, init to init, property_info lookup, the context and type of the property. Step 5, init to SELinux, selinux_check_access(..., &quot;set&quot;), can this caller set this property. Step 6, SELinux to init, allowed, or denied, with an audit log. Step 7, init to init, CheckType(type, value), for example bool or int. Step 8, init to shared memory, update or add the value, ro. only if it does not exist yet. Step 9, init to caller, PROP_SUCCESS, or an error code." loading="lazy"></div>
+    <figcaption>Every set request passes the same checks in init.</figcaption>
+  </figure>
+
+<pre class="code" data-lang="cpp" data-file="system/core/init/property_service.cpp, CheckPermissions()"><code>if (!IsLegalPropertyName(name)) {
+    *error = "Illegal property name";
+    return PROP_ERROR_INVALID_NAME;
+}
+if (StartsWith(name, "ctl.")) {
+    ...                                      // checked against the target service
+}
+const char* target_context = nullptr;
+const char* type = nullptr;
+property_info_area-&gt;GetPropertyInfo(name.c_str(), &amp;target_context, &amp;type);
+
+if (!CheckMacPerms(name, target_context, source_context.c_str(), cr)) {
+    *error = StringPrintf("SELinux permission check failed "
+                          "(source_context=%s, target_context=%s)",
+                          source_context.c_str(), target_context ?: "(null)");
+    return PROP_ERROR_PERMISSION_DENIED;
+}
+if (!CheckType(type, value)) {
+    *error = "Property type check failed, value doesn't match expected type";
+    return PROP_ERROR_INVALID_VALUE;
+}</code></pre>
+  <ol class="steps">
+    <li><strong>A legal name.</strong> Names with forbidden characters are refused at once.</li>
+    <li><strong>The SELinux check.</strong> <code>init</code> takes the context of the caller from the socket and the label of the property from <code>property_info</code>. It asks SELinux whether this caller can <code>set</code> this label in the class <code>property_service</code>. A refusal also writes an audit record, which helps a developer to write the missing rule.</li>
+    <li><strong>The type check.</strong> If the property has a type, the value must fit it. A <code>bool</code> accepts <code>true</code>, <code>false</code>, <code>1</code> or <code>0</code>, and an <code>int</code> accepts only a whole number.</li>
+  </ol>
+  <p>A rule in the policy names the caller and the label. The macro <code>set_prop</code> below lets the shell set every property with the label <code>debug_prop</code>.</p>
+<pre class="code" data-lang="text" data-file="An SELinux rule"><code>set_prop(shell, debug_prop)</code></pre>
+
+  <h3>The read check</h3>
+  <p>A read never reaches <code>init</code>, so <code>init</code> cannot check it. The check happens in the kernel instead, when a process opens and maps the file of a context. Each file carries the SELinux label of its context. A process whose domain lacks the <code>file { read open map }</code> rights for that label cannot map the file. For that process, every property in the file simply does not exist.</p>
+  <p>This is how Android hides most properties from apps. The policy lets apps read a small set of labels, such as the build properties that the public <code>android.os.Build</code> class shows anyway. Labels that could reveal sensitive details or help to fingerprint a device stay closed to them.</p>
+<pre class="code" data-lang="bash" data-file="Terminal"><code>$ adb shell getprop -Z ro.build.type
+u:object_r:build_prop:s0
+$ adb shell getprop -Z debug.myapp.trace
+u:object_r:debug_prop:s0</code></pre>
+
+  <details class="deep">
+    <summary>For the curious, the app compatibility override <small>Optional</small></summary>
+    <div class="inner">
+      <p>Android can show a different value of a property to one process only. A process that turns on compatibility overrides first looks for a shadow property with the prefix <code>ro.appcompat_override.</code>. If <code>ro.appcompat_override.ro.some.flag</code> exists, that process reads its value in place of <code>ro.some.flag</code>. Every other process still sees the original value.</p>
+<pre class="code" data-lang="cpp" data-file="bionic/libc/system_properties/system_properties.cpp, Find()"><code>#define APPCOMPAT_PREFIX "ro.appcompat_override."
+
+if (use_appcompat_override_) {
+    snprintf(overrideName, totalLength, "%s%s", APPCOMPAT_PREFIX, name);
+    prop_area* pa = contexts_-&gt;GetPropAreaForName(overrideName);
+    if (pa) {
+        const prop_info* pi = pa-&gt;find(overrideName);
+        if (pi) return pi;
+    }
+}
+// otherwise the normal lookup of name</code></pre>
+      <p>The platform uses this to give an older app the value that it expects, without changing the device for everyone else. On the <code>init</code> side, the feature needs a build flag. Its files live under <code>/dev/__properties__/appcompat_override/</code>.</p>
+    </div>
+  </details>
+
+  <h2>The property service in init</h2>
+  <p>In <a href="04-boot-and-init.html">chapter 4</a>, you saw <code>init</code> call <code>PropertyInit()</code> and <code>StartPropertyService()</code> in its second stage. This section looks at what happens between these two calls and after them. By the time the first app starts, several hundred properties already exist, from several sources and in a fixed order.</p>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../../assets/img/diagrams/sp-boot.svg" alt="Five stages in order. First, androidboot values from the kernel command line, bootconfig and device tree become ro.boot properties. Second, init loads the build.prop files of system, system_ext, vendor, odm and product, and a later file wins for the same name. Third, init derives values such as ro.product, ro.build.fingerprint, ro.product.cpu.abilist and ro.vendor.api_level. Fourth, the property service opens its two sockets, so other processes can ask to set values. Fifth, after /data mounts, persist properties load, next_boot values apply and ro.persistent_properties.ready becomes true. All of this happens in second-stage init, before most other processes start." loading="lazy"></div>
+    <figcaption>Properties fill up in five stages, from the bootloader to the data partition.</figcaption>
+  </figure>
+
+  <h3>Values from the bootloader</h3>
+  <p>The bootloader passes facts about the hardware and the boot to the kernel. It uses the kernel command line, the newer bootconfig and the device tree. Every value whose key starts with <code>androidboot.</code> becomes an <code>ro.boot.</code> property.</p>
+<pre class="code" data-lang="cpp" data-file="system/core/init/property_service.cpp"><code>constexpr auto ANDROIDBOOT_PREFIX = "androidboot."sv;
+
+static void ProcessBootconfig() {
+    android::fs_mgr::ImportBootconfig([&amp;](const std::string&amp; key, const std::string&amp; value) {
+        if (StartsWith(key, ANDROIDBOOT_PREFIX)) {
+            InitPropertySet("ro.boot." + key.substr(ANDROIDBOOT_PREFIX.size()), value);
+        }
+    });
+}</code></pre>
+  <p>So <code>androidboot.verifiedbootstate=green</code> becomes <code>ro.boot.verifiedbootstate=green</code>, the result of Android Verified Boot from chapter 4. <code>init</code> then copies a few of these values to older names that much code still reads. For example, <code>ro.boot.hardware</code> becomes <code>ro.hardware</code>, the name that the legacy HAL loader of <a href="10-hal.html">chapter 10</a> used to find its libraries.</p>
+
+  <h3>build.prop files and their order</h3>
+  <p>Next, <code>init</code> reads the <code>build.prop</code> files of all partitions. The build system writes these files, one for each partition, so that each part of the image describes itself. The order matters, because a later file wins when two files set the same name.</p>
+  <ol>
+    <li><code>/system/build.prop</code></li>
+    <li><code>/system_ext/etc/build.prop</code></li>
+    <li><code>/system_dlkm/etc/build.prop</code></li>
+    <li><code>/vendor/default.prop</code> and <code>/vendor/build.prop</code></li>
+    <li><code>/vendor_dlkm/etc/build.prop</code> and <code>/odm_dlkm/etc/build.prop</code></li>
+    <li><code>/odm/etc/build.prop</code></li>
+    <li><code>/product/etc/build.prop</code></li>
+  </ol>
+  <p>The order runs from the most general part of the image to the most specific one. A device maker can then change a value in the product partition without touching the system image. <code>init</code> collects all files in a map first and writes the final values afterwards, so that each property is set only once. This also means that an <code>ro.</code> value from a later file can still replace one from an earlier file.</p>
+  <p>Values from vendor and ODM files get the SELinux context of the vendor side while <code>init</code> loads them. The policy then decides which properties the vendor side can set, even inside its own <code>build.prop</code>.</p>
+
+  <h3>Values that init works out</h3>
+  <p>Some properties come from no file at all. <code>init</code> builds them from other properties, so that every device ends up with a complete and consistent set.</p>
+  <ul>
+    <li><strong>The product identity.</strong> Each partition can set its own name, such as <code>ro.product.vendor.model</code> or <code>ro.product.product.model</code>. If <code>ro.product.model</code> is still empty, <code>init</code> takes the first value in the order product, odm, vendor, system_ext and system.</li>
+    <li><strong>The build fingerprint.</strong> If the build did not set <code>ro.build.fingerprint</code>, <code>init</code> joins it from the brand, name, device, release, build ID, incremental number, type and tags.</li>
+    <li><strong>The CPU ABIs.</strong> <code>ro.product.cpu.abilist</code> lists the instruction sets that the device runs, 64-bit ones first, so that the package manager knows which native libraries an app can use.</li>
+    <li><strong>The vendor API level.</strong> <code>ro.vendor.api_level</code> tells the system which API level the vendor image supports. Later releases use it to decide which rules the vendor side must follow.</li>
+  </ul>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../../assets/img/diagrams/sp-fingerprint.svg" alt="The build fingerprint is built from other properties when the build does not set it. For an emulator it reads google slash sdk_gphone64_x86_64 slash emu64x colon 17 slash the build id slash the incremental number colon userdebug slash dev-keys. The brand, name and device come from ro.product properties. The release, build id and incremental number come from ro.build.version and ro.build.id. The type and tags come from ro.build.type and ro.build.tags." loading="lazy"></div>
+    <figcaption>The fingerprint names a build in one string, so that tools can compare builds exactly.</figcaption>
+  </figure>
+
+  <p>The fingerprint identifies one exact build. App stores, update servers and crash reports use it to tell builds apart, so a device must never show the fingerprint of another build.</p>
+
+  <h3>Two sockets for writes</h3>
+  <p><code>StartPropertyService()</code> opens two Unix sockets, each served by its own thread.</p>
+  <ul>
+    <li><strong><code>/dev/socket/property_service</code></strong> is open to every process (mode 0666). The SELinux check, not the socket, decides what a caller can set.</li>
+    <li><strong><code>/dev/socket/property_service_for_system</code></strong> is open only to the group <code>system</code> (mode 0660). Its thread also handles internal messages from the main loop of <code>init</code>, such as the request to load the saved properties.</li>
+  </ul>
+  <p>A client sends a short message. The current format, <code>PROP_MSG_SETPROP2</code>, sends the length and text of the name, then the length and text of the value. <code>init</code> answers with a result code, so the caller knows whether the change worked. <code>init</code> also reads the user, group and process ID of the caller from the socket with <code>SO_PEERCRED</code>, which the caller cannot fake.</p>
+
+  <h3>Changes that start actions</h3>
+  <p>After each successful change, <code>init</code> checks its <code>.rc</code> files for triggers on that property. This turns properties into a simple signal between processes.</p>
+<pre class="code" data-lang="text" data-file="an .rc file"><code>on property:sys.boot_completed=1
+    start post_boot_service
+
+on property:persist.sys.usb.config=* &amp;&amp; property:ro.persistent_properties.ready=true
+    setprop sys.usb.config ${persist.sys.usb.config}</code></pre>
+  <p>One process sets a property, and <code>init</code> starts a service or runs commands in response. Much of the boot sequence of Android depends on such triggers.</p>
+
+  <h3>Saved values arrive late</h3>
+  <p>The <code>persist.</code> values sit in <code>/data</code>, and <code>/data</code> is encrypted and mounted only later in the boot. Until then, these properties simply do not exist. When <code>/data</code> is ready, the main loop of <code>init</code> sends a message to the property thread. The thread loads the saved file, applies the <code>next_boot.</code> entries and finally sets <code>ro.persistent_properties.ready</code> to <code>true</code>.</p>
+  <p>Code that needs a saved value early must handle the case where it is still missing, or wait for <code>ro.persistent_properties.ready</code>. A common bug reads a <code>persist.</code> setting too early, gets an empty value and silently uses the default.</p>
+
+  <h2>Reading and writing from code</h2>
+  <p>Every language on the platform reaches the same shared memory and the same socket. Only the wrapper differs.</p>
+
+  <h3>Java, the SystemProperties class</h3>
+  <p>The framework uses <code>android.os.SystemProperties</code>. The class is hidden from the public SDK and marked <code>@SystemApi</code>, so platform code and privileged apps can use it, but ordinary apps cannot. The getters return a default when a property is missing, so that callers do not need to check for null.</p>
+<pre class="code" data-lang="java" data-file="frameworks/base/core/java/android/os/SystemProperties.java"><code>public static String get(String key, String def)
+public static int getInt(String key, int def)
+public static long getLong(String key, long def)
+public static boolean getBoolean(String key, boolean def)   // y, yes, 1, true, on and n, no, 0, false, off
+
+@FastNative
+private static native String native_get(String key, String def);
+
+// _NOT_ FastNative: native_set performs IPC and can block
+private static native void native_set(String key, String def);</code></pre>
+  <p>The getters are marked <code>@FastNative</code>, a faster form of a JNI call, because a read is only a lookup in memory. The setter is not, because a set sends a message to <code>init</code> and waits for the answer. The setter also refuses a value longer than 91 bytes for any name that does not start with <code>ro.</code>.</p>
+  <p>For a property that a component reads very often, <code>SystemProperties.find()</code> returns a <code>Handle</code>. The handle keeps the address of the <code>prop_info</code>, so each later read skips the search through the tree.</p>
+  <p>Ordinary apps once read properties through reflection on this hidden class. Since Android 9, the platform restricts hidden APIs. The methods carry <code>@UnsupportedAppUsage</code>, and apps that target newer API levels can no longer call them. For apps, properties were never a public API.</p>
+
+  <h3>C and C++</h3>
+  <p>Native code uses the functions of bionic in <code>&lt;sys/system_properties.h&gt;</code>, which the NDK also provides.</p>
+<pre class="code" data-lang="cpp" data-file="&lt;sys/system_properties.h&gt;"><code>const prop_info* __system_property_find(const char* name);
+void __system_property_read_callback(const prop_info* pi,
+        void (*callback)(void* cookie, const char* name, const char* value, uint32_t serial),
+        void* cookie);
+int __system_property_set(const char* name, const char* value);
+bool __system_property_wait(const prop_info* pi, uint32_t old_serial,
+        uint32_t* new_serial_ptr, const timespec* relative_timeout);</code></pre>
+  <p><code>__system_property_wait()</code> blocks on the futex of a property until its serial changes. A daemon can therefore sleep until a value changes, without polling. Platform code usually takes the simpler helpers of <code>libbase</code>, such as <code>GetProperty()</code>, <code>GetBoolProperty()</code>, <code>SetProperty()</code> and <code>WaitForProperty()</code>.</p>
+<pre class="code" data-lang="cpp" data-file="A native daemon"><code>#include &lt;android-base/properties.h&gt;
+
+if (android::base::GetBoolProperty("debug.mydaemon.verbose", false)) {
+    EnableVerboseLogs();
+}
+// wait up to 30 seconds for the end of the boot
+android::base::WaitForProperty("sys.boot_completed", "1", std::chrono::seconds(30));</code></pre>
+
+  <h3>Rust</h3>
+  <p>Newer platform code in Rust, such as keystore2, uses the crate <code>librustutils</code>. Its functions <code>read()</code>, <code>read_bool()</code>, <code>write()</code> and <code>foreach()</code> wrap the same bionic calls, and its errors are a Rust enum instead of a bare <code>-1</code>. The type <code>PropertyWatcher</code> wraps the futex wait. Rust code can then wait until a property appears or reaches a value, without the risk of missing a change between two waits.</p>
+<pre class="code" data-lang="rust" data-file="Rust platform code"><code>use rustutils::system_properties::{self, PropertyWatcher};
+
+let verbose = system_properties::read_bool("debug.myservice.verbose", false)?;
+let mut watcher = PropertyWatcher::new("sys.boot_completed")?;
+watcher.wait_for_value("1", None)?;</code></pre>
+
+  <h2>Typed properties with sysprop_library</h2>
+  <p>A plain property has weak points. Its value is always text, so every caller parses it again. Nothing in the build notices when someone renames a property that another partition reads. Nobody can tell from the name which partition owns it. Since Project Treble, these gaps matter, because the system side and the vendor side update separately.</p>
+  <p>The Soong module type <code>sysprop_library</code> closes these gaps. You describe your properties once in a <code>.sysprop</code> file, and the build generates typed accessors in Java, C++ and Rust.</p>
+<pre class="code" data-lang="text" data-file="system/libsysprop/srcs/android/sysprop/BluetoothProperties.sysprop (excerpt)"><code>module: "android.sysprop.BluetoothProperties"
+owner: Platform
+
+prop {
+    api_name: "snoop_default_mode"
+    type: Enum
+    scope: Public
+    access: ReadWrite
+    enum_values: "empty|disabled|filtered|full"
+    prop_name: "persist.bluetooth.btsnoopdefaultmode"
+}</code></pre>
+  <ul>
+    <li><strong><code>type</code></strong> sets the type, such as <code>Boolean</code>, <code>Integer</code>, <code>String</code>, <code>Enum</code> or a list of these. The generated code parses the text for you.</li>
+    <li><strong><code>scope</code></strong> is <code>Public</code> for a stable surface that other partitions can use or <code>Internal</code> for the owner only.</li>
+    <li><strong><code>access</code></strong> is <code>Readonly</code>, <code>Writeonce</code> or <code>ReadWrite</code>, and decides whether a setter exists.</li>
+    <li><strong><code>prop_name</code></strong> is the real property behind the accessor.</li>
+  </ul>
+<pre class="code" data-lang="text" data-file="Android.bp"><code>sysprop_library {
+    name: "PlatformProperties",
+    srcs: ["*.sysprop"],
+    property_owner: "Platform",
+    vendor_available: true,
+    api_packages: ["android.sysprop"],
+}</code></pre>
+  <p>From this module, the build creates a C++ library, a Java library and a Rust library. A caller then writes <code>BluetoothProperties.snoop_default_mode()</code> and gets a typed value, not a string.</p>
+<pre class="code" data-lang="java" data-file="Generated Java, simplified"><code>public static Optional&lt;snoop_default_mode_values&gt; snoop_default_mode() {
+    String value = SystemProperties.get("persist.bluetooth.btsnoopdefaultmode");
+    return Optional.ofNullable(tryParseEnum(snoop_default_mode_values::valueOf, value));
+}
+
+public static void snoop_default_mode(snoop_default_mode_values value) {
+    SystemProperties.set("persist.bluetooth.btsnoopdefaultmode", value.getPropValue());
+}</code></pre>
+
+  <h3>Who can use whose properties</h3>
+  <p>The field <code>property_owner</code> says which partition owns the library. The build then checks every user. The system side never depends on a vendor property, and a vendor reads only the stable part of a platform library.</p>
+
+  <figure class="diagram">
+    <div class="frame"><img src="../../assets/img/diagrams/sp-owners.svg" alt="A grid of owners and users. A library owned by Platform can be used with the Internal scope from system and system_ext, and only through its Public scope from vendor, odm and product. A library owned by Vendor cannot be used from system or system_ext, can be used with the Internal scope from vendor and odm, and only through its Public scope from product. A library owned by Odm can be used only from vendor and odm, with the Internal scope. The build checks these rules, so that system code never depends on vendor properties." loading="lazy"></div>
+    <figcaption>The build refuses a dependency that breaks the split between system and vendor.</figcaption>
+  </figure>
+
+  <p>The same idea applies to the names and labels themselves. Vendor properties use the prefixes <code>vendor.</code> or <code>persist.vendor.</code> and get their labels from <code>vendor_property_contexts</code>. The policy keeps vendor processes away from most platform labels and the other way round. One side then cannot quietly change the behavior of the other.</p>
+
+  <h3>Properties or aconfig flags</h3>
+  <p><a href="03-feature-flags.html">Chapter 3</a> introduced aconfig flags, and both can look like a switch with a name. They serve different needs. A property describes this device or this boot, such as the model, the build type or the state of USB. Some properties can change at run time. An aconfig flag decides whether a feature is on in a build, with a release plan behind it. Android 17 moves more one-off feature switches from properties to aconfig flags and keeps real device configuration in properties.</p>
+
+  <div class="block changed">
+    <div class="label">What changed in Android 17</div>
+    <p>The property system is mature, so Android 17 refines it and does not redesign it. The changes sit in the write path of <code>init</code> and in <code>sysprop_library</code>.</p>
+    <ul>
+      <li><strong>Clearer errors on a refused set.</strong> When the SELinux check fails, <code>init</code> now puts both contexts in the error text, as <code>source_context=…</code> and <code>target_context=…</code>. The kernel can drop audit messages when too many arrive, so this message from <code>init</code> makes a refused <code>setprop</code> much easier to debug.</li>
+      <li><strong>Defaults in .sysprop files.</strong> A property in a <code>.sysprop</code> file can now declare <code>default_value</code>. The generated getter then returns a plain value instead of an <code>Optional</code>, and callers no longer repeat the fallback. Together with <code>legacy_prop_name</code>, a renamed property can fall back to its old name and then to its default.</li>
+      <li><strong>No more API text files for sysprop_library.</strong> Each library used to keep checked-in files of its API and failed the build on any change. Android 17 removed these files and the check. The fields <code>scope</code> and <code>property_owner</code> now define the stable surface alone.</li>
+      <li><strong>References inside build.prop.</strong> While <code>init</code> loads a property file, it now expands references such as <code>${ro.foo}</code> in values and in <code>import</code> lines.</li>
+      <li><strong>A frozen-chipset rule for the vendor API level.</strong> If a chipset declares <code>ro.board.first_api_level</code>, its vendor image counts as frozen, and <code>init</code> can lower <code>ro.vendor.api_level</code> to the API level of the board.</li>
+    </ul>
+  </div>
+
+  <div class="block security">
+    <div class="label">Security lens</div>
+    <p>Properties look harmless, but they steer debug features, USB modes, reboots and the behavior of many daemons. Their design limits the damage that a wrong or hostile write can do.</p>
+    <ul>
+      <li><strong>One writer, checked by SELinux.</strong> Every change passes <code>init</code>, which knows the true identity of the caller from the socket. An app cannot set a property that its domain has no rule for.</li>
+      <li><strong>Hidden from apps by default.</strong> Each label has its own file, and the policy opens only a few labels to apps. This limits what a malicious app can learn about the device, such as details that help to fingerprint it.</li>
+      <li><strong>Trust <code>ro.</code>, check the rest.</strong> An <code>ro.</code> value cannot change after boot, so it is safe for decisions. A value under <code>debug.</code>, <code>persist.</code> or <code>sys.</code> can come from a less trusted process. Treat it as input and check its range before you use it.</li>
+      <li><strong>Never store secrets.</strong> Properties are not encrypted, and many processes can read them. Keys, tokens and personal data belong in the Android Keystore or in private app storage, never in a property.</li>
+      <li><strong>Keep rules narrow.</strong> A vendor rule such as <code>set_prop(my_daemon, system_prop)</code> gives far more power than one small label for the daemon's own properties. Give each daemon its own label, and allow only what it needs.</li>
+    </ul>
+  </div>
+
+  <div class="block remember">
+    <div class="label">Worth remembering</div>
+    <ul>
+      <li>Properties are short name-value pairs in shared memory. Every process reads them directly, and only <code>init</code> writes them.</li>
+      <li>Each SELinux label has its own file under <code>/dev/__properties__/</code>, so the kernel controls reads and <code>init</code> controls writes.</li>
+      <li>Inside each file, a tree of name parts makes lookups fast, and the dirty bit with a backup copy keeps reads consistent without locks.</li>
+      <li>The prefix sets the behavior. <code>ro.</code> is set once, <code>persist.</code> survives reboots, <code>ctl.</code> controls services and <code>init.svc.</code> reports their state.</li>
+      <li>At boot, values come from the bootloader, then from the <code>build.prop</code> files in a fixed order, then from derived rules and last from <code>/data</code>.</li>
+      <li><code>sysprop_library</code> turns properties into typed APIs and enforces which partition can use which properties.</li>
+    </ul>
+  </div>
+
+  <details class="deep">
+    <summary>For the curious, source files <small>Optional</small></summary>
+    <div class="inner">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Path</th><th>Content</th></tr></thead>
+          <tbody>
+            <tr><td><code>bionic/libc/system_properties/</code></td><td>The shared memory files, the tree and <code>prop_info</code>, plus the lock-free read</td></tr>
+            <tr><td><code>bionic/libc/include/sys/system_properties.h</code></td><td>The public C API</td></tr>
+            <tr><td><code>system/core/init/property_service.cpp</code></td><td>The property service, the checks, the boot loading and the derived values</td></tr>
+            <tr><td><code>system/core/init/persistent_properties.cpp</code></td><td>The saved <code>persist.</code> values</td></tr>
+            <tr><td><code>system/core/property_service/libpropertyinfoparser/</code></td><td>The format of the <code>property_info</code> tree</td></tr>
+            <tr><td><code>system/sepolicy/private/property_contexts</code></td><td>The labels of the platform properties</td></tr>
+            <tr><td><code>frameworks/base/core/java/android/os/SystemProperties.java</code></td><td>The Java API</td></tr>
+            <tr><td><code>system/libbase/include/android-base/properties.h</code></td><td>The C++ helpers of libbase</td></tr>
+            <tr><td><code>system/librustutils/</code></td><td>The Rust API and <code>PropertyWatcher</code></td></tr>
+            <tr><td><code>build/soong/sysprop/</code>, <code>system/tools/sysprop/</code></td><td><code>sysprop_library</code> and its code generators</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>To follow one property from end to end, pick <code>persist.sys.locale</code>. Find its label in <code>property_contexts</code>, its rules in the policy, the code that sets it in the framework and the place where <code>init</code> saves it.</p>
+    </div>
+  </details>
+
+  <div class="block try">
+    <div class="label">Try it yourself</div>
+    <p><strong>On an emulator with a userdebug build.</strong> Read properties and look at their labels and files. Then set a debug value.</p>
+<pre class="code" data-lang="bash" data-file="Terminal"><code>adb shell getprop ro.build.fingerprint
+adb shell getprop -Z ro.build.type             # the SELinux label
+adb root                                       # the folder below is closed to the shell
+adb shell ls -lZ /dev/__properties__/ | head
+adb shell setprop debug.mytest.value "hello"
+adb shell getprop debug.mytest.value
+adb shell setprop ro.build.type eng            # fails, ro. is set once
+adb shell getprop | grep "init.svc" | head</code></pre>
+    <p>The fourth command lists the files in memory, one per label. The seventh command fails, because <code>ro.build.type</code> already has a value.</p>
+    <p><strong>Follow a saved value.</strong> Set a <code>persist.</code> property, reboot and read it again. Then look at the file that keeps it.</p>
+<pre class="code" data-lang="bash" data-file="Terminal"><code>adb root
+adb shell setprop persist.mytest.value "survives"
+adb reboot
+adb wait-for-device
+adb shell getprop persist.mytest.value
+adb root
+adb shell ls -l /data/property/</code></pre>
+    <p><strong>Trace the product identity.</strong> Compare the values of each partition with the final one.</p>
+<pre class="code" data-lang="bash" data-file="Terminal"><code>for p in system system_ext vendor odm product; do
+  echo "$p: $(adb shell getprop ro.product.$p.model)"
+done
+echo "final: $(adb shell getprop ro.product.model)"</code></pre>
+    <p>On an emulator, several partitions often hold the same value. On a real phone, the product partition usually wins.</p>
+  </div>
+
+  <h2>Key terms</h2>
+  <dl class="terms">
+    <dt>System property</dt><dd>A short name-value pair that the whole device shares, such as <code>ro.build.type=user</code>.</dd>
+    <dt>Property area</dt><dd>One of the shared memory files under <code>/dev/__properties__/</code>, one for each SELinux label.</dd>
+    <dt>Trie</dt><dd>A tree in which each level holds one part of a name, used to find a property quickly.</dd>
+    <dt><code>prop_info</code></dt><dd>The 96-byte record that holds one value and its serial.</dd>
+    <dt>Serial</dt><dd>A number in each <code>prop_info</code> with the dirty bit, the length and a change counter.</dd>
+    <dt>Dirty bit</dt><dd>A flag that tells readers that a write is in progress, so they use the backup copy.</dd>
+    <dt>Futex</dt><dd>A fast kernel wait queue that wakes processes when a value in memory changes.</dd>
+    <dt>Property service</dt><dd>The part of <code>init</code> that receives set requests through a socket and checks them.</dd>
+    <dt><code>property_contexts</code></dt><dd>Files that map property names to SELinux labels and value types.</dd>
+    <dt><code>build.prop</code></dt><dd>A file in each partition that lists the properties of that part of the image.</dd>
+    <dt>Build fingerprint</dt><dd>The string in <code>ro.build.fingerprint</code> that names one exact build.</dd>
+    <dt><code>sysprop_library</code></dt><dd>A Soong module type that turns properties into typed APIs with ownership rules.</dd>
+  </dl>
+
+</article>
+</main>
+
+<script src="../../assets/js/site.js?v=20261112"></script>
+</body>
+</html>

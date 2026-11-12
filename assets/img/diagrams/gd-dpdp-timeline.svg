@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 176" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">When the parts of the DPDP framework apply</title>
+  <desc id="d">A timeline. The Act received assent on 11 August 2023. The Rules were notified on 13 November 2025, and the rules on the Data Protection Board applied at once. The Consent Manager rules apply from 13 November 2026. All other duties apply from 13 May 2027, including notice, consent, rights, security, breach reporting, children and transfers.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<line x1="60" y1="90" x2="830" y2="90" stroke="#d9d4c7" stroke-width="4"/>
+<circle cx="80" cy="90" r="12" fill="#5d6b7e"/>
+<text x="80" y="60" font-size="12.4" fill="#3f4a59" text-anchor="middle" font-weight="700">11 Aug 2023</text>
+<text x="80" y="124" font-size="11.2" fill="#1c2230" text-anchor="middle" font-weight="500">Act receives assent</text>
+<circle cx="300" cy="90" r="12" fill="#b7791f"/>
+<text x="300" y="60" font-size="12.4" fill="#8a5a12" text-anchor="middle" font-weight="700">13 Nov 2025</text>
+<text x="300" y="124" font-size="11.2" fill="#1c2230" text-anchor="middle" font-weight="500">Rules notified. Board rules apply</text>
+<circle cx="540" cy="90" r="12" fill="#2f62c8"/>
+<text x="540" y="60" font-size="12.4" fill="#1f4a9e" text-anchor="middle" font-weight="700">13 Nov 2026</text>
+<text x="540" y="124" font-size="11.2" fill="#1c2230" text-anchor="middle" font-weight="500">Consent Manager rules apply</text>
+<circle cx="780" cy="90" r="12" fill="#0f8a6a"/>
+<text x="780" y="60" font-size="12.4" fill="#0b6650" text-anchor="middle" font-weight="700">13 May 2027</text>
+<text x="780" y="124" font-size="11.2" fill="#1c2230" text-anchor="middle" font-weight="500">All other duties apply</text>
+<text x="440" y="160" font-size="11.6" fill="#4a5263" text-anchor="middle" font-style="italic">Notice, consent, rights, security, breach reporting, children and transfers start on 13 May 2027.</text>
+</svg>

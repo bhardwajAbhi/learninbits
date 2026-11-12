@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 340" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">Maximum penalties under the DPDP Act</title>
+  <desc id="d">Bars for the maximum penalties. These are 250 crore rupees for failing reasonable security safeguards, 200 crore for breach notification, 200 crore for children&#x27;s data, 150 crore for Significant Data Fiduciary duties, 50 crore for any other provision and 10,000 rupees for duties of a Data Principal.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<text x="300" y="42" font-size="13" fill="#1c2230" text-anchor="end" font-weight="700">Reasonable security safeguards</text>
+<text x="300" y="58" font-size="11" fill="#7b8292" text-anchor="end">Section 8(5)</text>
+<rect x="316" y="30" width="470" height="30" rx="6" fill="#c2552d"/>
+<text x="796" y="50" font-size="13" fill="#963f1f" text-anchor="start" font-weight="700">Rs 250 crore</text>
+<text x="300" y="94" font-size="13" fill="#1c2230" text-anchor="end" font-weight="700">Breach notification</text>
+<text x="300" y="110" font-size="11" fill="#7b8292" text-anchor="end">Section 8(6)</text>
+<rect x="316" y="82" width="376" height="30" rx="6" fill="#c2552d"/>
+<text x="702" y="102" font-size="13" fill="#963f1f" text-anchor="start" font-weight="700">Rs 200 crore</text>
+<text x="300" y="146" font-size="13" fill="#1c2230" text-anchor="end" font-weight="700">Children&#x27;s data</text>
+<text x="300" y="162" font-size="11" fill="#7b8292" text-anchor="end">Section 9</text>
+<rect x="316" y="134" width="376" height="30" rx="6" fill="#c2552d"/>
+<text x="702" y="154" font-size="13" fill="#963f1f" text-anchor="start" font-weight="700">Rs 200 crore</text>
+<text x="300" y="198" font-size="13" fill="#1c2230" text-anchor="end" font-weight="700">Significant Data Fiduciary duties</text>
+<text x="300" y="214" font-size="11" fill="#7b8292" text-anchor="end">Section 10</text>
+<rect x="316" y="186" width="282" height="30" rx="6" fill="#b7791f"/>
+<text x="608" y="206" font-size="13" fill="#8a5a12" text-anchor="start" font-weight="700">Rs 150 crore</text>
+<text x="300" y="250" font-size="13" fill="#1c2230" text-anchor="end" font-weight="700">Any other provision</text>
+<text x="300" y="266" font-size="11" fill="#7b8292" text-anchor="end">notice, consent, rights and more</text>
+<rect x="316" y="238" width="94" height="30" rx="6" fill="#5d6b7e"/>
+<text x="420" y="258" font-size="13" fill="#3f4a59" text-anchor="start" font-weight="700">Rs 50 crore</text>
+<text x="300" y="302" font-size="13" fill="#1c2230" text-anchor="end" font-weight="700">Duties of a Data Principal</text>
+<text x="300" y="318" font-size="11" fill="#7b8292" text-anchor="end">Section 15</text>
+<rect x="316" y="290" width="4" height="30" rx="6" fill="#5d6b7e"/>
+<text x="330" y="310" font-size="13" fill="#3f4a59" text-anchor="start" font-weight="700">Rs 10,000</text>
+</svg>

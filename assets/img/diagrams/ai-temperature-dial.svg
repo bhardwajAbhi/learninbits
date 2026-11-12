@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 390" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">How temperature changes the choice of the next word</title>
+  <desc id="d">Example numbers for the next word after Always pause and verify the sender&#x27;s. At temperature 0, the top word address always wins with 100 percent. At temperature 0.7, address has 70 percent, identity 17, email 9 and details 4, so the top word wins most often. At temperature 1.5, address has 45 percent, identity 23, email 18, details 12 and even banana 2, so weak words get a real chance.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<text x="440" y="30" font-size="14" fill="#1c2230" text-anchor="middle" font-weight="700">Next word after “Always pause and verify the sender&#x27;s ...”</text>
+<text x="440" y="50" font-size="12" fill="#4a5263" text-anchor="middle" font-style="italic">Example numbers, to show the effect</text>
+<rect x="24" y="70" width="268" height="300" rx="14" fill="#fff" stroke="#2f62c8" stroke-width="1.6"/>
+<text x="158" y="98" font-size="14.5" fill="#1f4a9e" text-anchor="middle" font-weight="700">Temperature 0</text>
+<text x="40" y="136" font-size="12.3" fill="#1c2230" text-anchor="start" font-weight="600">address</text>
+<rect x="110" y="122" width="124" height="20" rx="5" fill="#f3f1ec"/>
+<rect x="110" y="122" width="124" height="20" rx="5" fill="#2f62c8" fill-opacity="0.85"/>
+<text x="276" y="137" font-size="12" fill="#1f4a9e" text-anchor="end" font-weight="700">100%</text>
+<text x="40" y="180" font-size="12.3" fill="#1c2230" text-anchor="start" font-weight="600">identity</text>
+<rect x="110" y="166" width="124" height="20" rx="5" fill="#f3f1ec"/>
+<text x="276" y="181" font-size="12" fill="#1f4a9e" text-anchor="end" font-weight="700">0%</text>
+<text x="40" y="224" font-size="12.3" fill="#1c2230" text-anchor="start" font-weight="600">email</text>
+<rect x="110" y="210" width="124" height="20" rx="5" fill="#f3f1ec"/>
+<text x="276" y="225" font-size="12" fill="#1f4a9e" text-anchor="end" font-weight="700">0%</text>
+<text x="40" y="268" font-size="12.3" fill="#1c2230" text-anchor="start" font-weight="600">details</text>
+<rect x="110" y="254" width="124" height="20" rx="5" fill="#f3f1ec"/>
+<text x="276" y="269" font-size="12" fill="#1f4a9e" text-anchor="end" font-weight="700">0%</text>
+<text x="40" y="312" font-size="12.3" fill="#1c2230" text-anchor="start" font-weight="600">banana</text>
+<rect x="110" y="298" width="124" height="20" rx="5" fill="#f3f1ec"/>
+<text x="276" y="313" font-size="12" fill="#1f4a9e" text-anchor="end" font-weight="700">0%</text>
+<text x="158" y="352" font-size="12.3" fill="#4a5263" text-anchor="middle" font-style="italic" font-weight="600">Always the top word</text>
+<rect x="308" y="70" width="268" height="300" rx="14" fill="#fff" stroke="#7a4fc2" stroke-width="1.6"/>
+<text x="442" y="98" font-size="14.5" fill="#58378f" text-anchor="middle" font-weight="700">Temperature 0.7</text>
+<text x="324" y="136" font-size="12.3" fill="#1c2230" text-anchor="start" font-weight="600">address</text>
+<rect x="394" y="122" width="124" height="20" rx="5" fill="#f3f1ec"/>
+<rect x="394" y="122" width="86.8" height="20" rx="5" fill="#7a4fc2" fill-opacity="0.85"/>
+<text x="560" y="137" font-size="12" fill="#58378f" text-anchor="end" font-weight="700">70%</text>
+<text x="324" y="180" font-size="12.3" fill="#1c2230" text-anchor="start" font-weight="600">identity</text>
+<rect x="394" y="166" width="124" height="20" rx="5" fill="#f3f1ec"/>
+<rect x="394" y="166" width="21.08" height="20" rx="5" fill="#7a4fc2" fill-opacity="0.85"/>
+<text x="560" y="181" font-size="12" fill="#58378f" text-anchor="end" font-weight="700">17%</text>
+<text x="324" y="224" font-size="12.3" fill="#1c2230" text-anchor="start" font-weight="600">email</text>
+<rect x="394" y="210" width="124" height="20" rx="5" fill="#f3f1ec"/>
+<rect x="394" y="210" width="11.16" height="20" rx="5" fill="#7a4fc2" fill-opacity="0.85"/>
+<text x="560" y="225" font-size="12" fill="#58378f" text-anchor="end" font-weight="700">9%</text>
+<text x="324" y="268" font-size="12.3" fill="#1c2230" text-anchor="start" font-weight="600">details</text>
+<rect x="394" y="254" width="124" height="20" rx="5" fill="#f3f1ec"/>
+<rect x="394" y="254" width="4.96" height="20" rx="5" fill="#7a4fc2" fill-opacity="0.85"/>
+<text x="560" y="269" font-size="12" fill="#58378f" text-anchor="end" font-weight="700">4%</text>
+<text x="324" y="312" font-size="12.3" fill="#1c2230" text-anchor="start" font-weight="600">banana</text>
+<rect x="394" y="298" width="124" height="20" rx="5" fill="#f3f1ec"/>
+<text x="560" y="313" font-size="12" fill="#58378f" text-anchor="end" font-weight="700">0%</text>
+<text x="442" y="352" font-size="12.3" fill="#4a5263" text-anchor="middle" font-style="italic" font-weight="600">The top word wins most often</text>
+<rect x="592" y="70" width="268" height="300" rx="14" fill="#fff" stroke="#c2552d" stroke-width="1.6"/>
+<text x="726" y="98" font-size="14.5" fill="#963f1f" text-anchor="middle" font-weight="700">Temperature 1.5</text>
+<text x="608" y="136" font-size="12.3" fill="#1c2230" text-anchor="start" font-weight="600">address</text>
+<rect x="678" y="122" width="124" height="20" rx="5" fill="#f3f1ec"/>
+<rect x="678" y="122" width="55.8" height="20" rx="5" fill="#c2552d" fill-opacity="0.85"/>
+<text x="844" y="137" font-size="12" fill="#963f1f" text-anchor="end" font-weight="700">45%</text>
+<text x="608" y="180" font-size="12.3" fill="#1c2230" text-anchor="start" font-weight="600">identity</text>
+<rect x="678" y="166" width="124" height="20" rx="5" fill="#f3f1ec"/>
+<rect x="678" y="166" width="28.52" height="20" rx="5" fill="#c2552d" fill-opacity="0.85"/>
+<text x="844" y="181" font-size="12" fill="#963f1f" text-anchor="end" font-weight="700">23%</text>
+<text x="608" y="224" font-size="12.3" fill="#1c2230" text-anchor="start" font-weight="600">email</text>
+<rect x="678" y="210" width="124" height="20" rx="5" fill="#f3f1ec"/>
+<rect x="678" y="210" width="22.32" height="20" rx="5" fill="#c2552d" fill-opacity="0.85"/>
+<text x="844" y="225" font-size="12" fill="#963f1f" text-anchor="end" font-weight="700">18%</text>
+<text x="608" y="268" font-size="12.3" fill="#1c2230" text-anchor="start" font-weight="600">details</text>
+<rect x="678" y="254" width="124" height="20" rx="5" fill="#f3f1ec"/>
+<rect x="678" y="254" width="14.88" height="20" rx="5" fill="#c2552d" fill-opacity="0.85"/>
+<text x="844" y="269" font-size="12" fill="#963f1f" text-anchor="end" font-weight="700">12%</text>
+<text x="608" y="312" font-size="12.3" fill="#1c2230" text-anchor="start" font-weight="600">banana</text>
+<rect x="678" y="298" width="124" height="20" rx="5" fill="#f3f1ec"/>
+<rect x="678" y="298" width="4" height="20" rx="5" fill="#c2552d" fill-opacity="0.85"/>
+<text x="844" y="313" font-size="12" fill="#963f1f" text-anchor="end" font-weight="700">2%</text>
+<text x="726" y="352" font-size="12.3" fill="#4a5263" text-anchor="middle" font-style="italic" font-weight="600">Weak words get a real chance</text>
+</svg>

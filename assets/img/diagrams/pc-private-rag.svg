@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 306" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">Private RAG with pseudonymous inference</title>
+  <desc id="d">Inside your boundary, a detector finds more than 30 sensitive attributes with an NER model, rules and tree matching. Format-preserving encryption replaces them with realistic tokens. The external LLM works on the tokens. The reply comes back and is decrypted only on the user side, so the user reads the real values.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="20" y="20" width="430" height="270" rx="16" fill="#e3f4ee"/>
+<text x="40" y="44" font-size="11" fill="#0b6650" text-anchor="start" letter-spacing="1.1" font-weight="700">INSIDE YOUR BOUNDARY</text>
+<rect x="480" y="20" width="380" height="270" rx="16" fill="#f2efe8"/>
+<text x="500" y="44" font-size="11" fill="#4a5263" text-anchor="start" letter-spacing="1.1" font-weight="700">EXTERNAL LLM SERVICE</text>
+<rect x="40" y="58" width="190" height="106" rx="12" fill="#fff" stroke="#2f62c8" stroke-width="1.6"/>
+<path d="M52 58 h166 a12 12 0 0 1 12 12 v22 h-190 v-22 a12 12 0 0 1 12 -12z" fill="#2f62c8"/>
+<text x="54" y="79.86" font-size="13.5" fill="#fff" text-anchor="start" font-weight="700">1  Detect</text>
+<text x="54" y="114" font-size="11" fill="#4a5263" text-anchor="start">30+ sensitive attributes,</text>
+<text x="54" y="131.05" font-size="11" fill="#4a5263" text-anchor="start">NER model, rules and</text>
+<text x="54" y="148.1" font-size="11" fill="#4a5263" text-anchor="start">tree matching</text>
+<rect x="240" y="58" width="190" height="106" rx="12" fill="#fff" stroke="#7a4fc2" stroke-width="1.6"/>
+<path d="M252 58 h166 a12 12 0 0 1 12 12 v22 h-190 v-22 a12 12 0 0 1 12 -12z" fill="#7a4fc2"/>
+<text x="254" y="79.86" font-size="13.5" fill="#fff" text-anchor="start" font-weight="700">2  Encrypt</text>
+<text x="254" y="114" font-size="11" fill="#4a5263" text-anchor="start">format-preserving</text>
+<text x="254" y="131.05" font-size="11" fill="#4a5263" text-anchor="start">encryption, keys kept</text>
+<text x="254" y="148.1" font-size="11" fill="#4a5263" text-anchor="start">inside</text>
+<rect x="240" y="176" width="190" height="106" rx="12" fill="#fff" stroke="#0f8a6a" stroke-width="1.6"/>
+<path d="M252 176 h166 a12 12 0 0 1 12 12 v22 h-190 v-22 a12 12 0 0 1 12 -12z" fill="#0f8a6a"/>
+<text x="254" y="197.86" font-size="13.5" fill="#fff" text-anchor="start" font-weight="700">4  Decrypt</text>
+<text x="254" y="232" font-size="11" fill="#4a5263" text-anchor="start">only on the user side,</text>
+<text x="254" y="249.05" font-size="11" fill="#4a5263" text-anchor="start">real values come back</text>
+<rect x="40" y="176" width="190" height="106" rx="12" fill="#fff" stroke="#5d6b7e" stroke-width="1.6"/>
+<path d="M52 176 h166 a12 12 0 0 1 12 12 v22 h-190 v-22 a12 12 0 0 1 12 -12z" fill="#5d6b7e"/>
+<text x="54" y="197.86" font-size="13.5" fill="#fff" text-anchor="start" font-weight="700">5  User</text>
+<text x="54" y="232" font-size="11" fill="#4a5263" text-anchor="start">reads a normal answer</text>
+<text x="54" y="249.05" font-size="11" fill="#4a5263" text-anchor="start">with the real values</text>
+<path d="M230 111 H236" fill="none" stroke="#1c2230" stroke-width="2" marker-end="url(#m0)"/>
+<rect x="510" y="90" width="320" height="120" rx="14" fill="#1c2230"/>
+<text x="670" y="120" font-size="14" fill="#fff" text-anchor="middle" font-weight="700">3  LLM</text>
+<text x="670" y="146" font-size="11.5" fill="#ffffff80" text-anchor="middle" font-family="JetBrains Mono, monospace">“Priya, PAN ABCDE1234F”</text>
+<text x="670" y="166" font-size="10.5" fill="#ffffffcc" text-anchor="middle">becomes</text>
+<text x="670" y="188" font-size="11.5" fill="#fff" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="700">“Meera, PAN QWERT5678K”</text>
+<path d="M430 100 H504" fill="none" stroke="#7a4fc2" stroke-width="2" marker-end="url(#m5)"/>
+<text x="467" y="92" font-size="10.5" fill="#58378f" text-anchor="middle" font-weight="700">tokens</text>
+<path d="M504 200 H436" fill="none" stroke="#0f8a6a" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#m4)"/>
+<text x="467" y="222" font-size="10.5" fill="#0b6650" text-anchor="middle" font-weight="700">reply</text>
+<path d="M240 229 H234" fill="none" stroke="#1c2230" stroke-width="2" marker-end="url(#m0)"/>
+<text x="670" y="250" font-size="11.5" fill="#1c2230" text-anchor="middle" font-weight="700">The model never sees the real values,</text>
+<text x="670" y="268" font-size="11.5" fill="#4a5263" text-anchor="middle">but the text still reads normally.</text>
+</svg>

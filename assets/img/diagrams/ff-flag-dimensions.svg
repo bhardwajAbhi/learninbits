@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 420" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">The two dimensions of a flag and the options of a declaration</title>
+  <desc id="d">A grid of state against permission. Read-only and disabled means off in this build, with the value in the image. Read-only and enabled means on in this build. Read-write and disabled means off by default, and a server push or local override can turn it on. Read-write and enabled means on by default and can be turned off. On the right, three declaration options. is_fixed_read_only keeps the permission read-only. purpose is FEATURE or BUGFIX. type is boolean today, and the integer type in Android 17 is groundwork only.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<text x="400" y="30" font-size="14" fill="#1c2230" text-anchor="middle" font-weight="700">State</text>
+<rect x="190" y="40" width="170" height="26" rx="8" fill="#eef0f3" stroke="#5d6b7e" stroke-width="1.2"/>
+<text x="275" y="57.5" font-size="12.5" fill="#3f4a59" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="600">DISABLED</text>
+<rect x="440" y="40" width="170" height="26" rx="8" fill="#e3f4ee" stroke="#0f8a6a" stroke-width="1.2"/>
+<text x="525" y="57.5" font-size="12.5" fill="#0b6650" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="600">ENABLED</text>
+<text x="85" y="30" font-size="14" fill="#1c2230" text-anchor="middle" font-weight="700">Permission</text>
+<rect x="32" y="127" width="106" height="26" rx="8" fill="#eef3fb" stroke="#2f62c8" stroke-width="1.2"/>
+<text x="85" y="144.14" font-size="11.5" fill="#1f4a9e" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="600">READ_ONLY</text>
+<rect x="32" y="307" width="106" height="26" rx="8" fill="#fdf4e3" stroke="#b7791f" stroke-width="1.2"/>
+<text x="85" y="324.14" font-size="11.5" fill="#8a5a12" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="600">READ_WRITE</text>
+<rect x="160" y="80" width="230" height="140" rx="12" fill="#fff" stroke="#2f62c8" stroke-width="1.7"/>
+<rect x="160" y="80" width="6" height="140" rx="3" fill="#2f62c8"/>
+<text x="180" y="108" font-size="15" fill="#1f4a9e" text-anchor="start" font-weight="700">Off in this build</text>
+<text x="180" y="132" font-size="12.5" fill="#4a5263" text-anchor="start">The value is part of the image.</text>
+<text x="180" y="151" font-size="12.5" fill="#4a5263" text-anchor="start">The optimizer can remove</text>
+<text x="180" y="170" font-size="12.5" fill="#4a5263" text-anchor="start">the code behind the flag.</text>
+<rect x="410" y="80" width="230" height="140" rx="12" fill="#fff" stroke="#2f62c8" stroke-width="1.7"/>
+<rect x="410" y="80" width="6" height="140" rx="3" fill="#2f62c8"/>
+<text x="430" y="108" font-size="15" fill="#1f4a9e" text-anchor="start" font-weight="700">On in this build</text>
+<text x="430" y="132" font-size="12.5" fill="#4a5263" text-anchor="start">The value is part of the image.</text>
+<text x="430" y="151" font-size="12.5" fill="#4a5263" text-anchor="start">The optimizer can remove</text>
+<text x="430" y="170" font-size="12.5" fill="#4a5263" text-anchor="start">the old code path.</text>
+<rect x="160" y="260" width="230" height="140" rx="12" fill="#fff" stroke="#b7791f" stroke-width="1.7"/>
+<rect x="160" y="260" width="6" height="140" rx="3" fill="#b7791f"/>
+<text x="180" y="288" font-size="15" fill="#8a5a12" text-anchor="start" font-weight="700">Off by default</text>
+<text x="180" y="312" font-size="12.5" fill="#4a5263" text-anchor="start">A server push or a local</text>
+<text x="180" y="331" font-size="12.5" fill="#4a5263" text-anchor="start">override can turn it on</text>
+<text x="180" y="350" font-size="12.5" fill="#4a5263" text-anchor="start">while the device runs.</text>
+<rect x="410" y="260" width="230" height="140" rx="12" fill="#fff" stroke="#b7791f" stroke-width="1.7"/>
+<rect x="410" y="260" width="6" height="140" rx="3" fill="#b7791f"/>
+<text x="430" y="288" font-size="15" fill="#8a5a12" text-anchor="start" font-weight="700">On by default</text>
+<text x="430" y="312" font-size="12.5" fill="#4a5263" text-anchor="start">A server push or a local</text>
+<text x="430" y="331" font-size="12.5" fill="#4a5263" text-anchor="start">override can turn it off,</text>
+<text x="430" y="350" font-size="12.5" fill="#4a5263" text-anchor="start">for example for a rollback.</text>
+<text x="770" y="30" font-size="14" fill="#1c2230" text-anchor="middle" font-weight="700">Options in the declaration</text>
+<rect x="670" y="48" width="200" height="106" rx="12" fill="#fff" stroke="#7a4fc2" stroke-width="1.7"/>
+<rect x="670" y="48" width="6" height="106" rx="3" fill="#7a4fc2"/>
+<text x="690" y="76" font-size="13" fill="#58378f" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">is_fixed_read_only</text>
+<text x="690" y="100" font-size="12" fill="#4a5263" text-anchor="start">Permission is always</text>
+<text x="690" y="117" font-size="12" fill="#4a5263" text-anchor="start">READ_ONLY. A values file</text>
+<text x="690" y="134" font-size="12" fill="#4a5263" text-anchor="start">cannot make it writable.</text>
+<rect x="670" y="166" width="200" height="106" rx="12" fill="#fff" stroke="#c2552d" stroke-width="1.7"/>
+<rect x="670" y="166" width="6" height="106" rx="3" fill="#c2552d"/>
+<text x="690" y="194" font-size="13" fill="#963f1f" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">purpose</text>
+<text x="690" y="218" font-size="12" fill="#4a5263" text-anchor="start">FEATURE for new work.</text>
+<text x="690" y="235" font-size="12" fill="#4a5263" text-anchor="start">BUGFIX for a fix with a</text>
+<text x="690" y="252" font-size="12" fill="#4a5263" text-anchor="start">short life.</text>
+<rect x="670" y="284" width="200" height="106" rx="12" fill="#fff" stroke="#5d6b7e" stroke-width="1.7"/>
+<rect x="670" y="284" width="6" height="106" rx="3" fill="#5d6b7e"/>
+<text x="690" y="312" font-size="13" fill="#3f4a59" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">type (Android 17)</text>
+<text x="690" y="336" font-size="12" fill="#4a5263" text-anchor="start">Boolean today. The integer</text>
+<text x="690" y="353" font-size="12" fill="#4a5263" text-anchor="start">type is groundwork in</text>
+<text x="690" y="370" font-size="12" fill="#4a5263" text-anchor="start">storage and schema only.</text>
+</svg>

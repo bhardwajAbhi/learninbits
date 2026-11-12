@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 420" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">Eight kinds of privacy attack</title>
+  <desc id="d">Personal data in the middle, with eight attacks around it, namely singling out, linkage, inference, background knowledge, homogeneity, data breach, unconsented monitoring and unconsented processing.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<circle cx="440" cy="210" r="70" fill="#c2552d"/>
+<text x="440" y="206" font-size="15" fill="#fff" text-anchor="middle" font-weight="700">Personal</text>
+<text x="440" y="226" font-size="15" fill="#fff" text-anchor="middle" font-weight="700">data</text>
+<line x1="440" y1="138" x2="440" y2="74" stroke="#c2552d" stroke-width="1.6" stroke-dasharray="4 4"/>
+<rect x="342" y="24" width="196" height="52" rx="10" fill="#fff" stroke="#c2552d" stroke-width="1.5"/>
+<text x="440" y="46" font-size="12.5" fill="#963f1f" text-anchor="middle" font-weight="700">Singling out</text>
+<text x="440" y="63" font-size="10.5" fill="#4a5263" text-anchor="middle">one unique record</text>
+<line x1="490.912" y1="159.088" x2="587.078" y2="113.833" stroke="#c2552d" stroke-width="1.6" stroke-dasharray="4 4"/>
+<rect x="554.132" y="70.8629" width="196" height="52" rx="10" fill="#fff" stroke="#c2552d" stroke-width="1.5"/>
+<text x="652.132" y="92.8629" font-size="12.5" fill="#963f1f" text-anchor="middle" font-weight="700">Linkage</text>
+<text x="652.132" y="109.863" font-size="10.5" fill="#4a5263" text-anchor="middle">join with another dataset</text>
+<line x1="512" y1="210" x2="648" y2="210" stroke="#c2552d" stroke-width="1.6" stroke-dasharray="4 4"/>
+<rect x="642" y="184" width="196" height="52" rx="10" fill="#fff" stroke="#c2552d" stroke-width="1.5"/>
+<text x="740" y="206" font-size="12.5" fill="#963f1f" text-anchor="middle" font-weight="700">Inference</text>
+<text x="740" y="223" font-size="10.5" fill="#4a5263" text-anchor="middle">guess a secret value</text>
+<line x1="490.912" y1="260.912" x2="587.078" y2="306.167" stroke="#c2552d" stroke-width="1.6" stroke-dasharray="4 4"/>
+<rect x="554.132" y="297.137" width="196" height="52" rx="10" fill="#fff" stroke="#c2552d" stroke-width="1.5"/>
+<text x="652.132" y="319.137" font-size="12.5" fill="#963f1f" text-anchor="middle" font-weight="700">Background knowledge</text>
+<text x="652.132" y="336.137" font-size="10.5" fill="#4a5263" text-anchor="middle">what the attacker knows</text>
+<line x1="440" y1="282" x2="440" y2="346" stroke="#c2552d" stroke-width="1.6" stroke-dasharray="4 4"/>
+<rect x="342" y="344" width="196" height="52" rx="10" fill="#fff" stroke="#c2552d" stroke-width="1.5"/>
+<text x="440" y="366" font-size="12.5" fill="#963f1f" text-anchor="middle" font-weight="700">Homogeneity</text>
+<text x="440" y="383" font-size="10.5" fill="#4a5263" text-anchor="middle">the whole group is the same</text>
+<line x1="389.088" y1="260.912" x2="292.922" y2="306.167" stroke="#b7791f" stroke-width="1.6" stroke-dasharray="4 4"/>
+<rect x="129.868" y="297.137" width="196" height="52" rx="10" fill="#fff" stroke="#b7791f" stroke-width="1.5"/>
+<text x="227.868" y="319.137" font-size="12.5" fill="#8a5a12" text-anchor="middle" font-weight="700">Data breach</text>
+<text x="227.868" y="336.137" font-size="10.5" fill="#4a5263" text-anchor="middle">a leak or unauthorized access</text>
+<line x1="368" y1="210" x2="232" y2="210" stroke="#b7791f" stroke-width="1.6" stroke-dasharray="4 4"/>
+<rect x="42" y="184" width="196" height="52" rx="10" fill="#fff" stroke="#b7791f" stroke-width="1.5"/>
+<text x="140" y="206" font-size="12.5" fill="#8a5a12" text-anchor="middle" font-weight="700">Unconsented monitoring</text>
+<text x="140" y="223" font-size="10.5" fill="#4a5263" text-anchor="middle">tracking without consent</text>
+<line x1="389.088" y1="159.088" x2="292.922" y2="113.833" stroke="#b7791f" stroke-width="1.6" stroke-dasharray="4 4"/>
+<rect x="129.868" y="70.8629" width="196" height="52" rx="10" fill="#fff" stroke="#b7791f" stroke-width="1.5"/>
+<text x="227.868" y="92.8629" font-size="12.5" fill="#8a5a12" text-anchor="middle" font-weight="700">Unconsented processing</text>
+<text x="227.868" y="109.863" font-size="10.5" fill="#4a5263" text-anchor="middle">use beyond the purpose</text>
+</svg>

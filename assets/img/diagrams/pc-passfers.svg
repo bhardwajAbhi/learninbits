@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 286" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">PASSFERS, eight principles for responsible AI</title>
+  <desc id="d">Eight tiles for Privacy, Accountability, Safety, Security, Fairness, Explainability, Reliability and Sustainability.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="20" y="20" width="200" height="116" rx="12" fill="#fff" stroke="#2f62c8" stroke-width="1.6"/>
+<rect x="34" y="34" width="44" height="44" rx="10" fill="#2f62c8"/>
+<text x="56" y="64" font-size="22" fill="#fff" text-anchor="middle" font-weight="700">P</text>
+<text x="90" y="62" font-size="14" fill="#1f4a9e" text-anchor="start" font-weight="700">Privacy</text>
+<text x="34" y="102" font-size="11.5" fill="#4a5263" text-anchor="start">protect personal and</text>
+<text x="34" y="118" font-size="11.5" fill="#4a5263" text-anchor="start">sensitive data</text>
+<rect x="232" y="20" width="200" height="116" rx="12" fill="#fff" stroke="#5d6b7e" stroke-width="1.6"/>
+<rect x="246" y="34" width="44" height="44" rx="10" fill="#5d6b7e"/>
+<text x="268" y="64" font-size="22" fill="#fff" text-anchor="middle" font-weight="700">A</text>
+<text x="302" y="62" font-size="14" fill="#3f4a59" text-anchor="start" font-weight="700">Accountability</text>
+<text x="246" y="102" font-size="11.5" fill="#4a5263" text-anchor="start">make decisions</text>
+<text x="246" y="118" font-size="11.5" fill="#4a5263" text-anchor="start">traceable</text>
+<rect x="444" y="20" width="200" height="116" rx="12" fill="#fff" stroke="#c2552d" stroke-width="1.6"/>
+<rect x="458" y="34" width="44" height="44" rx="10" fill="#c2552d"/>
+<text x="480" y="64" font-size="22" fill="#fff" text-anchor="middle" font-weight="700">S</text>
+<text x="514" y="62" font-size="14" fill="#963f1f" text-anchor="start" font-weight="700">Safety</text>
+<text x="458" y="102" font-size="11.5" fill="#4a5263" text-anchor="start">prevent harmful</text>
+<text x="458" y="118" font-size="11.5" fill="#4a5263" text-anchor="start">behavior</text>
+<rect x="656" y="20" width="200" height="116" rx="12" fill="#fff" stroke="#7a4fc2" stroke-width="1.6"/>
+<rect x="670" y="34" width="44" height="44" rx="10" fill="#7a4fc2"/>
+<text x="692" y="64" font-size="22" fill="#fff" text-anchor="middle" font-weight="700">S</text>
+<text x="726" y="62" font-size="14" fill="#58378f" text-anchor="start" font-weight="700">Security</text>
+<text x="670" y="102" font-size="11.5" fill="#4a5263" text-anchor="start">stop misuse</text>
+<text x="670" y="118" font-size="11.5" fill="#4a5263" text-anchor="start">and manipulation</text>
+<rect x="20" y="150" width="200" height="116" rx="12" fill="#fff" stroke="#b7791f" stroke-width="1.6"/>
+<rect x="34" y="164" width="44" height="44" rx="10" fill="#b7791f"/>
+<text x="56" y="194" font-size="22" fill="#fff" text-anchor="middle" font-weight="700">F</text>
+<text x="90" y="192" font-size="14" fill="#8a5a12" text-anchor="start" font-weight="700">Fairness</text>
+<text x="34" y="232" font-size="11.5" fill="#4a5263" text-anchor="start">no bias</text>
+<text x="34" y="248" font-size="11.5" fill="#4a5263" text-anchor="start">or discrimination</text>
+<rect x="232" y="150" width="200" height="116" rx="12" fill="#fff" stroke="#0f8a6a" stroke-width="1.6"/>
+<rect x="246" y="164" width="44" height="44" rx="10" fill="#0f8a6a"/>
+<text x="268" y="194" font-size="22" fill="#fff" text-anchor="middle" font-weight="700">E</text>
+<text x="302" y="192" font-size="14" fill="#0b6650" text-anchor="start" font-weight="700">Explainability</text>
+<text x="246" y="232" font-size="11.5" fill="#4a5263" text-anchor="start">decisions easy</text>
+<text x="246" y="248" font-size="11.5" fill="#4a5263" text-anchor="start">to read</text>
+<rect x="444" y="150" width="200" height="116" rx="12" fill="#fff" stroke="#2f62c8" stroke-width="1.6"/>
+<rect x="458" y="164" width="44" height="44" rx="10" fill="#2f62c8"/>
+<text x="480" y="194" font-size="22" fill="#fff" text-anchor="middle" font-weight="700">R</text>
+<text x="514" y="192" font-size="14" fill="#1f4a9e" text-anchor="start" font-weight="700">Reliability</text>
+<text x="458" y="232" font-size="11.5" fill="#4a5263" text-anchor="start">consistent, predictable</text>
+<text x="458" y="248" font-size="11.5" fill="#4a5263" text-anchor="start">results</text>
+<rect x="656" y="150" width="200" height="116" rx="12" fill="#fff" stroke="#0f8a6a" stroke-width="1.6"/>
+<rect x="670" y="164" width="44" height="44" rx="10" fill="#0f8a6a"/>
+<text x="692" y="194" font-size="22" fill="#fff" text-anchor="middle" font-weight="700">S</text>
+<text x="726" y="192" font-size="14" fill="#0b6650" text-anchor="start" font-weight="700">Sustainability</text>
+<text x="670" y="232" font-size="11.5" fill="#4a5263" text-anchor="start">energy-efficient</text>
+<text x="670" y="248" font-size="11.5" fill="#4a5263" text-anchor="start">systems</text>
+</svg>

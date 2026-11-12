@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 350" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">Two triads for security and privacy</title>
+  <desc id="d">Two triangles. Security has confidentiality, integrity and availability. Privacy has predictability, manageability and disassociability.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<path d="M220 70 L70 300 L370 300 Z" fill="#eef0f3" stroke="#5d6b7e" stroke-width="2"/>
+<text x="220" y="225" font-size="18" fill="#3f4a59" text-anchor="middle" font-weight="700">Security</text>
+<text x="220" y="246" font-size="12" fill="#4a5263" text-anchor="middle">who can open the data</text>
+<circle cx="220" cy="70" r="8" fill="#5d6b7e"/>
+<text x="220" y="54" font-size="14" fill="#1c2230" text-anchor="middle" font-weight="700">Confidentiality</text>
+<circle cx="70" cy="300" r="8" fill="#5d6b7e"/>
+<text x="70" y="330" font-size="14" fill="#1c2230" text-anchor="middle" font-weight="700">Integrity</text>
+<circle cx="370" cy="300" r="8" fill="#5d6b7e"/>
+<text x="370" y="330" font-size="14" fill="#1c2230" text-anchor="middle" font-weight="700">Availability</text>
+<path d="M660 70 L510 300 L810 300 Z" fill="#e3f4ee" stroke="#0f8a6a" stroke-width="2"/>
+<text x="660" y="225" font-size="18" fill="#0b6650" text-anchor="middle" font-weight="700">Privacy</text>
+<text x="660" y="246" font-size="12" fill="#4a5263" text-anchor="middle">what happens to the person</text>
+<circle cx="660" cy="70" r="8" fill="#0f8a6a"/>
+<text x="660" y="54" font-size="14" fill="#1c2230" text-anchor="middle" font-weight="700">Predictability</text>
+<circle cx="510" cy="300" r="8" fill="#0f8a6a"/>
+<text x="510" y="330" font-size="14" fill="#1c2230" text-anchor="middle" font-weight="700">Manageability</text>
+<circle cx="810" cy="300" r="8" fill="#0f8a6a"/>
+<text x="810" y="330" font-size="14" fill="#1c2230" text-anchor="middle" font-weight="700">Disassociability</text>
+<text x="440" y="190" font-size="40" fill="#7b8292" text-anchor="middle" font-weight="300">+</text>
+</svg>

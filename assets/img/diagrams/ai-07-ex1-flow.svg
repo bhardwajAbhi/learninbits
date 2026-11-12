@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 700" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">How the privacy policy analysis of Example 1 flows</title>
+  <desc id="d">Schema, class PrivacyPolicyAnalysis(BaseModel), app_name, data_practices, third_party_sharing, retention_periods, user_controls, security_measures, privacy_concerns, overall_transparency (LOW, MEDIUM, HIGH), summary, data_practices holds DataCollectionPractice objects. Parser, parser = JsonOutputParser(pydantic_object=...), get_format_instructions() writes the JSON schema as text. Template, privacy_policy_prompt, 5 rules, then {format_instructions} and {privacy_policy}. Data, privacy_policy, The QuickRide policy, about 60 lines. Model, llm = ChatGoogleGenerativeAI(model=&quot;gemini-3.1-flash-lite&quot;, temperature=0), Writes one JSON object. Parser, JsonOutputParser, Turns the JSON text into a Python dict, without validation. Output, result[&#x27;app_name&#x27;], for practice in result[&#x27;data_practices&#x27;], QuickRide, transparency MEDIUM, 5 data categories, 4 concerns.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="20" y="34" width="92" height="26" rx="13" fill="#fbecec" stroke="#c2552d" stroke-width="1.2"/>
+<text x="66" y="51.32" font-size="12" fill="#963f1f" text-anchor="middle" font-weight="700">Schema</text>
+<rect x="126" y="24" width="680" height="122" rx="12" fill="#fff" stroke="#c2552d" stroke-width="1.6"/>
+<rect x="126" y="24" width="6" height="122" rx="3" fill="#c2552d"/>
+<text x="146" y="52" font-size="13.6" fill="#963f1f" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">class PrivacyPolicyAnalysis(BaseModel)</text>
+<text x="146" y="74" font-size="12.2" fill="#4a5263" text-anchor="start">app_name, data_practices, third_party_sharing, retention_periods</text>
+<text x="146" y="93" font-size="12.2" fill="#4a5263" text-anchor="start">user_controls, security_measures, privacy_concerns</text>
+<text x="146" y="112" font-size="12.2" fill="#4a5263" text-anchor="start">overall_transparency (LOW, MEDIUM, HIGH), summary</text>
+<text x="146" y="131" font-size="12.2" fill="#4a5263" text-anchor="start">data_practices holds DataCollectionPractice objects</text>
+<path d="M466 148 L 466 166" fill="none" stroke="#1c2230" stroke-width="1.6" marker-end="url(#m0)"/>
+<rect x="20" y="180" width="92" height="26" rx="13" fill="#fdf4e3" stroke="#b7791f" stroke-width="1.2"/>
+<text x="66" y="197.32" font-size="12" fill="#8a5a12" text-anchor="middle" font-weight="700">Parser</text>
+<rect x="126" y="170" width="680" height="65" rx="12" fill="#fff" stroke="#b7791f" stroke-width="1.6"/>
+<rect x="126" y="170" width="6" height="65" rx="3" fill="#b7791f"/>
+<text x="146" y="198" font-size="13.6" fill="#8a5a12" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">parser = JsonOutputParser(pydantic_object=...)</text>
+<text x="146" y="220" font-size="12.2" fill="#4a5263" text-anchor="start">get_format_instructions() writes the JSON schema as text</text>
+<path d="M466 237 L 466 255" fill="none" stroke="#1c2230" stroke-width="1.6" marker-end="url(#m0)"/>
+<rect x="20" y="269" width="92" height="26" rx="13" fill="#f3f0fa" stroke="#7a4fc2" stroke-width="1.2"/>
+<text x="66" y="286.32" font-size="12" fill="#58378f" text-anchor="middle" font-weight="700">Template</text>
+<rect x="126" y="259" width="680" height="65" rx="12" fill="#fff" stroke="#7a4fc2" stroke-width="1.6"/>
+<rect x="126" y="259" width="6" height="65" rx="3" fill="#7a4fc2"/>
+<text x="146" y="287" font-size="13.6" fill="#58378f" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">privacy_policy_prompt</text>
+<text x="146" y="309" font-size="12.2" fill="#4a5263" text-anchor="start">5 rules, then {format_instructions} and {privacy_policy}</text>
+<path d="M466 326 L 466 344" fill="none" stroke="#1c2230" stroke-width="1.6" marker-end="url(#m0)"/>
+<rect x="20" y="358" width="92" height="26" rx="13" fill="#eef0f3" stroke="#5d6b7e" stroke-width="1.2"/>
+<text x="66" y="375.32" font-size="12" fill="#3f4a59" text-anchor="middle" font-weight="700">Data</text>
+<rect x="126" y="348" width="680" height="65" rx="12" fill="#fff" stroke="#5d6b7e" stroke-width="1.6"/>
+<rect x="126" y="348" width="6" height="65" rx="3" fill="#5d6b7e"/>
+<text x="146" y="376" font-size="13.6" fill="#3f4a59" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">privacy_policy</text>
+<text x="146" y="398" font-size="12.2" fill="#4a5263" text-anchor="start">The QuickRide policy, about 60 lines</text>
+<path d="M466 415 L 466 433" fill="none" stroke="#1c2230" stroke-width="1.6" marker-end="url(#m0)"/>
+<rect x="20" y="447" width="92" height="26" rx="13" fill="#eef3fb" stroke="#2f62c8" stroke-width="1.2"/>
+<text x="66" y="464.32" font-size="12" fill="#1f4a9e" text-anchor="middle" font-weight="700">Model</text>
+<rect x="126" y="437" width="680" height="65" rx="12" fill="#fff" stroke="#2f62c8" stroke-width="1.6"/>
+<rect x="126" y="437" width="6" height="65" rx="3" fill="#2f62c8"/>
+<text x="146" y="465" font-size="13.6" fill="#1f4a9e" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">llm = ChatGoogleGenerativeAI(model=&quot;gemini-3.1-flash-lite&quot;, temperature=0)</text>
+<text x="146" y="487" font-size="12.2" fill="#4a5263" text-anchor="start">Writes one JSON object</text>
+<path d="M466 504 L 466 522" fill="none" stroke="#1c2230" stroke-width="1.6" marker-end="url(#m0)"/>
+<rect x="20" y="536" width="92" height="26" rx="13" fill="#fdf4e3" stroke="#b7791f" stroke-width="1.2"/>
+<text x="66" y="553.32" font-size="12" fill="#8a5a12" text-anchor="middle" font-weight="700">Parser</text>
+<rect x="126" y="526" width="680" height="65" rx="12" fill="#fff" stroke="#b7791f" stroke-width="1.6"/>
+<rect x="126" y="526" width="6" height="65" rx="3" fill="#b7791f"/>
+<text x="146" y="554" font-size="13.6" fill="#8a5a12" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">JsonOutputParser</text>
+<text x="146" y="576" font-size="12.2" fill="#4a5263" text-anchor="start">Turns the JSON text into a Python dict, without validation</text>
+<path d="M466 593 L 466 611" fill="none" stroke="#1c2230" stroke-width="1.6" marker-end="url(#m0)"/>
+<rect x="20" y="625" width="92" height="26" rx="13" fill="#e3f4ee" stroke="#0f8a6a" stroke-width="1.2"/>
+<text x="66" y="642.32" font-size="12" fill="#0b6650" text-anchor="middle" font-weight="700">Output</text>
+<rect x="126" y="615" width="680" height="65" rx="12" fill="#fff" stroke="#0f8a6a" stroke-width="1.6"/>
+<rect x="126" y="615" width="6" height="65" rx="3" fill="#0f8a6a"/>
+<text x="146" y="643" font-size="13.6" fill="#0b6650" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">result[&#x27;app_name&#x27;], for practice in result[&#x27;data_practices&#x27;]</text>
+<text x="146" y="665" font-size="12.2" fill="#4a5263" text-anchor="start">QuickRide, transparency MEDIUM, 5 data categories, 4 concerns</text>
+</svg>

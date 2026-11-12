@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 692" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">Inside the persona calls of Example 2</title>
+  <desc id="d">A sequence diagram with the lanes Your code, llm, OpenRouter API. Step 1, Your code to Your code, messages_analyst = [...], SystemMessage with the analyst role, HumanMessage with the question. Step 2, Your code to llm, llm.invoke(messages_analyst), a list of two messages, not a string. Step 3, llm to OpenRouter API, Request with a system and a human message, temperature 0, no length limit. Step 4, OpenRouter API to llm, Analyst answer, 61 in, 503 out. Step 5, llm to Your code, AIMessage, the code prints .text, .response_metadata and .usage_metadata. Step 6, Your code to llm, llm.invoke(messages_ciso), the same question, the CISO role. Step 7, OpenRouter API to Your code, CISO answer, 65 in, 503 out. Step 8, Your code to llm, llm.invoke(messages_teacher), the same question, the teacher role in Hindi. Step 9, OpenRouter API to Your code, Teacher answer, 129 in, 1,267 out. Steps 1 to 5 repeat, Persona 1, analyst. Steps 6 to 9 repeat, Personas 2 and 3, the same steps.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="15" y="18" width="150" height="42" rx="10" fill="#eef0f3" stroke="#5d6b7e" stroke-width="1.4"/>
+<text x="90" y="44" font-size="12.3" fill="#3f4a59" text-anchor="middle" font-weight="700">Your code</text>
+<line x1="90" y1="60" x2="90" y2="676" stroke="#d9d4c7" stroke-width="1.6" stroke-dasharray="5 5"/>
+<rect x="365" y="18" width="150" height="42" rx="10" fill="#eef3fb" stroke="#2f62c8" stroke-width="1.4"/>
+<text x="440" y="44" font-size="11.8" fill="#1f4a9e" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="700">llm</text>
+<line x1="440" y1="60" x2="440" y2="676" stroke="#d9d4c7" stroke-width="1.6" stroke-dasharray="5 5"/>
+<rect x="715" y="18" width="150" height="42" rx="10" fill="#fdf4e3" stroke="#b7791f" stroke-width="1.4"/>
+<text x="790" y="44" font-size="12.3" fill="#8a5a12" text-anchor="middle" font-weight="700">OpenRouter API</text>
+<line x1="790" y1="60" x2="790" y2="676" stroke="#d9d4c7" stroke-width="1.6" stroke-dasharray="5 5"/>
+<rect x="14" y="78" width="852" height="304" rx="10" fill="none" stroke="#5d6b7e" stroke-width="1.2" stroke-dasharray="6 4"/>
+<rect x="14" y="78" width="152" height="22" rx="10" fill="#5d6b7e"/>
+<text x="26" y="93" font-size="11.5" fill="#fff" text-anchor="start" font-weight="700">Persona 1, analyst</text>
+<rect x="14" y="400" width="852" height="248" rx="10" fill="none" stroke="#5d6b7e" stroke-width="1.2" stroke-dasharray="6 4"/>
+<rect x="14" y="400" width="250" height="22" rx="10" fill="#5d6b7e"/>
+<text x="26" y="415" font-size="11.5" fill="#fff" text-anchor="start" font-weight="700">Personas 2 and 3, the same steps</text>
+<path d="M90 118 h34 v18 h-30" fill="none" stroke="#5d6b7e" stroke-width="1.6"/>
+<path d="M98 136 L 92 136" fill="none" stroke="#5d6b7e" stroke-width="1.6" marker-end="url(#m8)"/>
+<circle cx="146" cy="127" r="10" fill="#5d6b7e"/>
+<text x="146" y="130.96" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">1</text>
+<text x="162" y="131" font-size="12" fill="#3f4a59" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">messages_analyst = [...]</text>
+<text x="162" y="147" font-size="11.3" fill="#4a5263" text-anchor="start">SystemMessage with the analyst role, HumanMessage with the question</text>
+<path d="M94 184 L 434 184" fill="none" stroke="#5d6b7e" stroke-width="1.7" marker-end="url(#m8)"/>
+<circle cx="108" cy="171" r="10" fill="#5d6b7e"/>
+<text x="108" y="174.96" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">2</text>
+<text x="124" y="176" font-size="12" fill="#3f4a59" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">llm.invoke(messages_analyst)</text>
+<text x="124" y="200" font-size="11.3" fill="#4a5263" text-anchor="start">a list of two messages, not a string</text>
+<path d="M444 240 L 784 240" fill="none" stroke="#2f62c8" stroke-width="1.7" marker-end="url(#m3)"/>
+<circle cx="458" cy="227" r="10" fill="#2f62c8"/>
+<text x="458" y="230.96" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">3</text>
+<text x="474" y="232" font-size="12" fill="#1f4a9e" text-anchor="start" font-weight="700">Request with a system and a human message</text>
+<text x="474" y="256" font-size="11.3" fill="#4a5263" text-anchor="start">temperature 0, no length limit</text>
+<path d="M786 296 L 446 296" fill="none" stroke="#b7791f" stroke-width="1.7" stroke-dasharray="6 4" marker-end="url(#m6)"/>
+<circle cx="458" cy="283" r="10" fill="#b7791f"/>
+<text x="458" y="286.96" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">4</text>
+<text x="474" y="288" font-size="12" fill="#8a5a12" text-anchor="start" font-weight="700">Analyst answer</text>
+<text x="474" y="312" font-size="11.3" fill="#4a5263" text-anchor="start">61 in, 503 out</text>
+<path d="M436 352 L 96 352" fill="none" stroke="#2f62c8" stroke-width="1.7" stroke-dasharray="6 4" marker-end="url(#m3)"/>
+<circle cx="108" cy="339" r="10" fill="#2f62c8"/>
+<text x="108" y="342.96" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">5</text>
+<text x="124" y="344" font-size="12" fill="#1f4a9e" text-anchor="start" font-weight="700">AIMessage</text>
+<text x="124" y="368" font-size="11.3" fill="#4a5263" text-anchor="start">the code prints .text, .response_metadata and .usage_metadata</text>
+<path d="M94 450 L 434 450" fill="none" stroke="#5d6b7e" stroke-width="1.7" marker-end="url(#m8)"/>
+<circle cx="108" cy="437" r="10" fill="#5d6b7e"/>
+<text x="108" y="440.96" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">6</text>
+<text x="124" y="442" font-size="12" fill="#3f4a59" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">llm.invoke(messages_ciso)</text>
+<text x="124" y="466" font-size="11.3" fill="#4a5263" text-anchor="start">the same question, the CISO role</text>
+<path d="M786 506 L 96 506" fill="none" stroke="#b7791f" stroke-width="1.7" stroke-dasharray="6 4" marker-end="url(#m6)"/>
+<circle cx="108" cy="493" r="10" fill="#b7791f"/>
+<text x="108" y="496.96" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">7</text>
+<text x="124" y="498" font-size="12" fill="#8a5a12" text-anchor="start" font-weight="700">CISO answer</text>
+<text x="124" y="522" font-size="11.3" fill="#4a5263" text-anchor="start">65 in, 503 out</text>
+<path d="M94 562 L 434 562" fill="none" stroke="#5d6b7e" stroke-width="1.7" marker-end="url(#m8)"/>
+<circle cx="108" cy="549" r="10" fill="#5d6b7e"/>
+<text x="108" y="552.96" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">8</text>
+<text x="124" y="554" font-size="12" fill="#3f4a59" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">llm.invoke(messages_teacher)</text>
+<text x="124" y="578" font-size="11.3" fill="#4a5263" text-anchor="start">the same question, the teacher role in Hindi</text>
+<path d="M786 618 L 96 618" fill="none" stroke="#b7791f" stroke-width="1.7" stroke-dasharray="6 4" marker-end="url(#m6)"/>
+<circle cx="108" cy="605" r="10" fill="#b7791f"/>
+<text x="108" y="608.96" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">9</text>
+<text x="124" y="610" font-size="12" fill="#8a5a12" text-anchor="start" font-weight="700">Teacher answer</text>
+<text x="124" y="634" font-size="11.3" fill="#4a5263" text-anchor="start">129 in, 1,267 out</text>
+</svg>

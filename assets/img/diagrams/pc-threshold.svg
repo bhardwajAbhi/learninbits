@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 346" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">Threshold cryptography with a 2-of-3 scheme</title>
+  <desc id="d">A key is split into three shares for three parties. Any two shares rebuild the key to decrypt or sign. One lost or dishonest party cannot stop or break the system.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<circle cx="70" cy="150" r="19.2" fill="none" stroke="#1c2230" stroke-width="6.0"/>
+<path d="M89.2 150 h48 v14.4 m-16.8 -14.4 v12" fill="none" stroke="#1c2230" stroke-width="6.0"/>
+<text x="100" y="200" font-size="12" fill="#1c2230" text-anchor="middle" font-weight="700">the key</text>
+<path d="M160 150 L240 74" fill="none" stroke="#5d6b7e" stroke-width="1.5" marker-end="url(#m8)"/>
+<rect x="246" y="50" width="150" height="50" rx="10" fill="#eef3fb" stroke="#2f62c8" stroke-width="1.5"/>
+<text x="321" y="72" font-size="12.5" fill="#1f4a9e" text-anchor="middle" font-weight="700">Share 1</text>
+<text x="321" y="89" font-size="10.5" fill="#4a5263" text-anchor="middle">party 1</text>
+<path d="M160 150 L240 174" fill="none" stroke="#5d6b7e" stroke-width="1.5" marker-end="url(#m8)"/>
+<rect x="246" y="150" width="150" height="50" rx="10" fill="#e3f4ee" stroke="#0f8a6a" stroke-width="1.5"/>
+<text x="321" y="172" font-size="12.5" fill="#0b6650" text-anchor="middle" font-weight="700">Share 2</text>
+<text x="321" y="189" font-size="10.5" fill="#4a5263" text-anchor="middle">party 2</text>
+<path d="M160 150 L240 274" fill="none" stroke="#5d6b7e" stroke-width="1.5" marker-end="url(#m8)"/>
+<rect x="246" y="250" width="150" height="50" rx="10" fill="#f3f0fa" stroke="#7a4fc2" stroke-width="1.5"/>
+<text x="321" y="272" font-size="12.5" fill="#58378f" text-anchor="middle" font-weight="700">Share 3</text>
+<text x="321" y="289" font-size="10.5" fill="#4a5263" text-anchor="middle">party 3</text>
+<path d="M396 75 L520 135" fill="none" stroke="#2f62c8" stroke-width="1.6" marker-end="url(#m3)"/>
+<path d="M396 175 L520 150" fill="none" stroke="#0f8a6a" stroke-width="1.6" marker-end="url(#m4)"/>
+<path d="M396 275 L470 240" fill="none" stroke="#7a4fc2" stroke-width="1.6" stroke-dasharray="4 4"/>
+<text x="486" y="252" font-size="11" fill="#58378f" text-anchor="start" font-weight="600">not needed</text>
+<rect x="526" y="110" width="130" height="70" rx="12" fill="#1c2230"/>
+<text x="591" y="140" font-size="13" fill="#fff" text-anchor="middle" font-weight="700">Any 2 of 3</text>
+<text x="591" y="158" font-size="10.5" fill="#ffffffcc" text-anchor="middle">rebuild the key</text>
+<path d="M656 145 H700" fill="none" stroke="#1c2230" stroke-width="2" marker-end="url(#m0)"/>
+<circle cx="730" cy="145" r="16" fill="none" stroke="#0f8a6a" stroke-width="5.0"/>
+<path d="M746 145 h40 v12 m-14 -12 v10" fill="none" stroke="#0f8a6a" stroke-width="5.0"/>
+<text x="780" y="190" font-size="12" fill="#0b6650" text-anchor="middle" font-weight="700">decrypt or sign</text>
+<text x="440" y="330" font-size="12.5" fill="#1c2230" text-anchor="middle" font-weight="700">One lost or dishonest party cannot stop or break the system.</text>
+</svg>

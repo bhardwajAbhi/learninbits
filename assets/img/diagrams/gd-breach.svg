@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 470" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">Breach reporting deadlines under the DPDP Act and the GDPR</title>
+  <desc id="d">Two timelines from the moment the fiduciary learns of a breach to 72 hours. Under DPDP Rule 7, a short intimation goes to the Board without delay, a detailed report follows within 72 hours, and every affected person gets a notice without delay. Every breach counts, with no risk threshold, and the Board can extend the 72 hours on a written request. Under GDPR Articles 33 and 34, the authority gets a report within 72 hours if the breach creates a risk to people, and the people get a notice without undue delay only if the risk is high.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<text x="20" y="34" font-size="13" fill="#8a5a12" text-anchor="start" font-weight="700">DPDP Act, Rule 7</text>
+<rect x="70" y="50" width="250" height="36" rx="8" fill="#fdf4e3" stroke="#b7791f" stroke-width="1.2"/>
+<text x="195" y="73" font-size="11.2" fill="#8a5a12" text-anchor="middle" font-weight="700">Short intimation to the Board</text>
+<line x1="90" y1="130" x2="90" y2="86" stroke="#b7791f" stroke-width="1.4" stroke-dasharray="3 3"/>
+<rect x="580" y="50" width="250" height="36" rx="8" fill="#fdf4e3" stroke="#b7791f" stroke-width="1.2"/>
+<text x="705" y="73" font-size="11.2" fill="#8a5a12" text-anchor="middle" font-weight="700">Detailed report to the Board</text>
+<line x1="820" y1="130" x2="820" y2="86" stroke="#b7791f" stroke-width="1.4" stroke-dasharray="3 3"/>
+<line x1="60" y1="130" x2="840" y2="130" stroke="#1c2230" stroke-width="2.5"/>
+<circle cx="60" cy="130" r="8" fill="#1c2230"/>
+<circle cx="840" cy="130" r="8" fill="#c2552d"/>
+<text x="60" y="158" font-size="11" fill="#4a5263" text-anchor="start" font-weight="600">Learns of the breach</text>
+<text x="840" y="158" font-size="12" fill="#963f1f" text-anchor="end" font-weight="800">72 hours</text>
+<rect x="70" y="172" width="330" height="36" rx="8" fill="#fdf4e3" stroke="#b7791f" stroke-width="1.2"/>
+<text x="235" y="195" font-size="11.2" fill="#8a5a12" text-anchor="middle" font-weight="700">Notice to every affected person, without delay</text>
+<line x1="330" y1="130" x2="330" y2="172" stroke="#b7791f" stroke-width="1.4" stroke-dasharray="3 3"/>
+<text x="20" y="236" font-size="11" fill="#4a5263" text-anchor="start" font-style="italic">Every breach, no risk threshold. The Board can extend the 72 hours on a written request.</text>
+<text x="20" y="280" font-size="13" fill="#1f4a9e" text-anchor="start" font-weight="700">GDPR, Articles 33 and 34</text>
+<rect x="560" y="296" width="270" height="36" rx="8" fill="#eef3fb" stroke="#2f62c8" stroke-width="1.2"/>
+<text x="695" y="319" font-size="11.2" fill="#1f4a9e" text-anchor="middle" font-weight="700">Authority, if a risk to people exists</text>
+<line x1="820" y1="376" x2="820" y2="332" stroke="#2f62c8" stroke-width="1.4" stroke-dasharray="3 3"/>
+<line x1="60" y1="376" x2="840" y2="376" stroke="#1c2230" stroke-width="2.5"/>
+<circle cx="60" cy="376" r="8" fill="#1c2230"/>
+<circle cx="840" cy="376" r="8" fill="#c2552d"/>
+<text x="60" y="404" font-size="11" fill="#4a5263" text-anchor="start" font-weight="600">Learns of the breach</text>
+<text x="840" y="404" font-size="12" fill="#963f1f" text-anchor="end" font-weight="800">72 hours</text>
+<rect x="70" y="418" width="340" height="36" rx="8" fill="#eef3fb" stroke="#2f62c8" stroke-width="1.2"/>
+<text x="240" y="441" font-size="11.2" fill="#1f4a9e" text-anchor="middle" font-weight="700">People, without undue delay, if the risk is high</text>
+<line x1="330" y1="376" x2="330" y2="418" stroke="#2f62c8" stroke-width="1.4" stroke-dasharray="3 3"/>
+</svg>

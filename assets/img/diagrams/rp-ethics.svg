@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 400" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">The pillars of ethical research</title>
+  <desc id="d">Four pillars hold up responsible research, namely no plagiarism, no self-plagiarism, proper citation and an understanding of copyright. Below them, research is a chain of contributing knowledge, thinking systematically, experimenting honestly, writing clearly and publishing responsibly.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<path d="M60 110 L440 24 L820 110 Z" fill="#1c2230"/>
+<text x="440" y="92" font-size="17" fill="#fff" text-anchor="middle" font-weight="700">Responsible research</text>
+<rect x="70" y="122" width="170" height="150" rx="10" fill="#eef3fb" stroke="#2f62c8" stroke-width="1.6"/>
+<text x="155" y="162" font-size="14.5" fill="#1f4a9e" text-anchor="middle" font-weight="700">No plagiarism</text>
+<text x="155" y="196" font-size="13" fill="#4a5263" text-anchor="middle">Credit every word,</text>
+<text x="155" y="218" font-size="13" fill="#4a5263" text-anchor="middle">idea and figure</text>
+<rect x="260" y="122" width="170" height="150" rx="10" fill="#f3f0fa" stroke="#7a4fc2" stroke-width="1.6"/>
+<text x="345" y="162" font-size="14.5" fill="#58378f" text-anchor="middle" font-weight="700">No self-plagiarism</text>
+<text x="345" y="196" font-size="13" fill="#4a5263" text-anchor="middle">No recycled text</text>
+<text x="345" y="218" font-size="13" fill="#4a5263" text-anchor="middle">or data as new</text>
+<rect x="450" y="122" width="170" height="150" rx="10" fill="#e3f4ee" stroke="#0f8a6a" stroke-width="1.6"/>
+<text x="535" y="162" font-size="14.5" fill="#0b6650" text-anchor="middle" font-weight="700">Proper citation</text>
+<text x="535" y="196" font-size="13" fill="#4a5263" text-anchor="middle">Cite the original</text>
+<text x="535" y="218" font-size="13" fill="#4a5263" text-anchor="middle">sources accurately</text>
+<rect x="640" y="122" width="170" height="150" rx="10" fill="#fdf4e3" stroke="#b7791f" stroke-width="1.6"/>
+<text x="725" y="162" font-size="14.5" fill="#8a5a12" text-anchor="middle" font-weight="700">Copyright</text>
+<text x="725" y="196" font-size="13" fill="#4a5263" text-anchor="middle">Know what you sign,</text>
+<text x="725" y="218" font-size="13" fill="#4a5263" text-anchor="middle">transfer or open access</text>
+<rect x="60" y="284" width="760" height="22" rx="6" fill="#5d6b7e"/>
+<rect x="20" y="330" width="160" height="54" rx="27" fill="#fff" stroke="#5d6b7e" stroke-width="1.4"/>
+<text x="100" y="362" font-size="12.3" fill="#3f4a59" text-anchor="middle" font-weight="700">Contributing knowledge</text>
+<path d="M180 357 H188" fill="none" stroke="#5d6b7e" stroke-width="1.4" marker-end="url(#m8)"/>
+<rect x="190" y="330" width="160" height="54" rx="27" fill="#fff" stroke="#5d6b7e" stroke-width="1.4"/>
+<text x="270" y="362" font-size="12.3" fill="#3f4a59" text-anchor="middle" font-weight="700">Thinking systematically</text>
+<path d="M350 357 H358" fill="none" stroke="#5d6b7e" stroke-width="1.4" marker-end="url(#m8)"/>
+<rect x="360" y="330" width="160" height="54" rx="27" fill="#fff" stroke="#5d6b7e" stroke-width="1.4"/>
+<text x="440" y="362" font-size="12.3" fill="#3f4a59" text-anchor="middle" font-weight="700">Experimenting honestly</text>
+<path d="M520 357 H528" fill="none" stroke="#5d6b7e" stroke-width="1.4" marker-end="url(#m8)"/>
+<rect x="530" y="330" width="160" height="54" rx="27" fill="#fff" stroke="#5d6b7e" stroke-width="1.4"/>
+<text x="610" y="362" font-size="12.3" fill="#3f4a59" text-anchor="middle" font-weight="700">Writing clearly</text>
+<path d="M690 357 H698" fill="none" stroke="#5d6b7e" stroke-width="1.4" marker-end="url(#m8)"/>
+<rect x="700" y="330" width="160" height="54" rx="27" fill="#fff" stroke="#5d6b7e" stroke-width="1.4"/>
+<text x="780" y="362" font-size="12.3" fill="#3f4a59" text-anchor="middle" font-weight="700">Publishing responsibly</text>
+</svg>

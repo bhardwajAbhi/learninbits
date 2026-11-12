@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 322" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">Where kernel modules live and when they load on the emulator</title>
+  <desc id="d">Three places in load order. One, the vendor ramdisk holds modules such as virtio_blk, virtio_pci and virtio_mmio, which first-stage init loads to reach storage. Two, system_dlkm is a read-only erofs partition with about 100 GKI modules for networking, USB, file systems, crypto and zram, built by Google. Three, the vendor partition or vendor_dlkm holds device drivers such as goldfish_pipe, goldfish_battery and virtio-gpu, which the dlkm_loader service loads. A blocklist keeps vkms.ko and snd-aloop.ko from loading, because virtio drivers do the same job.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="20" y="30" width="260" height="220" rx="12" fill="#fff" stroke="#b7791f" stroke-width="1.6"/>
+<circle cx="42" cy="54" r="12" fill="#b7791f"/>
+<text x="42" y="58.32" font-size="12" fill="#fff" text-anchor="middle" font-weight="700">1</text>
+<text x="62" y="59" font-size="13.2" fill="#8a5a12" text-anchor="start" font-weight="700">Vendor ramdisk</text>
+<text x="38" y="86" font-size="11.4" fill="#4a5263" text-anchor="start" font-weight="600">First-stage init</text>
+<rect x="38" y="100" width="224" height="28" rx="6" fill="#fdf4e3"/>
+<text x="50" y="119" font-size="11.2" fill="#1c2230" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="600">virtio_blk.ko</text>
+<rect x="38" y="134" width="224" height="28" rx="6" fill="#fdf4e3"/>
+<text x="50" y="153" font-size="11.2" fill="#1c2230" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="600">virtio_pci.ko</text>
+<rect x="38" y="168" width="224" height="28" rx="6" fill="#fdf4e3"/>
+<text x="50" y="187" font-size="11.2" fill="#1c2230" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="600">virtio_mmio.ko</text>
+<text x="150" y="234" font-size="11.4" fill="#8a5a12" text-anchor="middle" font-weight="700">Needed to reach storage</text>
+<path d="M282 140 L 306 140" fill="none" stroke="#1c2230" stroke-width="1.6" marker-end="url(#m0)"/>
+<rect x="310" y="30" width="260" height="220" rx="12" fill="#fff" stroke="#0f8a6a" stroke-width="1.6"/>
+<circle cx="332" cy="54" r="12" fill="#0f8a6a"/>
+<text x="332" y="58.32" font-size="12" fill="#fff" text-anchor="middle" font-weight="700">2</text>
+<text x="352" y="59" font-size="13.2" fill="#0b6650" text-anchor="start" font-weight="700">system_dlkm</text>
+<text x="328" y="86" font-size="11.4" fill="#4a5263" text-anchor="start" font-weight="600">Read-only erofs</text>
+<rect x="328" y="100" width="224" height="28" rx="6" fill="#e3f4ee"/>
+<text x="340" y="119" font-size="11.2" fill="#1c2230" text-anchor="start" font-weight="600">~100 GKI modules</text>
+<rect x="328" y="134" width="224" height="28" rx="6" fill="#e3f4ee"/>
+<text x="340" y="153" font-size="11.2" fill="#1c2230" text-anchor="start" font-weight="600">network, USB, file</text>
+<rect x="328" y="168" width="224" height="28" rx="6" fill="#e3f4ee"/>
+<text x="340" y="187" font-size="11.2" fill="#1c2230" text-anchor="start" font-weight="600">systems, crypto, zram</text>
+<text x="440" y="234" font-size="11.4" fill="#0b6650" text-anchor="middle" font-weight="700">Built by Google</text>
+<path d="M572 140 L 596 140" fill="none" stroke="#1c2230" stroke-width="1.6" marker-end="url(#m0)"/>
+<rect x="600" y="30" width="260" height="220" rx="12" fill="#fff" stroke="#2f62c8" stroke-width="1.6"/>
+<circle cx="622" cy="54" r="12" fill="#2f62c8"/>
+<text x="622" y="58.32" font-size="12" fill="#fff" text-anchor="middle" font-weight="700">3</text>
+<text x="642" y="59" font-size="13.2" fill="#1f4a9e" text-anchor="start" font-weight="700">vendor (or vendor_dlkm)</text>
+<text x="618" y="86" font-size="11.4" fill="#4a5263" text-anchor="start" font-weight="600">dlkm_loader service</text>
+<rect x="618" y="100" width="224" height="28" rx="6" fill="#eef3fb"/>
+<text x="630" y="119" font-size="11.2" fill="#1c2230" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="600">goldfish_pipe.ko</text>
+<rect x="618" y="134" width="224" height="28" rx="6" fill="#eef3fb"/>
+<text x="630" y="153" font-size="11.2" fill="#1c2230" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="600">goldfish_battery.ko</text>
+<rect x="618" y="168" width="224" height="28" rx="6" fill="#eef3fb"/>
+<text x="630" y="187" font-size="11.2" fill="#1c2230" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="600">virtio-gpu.ko</text>
+<text x="730" y="234" font-size="11.4" fill="#1f4a9e" text-anchor="middle" font-weight="700">Device drivers</text>
+<rect x="20" y="268" width="840" height="40" rx="10" fill="#f2efe8"/>
+<text x="440" y="293" font-size="11.6" fill="#1c2230" text-anchor="middle" font-weight="500">A blocklist keeps modules such as vkms.ko and snd-aloop.ko from loading, because virtio drivers do the same job.</text>
+</svg>

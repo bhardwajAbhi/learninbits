@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 370" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">Three walls around the code from the model</title>
+  <desc id="d">On the left, three nested walls around the code from the model, which is untrusted text that looks like Python. Wall 1, the inner wall, is a check before anything runs, check_code with ast.parse and three rules. Wall 2 is a separate Python process, subprocess.run instead of exec inside your program. Wall 3, the outer wall, is a set of limits on the process, namely a timeout of 5 seconds, an empty environment, an empty temporary folder and Python&#x27;s isolated mode. On the right, six attempts and the wall that stops each one. import os, open of .env and the __class__ route stop at wall 1. A division by zero stays in wall 2, and your program keeps running. An endless loop stops at wall 3 after 5 seconds, and an attempt to read the API key finds no keys, because the environment is empty.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="20" y="24" width="520" height="330" rx="16" fill="#e6f3f4" stroke="#0e7c86" stroke-width="1.5"/>
+<text x="36" y="48" font-size="12.6" fill="#095a61" text-anchor="start" font-weight="700">Wall 3, limits on the process</text>
+<text x="36" y="66" font-size="10.8" fill="#1c2230" text-anchor="start" font-family="JetBrains Mono, monospace">timeout=5, env={}, an empty temp folder, python -I</text>
+<rect x="46" y="78" width="468" height="240" rx="16" fill="#eef3fb" stroke="#2f62c8" stroke-width="1.5"/>
+<text x="62" y="102" font-size="12.6" fill="#1f4a9e" text-anchor="start" font-weight="700">Wall 2, a separate Python process</text>
+<text x="62" y="120" font-size="10.8" fill="#1c2230" text-anchor="start" font-family="JetBrains Mono, monospace">subprocess.run(...), not exec() inside your program</text>
+<rect x="72" y="132" width="416" height="150" rx="16" fill="#f3f0fa" stroke="#7a4fc2" stroke-width="1.5"/>
+<text x="88" y="156" font-size="12.6" fill="#58378f" text-anchor="start" font-weight="700">Wall 1, a check before anything runs</text>
+<text x="88" y="174" font-size="10.8" fill="#1c2230" text-anchor="start">check_code(), ast.parse and three rules</text>
+<rect x="140" y="196" width="280" height="46" rx="10" fill="#1f2633"/>
+<text x="280" y="216" font-size="12.6" fill="#fff" text-anchor="middle" font-weight="700">Code from the model</text>
+<text x="280" y="233" font-size="10.6" fill="#ffffffcc" text-anchor="middle">untrusted text that looks like Python</text>
+<text x="570" y="36" font-size="12.4" fill="#1c2230" text-anchor="start" font-weight="700">Attempt and the wall that stops it</text>
+<rect x="570" y="50" width="290" height="42" rx="9" fill="#fff" stroke="#7a4fc2" stroke-width="1.3"/>
+<text x="584" y="68" font-size="11.4" fill="#1c2230" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="600">import os</text>
+<text x="584" y="84" font-size="10.8" fill="#58378f" text-anchor="start" font-weight="700">Wall 1, import not allowed</text>
+<rect x="570" y="100" width="290" height="42" rx="9" fill="#fff" stroke="#7a4fc2" stroke-width="1.3"/>
+<text x="584" y="118" font-size="11.4" fill="#1c2230" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="600">open(&quot;.env&quot;).read()</text>
+<text x="584" y="134" font-size="10.8" fill="#58378f" text-anchor="start" font-weight="700">Wall 1, name not allowed</text>
+<rect x="570" y="150" width="290" height="42" rx="9" fill="#fff" stroke="#7a4fc2" stroke-width="1.3"/>
+<text x="584" y="168" font-size="11.4" fill="#1c2230" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="600">().__class__.__bases__</text>
+<text x="584" y="184" font-size="10.8" fill="#58378f" text-anchor="start" font-weight="700">Wall 1, attribute not allowed</text>
+<rect x="570" y="200" width="290" height="42" rx="9" fill="#fff" stroke="#2f62c8" stroke-width="1.3"/>
+<text x="584" y="218" font-size="11.4" fill="#1c2230" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="600">1 / 0</text>
+<text x="584" y="234" font-size="10.8" fill="#1f4a9e" text-anchor="start" font-weight="700">Wall 2, your program keeps running</text>
+<rect x="570" y="250" width="290" height="42" rx="9" fill="#fff" stroke="#0e7c86" stroke-width="1.3"/>
+<text x="584" y="268" font-size="11.4" fill="#1c2230" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="600">while True: pass</text>
+<text x="584" y="284" font-size="10.8" fill="#095a61" text-anchor="start" font-weight="700">Wall 3, stopped after 5 seconds</text>
+<rect x="570" y="300" width="290" height="42" rx="9" fill="#fff" stroke="#0e7c86" stroke-width="1.3"/>
+<text x="584" y="318" font-size="11.4" fill="#1c2230" text-anchor="start" font-weight="600">read the API key</text>
+<text x="584" y="334" font-size="10.8" fill="#095a61" text-anchor="start" font-weight="700">Wall 3, env={} holds no keys</text>
+</svg>

@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 388" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">Where an attack can enter the agent loop, and the guards</title>
+  <desc id="d">In the middle is the agent loop, with think, act, observe and remember. Four risks point into it. No stop means a loop that keeps running and spending. Hidden instructions come in a web page or a tool reply that the agent observes. Too much access means that an action can do real harm. False memories come from a planted entry that misleads the agent later. Below are the guards, namely human approval for risky steps, the fewest permissions, a sandbox, a step limit and a log of every action.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="250" y="70" width="380" height="230" rx="16" fill="#fff" stroke="#5d6b7e" stroke-width="1.4"/>
+<text x="440" y="96" font-size="13" fill="#3f4a59" text-anchor="middle" font-weight="700">The agent loop</text>
+<rect x="280" y="116" width="140" height="56" rx="11" fill="#f3f0fa" stroke="#7a4fc2" stroke-width="1.5"/>
+<text x="350" y="148.68" font-size="13" fill="#58378f" text-anchor="middle" font-weight="700">Think</text>
+<rect x="460" y="116" width="140" height="56" rx="11" fill="#eef3fb" stroke="#2f62c8" stroke-width="1.5"/>
+<text x="530" y="148.68" font-size="13" fill="#1f4a9e" text-anchor="middle" font-weight="700">Act</text>
+<rect x="280" y="204" width="140" height="56" rx="11" fill="#fdf4e3" stroke="#b7791f" stroke-width="1.5"/>
+<text x="350" y="236.68" font-size="13" fill="#8a5a12" text-anchor="middle" font-weight="700">Observe</text>
+<rect x="460" y="204" width="140" height="56" rx="11" fill="#e6f3f4" stroke="#0e7c86" stroke-width="1.5"/>
+<text x="530" y="236.68" font-size="13" fill="#095a61" text-anchor="middle" font-weight="700">Remember</text>
+<rect x="20" y="110" width="200" height="58" rx="10" fill="#fbecec" stroke="#c2552d" stroke-width="1.4"/>
+<text x="120" y="135" font-size="12.4" fill="#963f1f" text-anchor="middle" font-weight="700">No stop</text>
+<text x="120" y="154" font-size="10.6" fill="#4a5263" text-anchor="middle">a loop that runs and spends</text>
+<rect x="20" y="220" width="200" height="58" rx="10" fill="#fbecec" stroke="#c2552d" stroke-width="1.4"/>
+<text x="120" y="245" font-size="12.4" fill="#963f1f" text-anchor="middle" font-weight="700">Hidden instructions</text>
+<text x="120" y="264" font-size="10.6" fill="#4a5263" text-anchor="middle">in a web page or a tool reply</text>
+<rect x="660" y="110" width="200" height="58" rx="10" fill="#fbecec" stroke="#c2552d" stroke-width="1.4"/>
+<text x="760" y="135" font-size="12.4" fill="#963f1f" text-anchor="middle" font-weight="700">Too much access</text>
+<text x="760" y="154" font-size="10.6" fill="#4a5263" text-anchor="middle">an action can do real harm</text>
+<rect x="660" y="220" width="200" height="58" rx="10" fill="#fbecec" stroke="#c2552d" stroke-width="1.4"/>
+<text x="760" y="245" font-size="12.4" fill="#963f1f" text-anchor="middle" font-weight="700">False memories</text>
+<text x="760" y="264" font-size="10.6" fill="#4a5263" text-anchor="middle">a planted entry misleads later</text>
+<path d="M222 139 L 278 150" fill="none" stroke="#c2552d" stroke-width="1.6" marker-end="url(#m7)"/>
+<path d="M222 249 L 278 238" fill="none" stroke="#c2552d" stroke-width="1.6" marker-end="url(#m7)"/>
+<path d="M658 139 L 602 150" fill="none" stroke="#c2552d" stroke-width="1.6" marker-end="url(#m7)"/>
+<path d="M658 249 L 602 238" fill="none" stroke="#c2552d" stroke-width="1.6" marker-end="url(#m7)"/>
+<rect x="20" y="320" width="840" height="52" rx="12" fill="#e3f4ee" stroke="#0f8a6a" stroke-width="1.4"/>
+<text x="440" y="343" font-size="12.8" fill="#0b6650" text-anchor="middle" font-weight="700">Guards</text>
+<text x="440" y="362" font-size="11.4" fill="#1c2230" text-anchor="middle">human approval for risky steps, the fewest permissions, a sandbox, a step limit and a log of every action</text>
+<text x="440" y="40" font-size="13.4" fill="#1c2230" text-anchor="middle" font-weight="700">Where an attack can enter, and what guards the loop</text>
+</svg>

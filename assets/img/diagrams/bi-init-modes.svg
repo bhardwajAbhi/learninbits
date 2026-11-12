@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 358" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">One init binary with five entry points</title>
+  <desc id="d">The main function of init in system/core/init/main.cpp first raises its priority to minus 20 and restores it before the main loop. It then checks its arguments from top to bottom. If the program name is ueventd, ueventd_main creates device nodes. If the first argument is subcontext, SubcontextMain runs vendor commands in the vendor context. If it is selinux_setup, SetupSelinux loads the policy. If it is second_stage, SecondStageMain sets up properties, rc files and the main loop. With no argument, FirstStageMain runs, but only in the ramdisk build. The /system/bin/init binary aborts in that case.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="20" y="24" width="300" height="144" rx="12" fill="#1f2633"/>
+<path d="M32 24 h276 a12 12 0 0 1 12 12 v22 h-300 v-22 a12 12 0 0 1 12 -12z" fill="#2f62c8"/>
+<text x="36" y="47" font-size="13.5" fill="#fff" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">system/core/init/main.cpp</text>
+<text x="36" y="80" font-size="11.6" fill="#e8ecf3" text-anchor="start" font-family="JetBrains Mono, monospace">int main(int argc, char** argv)</text>
+<text x="36" y="98" font-size="11.6" fill="#e8ecf3" text-anchor="start" font-family="JetBrains Mono, monospace"></text>
+<text x="36" y="116" font-size="11.6" fill="#e8ecf3" text-anchor="start" font-family="JetBrains Mono, monospace">setpriority(PRIO_PROCESS, 0, -20);</text>
+<text x="36" y="134" font-size="11.6" fill="#9aa6b8" text-anchor="start" font-family="JetBrains Mono, monospace">// highest priority during boot</text>
+<text x="36" y="152" font-size="11.6" fill="#9aa6b8" text-anchor="start" font-family="JetBrains Mono, monospace">// back to 0 before the main loop</text>
+<rect x="360" y="30" width="186" height="34" rx="8" fill="#eef0f3" stroke="#5d6b7e" stroke-width="1.2"/>
+<text x="453" y="51.248" font-size="11.8" fill="#3f4a59" text-anchor="middle" font-weight="600">Name is ueventd</text>
+<path d="M546 47 L 574 47" fill="none" stroke="#5d6b7e" stroke-width="1.6" marker-end="url(#m8)"/>
+<rect x="578" y="24" width="282" height="50" rx="10" fill="#fff" stroke="#5d6b7e" stroke-width="1.4"/>
+<text x="592" y="44" font-size="12.4" fill="#3f4a59" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">ueventd_main()</text>
+<text x="592" y="62" font-size="11.4" fill="#4a5263" text-anchor="start">Creates device nodes in /dev</text>
+<path d="M320 96 C 340 96, 340 47, 356 47" fill="none" stroke="#d9d4c7" stroke-width="1.4"/>
+<rect x="360" y="96" width="186" height="34" rx="8" fill="#f3f0fa" stroke="#7a4fc2" stroke-width="1.2"/>
+<text x="453" y="117.248" font-size="11.8" fill="#58378f" text-anchor="middle" font-weight="600">argv[1] is subcontext</text>
+<path d="M546 113 L 574 113" fill="none" stroke="#7a4fc2" stroke-width="1.6" marker-end="url(#m5)"/>
+<rect x="578" y="90" width="282" height="50" rx="10" fill="#fff" stroke="#7a4fc2" stroke-width="1.4"/>
+<text x="592" y="110" font-size="12.4" fill="#58378f" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">SubcontextMain()</text>
+<text x="592" y="128" font-size="11.4" fill="#4a5263" text-anchor="start">Runs vendor commands in the vendor context</text>
+<path d="M320 96 C 340 96, 340 113, 356 113" fill="none" stroke="#d9d4c7" stroke-width="1.4"/>
+<rect x="360" y="162" width="186" height="34" rx="8" fill="#fdf4e3" stroke="#b7791f" stroke-width="1.2"/>
+<text x="453" y="183.248" font-size="11.8" fill="#8a5a12" text-anchor="middle" font-weight="600">argv[1] is selinux_setup</text>
+<path d="M546 179 L 574 179" fill="none" stroke="#b7791f" stroke-width="1.6" marker-end="url(#m6)"/>
+<rect x="578" y="156" width="282" height="50" rx="10" fill="#fff" stroke="#b7791f" stroke-width="1.4"/>
+<text x="592" y="176" font-size="12.4" fill="#8a5a12" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">SetupSelinux()</text>
+<text x="592" y="194" font-size="11.4" fill="#4a5263" text-anchor="start">Loads the SELinux policy</text>
+<path d="M320 96 C 340 96, 340 179, 356 179" fill="none" stroke="#d9d4c7" stroke-width="1.4"/>
+<rect x="360" y="228" width="186" height="34" rx="8" fill="#e3f4ee" stroke="#0f8a6a" stroke-width="1.2"/>
+<text x="453" y="249.248" font-size="11.8" fill="#0b6650" text-anchor="middle" font-weight="600">argv[1] is second_stage</text>
+<path d="M546 245 L 574 245" fill="none" stroke="#0f8a6a" stroke-width="1.6" marker-end="url(#m4)"/>
+<rect x="578" y="222" width="282" height="50" rx="10" fill="#fff" stroke="#0f8a6a" stroke-width="1.4"/>
+<text x="592" y="242" font-size="12.4" fill="#0b6650" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">SecondStageMain()</text>
+<text x="592" y="260" font-size="11.4" fill="#4a5263" text-anchor="start">Properties, rc files and the main loop</text>
+<path d="M320 96 C 340 96, 340 245, 356 245" fill="none" stroke="#d9d4c7" stroke-width="1.4"/>
+<rect x="360" y="294" width="186" height="34" rx="8" fill="#fbecec" stroke="#c2552d" stroke-width="1.2"/>
+<text x="453" y="315.248" font-size="11.8" fill="#963f1f" text-anchor="middle" font-weight="600">No argument</text>
+<path d="M546 311 L 574 311" fill="none" stroke="#c2552d" stroke-width="1.6" marker-end="url(#m7)"/>
+<rect x="578" y="288" width="282" height="50" rx="10" fill="#fff" stroke="#c2552d" stroke-width="1.4"/>
+<text x="592" y="308" font-size="12.4" fill="#963f1f" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">FirstStageMain()</text>
+<text x="592" y="326" font-size="11.4" fill="#4a5263" text-anchor="start">Only in the ramdisk build. /system/bin/init aborts.</text>
+<path d="M320 96 C 340 96, 340 311, 356 311" fill="none" stroke="#d9d4c7" stroke-width="1.4"/>
+<text x="170" y="198" font-size="12" fill="#4a5263" text-anchor="middle" font-style="italic">The checks run from top to bottom.</text>
+<text x="170" y="216" font-size="12" fill="#4a5263" text-anchor="middle" font-style="italic">The first match wins.</text>
+</svg>

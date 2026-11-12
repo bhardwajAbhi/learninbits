@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 444" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">The safe path of the code and every possible outcome</title>
+  <desc id="d">Six steps from top to bottom, each with its own outcome on the right. The model reply is a plain string. Find the code block with re.search, and if there is no python fence, the result is No code found with the raw response. Check the code with check_code, and if a rule matches, the result is Code rejected, for example Import not allowed os. Run the code in a separate process with subprocess.run and the arguments -I and -c, and if it takes too long, TimeoutExpired gives Code stopped after 5 seconds. Check the exit code, and if it is not 0, the result is Code failed with the error, for example ZeroDivisionError. Otherwise, read the result from stdout or from the last line that the footer printed, for example 167400 or ANSWER 440.0.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="20" y="24" width="440" height="54" rx="11" fill="#fff" stroke="#5d6b7e" stroke-width="1.6"/>
+<rect x="20" y="24" width="6" height="54" rx="3" fill="#5d6b7e"/>
+<text x="40" y="46" font-size="12.8" fill="#3f4a59" text-anchor="start" font-weight="700">Model reply</text>
+<text x="40" y="65" font-size="10.4" fill="#1c2230" text-anchor="start" font-family="JetBrains Mono, monospace">response, a plain string</text>
+<path d="M240 78 L 240 92" fill="none" stroke="#1c2230" stroke-width="1.5" marker-end="url(#m0)"/>
+<rect x="20" y="94" width="440" height="54" rx="11" fill="#fff" stroke="#7a4fc2" stroke-width="1.6"/>
+<rect x="20" y="94" width="6" height="54" rx="3" fill="#7a4fc2"/>
+<text x="40" y="116" font-size="12.8" fill="#58378f" text-anchor="start" font-weight="700">Find the code block</text>
+<text x="40" y="135" font-size="10.4" fill="#1c2230" text-anchor="start" font-family="JetBrains Mono, monospace">re.search(r&quot;```python\n(.*?)```&quot;, ...)</text>
+<path d="M240 148 L 240 162" fill="none" stroke="#1c2230" stroke-width="1.5" marker-end="url(#m0)"/>
+<path d="M460 121 L 586 121" fill="none" stroke="#c2552d" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#m7)"/>
+<text x="523" y="114" font-size="10.2" fill="#4a5263" text-anchor="middle" font-weight="600">no ```python fence</text>
+<rect x="590" y="100" width="270" height="42" rx="9" fill="#fbecec" stroke="#c2552d" stroke-width="1.3"/>
+<text x="604" y="126" font-size="11.2" fill="#963f1f" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">No code found.</text>
+<rect x="20" y="164" width="440" height="54" rx="11" fill="#fff" stroke="#7a4fc2" stroke-width="1.6"/>
+<rect x="20" y="164" width="6" height="54" rx="3" fill="#7a4fc2"/>
+<text x="40" y="186" font-size="12.8" fill="#58378f" text-anchor="start" font-weight="700">Check the code</text>
+<text x="40" y="205" font-size="10.4" fill="#1c2230" text-anchor="start" font-family="JetBrains Mono, monospace">check_code(code), wall 1</text>
+<path d="M240 218 L 240 232" fill="none" stroke="#1c2230" stroke-width="1.5" marker-end="url(#m0)"/>
+<path d="M460 191 L 586 191" fill="none" stroke="#c2552d" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#m7)"/>
+<text x="523" y="184" font-size="10.2" fill="#4a5263" text-anchor="middle" font-weight="600">a rule matched</text>
+<rect x="590" y="170" width="270" height="42" rx="9" fill="#fbecec" stroke="#c2552d" stroke-width="1.3"/>
+<text x="604" y="196" font-size="11.2" fill="#963f1f" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">Code rejected: Import not allowed: os</text>
+<rect x="20" y="234" width="440" height="54" rx="11" fill="#fff" stroke="#2f62c8" stroke-width="1.6"/>
+<rect x="20" y="234" width="6" height="54" rx="3" fill="#2f62c8"/>
+<text x="40" y="256" font-size="12.8" fill="#1f4a9e" text-anchor="start" font-weight="700">Run in a separate process</text>
+<text x="40" y="275" font-size="10.4" fill="#1c2230" text-anchor="start" font-family="JetBrains Mono, monospace">subprocess.run([..., &quot;-I&quot;, &quot;-c&quot;, code], ...)</text>
+<path d="M240 288 L 240 302" fill="none" stroke="#1c2230" stroke-width="1.5" marker-end="url(#m0)"/>
+<path d="M460 261 L 586 261" fill="none" stroke="#b7791f" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#m6)"/>
+<text x="523" y="254" font-size="10.2" fill="#4a5263" text-anchor="middle" font-weight="600">TimeoutExpired</text>
+<rect x="590" y="240" width="270" height="42" rx="9" fill="#fdf4e3" stroke="#b7791f" stroke-width="1.3"/>
+<text x="604" y="266" font-size="11.2" fill="#8a5a12" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">Code stopped after 5 seconds.</text>
+<rect x="20" y="304" width="440" height="54" rx="11" fill="#fff" stroke="#2f62c8" stroke-width="1.6"/>
+<rect x="20" y="304" width="6" height="54" rx="3" fill="#2f62c8"/>
+<text x="40" y="326" font-size="12.8" fill="#1f4a9e" text-anchor="start" font-weight="700">Check the exit</text>
+<text x="40" y="345" font-size="10.4" fill="#1c2230" text-anchor="start" font-family="JetBrains Mono, monospace">result.returncode</text>
+<path d="M240 358 L 240 372" fill="none" stroke="#1c2230" stroke-width="1.5" marker-end="url(#m0)"/>
+<path d="M460 331 L 586 331" fill="none" stroke="#b7791f" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#m6)"/>
+<text x="523" y="324" font-size="10.2" fill="#4a5263" text-anchor="middle" font-weight="600">returncode is not 0</text>
+<rect x="590" y="310" width="270" height="42" rx="9" fill="#fdf4e3" stroke="#b7791f" stroke-width="1.3"/>
+<text x="604" y="336" font-size="11.2" fill="#8a5a12" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">Code failed: ZeroDivisionError ...</text>
+<rect x="20" y="374" width="440" height="54" rx="11" fill="#fff" stroke="#0f8a6a" stroke-width="1.6"/>
+<rect x="20" y="374" width="6" height="54" rx="3" fill="#0f8a6a"/>
+<text x="40" y="396" font-size="12.8" fill="#0b6650" text-anchor="start" font-weight="700">Read the result</text>
+<text x="40" y="415" font-size="10.4" fill="#1c2230" text-anchor="start" font-family="JetBrains Mono, monospace">stdout, or the last line printed by the footer</text>
+<path d="M460 401 L 586 401" fill="none" stroke="#0f8a6a" stroke-width="1.5" marker-end="url(#m4)"/>
+<text x="523" y="394" font-size="10.2" fill="#4a5263" text-anchor="middle" font-weight="600">all checks passed</text>
+<rect x="590" y="380" width="270" height="42" rx="9" fill="#e3f4ee" stroke="#0f8a6a" stroke-width="1.3"/>
+<text x="604" y="406" font-size="11.2" fill="#0b6650" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">167400  or  ANSWER: 440.0</text>
+</svg>

@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 228" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">Every read takes two lookups</title>
+  <desc id="d">A read of debug.myapp.trace takes three steps. First, the reader looks up the name in property_info and finds that debug maps to the context debug_prop. Second, it opens the file for that context. Third, it walks the tree in that file, finds the prop_info and reads it. SELinux checks the second step. A process without read access to debug_prop cannot map the file, so the property looks as if it does not exist.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="20" y="70" width="170" height="56" rx="10" fill="#1f2633"/>
+<text x="105" y="94" font-size="12" fill="#fff" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="700">getprop</text>
+<text x="105" y="112" font-size="10.6" fill="#e8ecf3" text-anchor="middle" font-family="JetBrains Mono, monospace">debug.myapp.trace</text>
+<rect x="230" y="60" width="195" height="76" rx="10" fill="#f3f0fa" stroke="#7a4fc2" stroke-width="1.4"/>
+<text x="327.5" y="95" font-size="12.8" fill="#58378f" text-anchor="middle" font-weight="700">1. property_info</text>
+<text x="327.5" y="113" font-size="10.6" fill="#4a5263" text-anchor="middle">debug. maps to debug_prop</text>
+<path d="M192 98 L 228 98" fill="none" stroke="#1c2230" stroke-width="1.5" marker-end="url(#m0)"/>
+<rect x="445" y="60" width="195" height="76" rx="10" fill="#e3f4ee" stroke="#0f8a6a" stroke-width="1.4"/>
+<text x="542.5" y="95" font-size="12.8" fill="#0b6650" text-anchor="middle" font-weight="700">2. open that file</text>
+<text x="542.5" y="113" font-size="10.6" fill="#4a5263" text-anchor="middle">u:object_r:debug_prop:s0</text>
+<path d="M425 98 L 443 98" fill="none" stroke="#1c2230" stroke-width="1.5" marker-end="url(#m0)"/>
+<rect x="660" y="60" width="195" height="76" rx="10" fill="#eef3fb" stroke="#2f62c8" stroke-width="1.4"/>
+<text x="757.5" y="95" font-size="12.8" fill="#1f4a9e" text-anchor="middle" font-weight="700">3. walk its tree</text>
+<text x="757.5" y="113" font-size="10.6" fill="#4a5263" text-anchor="middle">find the prop_info, read it</text>
+<path d="M640 98 L 658 98" fill="none" stroke="#1c2230" stroke-width="1.5" marker-end="url(#m0)"/>
+<rect x="20" y="160" width="840" height="52" rx="12" fill="#f2efe8"/>
+<text x="440" y="182" font-size="11.6" fill="#1c2230" text-anchor="middle">SELinux checks step 2. A process without read access to debug_prop cannot map the file,</text>
+<text x="440" y="200" font-size="11.6" fill="#1c2230" text-anchor="middle">so the property looks as if it does not exist.</text>
+<text x="20" y="36" font-size="12.8" fill="#1c2230" text-anchor="start" font-weight="700">Every read takes two lookups</text>
+</svg>

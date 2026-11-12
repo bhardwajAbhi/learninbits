@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 330" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">A prompt template and its slots</title>
+  <desc id="d">On the left, four values from the form: permission is android.permission.CAMERA, audience_level is Intermediate, detail_level is Medium and language is English. Each value goes into its slot in the prompt template. The template has fixed text, such as Explain the following Android permission, and the slots permission, audience_level, detail_level and language. The fixed text stays the same for every request. The format method returns the finished prompt, which goes to the model.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<text x="20" y="36" font-size="12.4" fill="#4a5263" text-anchor="start" font-weight="700">Values from the form</text>
+<rect x="20" y="50" width="270" height="40" rx="9" fill="#eef0f3" stroke="#5d6b7e" stroke-width="1.2"/>
+<text x="34" y="67" font-size="11" fill="#3f4a59" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">permission</text>
+<text x="34" y="83" font-size="11.6" fill="#1c2230" text-anchor="start">android.permission.CAMERA</text>
+<path d="M292 70 C 330 70, 330 92, 366 92" fill="none" stroke="#7a4fc2" stroke-width="1.4" marker-end="url(#m5)"/>
+<rect x="20" y="102" width="270" height="40" rx="9" fill="#eef0f3" stroke="#5d6b7e" stroke-width="1.2"/>
+<text x="34" y="119" font-size="11" fill="#3f4a59" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">audience_level</text>
+<text x="34" y="135" font-size="11.6" fill="#1c2230" text-anchor="start">Intermediate</text>
+<path d="M292 122 C 330 122, 330 154, 366 154" fill="none" stroke="#7a4fc2" stroke-width="1.4" marker-end="url(#m5)"/>
+<rect x="20" y="154" width="270" height="40" rx="9" fill="#eef0f3" stroke="#5d6b7e" stroke-width="1.2"/>
+<text x="34" y="171" font-size="11" fill="#3f4a59" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">detail_level</text>
+<text x="34" y="187" font-size="11.6" fill="#1c2230" text-anchor="start">Medium</text>
+<path d="M292 174 C 330 174, 330 216, 366 216" fill="none" stroke="#7a4fc2" stroke-width="1.4" marker-end="url(#m5)"/>
+<rect x="20" y="206" width="270" height="40" rx="9" fill="#eef0f3" stroke="#5d6b7e" stroke-width="1.2"/>
+<text x="34" y="223" font-size="11" fill="#3f4a59" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">language</text>
+<text x="34" y="239" font-size="11.6" fill="#1c2230" text-anchor="start">English</text>
+<path d="M292 226 C 330 226, 330 278, 366 278" fill="none" stroke="#7a4fc2" stroke-width="1.4" marker-end="url(#m5)"/>
+<rect x="370" y="20" width="300" height="290" rx="12" fill="#fff" stroke="#7a4fc2" stroke-width="1.6"/>
+<text x="386" y="44" font-size="12.6" fill="#58378f" text-anchor="start" font-weight="700">Prompt template</text>
+<text x="386" y="70" font-size="11.6" fill="#1c2230" text-anchor="start">Explain the following Android</text>
+<text x="386" y="100" font-size="11.6" fill="#1c2230" text-anchor="start">permission </text>
+<rect x="452.3" y="87" width="91.2" height="18" rx="5" fill="#f3f0fa" stroke="#7a4fc2" stroke-width="1"/>
+<text x="455.3" y="100" font-size="11" fill="#58378f" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">{permission}</text>
+<text x="386" y="130" font-size="11.6" fill="#1c2230" text-anchor="start">Must include what it does,</text>
+<text x="386" y="160" font-size="11.6" fill="#1c2230" text-anchor="start">the risks and best practices.</text>
+<text x="386" y="190" font-size="11.6" fill="#1c2230" text-anchor="start">Target Audience Level</text>
+<text x="386" y="220" font-size="11.6" fill="#1c2230" text-anchor="start"></text>
+<rect x="383" y="207" width="119.6" height="18" rx="5" fill="#f3f0fa" stroke="#7a4fc2" stroke-width="1"/>
+<text x="386" y="220" font-size="11" fill="#58378f" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">{audience_level}</text>
+<text x="386" y="250" font-size="11.6" fill="#1c2230" text-anchor="start">Detail Level </text>
+<rect x="464.9" y="237" width="105.4" height="18" rx="5" fill="#f3f0fa" stroke="#7a4fc2" stroke-width="1"/>
+<text x="467.9" y="250" font-size="11" fill="#58378f" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">{detail_level}</text>
+<text x="386" y="280" font-size="11.6" fill="#1c2230" text-anchor="start">Answer in </text>
+<rect x="446" y="267" width="77" height="18" rx="5" fill="#f3f0fa" stroke="#7a4fc2" stroke-width="1"/>
+<text x="449" y="280" font-size="11" fill="#58378f" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">{language}</text>
+<text x="386" y="300" font-size="10.6" fill="#4a5263" text-anchor="start" font-style="italic">The fixed text stays the same for every request.</text>
+<path d="M674 165 L 736 165" fill="none" stroke="#1c2230" stroke-width="1.6" marker-end="url(#m0)"/>
+<text x="705" y="154" font-size="10.6" fill="#58378f" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="700">format()</text>
+<rect x="740" y="110" width="120" height="110" rx="12" fill="#eef3fb" stroke="#2f62c8" stroke-width="1.5"/>
+<text x="800" y="150" font-size="12.6" fill="#1f4a9e" text-anchor="middle" font-weight="700">Finished</text>
+<text x="800" y="168" font-size="12.6" fill="#1f4a9e" text-anchor="middle" font-weight="700">prompt</text>
+<text x="800" y="192" font-size="11" fill="#4a5263" text-anchor="middle">to the model</text>
+</svg>

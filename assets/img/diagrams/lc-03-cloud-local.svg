@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 400" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">A cloud model compared with a local model</title>
+  <desc id="d">Two columns. On the left, a cloud model, used in chapters 1 and 2. Your program, with ChatGoogleGenerativeAI or ChatOpenAI, sends the question over the internet to the Gemini or OpenAI servers, which write the answer. It needs an API key, has large and fast models, and usage can cost money. On the right, a local model, used in this chapter. Your program, with ChatOllama, sends the question to Ollama on your computer at localhost port 11434, and gemma:2b on your computer writes the answer. It needs no API key, the data stays on your computer, and the models are smaller and slower on a laptop.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="20" y="20" width="400" height="360" rx="14" fill="#fff" stroke="#2f62c8" stroke-width="1.6"/>
+<rect x="20" y="20" width="400" height="40" rx="14" fill="#2f62c8"/>
+<rect x="20" y="44" width="400" height="16" rx="0" fill="#2f62c8"/>
+<text x="220" y="46" font-size="13.5" fill="#fff" text-anchor="middle" font-weight="700">Cloud model, chapters 1 and 2</text>
+<rect x="50" y="80" width="340" height="56" rx="10" fill="#f2efe8"/>
+<text x="220" y="104" font-size="13" fill="#1c2230" text-anchor="middle" font-weight="700">Your program</text>
+<text x="220" y="123" font-size="11.4" fill="#4a5263" text-anchor="middle" font-family="JetBrains Mono, monospace">ChatGoogleGenerativeAI or ChatOpenAI</text>
+<path d="M220 137 L 220 162" fill="none" stroke="#1c2230" stroke-width="1.5" marker-end="url(#m0)"/>
+<rect x="50" y="164" width="340" height="56" rx="10" fill="#eef3fb" stroke="#2f62c8" stroke-width="1.2"/>
+<text x="220" y="188" font-size="13" fill="#1f4a9e" text-anchor="middle" font-weight="700">The internet</text>
+<text x="220" y="207" font-size="11.4" fill="#4a5263" text-anchor="middle">Your question leaves your computer</text>
+<path d="M220 221 L 220 246" fill="none" stroke="#1c2230" stroke-width="1.5" marker-end="url(#m0)"/>
+<rect x="50" y="248" width="340" height="56" rx="10" fill="#eef3fb" stroke="#2f62c8" stroke-width="1.2"/>
+<text x="220" y="272" font-size="13" fill="#1f4a9e" text-anchor="middle" font-weight="700">Gemini or OpenAI servers</text>
+<text x="220" y="291" font-size="11.4" fill="#4a5263" text-anchor="middle">writes the answer</text>
+<text x="220" y="324" font-size="11.6" fill="#1f4a9e" text-anchor="middle" font-weight="600">Needs an API key</text>
+<text x="220" y="342" font-size="11.6" fill="#1f4a9e" text-anchor="middle" font-weight="600">Large and fast models</text>
+<text x="220" y="360" font-size="11.6" fill="#1f4a9e" text-anchor="middle" font-weight="600">Usage can cost money</text>
+<rect x="460" y="20" width="400" height="360" rx="14" fill="#fff" stroke="#0e7c86" stroke-width="1.6"/>
+<rect x="460" y="20" width="400" height="40" rx="14" fill="#0e7c86"/>
+<rect x="460" y="44" width="400" height="16" rx="0" fill="#0e7c86"/>
+<text x="660" y="46" font-size="13.5" fill="#fff" text-anchor="middle" font-weight="700">Local model, this chapter</text>
+<rect x="490" y="80" width="340" height="56" rx="10" fill="#f2efe8"/>
+<text x="660" y="104" font-size="13" fill="#1c2230" text-anchor="middle" font-weight="700">Your program</text>
+<text x="660" y="123" font-size="11.4" fill="#4a5263" text-anchor="middle" font-family="JetBrains Mono, monospace">ChatOllama or another chat model class</text>
+<path d="M660 137 L 660 162" fill="none" stroke="#1c2230" stroke-width="1.5" marker-end="url(#m0)"/>
+<rect x="490" y="164" width="340" height="56" rx="10" fill="#e6f3f4" stroke="#0e7c86" stroke-width="1.2"/>
+<text x="660" y="188" font-size="13" fill="#095a61" text-anchor="middle" font-weight="700">Ollama on your computer</text>
+<text x="660" y="207" font-size="11.4" fill="#4a5263" text-anchor="middle">localhost, port 11434</text>
+<path d="M660 221 L 660 246" fill="none" stroke="#1c2230" stroke-width="1.5" marker-end="url(#m0)"/>
+<rect x="490" y="248" width="340" height="56" rx="10" fill="#e6f3f4" stroke="#0e7c86" stroke-width="1.2"/>
+<text x="660" y="272" font-size="13" fill="#095a61" text-anchor="middle" font-weight="700">gemma:2b on your computer</text>
+<text x="660" y="291" font-size="11.4" fill="#4a5263" text-anchor="middle">writes the answer</text>
+<text x="660" y="324" font-size="11.6" fill="#095a61" text-anchor="middle" font-weight="600">No API key</text>
+<text x="660" y="342" font-size="11.6" fill="#095a61" text-anchor="middle" font-weight="600">Data stays on your computer</text>
+<text x="660" y="360" font-size="11.6" fill="#095a61" text-anchor="middle" font-weight="600">Smaller models, slower on a laptop</text>
+</svg>

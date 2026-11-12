@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 360" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">The four walls of the app sandbox</title>
+  <desc id="d">On the left, four nested layers around an app process named com.example.a. From the outside in, a mount namespace gives a private view of storage, seccomp-BPF filters system calls, the SELinux domain untrusted_app with MLS categories confines the process, and the Linux UID 10042 owns a data folder with mode 0700. On the right, four attempts and the layer that blocks each one. Reading the files of another app is blocked by the UID and DAC. Talking to vendor HALs or setting properties is blocked by SELinux. Loading a kernel module or mounting is blocked by seccomp-BPF. Seeing the storage of other apps is blocked by the namespace.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="20" y="24" width="520" height="320" rx="16" fill="#e6f3f4" stroke="#0e7c86" stroke-width="1.5"/>
+<text x="36" y="50" font-size="12" fill="#095a61" text-anchor="start" font-weight="700">Mount namespace, a private view of storage</text>
+<rect x="46" y="64" width="468" height="250" rx="16" fill="#fdf4e3" stroke="#b7791f" stroke-width="1.5"/>
+<text x="62" y="90" font-size="12" fill="#8a5a12" text-anchor="start" font-weight="700">seccomp-BPF, a filter on system calls</text>
+<rect x="72" y="104" width="416" height="180" rx="16" fill="#f3f0fa" stroke="#7a4fc2" stroke-width="1.5"/>
+<text x="88" y="130" font-size="12" fill="#58378f" text-anchor="start" font-weight="700">SELinux domain untrusted_app with MLS categories</text>
+<rect x="98" y="144" width="364" height="110" rx="16" fill="#eef3fb" stroke="#2f62c8" stroke-width="1.5"/>
+<text x="114" y="170" font-size="12" fill="#1f4a9e" text-anchor="start" font-weight="700">Linux UID 10042, data folder with mode 0700</text>
+<rect x="140" y="186" width="280" height="50" rx="10" fill="#fff" stroke="#1c2230" stroke-width="1.6"/>
+<text x="280" y="208" font-size="13" fill="#1c2230" text-anchor="middle" font-weight="700">App process</text>
+<text x="280" y="225" font-size="11" fill="#4a5263" text-anchor="middle" font-family="JetBrains Mono, monospace">com.example.a</text>
+<text x="570" y="40" font-size="12.6" fill="#1c2230" text-anchor="start" font-weight="700">The app tries to</text>
+<rect x="570" y="56" width="290" height="58" rx="10" fill="#fff" stroke="#2f62c8" stroke-width="1.4"/>
+<text x="586" y="80" font-size="12" fill="#1c2230" text-anchor="start" font-weight="600">Read the files of another app</text>
+<text x="586" y="100" font-size="11.4" fill="#1f4a9e" text-anchor="start" font-weight="700">Blocked by UID and DAC</text>
+<rect x="570" y="126" width="290" height="58" rx="10" fill="#fff" stroke="#7a4fc2" stroke-width="1.4"/>
+<text x="586" y="150" font-size="12" fill="#1c2230" text-anchor="start" font-weight="600">Talk to vendor HALs or set properties</text>
+<text x="586" y="170" font-size="11.4" fill="#58378f" text-anchor="start" font-weight="700">Blocked by SELinux</text>
+<rect x="570" y="196" width="290" height="58" rx="10" fill="#fff" stroke="#b7791f" stroke-width="1.4"/>
+<text x="586" y="220" font-size="12" fill="#1c2230" text-anchor="start" font-weight="600">Load a kernel module or mount</text>
+<text x="586" y="240" font-size="11.4" fill="#8a5a12" text-anchor="start" font-weight="700">Blocked by seccomp-BPF</text>
+<rect x="570" y="266" width="290" height="58" rx="10" fill="#fff" stroke="#0e7c86" stroke-width="1.4"/>
+<text x="586" y="290" font-size="12" fill="#1c2230" text-anchor="start" font-weight="600">See the storage of other apps</text>
+<text x="586" y="310" font-size="11.4" fill="#095a61" text-anchor="start" font-weight="700">Blocked by the mount namespace</text>
+</svg>

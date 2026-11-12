@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 282" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">The four verified boot states and their attestation values</title>
+  <desc id="d">Four cards. GREEN means verified, with a locked bootloader and images signed with the key of the OEM, and appears in attestation as Verified (0). YELLOW means self-signed, with a locked bootloader and images signed with a key that the user set, and appears as SelfSigned (1). ORANGE means unverified, with an unlocked bootloader, no chain of trust and a warning at every boot, and appears as Unverified (2). RED means that verification failed, so the device does not boot or warns, and appears as Failed (3). The command adb shell getprop ro.boot.verifiedbootstate prints green, yellow, orange or red.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="20" y="30" width="200" height="210" rx="14" fill="#fff" stroke="#0f8a6a" stroke-width="1.8"/>
+<rect x="20" y="30" width="200" height="52" rx="14" fill="#0f8a6a"/>
+<rect x="20" y="66" width="200" height="16" rx="0" fill="#0f8a6a"/>
+<text x="120" y="54" font-size="15" fill="#fff" text-anchor="middle" font-weight="800">GREEN</text>
+<text x="120" y="74" font-size="11.6" fill="#ffffffdd" text-anchor="middle" font-weight="600">Verified</text>
+<text x="120" y="108" font-size="11.6" fill="#1c2230" text-anchor="middle">Locked bootloader</text>
+<text x="120" y="126" font-size="11.6" fill="#1c2230" text-anchor="middle">Images signed with</text>
+<text x="120" y="144" font-size="11.6" fill="#1c2230" text-anchor="middle">the key of the OEM</text>
+<rect x="34" y="178" width="172" height="46" rx="8" fill="#e3f4ee"/>
+<text x="120" y="196" font-size="10.4" fill="#4a5263" text-anchor="middle" font-weight="600">In attestation</text>
+<text x="120" y="214" font-size="12" fill="#0b6650" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="700">Verified (0)</text>
+<rect x="232" y="30" width="200" height="210" rx="14" fill="#fff" stroke="#b8960c" stroke-width="1.8"/>
+<rect x="232" y="30" width="200" height="52" rx="14" fill="#b8960c"/>
+<rect x="232" y="66" width="200" height="16" rx="0" fill="#b8960c"/>
+<text x="332" y="54" font-size="15" fill="#fff" text-anchor="middle" font-weight="800">YELLOW</text>
+<text x="332" y="74" font-size="11.6" fill="#ffffffdd" text-anchor="middle" font-weight="600">Self-signed</text>
+<text x="332" y="108" font-size="11.6" fill="#1c2230" text-anchor="middle">Locked bootloader</text>
+<text x="332" y="126" font-size="11.6" fill="#1c2230" text-anchor="middle">Images signed with</text>
+<text x="332" y="144" font-size="11.6" fill="#1c2230" text-anchor="middle">a key set by the user</text>
+<rect x="246" y="178" width="172" height="46" rx="8" fill="#fbf6dc"/>
+<text x="332" y="196" font-size="10.4" fill="#4a5263" text-anchor="middle" font-weight="600">In attestation</text>
+<text x="332" y="214" font-size="12" fill="#6e5a06" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="700">SelfSigned (1)</text>
+<rect x="444" y="30" width="200" height="210" rx="14" fill="#fff" stroke="#d2691e" stroke-width="1.8"/>
+<rect x="444" y="30" width="200" height="52" rx="14" fill="#d2691e"/>
+<rect x="444" y="66" width="200" height="16" rx="0" fill="#d2691e"/>
+<text x="544" y="54" font-size="15" fill="#fff" text-anchor="middle" font-weight="800">ORANGE</text>
+<text x="544" y="74" font-size="11.6" fill="#ffffffdd" text-anchor="middle" font-weight="600">Unverified</text>
+<text x="544" y="108" font-size="11.6" fill="#1c2230" text-anchor="middle">Unlocked bootloader</text>
+<text x="544" y="126" font-size="11.6" fill="#1c2230" text-anchor="middle">No chain of trust</text>
+<text x="544" y="144" font-size="11.6" fill="#1c2230" text-anchor="middle">Warning at every boot</text>
+<rect x="458" y="178" width="172" height="46" rx="8" fill="#fbeee2"/>
+<text x="544" y="196" font-size="10.4" fill="#4a5263" text-anchor="middle" font-weight="600">In attestation</text>
+<text x="544" y="214" font-size="12" fill="#8a4511" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="700">Unverified (2)</text>
+<rect x="656" y="30" width="200" height="210" rx="14" fill="#fff" stroke="#c2552d" stroke-width="1.8"/>
+<rect x="656" y="30" width="200" height="52" rx="14" fill="#c2552d"/>
+<rect x="656" y="66" width="200" height="16" rx="0" fill="#c2552d"/>
+<text x="756" y="54" font-size="15" fill="#fff" text-anchor="middle" font-weight="800">RED</text>
+<text x="756" y="74" font-size="11.6" fill="#ffffffdd" text-anchor="middle" font-weight="600">Failed</text>
+<text x="756" y="108" font-size="11.6" fill="#1c2230" text-anchor="middle">Verification failed</text>
+<text x="756" y="126" font-size="11.6" fill="#1c2230" text-anchor="middle">The device does not</text>
+<text x="756" y="144" font-size="11.6" fill="#1c2230" text-anchor="middle">boot, or warns</text>
+<rect x="670" y="178" width="172" height="46" rx="8" fill="#fbecec"/>
+<text x="756" y="196" font-size="10.4" fill="#4a5263" text-anchor="middle" font-weight="600">In attestation</text>
+<text x="756" y="214" font-size="12" fill="#963f1f" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="700">Failed (3)</text>
+<text x="440" y="266" font-size="11.6" fill="#4a5263" text-anchor="middle" font-family="JetBrains Mono, monospace">adb shell getprop ro.boot.verifiedbootstate prints green, yellow, orange or red.</text>
+</svg>

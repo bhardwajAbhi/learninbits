@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 552" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">Inside one run of Example 2</title>
+  <desc id="d">A sequence diagram with the lanes main(), two chains, OpenRouter API. Step 1, main() to two chains, (unconstrained_prompt | llm | parser).invoke(...), the plain request. Step 2, two chains to OpenRouter API, call 1. Step 3, OpenRouter API to main(), answer, 420 words. Step 4, main() to main(), len(result.split()), 420 words. Step 5, main() to two chains, (constrained_prompt | llm | parser).invoke(...), the request with limits. Step 6, two chains to OpenRouter API, call 2. Step 7, OpenRouter API to main(), answer, 90 words, one paragraph. Step 8, main() to main(), len(result.split()), 90 words, over the limit of 80.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="15" y="18" width="150" height="42" rx="10" fill="#eef0f3" stroke="#5d6b7e" stroke-width="1.4"/>
+<text x="90" y="44" font-size="11.8" fill="#3f4a59" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="700">main()</text>
+<line x1="90" y1="60" x2="90" y2="536" stroke="#d9d4c7" stroke-width="1.6" stroke-dasharray="5 5"/>
+<rect x="365" y="18" width="150" height="42" rx="10" fill="#f3f0fa" stroke="#7a4fc2" stroke-width="1.4"/>
+<text x="440" y="44" font-size="11.8" fill="#58378f" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="700">two chains</text>
+<line x1="440" y1="60" x2="440" y2="536" stroke="#d9d4c7" stroke-width="1.6" stroke-dasharray="5 5"/>
+<rect x="715" y="18" width="150" height="42" rx="10" fill="#fdf4e3" stroke="#b7791f" stroke-width="1.4"/>
+<text x="790" y="44" font-size="12.3" fill="#8a5a12" text-anchor="middle" font-weight="700">OpenRouter API</text>
+<line x1="790" y1="60" x2="790" y2="536" stroke="#d9d4c7" stroke-width="1.6" stroke-dasharray="5 5"/>
+<path d="M94 98 L 434 98" fill="none" stroke="#5d6b7e" stroke-width="1.7" marker-end="url(#m8)"/>
+<circle cx="108" cy="85" r="10" fill="#5d6b7e"/>
+<text x="108" y="88.96" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">1</text>
+<text x="124" y="90" font-size="12" fill="#3f4a59" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">(unconstrained_prompt | llm | parser).invoke(...)</text>
+<text x="124" y="114" font-size="11.3" fill="#4a5263" text-anchor="start">the plain request</text>
+<path d="M444 154 L 784 154" fill="none" stroke="#7a4fc2" stroke-width="1.7" marker-end="url(#m5)"/>
+<circle cx="458" cy="141" r="10" fill="#7a4fc2"/>
+<text x="458" y="144.96" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">2</text>
+<text x="474" y="146" font-size="12" fill="#58378f" text-anchor="start" font-weight="700">call 1</text>
+<path d="M786 210 L 96 210" fill="none" stroke="#b7791f" stroke-width="1.7" stroke-dasharray="6 4" marker-end="url(#m6)"/>
+<circle cx="108" cy="197" r="10" fill="#b7791f"/>
+<text x="108" y="200.96" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">3</text>
+<text x="124" y="202" font-size="12" fill="#8a5a12" text-anchor="start" font-weight="700">answer</text>
+<text x="124" y="226" font-size="11.3" fill="#4a5263" text-anchor="start">420 words</text>
+<path d="M90 256 h34 v18 h-30" fill="none" stroke="#5d6b7e" stroke-width="1.6"/>
+<path d="M98 274 L 92 274" fill="none" stroke="#5d6b7e" stroke-width="1.6" marker-end="url(#m8)"/>
+<circle cx="146" cy="265" r="10" fill="#5d6b7e"/>
+<text x="146" y="268.96" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">4</text>
+<text x="162" y="269" font-size="12" fill="#3f4a59" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">len(result.split())</text>
+<text x="162" y="285" font-size="11.3" fill="#4a5263" text-anchor="start">420 words</text>
+<path d="M94 322 L 434 322" fill="none" stroke="#5d6b7e" stroke-width="1.7" marker-end="url(#m8)"/>
+<circle cx="108" cy="309" r="10" fill="#5d6b7e"/>
+<text x="108" y="312.96" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">5</text>
+<text x="124" y="314" font-size="12" fill="#3f4a59" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">(constrained_prompt | llm | parser).invoke(...)</text>
+<text x="124" y="338" font-size="11.3" fill="#4a5263" text-anchor="start">the request with limits</text>
+<path d="M444 378 L 784 378" fill="none" stroke="#7a4fc2" stroke-width="1.7" marker-end="url(#m5)"/>
+<circle cx="458" cy="365" r="10" fill="#7a4fc2"/>
+<text x="458" y="368.96" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">6</text>
+<text x="474" y="370" font-size="12" fill="#58378f" text-anchor="start" font-weight="700">call 2</text>
+<path d="M786 434 L 96 434" fill="none" stroke="#b7791f" stroke-width="1.7" stroke-dasharray="6 4" marker-end="url(#m6)"/>
+<circle cx="108" cy="421" r="10" fill="#b7791f"/>
+<text x="108" y="424.96" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">7</text>
+<text x="124" y="426" font-size="12" fill="#8a5a12" text-anchor="start" font-weight="700">answer</text>
+<text x="124" y="450" font-size="11.3" fill="#4a5263" text-anchor="start">90 words, one paragraph</text>
+<path d="M90 480 h34 v18 h-30" fill="none" stroke="#5d6b7e" stroke-width="1.6"/>
+<path d="M98 498 L 92 498" fill="none" stroke="#5d6b7e" stroke-width="1.6" marker-end="url(#m8)"/>
+<circle cx="146" cy="489" r="10" fill="#5d6b7e"/>
+<text x="146" y="492.96" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">8</text>
+<text x="162" y="493" font-size="12" fill="#3f4a59" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">len(result.split())</text>
+<text x="162" y="509" font-size="11.3" fill="#4a5263" text-anchor="start">90 words, over the limit of 80</text>
+</svg>

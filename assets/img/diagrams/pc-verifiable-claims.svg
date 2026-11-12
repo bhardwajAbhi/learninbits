@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 356" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">Verifiable claims for consent</title>
+  <desc id="d">The issuer, the Data Fiduciary, issues a credential. The holder, the Data Principal or a Consent Manager, keeps it and presents it. The verifier, a Data Processor or the Board, checks it. All three use a verifiable data registry. A credential has metadata, claims and proofs.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="30" y="30" width="220" height="112" rx="12" fill="#fff" stroke="#2f62c8" stroke-width="1.6"/>
+<path d="M42 30 h196 a12 12 0 0 1 12 12 v22 h-220 v-22 a12 12 0 0 1 12 -12z" fill="#2f62c8"/>
+<text x="140" y="51.86" font-size="13.5" fill="#fff" text-anchor="middle" font-weight="700">Issuer</text>
+<text x="140" y="86" font-size="11.5" fill="#4a5263" text-anchor="middle">issues the credential</text>
+<text x="140" y="103.825" font-size="11.5" fill="#4a5263" text-anchor="middle">the Data Fiduciary</text>
+<rect x="330" y="30" width="220" height="112" rx="12" fill="#fff" stroke="#0f8a6a" stroke-width="1.6"/>
+<path d="M342 30 h196 a12 12 0 0 1 12 12 v22 h-220 v-22 a12 12 0 0 1 12 -12z" fill="#0f8a6a"/>
+<text x="440" y="51.86" font-size="13.5" fill="#fff" text-anchor="middle" font-weight="700">Holder</text>
+<text x="440" y="86" font-size="11.5" fill="#4a5263" text-anchor="middle">keeps and presents it</text>
+<text x="440" y="103.825" font-size="11.5" fill="#4a5263" text-anchor="middle">the Data Principal</text>
+<text x="440" y="121.65" font-size="11.5" fill="#4a5263" text-anchor="middle">or a Consent Manager</text>
+<rect x="630" y="30" width="220" height="112" rx="12" fill="#fff" stroke="#7a4fc2" stroke-width="1.6"/>
+<path d="M642 30 h196 a12 12 0 0 1 12 12 v22 h-220 v-22 a12 12 0 0 1 12 -12z" fill="#7a4fc2"/>
+<text x="740" y="51.86" font-size="13.5" fill="#fff" text-anchor="middle" font-weight="700">Verifier</text>
+<text x="740" y="86" font-size="11.5" fill="#4a5263" text-anchor="middle">checks it</text>
+<text x="740" y="103.825" font-size="11.5" fill="#4a5263" text-anchor="middle">a Data Processor</text>
+<text x="740" y="121.65" font-size="11.5" fill="#4a5263" text-anchor="middle">or the Board</text>
+<path d="M250 80 H324" fill="none" stroke="#1c2230" stroke-width="2" marker-end="url(#m0)"/>
+<text x="287" y="70" font-size="11" fill="#4a5263" text-anchor="middle" font-weight="600">issue</text>
+<path d="M550 80 H624" fill="none" stroke="#1c2230" stroke-width="2" marker-end="url(#m0)"/>
+<text x="587" y="70" font-size="11" fill="#4a5263" text-anchor="middle" font-weight="600">present</text>
+<rect x="160" y="200" width="560" height="54" rx="10" fill="#f2efe8" stroke="#5d6b7e" stroke-width="1.5" stroke-dasharray="6 4"/>
+<text x="440" y="224" font-size="13.5" fill="#1c2230" text-anchor="middle" font-weight="700">Verifiable data registry</text>
+<text x="440" y="242" font-size="11" fill="#4a5263" text-anchor="middle">identifiers and schemas that all three register and check</text>
+<path d="M140 142 V194" fill="none" stroke="#5d6b7e" stroke-width="1.5" stroke-dasharray="4 4" marker-end="url(#m8)" marker-start="url(#m8)"/>
+<path d="M440 142 V194" fill="none" stroke="#5d6b7e" stroke-width="1.5" stroke-dasharray="4 4" marker-end="url(#m8)" marker-start="url(#m8)"/>
+<path d="M740 142 V194" fill="none" stroke="#5d6b7e" stroke-width="1.5" stroke-dasharray="4 4" marker-end="url(#m8)" marker-start="url(#m8)"/>
+<text x="440" y="296" font-size="12" fill="#4a5263" text-anchor="middle" font-weight="600">Each credential has three parts</text>
+<rect x="260" y="310" width="110" height="28" rx="14" fill="#eef0f3" stroke="#5d6b7e" stroke-width="1.2"/>
+<text x="315" y="328.32" font-size="12" fill="#3f4a59" text-anchor="middle" font-weight="600">metadata</text>
+<rect x="385" y="310" width="110" height="28" rx="14" fill="#eef3fb" stroke="#2f62c8" stroke-width="1.2"/>
+<text x="440" y="328.32" font-size="12" fill="#1f4a9e" text-anchor="middle" font-weight="600">claims</text>
+<rect x="510" y="310" width="110" height="28" rx="14" fill="#e3f4ee" stroke="#0f8a6a" stroke-width="1.2"/>
+<text x="565" y="328.32" font-size="12" fill="#0b6650" text-anchor="middle" font-weight="600">proofs</text>
+</svg>

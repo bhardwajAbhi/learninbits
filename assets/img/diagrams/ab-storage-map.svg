@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 312" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">Three storage areas and who can read each one</title>
+  <desc id="d">Internal app storage under /data/data/&lt;package&gt; can be read only by your app, is encrypted at rest by the device and is removed at uninstall. Use it for all private data. App-specific external storage under /sdcard/Android/data/&lt;package&gt; is blocked for other apps on Android 11 and later, can sit on a removable card and is removed at uninstall. Encrypt data before you write it there. Shared storage such as Pictures, Downloads and Documents can be read by the user and by apps with media or file access and stays after uninstall. Never use it for private data.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="20" y="30" width="270" height="236" rx="12" fill="#fff" stroke="#0f8a6a" stroke-width="1.6"/>
+<rect x="20" y="30" width="270" height="36" rx="12" fill="#0f8a6a"/>
+<rect x="20" y="50" width="270" height="16" rx="0" fill="#0f8a6a"/>
+<text x="34" y="54" font-size="13.2" fill="#fff" text-anchor="start" font-weight="700">Internal app storage</text>
+<text x="34" y="88" font-size="10.8" fill="#1c2230" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="600">/data/data/&lt;package&gt;/</text>
+<circle cx="38" cy="114" r="3" fill="#0f8a6a"/>
+<text x="48" y="118" font-size="11.6" fill="#4a5263" text-anchor="start">Only your app can read it</text>
+<circle cx="38" cy="138" r="3" fill="#0f8a6a"/>
+<text x="48" y="142" font-size="11.6" fill="#4a5263" text-anchor="start">Encrypted at rest by the device</text>
+<circle cx="38" cy="162" r="3" fill="#0f8a6a"/>
+<text x="48" y="166" font-size="11.6" fill="#4a5263" text-anchor="start">Removed at uninstall</text>
+<rect x="34" y="212" width="242" height="36" rx="8" fill="#e3f4ee" stroke="#0f8a6a" stroke-width="1.2"/>
+<text x="155" y="235" font-size="12" fill="#0b6650" text-anchor="middle" font-weight="700">Use for all private data</text>
+<rect x="306" y="30" width="270" height="236" rx="12" fill="#fff" stroke="#b7791f" stroke-width="1.6"/>
+<rect x="306" y="30" width="270" height="36" rx="12" fill="#b7791f"/>
+<rect x="306" y="50" width="270" height="16" rx="0" fill="#b7791f"/>
+<text x="320" y="54" font-size="13.2" fill="#fff" text-anchor="start" font-weight="700">App-specific external</text>
+<text x="320" y="88" font-size="10.8" fill="#1c2230" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="600">/sdcard/Android/data/&lt;package&gt;/</text>
+<circle cx="324" cy="114" r="3" fill="#b7791f"/>
+<text x="334" y="118" font-size="11.6" fill="#4a5263" text-anchor="start">Other apps blocked on Android 11+</text>
+<circle cx="324" cy="138" r="3" fill="#b7791f"/>
+<text x="334" y="142" font-size="11.6" fill="#4a5263" text-anchor="start">Can sit on a removable card</text>
+<circle cx="324" cy="162" r="3" fill="#b7791f"/>
+<text x="334" y="166" font-size="11.6" fill="#4a5263" text-anchor="start">Removed at uninstall</text>
+<rect x="320" y="212" width="242" height="36" rx="8" fill="#fdf4e3" stroke="#b7791f" stroke-width="1.2"/>
+<text x="441" y="235" font-size="12" fill="#8a5a12" text-anchor="middle" font-weight="700">Encrypt before you write</text>
+<rect x="592" y="30" width="270" height="236" rx="12" fill="#fff" stroke="#c2552d" stroke-width="1.6"/>
+<rect x="592" y="30" width="270" height="36" rx="12" fill="#c2552d"/>
+<rect x="592" y="50" width="270" height="16" rx="0" fill="#c2552d"/>
+<text x="606" y="54" font-size="13.2" fill="#fff" text-anchor="start" font-weight="700">Shared storage</text>
+<text x="606" y="88" font-size="10.8" fill="#1c2230" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="600">Pictures, Downloads, Documents</text>
+<circle cx="610" cy="114" r="3" fill="#c2552d"/>
+<text x="620" y="118" font-size="11.6" fill="#4a5263" text-anchor="start">The user can read it</text>
+<circle cx="610" cy="138" r="3" fill="#c2552d"/>
+<text x="620" y="142" font-size="11.6" fill="#4a5263" text-anchor="start">Apps with media or file access too</text>
+<circle cx="610" cy="162" r="3" fill="#c2552d"/>
+<text x="620" y="166" font-size="11.6" fill="#4a5263" text-anchor="start">Stays after uninstall</text>
+<rect x="606" y="212" width="242" height="36" rx="8" fill="#fbecec" stroke="#c2552d" stroke-width="1.2"/>
+<text x="727" y="235" font-size="12" fill="#963f1f" text-anchor="middle" font-weight="700">Never for private data</text>
+<text x="440" y="296" font-size="12" fill="#4a5263" text-anchor="middle" font-style="italic">The closer the data is to the left, the fewer readers it has.</text>
+</svg>

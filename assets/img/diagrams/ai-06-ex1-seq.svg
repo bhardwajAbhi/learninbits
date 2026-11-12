@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 594" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">Inside one call of the few-shot chain in Example 1</title>
+  <desc id="d">A sequence diagram with the lanes Your code, prompt, llm, Gemini API, parser. Step 1, Your code to prompt, chain.invoke({&quot;query&quot; observation}), the chain starts with the template. Step 2, prompt to prompt, Fill {query}, 12 messages, system, 10 example messages, the question. Step 3, prompt to llm, Prompt value, the filled messages go to the model. Step 4, llm to Gemini API, HTTPS request with the API key, all examples travel with every call. Step 5, Gemini API to llm, One label, for example FORMAT_VIOLATION. Step 6, llm to parser, AIMessage, the chain passes the reply to the parser. Step 7, parser to parser, Keep the text, StrOutputParser returns a string. Step 8, parser to Your code, The result, the code prints it with strip(). Steps 1 to 8 repeat, Repeated for each of the 5 observations.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="15" y="18" width="150" height="42" rx="10" fill="#eef0f3" stroke="#5d6b7e" stroke-width="1.4"/>
+<text x="90" y="44" font-size="12.3" fill="#3f4a59" text-anchor="middle" font-weight="700">Your code</text>
+<line x1="90" y1="60" x2="90" y2="578" stroke="#d9d4c7" stroke-width="1.6" stroke-dasharray="5 5"/>
+<rect x="190" y="18" width="150" height="42" rx="10" fill="#f3f0fa" stroke="#7a4fc2" stroke-width="1.4"/>
+<text x="265" y="44" font-size="11.8" fill="#58378f" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="700">prompt</text>
+<line x1="265" y1="60" x2="265" y2="578" stroke="#d9d4c7" stroke-width="1.6" stroke-dasharray="5 5"/>
+<rect x="365" y="18" width="150" height="42" rx="10" fill="#eef3fb" stroke="#2f62c8" stroke-width="1.4"/>
+<text x="440" y="44" font-size="11.8" fill="#1f4a9e" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="700">llm</text>
+<line x1="440" y1="60" x2="440" y2="578" stroke="#d9d4c7" stroke-width="1.6" stroke-dasharray="5 5"/>
+<rect x="540" y="18" width="150" height="42" rx="10" fill="#fdf4e3" stroke="#b7791f" stroke-width="1.4"/>
+<text x="615" y="44" font-size="12.3" fill="#8a5a12" text-anchor="middle" font-weight="700">Gemini API</text>
+<line x1="615" y1="60" x2="615" y2="578" stroke="#d9d4c7" stroke-width="1.6" stroke-dasharray="5 5"/>
+<rect x="715" y="18" width="150" height="42" rx="10" fill="#e3f4ee" stroke="#0f8a6a" stroke-width="1.4"/>
+<text x="790" y="44" font-size="11.8" fill="#0b6650" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="700">parser</text>
+<line x1="790" y1="60" x2="790" y2="578" stroke="#d9d4c7" stroke-width="1.6" stroke-dasharray="5 5"/>
+<rect x="14" y="78" width="852" height="472" rx="10" fill="none" stroke="#5d6b7e" stroke-width="1.2" stroke-dasharray="6 4"/>
+<rect x="14" y="78" width="299" height="22" rx="10" fill="#5d6b7e"/>
+<text x="26" y="93" font-size="11.5" fill="#fff" text-anchor="start" font-weight="700">Repeated for each of the 5 observations</text>
+<path d="M94 128 L 259 128" fill="none" stroke="#5d6b7e" stroke-width="1.7" marker-end="url(#m8)"/>
+<circle cx="108" cy="115" r="10" fill="#5d6b7e"/>
+<text x="108" y="118.96" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">1</text>
+<text x="124" y="120" font-size="12" fill="#3f4a59" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">chain.invoke({&quot;query&quot;: observation})</text>
+<text x="124" y="144" font-size="11.3" fill="#4a5263" text-anchor="start">the chain starts with the template</text>
+<path d="M265 174 h34 v18 h-30" fill="none" stroke="#7a4fc2" stroke-width="1.6"/>
+<path d="M273 192 L 267 192" fill="none" stroke="#7a4fc2" stroke-width="1.6" marker-end="url(#m5)"/>
+<circle cx="321" cy="183" r="10" fill="#7a4fc2"/>
+<text x="321" y="186.96" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">2</text>
+<text x="337" y="187" font-size="12" fill="#58378f" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">Fill {query}</text>
+<text x="337" y="203" font-size="11.3" fill="#4a5263" text-anchor="start">12 messages, system, 10 example messages, the question</text>
+<path d="M269 240 L 434 240" fill="none" stroke="#7a4fc2" stroke-width="1.7" marker-end="url(#m5)"/>
+<circle cx="283" cy="227" r="10" fill="#7a4fc2"/>
+<text x="283" y="230.96" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">3</text>
+<text x="299" y="232" font-size="12" fill="#58378f" text-anchor="start" font-weight="700">Prompt value</text>
+<text x="299" y="256" font-size="11.3" fill="#4a5263" text-anchor="start">the filled messages go to the model</text>
+<path d="M444 296 L 609 296" fill="none" stroke="#2f62c8" stroke-width="1.7" marker-end="url(#m3)"/>
+<circle cx="458" cy="283" r="10" fill="#2f62c8"/>
+<text x="458" y="286.96" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">4</text>
+<text x="474" y="288" font-size="12" fill="#1f4a9e" text-anchor="start" font-weight="700">HTTPS request with the API key</text>
+<text x="474" y="312" font-size="11.3" fill="#4a5263" text-anchor="start">all examples travel with every call</text>
+<path d="M611 352 L 446 352" fill="none" stroke="#b7791f" stroke-width="1.7" stroke-dasharray="6 4" marker-end="url(#m6)"/>
+<circle cx="458" cy="339" r="10" fill="#b7791f"/>
+<text x="458" y="342.96" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">5</text>
+<text x="474" y="344" font-size="12" fill="#8a5a12" text-anchor="start" font-weight="700">One label</text>
+<text x="474" y="368" font-size="11.3" fill="#4a5263" text-anchor="start">for example FORMAT_VIOLATION</text>
+<path d="M444 408 L 784 408" fill="none" stroke="#2f62c8" stroke-width="1.7" marker-end="url(#m3)"/>
+<circle cx="458" cy="395" r="10" fill="#2f62c8"/>
+<text x="458" y="398.96" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">6</text>
+<text x="474" y="400" font-size="12" fill="#1f4a9e" text-anchor="start" font-weight="700">AIMessage</text>
+<text x="474" y="424" font-size="11.3" fill="#4a5263" text-anchor="start">the chain passes the reply to the parser</text>
+<path d="M790 454 h-34 v18 h30" fill="none" stroke="#0f8a6a" stroke-width="1.6"/>
+<path d="M782 472 L 788 472" fill="none" stroke="#0f8a6a" stroke-width="1.6" marker-end="url(#m4)"/>
+<circle cx="734" cy="463" r="10" fill="#0f8a6a"/>
+<text x="734" y="466.96" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">7</text>
+<text x="718" y="467" font-size="12" fill="#0b6650" text-anchor="end" font-weight="700">Keep the text</text>
+<text x="718" y="483" font-size="11.3" fill="#4a5263" text-anchor="end">StrOutputParser returns a string</text>
+<path d="M786 520 L 96 520" fill="none" stroke="#0f8a6a" stroke-width="1.7" stroke-dasharray="6 4" marker-end="url(#m4)"/>
+<circle cx="108" cy="507" r="10" fill="#0f8a6a"/>
+<text x="108" y="510.96" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">8</text>
+<text x="124" y="512" font-size="12" fill="#0b6650" text-anchor="start" font-weight="700">The result</text>
+<text x="124" y="536" font-size="11.3" fill="#4a5263" text-anchor="start">the code prints it with strip()</text>
+</svg>

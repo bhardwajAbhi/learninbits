@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 370" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">The HAL between the framework and the hardware</title>
+  <desc id="d">Six layers from top to bottom. The app, Kotlin or Java code such as a flashlight app, updated through the Play Store. The framework, system_server, CameraService and the public APIs, updated through a system update. The HAL interface, a stable contract in AIDL such as ICameraProvider, with frozen versions. A line marks this layer as the boundary. The HAL implementation, a vendor process such as the camera provider service, updated through a vendor update. The kernel driver, a device node such as /dev/video0, also updated through a vendor update. The hardware, the camera sensor and its image processor.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="20" y="20" width="640" height="48" rx="10" fill="#eef3fb" stroke="#2f62c8" stroke-width="1.4"/>
+<text x="36" y="42" font-size="12.8" fill="#1f4a9e" text-anchor="start" font-weight="700">App</text>
+<text x="36" y="59" font-size="11" fill="#1c2230" text-anchor="start">Kotlin or Java code, such as a flashlight app</text>
+<text x="690" y="50" font-size="11.4" fill="#4a5263" text-anchor="start" font-weight="600">Play Store</text>
+<rect x="20" y="78" width="640" height="48" rx="10" fill="#eef3fb" stroke="#2f62c8" stroke-width="1.4"/>
+<text x="36" y="100" font-size="12.8" fill="#1f4a9e" text-anchor="start" font-weight="700">Framework</text>
+<text x="36" y="117" font-size="11" fill="#1c2230" text-anchor="start">system_server, CameraService, the public APIs</text>
+<text x="690" y="108" font-size="11.4" fill="#4a5263" text-anchor="start" font-weight="600">System update</text>
+<rect x="20" y="136" width="640" height="48" rx="10" fill="#f3f0fa" stroke="#7a4fc2" stroke-width="1.4"/>
+<text x="36" y="158" font-size="12.8" fill="#58378f" text-anchor="start" font-weight="700">HAL interface</text>
+<text x="36" y="175" font-size="11" fill="#1c2230" text-anchor="start">a stable contract in AIDL, such as ICameraProvider</text>
+<text x="690" y="166" font-size="11.4" fill="#4a5263" text-anchor="start" font-weight="600">Frozen versions</text>
+<rect x="20" y="194" width="640" height="48" rx="10" fill="#f8eaf1" stroke="#b0457a" stroke-width="1.4"/>
+<text x="36" y="216" font-size="12.8" fill="#7d2a55" text-anchor="start" font-weight="700">HAL implementation</text>
+<text x="36" y="233" font-size="11" fill="#1c2230" text-anchor="start">a vendor process, such as android.hardware.camera.provider-service</text>
+<text x="690" y="224" font-size="11.4" fill="#4a5263" text-anchor="start" font-weight="600">Vendor update</text>
+<rect x="20" y="252" width="640" height="48" rx="10" fill="#fbecec" stroke="#c2552d" stroke-width="1.4"/>
+<text x="36" y="274" font-size="12.8" fill="#963f1f" text-anchor="start" font-weight="700">Kernel driver</text>
+<text x="36" y="291" font-size="11" fill="#1c2230" text-anchor="start">a device node, such as /dev/video0</text>
+<text x="690" y="282" font-size="11.4" fill="#4a5263" text-anchor="start" font-weight="600">Vendor update</text>
+<rect x="20" y="310" width="640" height="48" rx="10" fill="#eef0f3" stroke="#5d6b7e" stroke-width="1.4"/>
+<text x="36" y="332" font-size="12.8" fill="#3f4a59" text-anchor="start" font-weight="700">Hardware</text>
+<text x="36" y="349" font-size="11" fill="#1c2230" text-anchor="start">the camera sensor and its image processor</text>
+<rect x="14" y="130" width="852" height="4" rx="2" fill="#7a4fc2"/>
+<text x="860" y="125" font-size="10.6" fill="#58378f" text-anchor="end" font-weight="700">the boundary</text>
+<text x="690" y="16" font-size="11" fill="#4a5263" text-anchor="start" font-weight="700">Updated through</text>
+</svg>

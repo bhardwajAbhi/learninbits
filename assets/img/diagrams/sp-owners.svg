@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 286" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">Who can use a sysprop_library</title>
+  <desc id="d">A grid of owners and users. A library owned by Platform can be used with the Internal scope from system and system_ext, and only through its Public scope from vendor, odm and product. A library owned by Vendor cannot be used from system or system_ext, can be used with the Internal scope from vendor and odm, and only through its Public scope from product. A library owned by Odm can be used only from vendor and odm, with the Internal scope. The build checks these rules, so that system code never depends on vendor properties.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<text x="20" y="30" font-size="12.8" fill="#1c2230" text-anchor="start" font-weight="700">Who can use a sysprop_library</text>
+<text x="220" y="62" font-size="11.4" fill="#4a5263" text-anchor="middle" font-weight="700">Owner</text>
+<rect x="330" y="46" width="168" height="34" rx="8" fill="#eef0f3" stroke="#5d6b7e" stroke-width="1.1"/>
+<text x="414" y="68" font-size="10.8" fill="#3f4a59" text-anchor="middle" font-weight="700">used from system, system_ext</text>
+<rect x="510" y="46" width="168" height="34" rx="8" fill="#eef0f3" stroke="#5d6b7e" stroke-width="1.1"/>
+<text x="594" y="68" font-size="10.8" fill="#3f4a59" text-anchor="middle" font-weight="700">used from vendor, odm</text>
+<rect x="690" y="46" width="168" height="34" rx="8" fill="#eef0f3" stroke="#5d6b7e" stroke-width="1.1"/>
+<text x="774" y="68" font-size="10.8" fill="#3f4a59" text-anchor="middle" font-weight="700">used from product</text>
+<rect x="150" y="100" width="140" height="30" rx="15" fill="#e3f4ee" stroke="#0f8a6a" stroke-width="1.2"/>
+<text x="220" y="119.32" font-size="12" fill="#0b6650" text-anchor="middle" font-weight="700">Platform</text>
+<rect x="330" y="94" width="168" height="42" rx="8" fill="#fff" stroke="#0f8a6a" stroke-width="1.2"/>
+<text x="414" y="120" font-size="11.6" fill="#0b6650" text-anchor="middle" font-weight="700">Internal</text>
+<rect x="510" y="94" width="168" height="42" rx="8" fill="#fff" stroke="#0f8a6a" stroke-width="1.2"/>
+<text x="594" y="120" font-size="11.6" fill="#0b6650" text-anchor="middle" font-weight="700">Public only</text>
+<rect x="690" y="94" width="168" height="42" rx="8" fill="#fff" stroke="#0f8a6a" stroke-width="1.2"/>
+<text x="774" y="120" font-size="11.6" fill="#0b6650" text-anchor="middle" font-weight="700">Public only</text>
+<rect x="150" y="152" width="140" height="30" rx="15" fill="#fdf4e3" stroke="#b7791f" stroke-width="1.2"/>
+<text x="220" y="171.32" font-size="12" fill="#8a5a12" text-anchor="middle" font-weight="700">Vendor</text>
+<rect x="330" y="146" width="168" height="42" rx="8" fill="#fff" stroke="#c2552d" stroke-width="1.2"/>
+<text x="414" y="172" font-size="11.6" fill="#963f1f" text-anchor="middle" font-weight="700">Not allowed</text>
+<rect x="510" y="146" width="168" height="42" rx="8" fill="#fff" stroke="#0f8a6a" stroke-width="1.2"/>
+<text x="594" y="172" font-size="11.6" fill="#0b6650" text-anchor="middle" font-weight="700">Internal</text>
+<rect x="690" y="146" width="168" height="42" rx="8" fill="#fff" stroke="#0f8a6a" stroke-width="1.2"/>
+<text x="774" y="172" font-size="11.6" fill="#0b6650" text-anchor="middle" font-weight="700">Public only</text>
+<rect x="150" y="204" width="140" height="30" rx="15" fill="#fbecec" stroke="#c2552d" stroke-width="1.2"/>
+<text x="220" y="223.32" font-size="12" fill="#963f1f" text-anchor="middle" font-weight="700">Odm</text>
+<rect x="330" y="198" width="168" height="42" rx="8" fill="#fff" stroke="#c2552d" stroke-width="1.2"/>
+<text x="414" y="224" font-size="11.6" fill="#963f1f" text-anchor="middle" font-weight="700">Not allowed</text>
+<rect x="510" y="198" width="168" height="42" rx="8" fill="#fff" stroke="#0f8a6a" stroke-width="1.2"/>
+<text x="594" y="224" font-size="11.6" fill="#0b6650" text-anchor="middle" font-weight="700">Internal</text>
+<rect x="690" y="198" width="168" height="42" rx="8" fill="#fff" stroke="#c2552d" stroke-width="1.2"/>
+<text x="774" y="224" font-size="11.6" fill="#963f1f" text-anchor="middle" font-weight="700">Not allowed</text>
+<text x="440" y="270" font-size="11.4" fill="#4a5263" text-anchor="middle" font-style="italic">The build checks these rules, so that system code never depends on vendor properties.</text>
+</svg>

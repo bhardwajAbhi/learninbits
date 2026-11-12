@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 256" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">The data spectrum</title>
+  <desc id="d">A scale from high risk to low risk with PII, masked, pseudonymized, anonymized, synthetic, DP and input privacy. PII, masked and pseudonymized data are personal data in scope of the law. Anonymized and synthetic data are exempt but keep some residual risk. DP and input privacy share only insights or encrypted results.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<defs><linearGradient id="g" x1="0" x2="1"><stop offset="0" stop-color="#c2452d"/><stop offset=".45" stop-color="#e0a54a"/><stop offset="1" stop-color="#2f7d55"/></linearGradient></defs>
+<rect x="30" y="70" width="820" height="26" rx="13" fill="url(#g)"/>
+<circle cx="70" cy="83" r="7" fill="#fff" stroke="#1c2230" stroke-width="2"/>
+<text x="70" y="60" font-size="12.5" fill="#1c2230" text-anchor="middle" font-weight="700">PII</text>
+<circle cx="193" cy="83" r="7" fill="#fff" stroke="#1c2230" stroke-width="2"/>
+<text x="193" y="60" font-size="12.5" fill="#1c2230" text-anchor="middle" font-weight="700">Masked</text>
+<circle cx="316" cy="83" r="7" fill="#fff" stroke="#1c2230" stroke-width="2"/>
+<text x="316" y="60" font-size="12.5" fill="#1c2230" text-anchor="middle" font-weight="700">Pseudonymized</text>
+<circle cx="439" cy="83" r="7" fill="#fff" stroke="#1c2230" stroke-width="2"/>
+<text x="439" y="60" font-size="12.5" fill="#1c2230" text-anchor="middle" font-weight="700">Anonymized</text>
+<circle cx="562" cy="83" r="7" fill="#fff" stroke="#1c2230" stroke-width="2"/>
+<text x="562" y="60" font-size="12.5" fill="#1c2230" text-anchor="middle" font-weight="700">Synthetic</text>
+<circle cx="685" cy="83" r="7" fill="#fff" stroke="#1c2230" stroke-width="2"/>
+<text x="685" y="60" font-size="12.5" fill="#1c2230" text-anchor="middle" font-weight="700">DP</text>
+<circle cx="808" cy="83" r="7" fill="#fff" stroke="#1c2230" stroke-width="2"/>
+<text x="808" y="60" font-size="12.5" fill="#1c2230" text-anchor="middle" font-weight="700">Input privacy</text>
+<text x="30" y="30" font-size="12" fill="#963f1f" text-anchor="start" font-weight="700">High risk, high regulation and overheads</text>
+<text x="850" y="30" font-size="12" fill="#0b6650" text-anchor="end" font-weight="700">Low risk</text>
+<path d="M34 110 v8 h322 v-8" fill="none" stroke="#c2552d" stroke-width="2"/>
+<rect x="30" y="130" width="320" height="110" rx="12" fill="#fff" stroke="#c2552d" stroke-width="1.6"/>
+<path d="M42 130 h296 a12 12 0 0 1 12 12 v22 h-320 v-22 a12 12 0 0 1 12 -12z" fill="#c2552d"/>
+<text x="44" y="151.86" font-size="13.5" fill="#fff" text-anchor="start" font-weight="700">Personal data, in scope</text>
+<text x="44" y="186" font-size="11.5" fill="#4a5263" text-anchor="start">Sensitive and regulated.</text>
+<text x="44" y="203.825" font-size="11.5" fill="#4a5263" text-anchor="start">Movement restricted.</text>
+<text x="44" y="221.65" font-size="11.5" fill="#4a5263" text-anchor="start">Rights apply directly.</text>
+<path d="M374 110 v8 h222 v-8" fill="none" stroke="#b7791f" stroke-width="2"/>
+<rect x="370" y="130" width="220" height="110" rx="12" fill="#fff" stroke="#b7791f" stroke-width="1.6"/>
+<path d="M382 130 h196 a12 12 0 0 1 12 12 v22 h-220 v-22 a12 12 0 0 1 12 -12z" fill="#b7791f"/>
+<text x="384" y="151.86" font-size="13.5" fill="#fff" text-anchor="start" font-weight="700">Exempt, non-personal</text>
+<text x="384" y="186" font-size="11.5" fill="#4a5263" text-anchor="start">Some residual risk stays.</text>
+<text x="384" y="203.825" font-size="11.5" fill="#4a5263" text-anchor="start">Protect it with other</text>
+<text x="384" y="221.65" font-size="11.5" fill="#4a5263" text-anchor="start">techno-legal measures.</text>
+<path d="M614 110 v8 h232 v-8" fill="none" stroke="#0f8a6a" stroke-width="2"/>
+<rect x="610" y="130" width="230" height="110" rx="12" fill="#fff" stroke="#0f8a6a" stroke-width="1.6"/>
+<path d="M622 130 h206 a12 12 0 0 1 12 12 v22 h-230 v-22 a12 12 0 0 1 12 -12z" fill="#0f8a6a"/>
+<text x="624" y="151.86" font-size="13.5" fill="#fff" text-anchor="start" font-weight="700">Exempt, private queries</text>
+<text x="624" y="186" font-size="11.5" fill="#4a5263" text-anchor="start">Only insights or encrypted</text>
+<text x="624" y="203.825" font-size="11.5" fill="#4a5263" text-anchor="start">results leave. The data</text>
+<text x="624" y="221.65" font-size="11.5" fill="#4a5263" text-anchor="start">itself stays inside.</text>
+</svg>

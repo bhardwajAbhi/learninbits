@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 650" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">Inside one safe run</title>
+  <desc id="d">A sequence diagram with the lanes Your code, check_code, subprocess.run, Child Python, Operating system. Step 1, Your code to check_code, check_code(code), ast.parse turns the text into a syntax tree, nothing runs. Step 2, check_code to check_code, ast.walk(tree), rules for imports, blocked names and _ attributes. Step 3, check_code to Your code, passes, or ValueError, a ValueError becomes Code rejected. Step 4, Your code to Operating system, tempfile.TemporaryDirectory(), an empty folder, deleted at the end of the with block. Step 5, Your code to subprocess.run, subprocess.run([sys.executable, &quot;-I&quot;, &quot;-c&quot;, code], ...), env={}, cwd=workdir, timeout=5, capture_output=True. Step 6, subprocess.run to Child Python, start python -I -c, a new process, no environment variables. Step 7, Child Python to Child Python, the model&#x27;s code runs, print(...), or answer = ... plus the footer. Step 8, Child Python to subprocess.run, stdout, stderr and the exit code, or TimeoutExpired after 5 seconds. Step 9, subprocess.run to Your code, CompletedProcess, returncode, stdout and stderr as text. Steps 1 to 9 repeat, Repeated for each code block.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="15" y="18" width="150" height="42" rx="10" fill="#eef0f3" stroke="#5d6b7e" stroke-width="1.4"/>
+<text x="90" y="44" font-size="12.3" fill="#3f4a59" text-anchor="middle" font-weight="700">Your code</text>
+<line x1="90" y1="60" x2="90" y2="634" stroke="#d9d4c7" stroke-width="1.6" stroke-dasharray="5 5"/>
+<rect x="190" y="18" width="150" height="42" rx="10" fill="#f3f0fa" stroke="#7a4fc2" stroke-width="1.4"/>
+<text x="265" y="44" font-size="11.8" fill="#58378f" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="700">check_code</text>
+<line x1="265" y1="60" x2="265" y2="634" stroke="#d9d4c7" stroke-width="1.6" stroke-dasharray="5 5"/>
+<rect x="365" y="18" width="150" height="42" rx="10" fill="#eef3fb" stroke="#2f62c8" stroke-width="1.4"/>
+<text x="440" y="44" font-size="11.8" fill="#1f4a9e" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="700">subprocess.run</text>
+<line x1="440" y1="60" x2="440" y2="634" stroke="#d9d4c7" stroke-width="1.6" stroke-dasharray="5 5"/>
+<rect x="540" y="18" width="150" height="42" rx="10" fill="#e6f3f4" stroke="#0e7c86" stroke-width="1.4"/>
+<text x="615" y="44" font-size="12.3" fill="#095a61" text-anchor="middle" font-weight="700">Child Python</text>
+<line x1="615" y1="60" x2="615" y2="634" stroke="#d9d4c7" stroke-width="1.6" stroke-dasharray="5 5"/>
+<rect x="715" y="18" width="150" height="42" rx="10" fill="#eef0f3" stroke="#5d6b7e" stroke-width="1.4"/>
+<text x="790" y="44" font-size="12.3" fill="#3f4a59" text-anchor="middle" font-weight="700">Operating system</text>
+<line x1="790" y1="60" x2="790" y2="634" stroke="#d9d4c7" stroke-width="1.6" stroke-dasharray="5 5"/>
+<rect x="14" y="78" width="852" height="528" rx="10" fill="none" stroke="#5d6b7e" stroke-width="1.2" stroke-dasharray="6 4"/>
+<rect x="14" y="78" width="222" height="22" rx="10" fill="#5d6b7e"/>
+<text x="26" y="93" font-size="11.5" fill="#fff" text-anchor="start" font-weight="700">Repeated for each code block</text>
+<path d="M94 128 L 259 128" fill="none" stroke="#5d6b7e" stroke-width="1.7" marker-end="url(#m8)"/>
+<circle cx="108" cy="115" r="10" fill="#5d6b7e"/>
+<text x="108" y="118.96" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">1</text>
+<text x="124" y="120" font-size="12" fill="#3f4a59" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">check_code(code)</text>
+<text x="124" y="144" font-size="11.3" fill="#4a5263" text-anchor="start">ast.parse turns the text into a syntax tree, nothing runs</text>
+<path d="M265 174 h34 v18 h-30" fill="none" stroke="#7a4fc2" stroke-width="1.6"/>
+<path d="M273 192 L 267 192" fill="none" stroke="#7a4fc2" stroke-width="1.6" marker-end="url(#m5)"/>
+<circle cx="321" cy="183" r="10" fill="#7a4fc2"/>
+<text x="321" y="186.96" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">2</text>
+<text x="337" y="187" font-size="12" fill="#58378f" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">ast.walk(tree)</text>
+<text x="337" y="203" font-size="11.3" fill="#4a5263" text-anchor="start">rules for imports, blocked names and _ attributes</text>
+<path d="M261 240 L 96 240" fill="none" stroke="#7a4fc2" stroke-width="1.7" stroke-dasharray="6 4" marker-end="url(#m5)"/>
+<circle cx="108" cy="227" r="10" fill="#7a4fc2"/>
+<text x="108" y="230.96" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">3</text>
+<text x="124" y="232" font-size="12" fill="#58378f" text-anchor="start" font-weight="700">passes, or ValueError</text>
+<text x="124" y="256" font-size="11.3" fill="#4a5263" text-anchor="start">a ValueError becomes Code rejected</text>
+<path d="M94 296 L 784 296" fill="none" stroke="#5d6b7e" stroke-width="1.7" marker-end="url(#m8)"/>
+<circle cx="108" cy="283" r="10" fill="#5d6b7e"/>
+<text x="108" y="286.96" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">4</text>
+<text x="124" y="288" font-size="12" fill="#3f4a59" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">tempfile.TemporaryDirectory()</text>
+<text x="124" y="312" font-size="11.3" fill="#4a5263" text-anchor="start">an empty folder, deleted at the end of the with block</text>
+<path d="M94 352 L 434 352" fill="none" stroke="#5d6b7e" stroke-width="1.7" marker-end="url(#m8)"/>
+<circle cx="108" cy="339" r="10" fill="#5d6b7e"/>
+<text x="108" y="342.96" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">5</text>
+<text x="124" y="344" font-size="12" fill="#3f4a59" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">subprocess.run([sys.executable, &quot;-I&quot;, &quot;-c&quot;, code], ...)</text>
+<text x="124" y="368" font-size="11.3" fill="#4a5263" text-anchor="start">env={}, cwd=workdir, timeout=5, capture_output=True</text>
+<path d="M444 408 L 609 408" fill="none" stroke="#2f62c8" stroke-width="1.7" marker-end="url(#m3)"/>
+<circle cx="458" cy="395" r="10" fill="#2f62c8"/>
+<text x="458" y="398.96" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">6</text>
+<text x="474" y="400" font-size="12" fill="#1f4a9e" text-anchor="start" font-weight="700">start python -I -c</text>
+<text x="474" y="424" font-size="11.3" fill="#4a5263" text-anchor="start">a new process, no environment variables</text>
+<path d="M615 454 h-34 v18 h30" fill="none" stroke="#0e7c86" stroke-width="1.6"/>
+<path d="M607 472 L 613 472" fill="none" stroke="#0e7c86" stroke-width="1.6" marker-end="url(#m0)"/>
+<circle cx="559" cy="463" r="10" fill="#0e7c86"/>
+<text x="559" y="466.96" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">7</text>
+<text x="543" y="467" font-size="12" fill="#095a61" text-anchor="end" font-weight="700">the model&#x27;s code runs</text>
+<text x="543" y="483" font-size="11.3" fill="#4a5263" text-anchor="end">print(...), or answer = ... plus the footer</text>
+<path d="M611 520 L 446 520" fill="none" stroke="#0e7c86" stroke-width="1.7" stroke-dasharray="6 4" marker-end="url(#m0)"/>
+<circle cx="458" cy="507" r="10" fill="#0e7c86"/>
+<text x="458" y="510.96" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">8</text>
+<text x="474" y="512" font-size="12" fill="#095a61" text-anchor="start" font-weight="700">stdout, stderr and the exit code</text>
+<text x="474" y="536" font-size="11.3" fill="#4a5263" text-anchor="start">or TimeoutExpired after 5 seconds</text>
+<path d="M436 576 L 96 576" fill="none" stroke="#2f62c8" stroke-width="1.7" stroke-dasharray="6 4" marker-end="url(#m3)"/>
+<circle cx="108" cy="563" r="10" fill="#2f62c8"/>
+<text x="108" y="566.96" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">9</text>
+<text x="124" y="568" font-size="12" fill="#1f4a9e" text-anchor="start" font-weight="700">CompletedProcess</text>
+<text x="124" y="592" font-size="11.3" fill="#4a5263" text-anchor="start">returncode, stdout and stderr as text</text>
+</svg>

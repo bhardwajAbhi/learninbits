@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 176" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">The parts of a GKI kernel version string</title>
+  <desc id="d">The string 6.18.16-android17-1-gb61cd7ae4209-ab15097451-4k from kernel_version.mk splits into six parts. 6.18.16 is LTS 6.18 at patch level 16. android17 is the ACK branch for Android 17. 1 is the first release of the branch. gb61cd7ae4209 is the git commit. ab15097451 is the Android build ID. 4k means 4 KB pages, and a 16 KB build has no suffix.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="20" y="40" width="101.6" height="40" rx="8" fill="#eef3fb" stroke="#2f62c8" stroke-width="1.5"/>
+<text x="70.8" y="66" font-size="15" fill="#1f4a9e" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="700">6.18.16</text>
+<text x="128.6" y="66" font-size="16" fill="#4a5263" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="700">-</text>
+<line x1="70.8" y1="80" x2="70.8" y2="98" stroke="#2f62c8" stroke-width="1.4"/>
+<text x="70.8" y="112" font-size="11.4" fill="#1f4a9e" text-anchor="middle" font-weight="600">LTS 6.18, patch level 16</text>
+<rect x="135.6" y="40" width="123.2" height="40" rx="8" fill="#e3f4ee" stroke="#0f8a6a" stroke-width="1.5"/>
+<text x="197.2" y="66" font-size="15" fill="#0b6650" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="700">android17</text>
+<text x="265.8" y="66" font-size="16" fill="#4a5263" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="700">-</text>
+<line x1="197.2" y1="80" x2="197.2" y2="142" stroke="#0f8a6a" stroke-width="1.4"/>
+<text x="197.2" y="156" font-size="11.4" fill="#0b6650" text-anchor="middle" font-weight="600">ACK branch for Android 17</text>
+<rect x="272.8" y="40" width="36.8" height="40" rx="8" fill="#f3f0fa" stroke="#7a4fc2" stroke-width="1.5"/>
+<text x="291.2" y="66" font-size="15" fill="#58378f" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="700">1</text>
+<text x="316.6" y="66" font-size="16" fill="#4a5263" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="700">-</text>
+<line x1="291.2" y1="80" x2="291.2" y2="98" stroke="#7a4fc2" stroke-width="1.4"/>
+<text x="291.2" y="112" font-size="11.4" fill="#58378f" text-anchor="middle" font-weight="600">First release of the branch</text>
+<rect x="323.6" y="40" width="166.4" height="40" rx="8" fill="#eef0f3" stroke="#5d6b7e" stroke-width="1.5"/>
+<text x="406.8" y="66" font-size="15" fill="#3f4a59" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="700">gb61cd7ae4209</text>
+<text x="497" y="66" font-size="16" fill="#4a5263" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="700">-</text>
+<line x1="406.8" y1="80" x2="406.8" y2="142" stroke="#5d6b7e" stroke-width="1.4"/>
+<text x="406.8" y="156" font-size="11.4" fill="#3f4a59" text-anchor="middle" font-weight="600">Git commit</text>
+<rect x="504" y="40" width="134" height="40" rx="8" fill="#fdf4e3" stroke="#b7791f" stroke-width="1.5"/>
+<text x="571" y="66" font-size="15" fill="#8a5a12" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="700">ab15097451</text>
+<text x="645" y="66" font-size="16" fill="#4a5263" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="700">-</text>
+<line x1="571" y1="80" x2="571" y2="98" stroke="#b7791f" stroke-width="1.4"/>
+<text x="571" y="112" font-size="11.4" fill="#8a5a12" text-anchor="middle" font-weight="600">Android build ID</text>
+<rect x="652" y="40" width="47.6" height="40" rx="8" fill="#fbecec" stroke="#c2552d" stroke-width="1.5"/>
+<text x="675.8" y="66" font-size="15" fill="#963f1f" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="700">4k</text>
+<line x1="675.8" y1="80" x2="675.8" y2="142" stroke="#c2552d" stroke-width="1.4"/>
+<text x="675.8" y="156" font-size="11.4" fill="#963f1f" text-anchor="middle" font-weight="600">4 KB pages. A 16 KB build has no suffix</text>
+<text x="20" y="26" font-size="12" fill="#4a5263" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="600">BOARD_KERNEL_VERSION in kernel/prebuilts/6.18/arm64/kernel_version.mk</text>
+</svg>

@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 522" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">How the temperature program of Example 1 flows</title>
+  <desc id="d">Input, prompt, &quot;Write a one sentense security awareness message about phishing emails.&quot;. Model, llm_zero = ChatGoogleGenerativeAI(..., temperature=0, max_output_tokens=64), for i in range(3) runs invoke(prompt) three times, Result, three identical sentences. Model, llm_balanced = ChatGoogleGenerativeAI(..., temperature=0.7, max_output_tokens=64), for i in range(3) runs invoke(prompt) three times, Result, a few words change. Model, llm_creative = ChatGoogleGenerativeAI(..., temperature=1.5, max_output_tokens=64), for i in range(3) runs invoke(prompt) three times, Result, more variety, still correct. Output, print(f&quot;Run {i+1} {response.text}&quot;), Nine sentences, three for each temperature.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="20" y="34" width="92" height="26" rx="13" fill="#eef0f3" stroke="#5d6b7e" stroke-width="1.2"/>
+<text x="66" y="51.32" font-size="12" fill="#3f4a59" text-anchor="middle" font-weight="700">Input</text>
+<rect x="126" y="24" width="680" height="65" rx="12" fill="#fff" stroke="#5d6b7e" stroke-width="1.6"/>
+<rect x="126" y="24" width="6" height="65" rx="3" fill="#5d6b7e"/>
+<text x="146" y="52" font-size="13.6" fill="#3f4a59" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">prompt</text>
+<text x="146" y="74" font-size="12.2" fill="#1c2230" text-anchor="start" font-family="JetBrains Mono, monospace">&quot;Write a one sentense security awareness message about phishing emails.&quot;</text>
+<path d="M466 91 L 466 109" fill="none" stroke="#1c2230" stroke-width="1.6" marker-end="url(#m0)"/>
+<rect x="20" y="123" width="92" height="26" rx="13" fill="#eef3fb" stroke="#2f62c8" stroke-width="1.2"/>
+<text x="66" y="140.32" font-size="12" fill="#1f4a9e" text-anchor="middle" font-weight="700">Model</text>
+<rect x="126" y="113" width="680" height="84" rx="12" fill="#fff" stroke="#2f62c8" stroke-width="1.6"/>
+<rect x="126" y="113" width="6" height="84" rx="3" fill="#2f62c8"/>
+<text x="146" y="141" font-size="13.6" fill="#1f4a9e" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">llm_zero = ChatGoogleGenerativeAI(..., temperature=0, max_output_tokens=64)</text>
+<text x="146" y="163" font-size="12.2" fill="#4a5263" text-anchor="start">for i in range(3) runs invoke(prompt) three times</text>
+<text x="146" y="182" font-size="12.2" fill="#4a5263" text-anchor="start">Result, three identical sentences</text>
+<path d="M466 199 L 466 217" fill="none" stroke="#1c2230" stroke-width="1.6" marker-end="url(#m0)"/>
+<rect x="20" y="231" width="92" height="26" rx="13" fill="#eef3fb" stroke="#2f62c8" stroke-width="1.2"/>
+<text x="66" y="248.32" font-size="12" fill="#1f4a9e" text-anchor="middle" font-weight="700">Model</text>
+<rect x="126" y="221" width="680" height="84" rx="12" fill="#fff" stroke="#2f62c8" stroke-width="1.6"/>
+<rect x="126" y="221" width="6" height="84" rx="3" fill="#2f62c8"/>
+<text x="146" y="249" font-size="13.6" fill="#1f4a9e" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">llm_balanced = ChatGoogleGenerativeAI(..., temperature=0.7, max_output_tokens=64)</text>
+<text x="146" y="271" font-size="12.2" fill="#4a5263" text-anchor="start">for i in range(3) runs invoke(prompt) three times</text>
+<text x="146" y="290" font-size="12.2" fill="#4a5263" text-anchor="start">Result, a few words change</text>
+<path d="M466 307 L 466 325" fill="none" stroke="#1c2230" stroke-width="1.6" marker-end="url(#m0)"/>
+<rect x="20" y="339" width="92" height="26" rx="13" fill="#eef3fb" stroke="#2f62c8" stroke-width="1.2"/>
+<text x="66" y="356.32" font-size="12" fill="#1f4a9e" text-anchor="middle" font-weight="700">Model</text>
+<rect x="126" y="329" width="680" height="84" rx="12" fill="#fff" stroke="#2f62c8" stroke-width="1.6"/>
+<rect x="126" y="329" width="6" height="84" rx="3" fill="#2f62c8"/>
+<text x="146" y="357" font-size="13.6" fill="#1f4a9e" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">llm_creative = ChatGoogleGenerativeAI(..., temperature=1.5, max_output_tokens=64)</text>
+<text x="146" y="379" font-size="12.2" fill="#4a5263" text-anchor="start">for i in range(3) runs invoke(prompt) three times</text>
+<text x="146" y="398" font-size="12.2" fill="#4a5263" text-anchor="start">Result, more variety, still correct</text>
+<path d="M466 415 L 466 433" fill="none" stroke="#1c2230" stroke-width="1.6" marker-end="url(#m0)"/>
+<rect x="20" y="447" width="92" height="26" rx="13" fill="#e3f4ee" stroke="#0f8a6a" stroke-width="1.2"/>
+<text x="66" y="464.32" font-size="12" fill="#0b6650" text-anchor="middle" font-weight="700">Output</text>
+<rect x="126" y="437" width="680" height="65" rx="12" fill="#fff" stroke="#0f8a6a" stroke-width="1.6"/>
+<rect x="126" y="437" width="6" height="65" rx="3" fill="#0f8a6a"/>
+<text x="146" y="465" font-size="13.6" fill="#0b6650" text-anchor="start" font-weight="700">print(f&quot;Run {i+1}: {response.text}&quot;)</text>
+<text x="146" y="487" font-size="12.2" fill="#4a5263" text-anchor="start">Nine sentences, three for each temperature</text>
+</svg>

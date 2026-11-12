@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 390" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">Problem statement and methodology</title>
+  <desc id="d">A weak problem statement is vague, for example a wish to improve performance. A strong one is precise, scoped and measurable. Then come the hypothesis, the methodology, the justification of choices and reproducibility. If others cannot reproduce the work, it is not science.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="24" y="20" width="404" height="150" rx="12" fill="#fff" stroke="#c2552d" stroke-width="1.6"/>
+<path d="M36 20 h380 a12 12 0 0 1 12 12 v28 h-404 v-28 a12 12 0 0 1 12 -12z" fill="#c2552d"/>
+<text x="38" y="45.22" font-size="14.5" fill="#fff" text-anchor="start" font-weight="700">A weak problem statement</text>
+<text x="38" y="82" font-size="13.5" fill="#4a5263" text-anchor="start">“We want to improve performance.”</text>
+<text x="38" y="102.925" font-size="13.5" fill="#4a5263" text-anchor="start"></text>
+<text x="38" y="123.85" font-size="13.5" fill="#4a5263" text-anchor="start">Vague, with no scope and no measure.</text>
+<rect x="452" y="20" width="404" height="150" rx="12" fill="#fff" stroke="#0f8a6a" stroke-width="1.6"/>
+<path d="M464 20 h380 a12 12 0 0 1 12 12 v28 h-404 v-28 a12 12 0 0 1 12 -12z" fill="#0f8a6a"/>
+<text x="466" y="45.22" font-size="14.5" fill="#fff" text-anchor="start" font-weight="700">A strong problem statement</text>
+<text x="466" y="82" font-size="13.5" fill="#4a5263" text-anchor="start">“Current detectors miss 20% of new</text>
+<text x="466" y="102.925" font-size="13.5" fill="#4a5263" text-anchor="start">malware because they use static</text>
+<text x="466" y="123.85" font-size="13.5" fill="#4a5263" text-anchor="start">features only. We target under 5%.”</text>
+<rect x="24" y="200" width="196" height="90" rx="14" fill="#eef3fb" stroke="#2f62c8" stroke-width="1.6"/>
+<text x="122" y="238" font-size="15.5" fill="#1f4a9e" text-anchor="middle" font-weight="700">Hypothesis</text>
+<text x="122" y="262" font-size="12.5" fill="#4a5263" text-anchor="middle">What do you expect?</text>
+<path d="M220 245 H234" fill="none" stroke="#1c2230" stroke-width="1.6" marker-end="url(#m0)"/>
+<rect x="236" y="200" width="196" height="90" rx="14" fill="#f3f0fa" stroke="#7a4fc2" stroke-width="1.6"/>
+<text x="334" y="238" font-size="15.5" fill="#58378f" text-anchor="middle" font-weight="700">Methodology</text>
+<text x="334" y="262" font-size="12.5" fill="#4a5263" text-anchor="middle">A step-by-step plan</text>
+<path d="M432 245 H446" fill="none" stroke="#1c2230" stroke-width="1.6" marker-end="url(#m0)"/>
+<rect x="448" y="200" width="196" height="90" rx="14" fill="#fdf4e3" stroke="#b7791f" stroke-width="1.6"/>
+<text x="546" y="238" font-size="15.5" fill="#8a5a12" text-anchor="middle" font-weight="700">Justification</text>
+<text x="546" y="262" font-size="12.5" fill="#4a5263" text-anchor="middle">Why these choices?</text>
+<path d="M644 245 H658" fill="none" stroke="#1c2230" stroke-width="1.6" marker-end="url(#m0)"/>
+<rect x="660" y="200" width="196" height="90" rx="14" fill="#e3f4ee" stroke="#0f8a6a" stroke-width="1.6"/>
+<text x="758" y="238" font-size="15.5" fill="#0b6650" text-anchor="middle" font-weight="700">Reproducibility</text>
+<text x="758" y="262" font-size="12.5" fill="#4a5263" text-anchor="middle">Can others rebuild it?</text>
+<rect x="24" y="312" width="832" height="58" rx="29" fill="#1c2230"/>
+<text x="440" y="347" font-size="15.5" fill="#fff" text-anchor="middle" font-weight="700">If others cannot reproduce it, it is not science.</text>
+</svg>

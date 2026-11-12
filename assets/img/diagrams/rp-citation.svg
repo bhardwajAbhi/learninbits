@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 410" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">Citation, reference and DOI</title>
+  <desc id="d">A citation is the marker in the text, for example [1]. A reference is the full source at the end of the paper, under References. The DOI, the Digital Object Identifier, is a unique and permanent code for a digital document, so the link never breaks.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="24" y="24" width="300" height="220" rx="12" fill="#fff" stroke="#d9d4c7" stroke-width="1.5"/>
+<text x="44" y="56" font-size="15.5" fill="#1c2230" text-anchor="start" font-weight="700">In the text</text>
+<text x="44" y="90" font-size="13.5" fill="#4a5263" text-anchor="start">Earlier studies used static</text>
+<text x="44" y="114" font-size="13.5" fill="#4a5263" text-anchor="start">permissions to detect malware</text>
+<text x="44" y="138" font-size="13.5" fill="#4a5263" text-anchor="start">with good accuracy</text>
+<rect x="224" y="129" width="36" height="24" rx="6" fill="#eef3fb" stroke="#2f62c8" stroke-width="1.5"/>
+<text x="242" y="146" font-size="13" fill="#1f4a9e" text-anchor="middle" font-weight="700">[1]</text>
+<text x="44" y="214" font-size="12.5" fill="#1f4a9e" text-anchor="start" font-weight="700">Citation, the marker</text>
+<path d="M324 140 H384" fill="none" stroke="#2f62c8" stroke-width="1.8" marker-end="url(#m3)"/>
+<rect x="390" y="24" width="466" height="220" rx="12" fill="#fff" stroke="#d9d4c7" stroke-width="1.5"/>
+<text x="410" y="56" font-size="15.5" fill="#1c2230" text-anchor="start" font-weight="700">At the end, under References</text>
+<rect x="410" y="76" width="426" height="96" rx="10" fill="#f3f0fa" stroke="#7a4fc2" stroke-width="1.5"/>
+<text x="426" y="104" font-size="13.5" fill="#1c2230" text-anchor="start">[1] A. Author and B. Author, “Title of the</text>
+<text x="426" y="126" font-size="13.5" fill="#1c2230" text-anchor="start">paper,” Proc. Conference, pp. 1–10, 2024.</text>
+<text x="426" y="148" font-size="13.5" fill="#58378f" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">doi 10.xxxx/xxxxx</text>
+<text x="410" y="214" font-size="12.5" fill="#58378f" text-anchor="start" font-weight="700">Reference, the full source</text>
+<rect x="24" y="278" width="832" height="114" rx="14" fill="#e3f4ee" stroke="#0f8a6a" stroke-width="1.5"/>
+<text x="44" y="312" font-size="15.5" fill="#0b6650" text-anchor="start" font-weight="700">DOI, the Digital Object Identifier</text>
+<text x="44" y="340" font-size="13.5" fill="#1c2230" text-anchor="start">A unique, permanent code for a digital document. The link that it makes never breaks,</text>
+<text x="44" y="362" font-size="13.5" fill="#1c2230" text-anchor="start">even if the website of the publisher changes.</text>
+<path d="M640 172 V272" fill="none" stroke="#7a4fc2" stroke-width="1.6" stroke-dasharray="4 4" marker-end="url(#m5)"/>
+</svg>

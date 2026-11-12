@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 494" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">How SetFlagsRule and CheckFlagsRule handle flags in tests</title>
+  <desc id="d">Left, SetFlagsRule for unit tests in five steps. Before the test, reflection saves the field Flags.FEATURE_FLAGS. The rule then puts a FakeFeatureFlagsImpl in it. @EnableFlags and @DisableFlags fill the map of the fake. During the test, Flags.myFlag() reads the value from the map. After the test, the rule puts the original implementation back. Right, CheckFlagsRule for device tests. DeviceFlagsValueProvider reads the real state of each flag on the device. If the device state matches the @RequiresFlagsEnabled or @RequiresFlagsDisabled rule, the test runs. If not, the test is skipped, not failed. The rule never changes a flag.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="20" y="34" width="410" height="440" rx="16" fill="#e3f4ee" fill-opacity="0.55"/>
+<rect x="20" y="34" width="410" height="440" rx="16" fill="none" stroke="#0f8a6a" stroke-width="1.2" stroke-dasharray="6 5"/>
+<rect x="36" y="21" width="210.4" height="26" rx="13" fill="#fff" stroke="#0f8a6a" stroke-width="1.2"/>
+<text x="141.2" y="38.5" font-size="12.5" fill="#0b6650" text-anchor="middle" font-weight="700">SetFlagsRule, unit tests</text>
+<circle cx="50" cy="92" r="13" fill="#0f8a6a"/>
+<text x="50" y="96.5" font-size="12.5" fill="#fff" text-anchor="middle" font-weight="700">1</text>
+<rect x="74" y="62" width="336" height="62" rx="10" fill="#fff" stroke="#0f8a6a" stroke-width="1.3"/>
+<text x="90" y="84" font-size="13" fill="#0b6650" text-anchor="start" font-weight="700">Before the test</text>
+<text x="90" y="102" font-size="12.2" fill="#1c2230" text-anchor="start">Reflection saves the field</text>
+<text x="90" y="118" font-size="12.2" fill="#4a5263" text-anchor="start">Flags.FEATURE_FLAGS.</text>
+<path d="M50 106 L 50 154" fill="none" stroke="#0f8a6a" stroke-width="1.4" marker-end="url(#m4)"/>
+<circle cx="50" cy="172" r="13" fill="#0f8a6a"/>
+<text x="50" y="176.5" font-size="12.5" fill="#fff" text-anchor="middle" font-weight="700">2</text>
+<rect x="74" y="142" width="336" height="62" rx="10" fill="#fff" stroke="#0f8a6a" stroke-width="1.3"/>
+<text x="90" y="164" font-size="13" fill="#0b6650" text-anchor="start" font-weight="700">Swap</text>
+<text x="90" y="182" font-size="12.2" fill="#1c2230" text-anchor="start">The rule puts a</text>
+<text x="90" y="198" font-size="12.2" fill="#4a5263" text-anchor="start">FakeFeatureFlagsImpl in it.</text>
+<path d="M50 186 L 50 234" fill="none" stroke="#0f8a6a" stroke-width="1.4" marker-end="url(#m4)"/>
+<circle cx="50" cy="252" r="13" fill="#0f8a6a"/>
+<text x="50" y="256.5" font-size="12.5" fill="#fff" text-anchor="middle" font-weight="700">3</text>
+<rect x="74" y="222" width="336" height="62" rx="10" fill="#fff" stroke="#0f8a6a" stroke-width="1.3"/>
+<text x="90" y="244" font-size="13" fill="#0b6650" text-anchor="start" font-weight="700">Set values</text>
+<text x="90" y="262" font-size="12.2" fill="#1c2230" text-anchor="start">@EnableFlags and @DisableFlags</text>
+<text x="90" y="278" font-size="12.2" fill="#4a5263" text-anchor="start">fill the map of the fake.</text>
+<path d="M50 266 L 50 314" fill="none" stroke="#0f8a6a" stroke-width="1.4" marker-end="url(#m4)"/>
+<circle cx="50" cy="332" r="13" fill="#0f8a6a"/>
+<text x="50" y="336.5" font-size="12.5" fill="#fff" text-anchor="middle" font-weight="700">4</text>
+<rect x="74" y="302" width="336" height="62" rx="10" fill="#fff" stroke="#0f8a6a" stroke-width="1.3"/>
+<text x="90" y="324" font-size="13" fill="#0b6650" text-anchor="start" font-weight="700">Run</text>
+<text x="90" y="342" font-size="12.2" fill="#1c2230" text-anchor="start">Flags.myFlag() now reads</text>
+<text x="90" y="358" font-size="12.2" fill="#4a5263" text-anchor="start">the value from the map.</text>
+<path d="M50 346 L 50 394" fill="none" stroke="#0f8a6a" stroke-width="1.4" marker-end="url(#m4)"/>
+<circle cx="50" cy="412" r="13" fill="#0f8a6a"/>
+<text x="50" y="416.5" font-size="12.5" fill="#fff" text-anchor="middle" font-weight="700">5</text>
+<rect x="74" y="382" width="336" height="62" rx="10" fill="#fff" stroke="#0f8a6a" stroke-width="1.3"/>
+<text x="90" y="404" font-size="13" fill="#0b6650" text-anchor="start" font-weight="700">After the test</text>
+<text x="90" y="422" font-size="12.2" fill="#1c2230" text-anchor="start">The rule puts the original</text>
+<text x="90" y="438" font-size="12.2" fill="#4a5263" text-anchor="start">implementation back.</text>
+<rect x="450" y="34" width="410" height="440" rx="16" fill="#eef3fb" fill-opacity="0.55"/>
+<rect x="450" y="34" width="410" height="440" rx="16" fill="none" stroke="#2f62c8" stroke-width="1.2" stroke-dasharray="6 5"/>
+<rect x="603.2" y="21" width="240.8" height="26" rx="13" fill="#fff" stroke="#2f62c8" stroke-width="1.2"/>
+<text x="723.6" y="38.5" font-size="12.5" fill="#1f4a9e" text-anchor="middle" font-weight="700">CheckFlagsRule, device tests</text>
+<rect x="476" y="70" width="358" height="70" rx="10" fill="#fff" stroke="#2f62c8" stroke-width="1.3"/>
+<text x="492" y="94" font-size="13" fill="#1f4a9e" text-anchor="start" font-weight="700">Read the real state</text>
+<text x="492" y="114" font-size="12.2" fill="#1c2230" text-anchor="start">DeviceFlagsValueProvider asks</text>
+<text x="492" y="130" font-size="12.2" fill="#4a5263" text-anchor="start">the device for each flag value.</text>
+<path d="M655 140 L 655 170" fill="none" stroke="#2f62c8" stroke-width="1.6" marker-end="url(#m3)"/>
+<path d="M655 174 L805 222 L655 270 L505 222 Z" fill="#fff" stroke="#2f62c8" stroke-width="2"/>
+<text x="655" y="218.5" font-size="12.5" fill="#1f4a9e" text-anchor="middle" font-weight="700">Device state matches</text>
+<text x="655" y="235.5" font-size="12.5" fill="#1f4a9e" text-anchor="middle" font-weight="700">the @RequiresFlags rule?</text>
+<path d="M555 256 L 540 300" fill="none" stroke="#0f8a6a" stroke-width="1.6" marker-end="url(#m4)"/>
+<text x="528" y="286" font-size="12" fill="#0b6650" text-anchor="end" font-weight="800">Yes</text>
+<path d="M755 256 L 770 300" fill="none" stroke="#c2552d" stroke-width="1.6" marker-end="url(#m7)"/>
+<text x="782" y="286" font-size="12" fill="#963f1f" text-anchor="start" font-weight="800">No</text>
+<rect x="470" y="304" width="170" height="70" rx="10" fill="#e3f4ee" stroke="#0f8a6a" stroke-width="1.2"/>
+<text x="555" y="332" font-size="13" fill="#0b6650" text-anchor="middle" font-weight="700">The test runs.</text>
+<rect x="670" y="304" width="170" height="70" rx="10" fill="#fbecec" stroke="#c2552d" stroke-width="1.2"/>
+<text x="755" y="330" font-size="12.5" fill="#963f1f" text-anchor="middle" font-weight="700">The test is skipped,</text>
+<text x="755" y="348" font-size="12.5" fill="#963f1f" text-anchor="middle" font-weight="700">not failed.</text>
+<text x="655" y="410" font-size="12.3" fill="#4a5263" text-anchor="middle">The rule never changes a flag.</text>
+<text x="655" y="428" font-size="12.3" fill="#4a5263" text-anchor="middle">It only checks that the device</text>
+<text x="655" y="446" font-size="12.3" fill="#4a5263" text-anchor="middle">matches the test.</text>
+</svg>

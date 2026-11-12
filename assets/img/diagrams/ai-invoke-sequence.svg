@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 470" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">What happens inside one invoke call</title>
+  <desc id="d">A sequence diagram with five lanes: your code, the prompt template, the model client, the model service and the parser. Your code calls invoke with a dictionary. The template fills the placeholder and gives the full prompt to the client. The client sends it over the internet with the API key. The service runs the model and returns a message. The parser takes out the text. Your code gets one plain string.</desc>
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker>
+    <marker id="b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0 10 5 0 10z" fill="#2f7d55"/></marker>
+  </defs>
+
+  <!-- internet zone -->
+  <rect x="560" y="70" width="190" height="390" rx="12" fill="#f3f0fa"/>
+  <text x="655" y="452" font-size="11" font-weight="700" letter-spacing="1" text-anchor="middle" fill="#7a4fc2">ON THE INTERNET</text>
+
+  <!-- lane heads -->
+  <g font-size="12.5" font-weight="700" text-anchor="middle">
+    <rect x="20" y="16" width="130" height="46" rx="10" fill="#1c2230"/><text x="85" y="44" fill="#fff">Your code</text>
+    <rect x="190" y="16" width="130" height="46" rx="10" fill="#2f62c8"/><text x="255" y="38" fill="#fff">Prompt</text><text x="255" y="54" fill="#fff">template</text>
+    <rect x="360" y="16" width="130" height="46" rx="10" fill="#b7791f"/><text x="425" y="38" fill="#fff">Model client</text><text x="425" y="54" font-size="10.5" font-weight="500" fill="#fbecd3">ChatOpenRouter</text>
+    <rect x="590" y="16" width="130" height="46" rx="10" fill="#7a4fc2"/><text x="655" y="38" fill="#fff">Model</text><text x="655" y="54" fill="#fff">service</text>
+    <rect x="740" y="16" width="120" height="46" rx="10" fill="#0f8a6a"/><text x="800" y="44" fill="#fff">Parser</text>
+  </g>
+  <g stroke="#9aa0ab" stroke-width="1.5" stroke-dasharray="5 5">
+    <line x1="85" y1="62" x2="85" y2="440"/><line x1="255" y1="62" x2="255" y2="440"/><line x1="425" y1="62" x2="425" y2="440"/><line x1="655" y1="62" x2="655" y2="440"/><line x1="800" y1="62" x2="800" y2="440"/>
+  </g>
+
+  <g font-size="12" fill="#1c2230">
+    <!-- 1 -->
+    <line x1="85" y1="104" x2="249" y2="104" stroke="#1c2230" stroke-width="2" marker-end="url(#a)"/>
+    <circle cx="100" cy="88" r="10" fill="#1c2230"/><text x="100" y="92" font-size="11" font-weight="700" text-anchor="middle" fill="#fff">1</text>
+    <text x="116" y="92" font-family="JetBrains Mono, monospace" font-size="11">invoke({...})</text>
+    <!-- 2 -->
+    <rect x="200" y="122" width="110" height="40" rx="8" fill="#eef3fb" stroke="#2f62c8"/>
+    <text x="255" y="139" text-anchor="middle" font-size="11"><tspan font-weight="700">2</tspan> fills {event}</text>
+    <text x="255" y="154" text-anchor="middle" font-size="11">makes the prompt</text>
+    <line x1="255" y1="178" x2="419" y2="178" stroke="#1c2230" stroke-width="2" marker-end="url(#a)"/>
+    <text x="337" y="171" text-anchor="middle" font-size="11">full prompt</text>
+    <!-- 3 -->
+    <line x1="425" y1="214" x2="649" y2="214" stroke="#1c2230" stroke-width="2" marker-end="url(#a)"/>
+    <circle cx="440" cy="198" r="10" fill="#1c2230"/><text x="440" y="202" font-size="11" font-weight="700" text-anchor="middle" fill="#fff">3</text>
+    <text x="456" y="202" font-size="11">sends prompt and API key</text>
+    <!-- 4 -->
+    <rect x="600" y="232" width="110" height="52" rx="8" fill="#ffffff" stroke="#7a4fc2"/>
+    <text x="655" y="252" text-anchor="middle" font-size="11"><tspan font-weight="700">4</tspan> runs the model</text>
+    <text x="655" y="268" text-anchor="middle" font-size="11">writes the reply</text>
+    <line x1="655" y1="302" x2="431" y2="302" stroke="#2f7d55" stroke-width="2" stroke-dasharray="7 5" marker-end="url(#b)"/>
+    <text x="543" y="295" text-anchor="middle" font-size="11" fill="#1f5c3d">message object</text>
+    <!-- 5 -->
+    <line x1="425" y1="338" x2="794" y2="338" stroke="#2f7d55" stroke-width="2" stroke-dasharray="7 5" marker-end="url(#b)"/>
+    <circle cx="440" cy="322" r="10" fill="#2f7d55"/><text x="440" y="326" font-size="11" font-weight="700" text-anchor="middle" fill="#fff">5</text>
+    <text x="456" y="326" font-size="11" fill="#1f5c3d">the message goes to the parser</text>
+    <rect x="752" y="352" width="96" height="40" rx="8" fill="#e3f4ee" stroke="#0f8a6a"/>
+    <text x="800" y="369" text-anchor="middle" font-size="11">keeps only</text>
+    <text x="800" y="384" text-anchor="middle" font-size="11">the text</text>
+    <!-- 6 -->
+    <line x1="800" y1="410" x2="91" y2="410" stroke="#2f7d55" stroke-width="2" stroke-dasharray="7 5" marker-end="url(#b)"/>
+    <circle cx="300" cy="410" r="10" fill="#2f7d55"/><text x="300" y="414" font-size="11" font-weight="700" text-anchor="middle" fill="#fff">6</text>
+    <text x="318" y="427" font-size="11" fill="#1f5c3d">plain string: "MALWARE"</text>
+  </g>
+</svg>

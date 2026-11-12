@@ -1,0 +1,101 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 548" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">A six-month privacy implementation plan</title>
+  <desc id="d">Twenty-one activities over six months. Month 1 has governance and platform. Month 2 has the sample team, security, notice, consent and cookies. Month 3 has risk discovery, DPIA and safeguards for consented flows. Months 4 and 5 have safeguards for analytics, testing, call center, marketing and third-party data, and application changes. Month 6 has AI chatbot protection, AI governance, customizations, rights, sign-off and go live. Most money at risk sits in the safeguards, at up to 250 crore rupees each.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="300" y="20" width="72" height="24" rx="6" fill="#eef0f3"/>
+<text x="336" y="37" font-size="11.5" fill="#3f4a59" text-anchor="middle" font-weight="700">Month 1</text>
+<rect x="376" y="20" width="72" height="24" rx="6" fill="#eef0f3"/>
+<text x="412" y="37" font-size="11.5" fill="#3f4a59" text-anchor="middle" font-weight="700">Month 2</text>
+<rect x="452" y="20" width="72" height="24" rx="6" fill="#eef0f3"/>
+<text x="488" y="37" font-size="11.5" fill="#3f4a59" text-anchor="middle" font-weight="700">Month 3</text>
+<rect x="528" y="20" width="72" height="24" rx="6" fill="#eef0f3"/>
+<text x="564" y="37" font-size="11.5" fill="#3f4a59" text-anchor="middle" font-weight="700">Month 4</text>
+<rect x="604" y="20" width="72" height="24" rx="6" fill="#eef0f3"/>
+<text x="640" y="37" font-size="11.5" fill="#3f4a59" text-anchor="middle" font-weight="700">Month 5</text>
+<rect x="680" y="20" width="72" height="24" rx="6" fill="#eef0f3"/>
+<text x="716" y="37" font-size="11.5" fill="#3f4a59" text-anchor="middle" font-weight="700">Month 6</text>
+<text x="290" y="37" font-size="11.5" fill="#4a5263" text-anchor="end" font-weight="700">Activity</text>
+<text x="866" y="37" font-size="11.5" fill="#4a5263" text-anchor="end" font-weight="700">At risk</text>
+<rect x="14" y="50" width="856" height="22" rx="4" fill="#f6f4ef"/>
+<text x="290" y="65" font-size="11.3" fill="#1c2230" text-anchor="end">Privacy governance and policy</text>
+<rect x="302" y="54" width="68" height="16" rx="4" fill="#5d6b7e"/>
+<text x="866" y="65" font-size="11" fill="#7b8292" text-anchor="end">—</text>
+<text x="290" y="87" font-size="11.3" fill="#1c2230" text-anchor="end">Deploy the platform</text>
+<rect x="302" y="76" width="68" height="16" rx="4" fill="#5d6b7e"/>
+<text x="866" y="87" font-size="11" fill="#7b8292" text-anchor="end">—</text>
+<rect x="14" y="94" width="856" height="22" rx="4" fill="#f6f4ef"/>
+<text x="290" y="109" font-size="11.3" fill="#1c2230" text-anchor="end">Onboard a sample application team</text>
+<rect x="378" y="98" width="68" height="16" rx="4" fill="#5d6b7e"/>
+<text x="866" y="109" font-size="11" fill="#7b8292" text-anchor="end">—</text>
+<text x="290" y="131" font-size="11.3" fill="#1c2230" text-anchor="end">Security and firewall setup</text>
+<rect x="378" y="120" width="68" height="16" rx="4" fill="#5d6b7e"/>
+<text x="866" y="131" font-size="11" fill="#7b8292" text-anchor="end">—</text>
+<rect x="14" y="138" width="856" height="22" rx="4" fill="#f6f4ef"/>
+<text x="290" y="153" font-size="11.3" fill="#1c2230" text-anchor="end">Notice and consent</text>
+<rect x="378" y="142" width="68" height="16" rx="4" fill="#2f62c8"/>
+<text x="866" y="153" font-size="11" fill="#1f4a9e" text-anchor="end" font-weight="700">Rs 50 cr</text>
+<text x="290" y="175" font-size="11.3" fill="#1c2230" text-anchor="end">Cookies</text>
+<rect x="378" y="164" width="68" height="16" rx="4" fill="#2f62c8"/>
+<text x="866" y="175" font-size="11" fill="#1f4a9e" text-anchor="end" font-weight="700">Rs 50 cr</text>
+<rect x="14" y="182" width="856" height="22" rx="4" fill="#f6f4ef"/>
+<text x="290" y="197" font-size="11.3" fill="#1c2230" text-anchor="end">Data flow risk discovery</text>
+<rect x="454" y="186" width="68" height="16" rx="4" fill="#b7791f"/>
+<text x="866" y="197" font-size="11" fill="#8a5a12" text-anchor="end" font-weight="700">Rs 150 cr</text>
+<text x="290" y="219" font-size="11.3" fill="#1c2230" text-anchor="end">Data protection impact assessment</text>
+<rect x="454" y="208" width="68" height="16" rx="4" fill="#b7791f"/>
+<text x="866" y="219" font-size="11" fill="#8a5a12" text-anchor="end" font-weight="700">Rs 150 cr</text>
+<rect x="14" y="226" width="856" height="22" rx="4" fill="#f6f4ef"/>
+<text x="290" y="241" font-size="11.3" fill="#1c2230" text-anchor="end">Safeguards for consented data flows</text>
+<rect x="454" y="230" width="68" height="16" rx="4" fill="#c2552d"/>
+<text x="866" y="241" font-size="11" fill="#963f1f" text-anchor="end" font-weight="700">Rs 250 cr</text>
+<text x="290" y="263" font-size="11.3" fill="#1c2230" text-anchor="end">Safeguards for analytics data</text>
+<rect x="530" y="252" width="144" height="16" rx="4" fill="#c2552d"/>
+<text x="866" y="263" font-size="11" fill="#963f1f" text-anchor="end" font-weight="700">Rs 250 cr</text>
+<rect x="14" y="270" width="856" height="22" rx="4" fill="#f6f4ef"/>
+<text x="290" y="285" font-size="11.3" fill="#1c2230" text-anchor="end">Safeguards for test data</text>
+<rect x="530" y="274" width="144" height="16" rx="4" fill="#c2552d"/>
+<text x="866" y="285" font-size="11" fill="#963f1f" text-anchor="end" font-weight="700">Rs 250 cr</text>
+<text x="290" y="307" font-size="11.3" fill="#1c2230" text-anchor="end">Safeguards for call center data</text>
+<rect x="530" y="296" width="144" height="16" rx="4" fill="#c2552d"/>
+<text x="866" y="307" font-size="11" fill="#963f1f" text-anchor="end" font-weight="700">Rs 250 cr</text>
+<rect x="14" y="314" width="856" height="22" rx="4" fill="#f6f4ef"/>
+<text x="290" y="329" font-size="11.3" fill="#1c2230" text-anchor="end">Safeguards for marketing data sharing</text>
+<rect x="530" y="318" width="144" height="16" rx="4" fill="#c2552d"/>
+<text x="866" y="329" font-size="11" fill="#963f1f" text-anchor="end" font-weight="700">Rs 250 cr</text>
+<text x="290" y="351" font-size="11.3" fill="#1c2230" text-anchor="end">Safeguards for third-party sharing</text>
+<rect x="530" y="340" width="144" height="16" rx="4" fill="#c2552d"/>
+<text x="866" y="351" font-size="11" fill="#963f1f" text-anchor="end" font-weight="700">Rs 250 cr</text>
+<rect x="14" y="358" width="856" height="22" rx="4" fill="#f6f4ef"/>
+<text x="290" y="373" font-size="11.3" fill="#1c2230" text-anchor="end">Business application changes</text>
+<rect x="530" y="362" width="144" height="16" rx="4" fill="#5d6b7e"/>
+<text x="866" y="373" font-size="11" fill="#7b8292" text-anchor="end">—</text>
+<text x="290" y="395" font-size="11.3" fill="#1c2230" text-anchor="end">AI chatbot protection</text>
+<rect x="682" y="384" width="68" height="16" rx="4" fill="#c2552d"/>
+<text x="866" y="395" font-size="11" fill="#963f1f" text-anchor="end" font-weight="700">Rs 250 cr</text>
+<rect x="14" y="402" width="856" height="22" rx="4" fill="#f6f4ef"/>
+<text x="290" y="417" font-size="11.3" fill="#1c2230" text-anchor="end">AI governance</text>
+<rect x="682" y="406" width="68" height="16" rx="4" fill="#2f62c8"/>
+<text x="866" y="417" font-size="11" fill="#1f4a9e" text-anchor="end" font-weight="700">Rs 50 cr</text>
+<text x="290" y="439" font-size="11.3" fill="#1c2230" text-anchor="end">Customizations</text>
+<rect x="682" y="428" width="68" height="16" rx="4" fill="#5d6b7e"/>
+<text x="866" y="439" font-size="11" fill="#7b8292" text-anchor="end">—</text>
+<rect x="14" y="446" width="856" height="22" rx="4" fill="#f6f4ef"/>
+<text x="290" y="461" font-size="11.3" fill="#1c2230" text-anchor="end">Data principal rights</text>
+<rect x="682" y="450" width="68" height="16" rx="4" fill="#2f62c8"/>
+<text x="866" y="461" font-size="11" fill="#1f4a9e" text-anchor="end" font-weight="700">Rs 50 cr</text>
+<text x="290" y="483" font-size="11.3" fill="#1c2230" text-anchor="end">User acceptance sign-off</text>
+<rect x="682" y="472" width="68" height="16" rx="4" fill="#5d6b7e"/>
+<text x="866" y="483" font-size="11" fill="#7b8292" text-anchor="end">—</text>
+<rect x="14" y="490" width="856" height="22" rx="4" fill="#f6f4ef"/>
+<text x="290" y="505" font-size="11.3" fill="#1c2230" text-anchor="end">Go live</text>
+<rect x="682" y="494" width="68" height="16" rx="4" fill="#5d6b7e"/>
+<text x="866" y="505" font-size="11" fill="#7b8292" text-anchor="end">—</text>
+<rect x="300" y="522" width="14" height="14" rx="3" fill="#5d6b7e"/>
+<text x="320" y="533" font-size="11" fill="#4a5263" text-anchor="start" font-weight="600">foundation</text>
+<rect x="435" y="522" width="14" height="14" rx="3" fill="#2f62c8"/>
+<text x="455" y="533" font-size="11" fill="#4a5263" text-anchor="start" font-weight="600">up to Rs 50 crore</text>
+<rect x="570" y="522" width="14" height="14" rx="3" fill="#b7791f"/>
+<text x="590" y="533" font-size="11" fill="#4a5263" text-anchor="start" font-weight="600">up to Rs 150 crore</text>
+<rect x="705" y="522" width="14" height="14" rx="3" fill="#c2552d"/>
+<text x="725" y="533" font-size="11" fill="#4a5263" text-anchor="start" font-weight="600">up to Rs 250 crore</text>
+</svg>

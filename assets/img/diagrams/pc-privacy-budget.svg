@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 280" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">The privacy budget, epsilon and delta</title>
+  <desc id="d">A budget bar with a total epsilon of 1.0. Four queries spend 0.2, 0.3, 0.15 and 0.25, so 0.1 is left. A scale shows that a small epsilon gives more noise and stronger privacy, and a large epsilon gives less noise and more accurate results. Delta is a tiny chance that the epsilon promise fails.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<text x="30" y="34" font-size="14" fill="#1c2230" text-anchor="start" font-weight="700">The privacy budget</text>
+<text x="30" y="54" font-size="12" fill="#4a5263" text-anchor="start">Each query spends part of it. When it is empty, the system stops answering.</text>
+<rect x="30" y="72" width="162" height="44" rx="6" fill="#2f62c8"/>
+<text x="112" y="99" font-size="11.5" fill="#fff" text-anchor="middle" font-weight="700">Query 1, ε 0.20</text>
+<rect x="194" y="72" width="244" height="44" rx="6" fill="#7a4fc2"/>
+<text x="317" y="99" font-size="11.5" fill="#fff" text-anchor="middle" font-weight="700">Query 2, ε 0.30</text>
+<rect x="440" y="72" width="121" height="44" rx="6" fill="#b7791f"/>
+<text x="501.5" y="99" font-size="11.5" fill="#fff" text-anchor="middle" font-weight="700">Query 3, ε 0.15</text>
+<rect x="563" y="72" width="203" height="44" rx="6" fill="#c2552d"/>
+<text x="665.5" y="99" font-size="11.5" fill="#fff" text-anchor="middle" font-weight="700">Query 4, ε 0.25</text>
+<rect x="768" y="72" width="82" height="44" rx="6" fill="#f2efe8" stroke="#d9d4c7" stroke-width="1.5" stroke-dasharray="4 3"/>
+<text x="809" y="99" font-size="11.5" fill="#4a5263" text-anchor="middle" font-weight="700">left ε 0.10</text>
+<text x="30" y="138" font-size="11.5" fill="#1c2230" text-anchor="start" font-weight="600">Total budget ε = 1.0. Epsilon values add up across queries, so you can track them.</text>
+<defs><linearGradient id="e" x1="0" x2="1"><stop offset="0" stop-color="#2f7d55"/><stop offset="1" stop-color="#c2452d"/></linearGradient></defs>
+<rect x="30" y="180" width="820" height="18" rx="9" fill="url(#e)"/>
+<text x="30" y="172" font-size="12.5" fill="#0b6650" text-anchor="start" font-weight="700">Small ε</text>
+<text x="850" y="172" font-size="12.5" fill="#963f1f" text-anchor="end" font-weight="700">Large ε</text>
+<text x="30" y="222" font-size="11.5" fill="#4a5263" text-anchor="start">more noise, stronger privacy,</text>
+<text x="30" y="237.87" font-size="11.5" fill="#4a5263" text-anchor="start">less accurate results</text>
+<text x="850" y="222" font-size="11.5" fill="#4a5263" text-anchor="end">less noise, weaker privacy,</text>
+<text x="850" y="237.87" font-size="11.5" fill="#4a5263" text-anchor="end">more accurate results</text>
+<rect x="300" y="212" width="280" height="52" rx="10" fill="#eef0f3" stroke="#5d6b7e" stroke-width="1.5"/>
+<text x="440" y="234" font-size="11.5" fill="#3f4a59" text-anchor="middle" font-weight="700">δ (delta) is a tiny chance that</text>
+<text x="440" y="252" font-size="11.5" fill="#3f4a59" text-anchor="middle" font-weight="700">the ε promise fails</text>
+</svg>

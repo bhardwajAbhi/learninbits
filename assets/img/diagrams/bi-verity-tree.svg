@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 378" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">The dm-verity hash tree and the managed error mode</title>
+  <desc id="d">On the left, a hash tree. The root hash sits at the top, then two level-1 hashes, four level-2 hashes and eight data blocks. A read of block B5 hashes the block and walks up through its parents to the root. The root hash comes from the signed vbmeta. On the right, the mode MANAGED_RESTART_AND_EIO, the usual mode on production devices. In restart mode, corruption causes a reboot. After a reboot for hashtree corruption, the device enters EIO mode, where apps get I/O errors and the device does not reboot again. A new OS version returns the device to restart mode. The state lives in avb.managed_verity_mode. Other modes are RESTART, EIO, LOGGING and PANIC.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="155" y="40" width="150" height="34" rx="8" fill="#fdf4e3" stroke="#b7791f" stroke-width="1.8"/>
+<text x="230" y="62" font-size="11.6" fill="#8a5a12" text-anchor="middle" font-weight="700">Root hash</text>
+<text x="14" y="62" font-size="11" fill="#4a5263" text-anchor="start"></text>
+<rect x="65" y="112" width="120" height="34" rx="8" fill="#fff" stroke="#2f62c8" stroke-width="1.3"/>
+<text x="125" y="134" font-size="11.6" fill="#1f4a9e" text-anchor="middle" font-weight="600">Level 1</text>
+<rect x="275" y="112" width="120" height="34" rx="8" fill="#fdf4e3" stroke="#b7791f" stroke-width="1.8"/>
+<text x="335" y="134" font-size="11.6" fill="#8a5a12" text-anchor="middle" font-weight="700">Level 1</text>
+<text x="14" y="134" font-size="11" fill="#4a5263" text-anchor="start"></text>
+<rect x="32.5" y="184" width="80" height="34" rx="8" fill="#fff" stroke="#2f62c8" stroke-width="1.3"/>
+<text x="72.5" y="206" font-size="11.6" fill="#1f4a9e" text-anchor="middle" font-weight="600">H0</text>
+<rect x="137.5" y="184" width="80" height="34" rx="8" fill="#fff" stroke="#2f62c8" stroke-width="1.3"/>
+<text x="177.5" y="206" font-size="11.6" fill="#1f4a9e" text-anchor="middle" font-weight="600">H1</text>
+<rect x="242.5" y="184" width="80" height="34" rx="8" fill="#fdf4e3" stroke="#b7791f" stroke-width="1.8"/>
+<text x="282.5" y="206" font-size="11.6" fill="#8a5a12" text-anchor="middle" font-weight="700">H2</text>
+<rect x="347.5" y="184" width="80" height="34" rx="8" fill="#fff" stroke="#2f62c8" stroke-width="1.3"/>
+<text x="387.5" y="206" font-size="11.6" fill="#1f4a9e" text-anchor="middle" font-weight="600">H3</text>
+<text x="14" y="206" font-size="11" fill="#4a5263" text-anchor="start"></text>
+<rect x="24.25" y="256" width="44" height="34" rx="8" fill="#fff" stroke="#5d6b7e" stroke-width="1.3"/>
+<text x="46.25" y="278" font-size="11.6" fill="#3f4a59" text-anchor="middle" font-weight="600">B0</text>
+<rect x="76.75" y="256" width="44" height="34" rx="8" fill="#fff" stroke="#5d6b7e" stroke-width="1.3"/>
+<text x="98.75" y="278" font-size="11.6" fill="#3f4a59" text-anchor="middle" font-weight="600">B1</text>
+<rect x="129.25" y="256" width="44" height="34" rx="8" fill="#fff" stroke="#5d6b7e" stroke-width="1.3"/>
+<text x="151.25" y="278" font-size="11.6" fill="#3f4a59" text-anchor="middle" font-weight="600">B2</text>
+<rect x="181.75" y="256" width="44" height="34" rx="8" fill="#fff" stroke="#5d6b7e" stroke-width="1.3"/>
+<text x="203.75" y="278" font-size="11.6" fill="#3f4a59" text-anchor="middle" font-weight="600">B3</text>
+<rect x="234.25" y="256" width="44" height="34" rx="8" fill="#fff" stroke="#5d6b7e" stroke-width="1.3"/>
+<text x="256.25" y="278" font-size="11.6" fill="#3f4a59" text-anchor="middle" font-weight="600">B4</text>
+<rect x="286.75" y="256" width="44" height="34" rx="8" fill="#fdf4e3" stroke="#b7791f" stroke-width="1.8"/>
+<text x="308.75" y="278" font-size="11.6" fill="#8a5a12" text-anchor="middle" font-weight="700">B5</text>
+<rect x="339.25" y="256" width="44" height="34" rx="8" fill="#fff" stroke="#5d6b7e" stroke-width="1.3"/>
+<text x="361.25" y="278" font-size="11.6" fill="#3f4a59" text-anchor="middle" font-weight="600">B6</text>
+<rect x="391.75" y="256" width="44" height="34" rx="8" fill="#fff" stroke="#5d6b7e" stroke-width="1.3"/>
+<text x="413.75" y="278" font-size="11.6" fill="#3f4a59" text-anchor="middle" font-weight="600">B7</text>
+<text x="14" y="278" font-size="11" fill="#4a5263" text-anchor="start"></text>
+<line x1="230" y1="74" x2="125" y2="112" stroke="#d9d4c7" stroke-width="1.4"/>
+<line x1="230" y1="74" x2="335" y2="112" stroke="#b7791f" stroke-width="2.4"/>
+<line x1="125" y1="146" x2="72.5" y2="184" stroke="#d9d4c7" stroke-width="1.4"/>
+<line x1="125" y1="146" x2="177.5" y2="184" stroke="#d9d4c7" stroke-width="1.4"/>
+<line x1="335" y1="146" x2="282.5" y2="184" stroke="#b7791f" stroke-width="2.4"/>
+<line x1="335" y1="146" x2="387.5" y2="184" stroke="#d9d4c7" stroke-width="1.4"/>
+<line x1="72.5" y1="218" x2="46.25" y2="256" stroke="#d9d4c7" stroke-width="1.4"/>
+<line x1="72.5" y1="218" x2="98.75" y2="256" stroke="#d9d4c7" stroke-width="1.4"/>
+<line x1="177.5" y1="218" x2="151.25" y2="256" stroke="#d9d4c7" stroke-width="1.4"/>
+<line x1="177.5" y1="218" x2="203.75" y2="256" stroke="#d9d4c7" stroke-width="1.4"/>
+<line x1="282.5" y1="218" x2="256.25" y2="256" stroke="#d9d4c7" stroke-width="1.4"/>
+<line x1="282.5" y1="218" x2="308.75" y2="256" stroke="#b7791f" stroke-width="2.4"/>
+<line x1="387.5" y1="218" x2="361.25" y2="256" stroke="#d9d4c7" stroke-width="1.4"/>
+<line x1="387.5" y1="218" x2="413.75" y2="256" stroke="#d9d4c7" stroke-width="1.4"/>
+<text x="230" y="316" font-size="12" fill="#4a5263" text-anchor="middle" font-style="italic">A read of block B5 hashes the block and walks up to the root.</text>
+<text x="230" y="334" font-size="12" fill="#4a5263" text-anchor="middle" font-style="italic">The root hash itself comes from the signed vbmeta.</text>
+<text x="480" y="34" font-size="13" fill="#1c2230" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">MANAGED_RESTART_AND_EIO</text>
+<text x="480" y="54" font-size="12" fill="#4a5263" text-anchor="start">The usual mode on production devices</text>
+<rect x="480" y="74" width="170" height="76" rx="12" fill="#fff" stroke="#2f62c8" stroke-width="1.7"/>
+<rect x="480" y="74" width="6" height="76" rx="3" fill="#2f62c8"/>
+<text x="500" y="102" font-size="13" fill="#1f4a9e" text-anchor="start" font-weight="700">Restart mode</text>
+<text x="500" y="126" font-size="11.8" fill="#4a5263" text-anchor="start">Corruption causes</text>
+<text x="500" y="143" font-size="11.8" fill="#4a5263" text-anchor="start">a reboot</text>
+<rect x="690" y="74" width="170" height="76" rx="12" fill="#fff" stroke="#b7791f" stroke-width="1.7"/>
+<rect x="690" y="74" width="6" height="76" rx="3" fill="#b7791f"/>
+<text x="710" y="102" font-size="13" fill="#8a5a12" text-anchor="start" font-weight="700">EIO mode</text>
+<text x="710" y="126" font-size="11.8" fill="#4a5263" text-anchor="start">Apps get I/O errors,</text>
+<text x="710" y="143" font-size="11.8" fill="#4a5263" text-anchor="start">no more reboots</text>
+<path d="M650 100 L 686 100" fill="none" stroke="#c2552d" stroke-width="1.8" marker-end="url(#m7)"/>
+<text x="670" y="92" font-size="11" fill="#c2552d" text-anchor="middle" font-weight="600"></text>
+<text x="668" y="172" font-size="11.4" fill="#963f1f" text-anchor="middle" font-weight="600">The reboot reason was</text>
+<text x="668" y="187" font-size="11.4" fill="#963f1f" text-anchor="middle" font-weight="600">hashtree corruption</text>
+<path d="M775 150 C 775 290, 565 290, 565 154" fill="none" stroke="#0f8a6a" stroke-width="1.8" marker-end="url(#m4)"/>
+<text x="670" y="270" font-size="11.4" fill="#0b6650" text-anchor="middle" font-weight="600">A new OS version</text>
+<text x="670" y="285" font-size="11.4" fill="#0b6650" text-anchor="middle" font-weight="600">was detected</text>
+<rect x="480" y="304" width="380" height="58" rx="10" fill="#f2efe8"/>
+<text x="494" y="326" font-size="12" fill="#1c2230" text-anchor="start" font-weight="700">State in avb.managed_verity_mode</text>
+<text x="494" y="346" font-size="11.6" fill="#4a5263" text-anchor="start">Other modes are RESTART, EIO, LOGGING and PANIC.</text>
+</svg>

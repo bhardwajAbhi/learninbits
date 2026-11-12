@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 296" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">The parts of a generative AI app</title>
+  <desc id="d">Four parts from left to right. The user types a question and reads the answer. The web page, made with Streamlit, has a text box, buttons and a chat window, and is added in chapter 4. Your program uses LangChain for the prompt template, the chain, the parser and the memory, and grows in chapters 5 to 14. The language model is in the cloud, such as Gemini or OpenAI, or local with Ollama, and is covered in chapters 1 to 3. The question travels to the right and the answer travels back to the left.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="20" y="40" width="196" height="150" rx="12" fill="#fff" stroke="#5d6b7e" stroke-width="1.6"/>
+<path d="M32 40 h172 a12 12 0 0 1 12 12 v22 h-196 v-22 a12 12 0 0 1 12 -12z" fill="#5d6b7e"/>
+<text x="34" y="61.86" font-size="13.5" fill="#fff" text-anchor="start" font-weight="700">User</text>
+<text x="34" y="96" font-size="12" fill="#4a5263" text-anchor="start">Types a question</text>
+<text x="34" y="114.6" font-size="12" fill="#4a5263" text-anchor="start">and reads the answer</text>
+<path d="M217 100 L 233 100" fill="none" stroke="#1c2230" stroke-width="1.6" marker-end="url(#m0)"/>
+<path d="M233 140 L 217 140" fill="none" stroke="#4a5263" stroke-width="1.4" marker-end="url(#m1)"/>
+<rect x="234" y="40" width="196" height="150" rx="12" fill="#fff" stroke="#0f8a6a" stroke-width="1.6"/>
+<path d="M246 40 h172 a12 12 0 0 1 12 12 v22 h-196 v-22 a12 12 0 0 1 12 -12z" fill="#0f8a6a"/>
+<text x="248" y="61.86" font-size="13.5" fill="#fff" text-anchor="start" font-weight="700">Web page</text>
+<text x="248" y="96" font-size="12" fill="#4a5263" text-anchor="start">Streamlit</text>
+<text x="248" y="114.6" font-size="12" fill="#4a5263" text-anchor="start">Text box, buttons,</text>
+<text x="248" y="133.2" font-size="12" fill="#4a5263" text-anchor="start">chat window</text>
+<path d="M431 100 L 447 100" fill="none" stroke="#1c2230" stroke-width="1.6" marker-end="url(#m0)"/>
+<path d="M447 140 L 431 140" fill="none" stroke="#4a5263" stroke-width="1.4" marker-end="url(#m1)"/>
+<rect x="448" y="40" width="196" height="150" rx="12" fill="#fff" stroke="#7a4fc2" stroke-width="1.6"/>
+<path d="M460 40 h172 a12 12 0 0 1 12 12 v22 h-196 v-22 a12 12 0 0 1 12 -12z" fill="#7a4fc2"/>
+<text x="462" y="61.86" font-size="13.5" fill="#fff" text-anchor="start" font-weight="700">Your program</text>
+<text x="462" y="96" font-size="12" fill="#4a5263" text-anchor="start">LangChain</text>
+<text x="462" y="114.6" font-size="12" fill="#4a5263" text-anchor="start">Prompt template, chain,</text>
+<text x="462" y="133.2" font-size="12" fill="#4a5263" text-anchor="start">parser, memory</text>
+<path d="M645 100 L 661 100" fill="none" stroke="#1c2230" stroke-width="1.6" marker-end="url(#m0)"/>
+<path d="M661 140 L 645 140" fill="none" stroke="#4a5263" stroke-width="1.4" marker-end="url(#m1)"/>
+<rect x="662" y="40" width="196" height="150" rx="12" fill="#fff" stroke="#2f62c8" stroke-width="1.6"/>
+<path d="M674 40 h172 a12 12 0 0 1 12 12 v22 h-196 v-22 a12 12 0 0 1 12 -12z" fill="#2f62c8"/>
+<text x="676" y="61.86" font-size="13.5" fill="#fff" text-anchor="start" font-weight="700">Language model</text>
+<text x="676" y="96" font-size="12" fill="#4a5263" text-anchor="start">Cloud, such as Gemini</text>
+<text x="676" y="114.6" font-size="12" fill="#4a5263" text-anchor="start">or OpenAI, or local</text>
+<text x="676" y="133.2" font-size="12" fill="#4a5263" text-anchor="start">with Ollama</text>
+<text x="440" y="226" font-size="12.2" fill="#4a5263" text-anchor="middle" font-style="italic">The question travels to the right. The answer travels back to the left.</text>
+<rect x="234" y="250" width="196" height="28" rx="14" fill="#e3f4ee" stroke="#0f8a6a" stroke-width="1.2"/>
+<text x="332" y="268.14" font-size="11.5" fill="#0b6650" text-anchor="middle" font-weight="700">Added in chapter 4</text>
+<rect x="448" y="250" width="196" height="28" rx="14" fill="#f3f0fa" stroke="#7a4fc2" stroke-width="1.2"/>
+<text x="546" y="268.14" font-size="11.5" fill="#58378f" text-anchor="middle" font-weight="700">Grows in chapters 5 to 14</text>
+<rect x="662" y="250" width="196" height="28" rx="14" fill="#eef3fb" stroke="#2f62c8" stroke-width="1.2"/>
+<text x="760" y="268.14" font-size="11.5" fill="#1f4a9e" text-anchor="middle" font-weight="700">Chapters 1 to 3</text>
+</svg>

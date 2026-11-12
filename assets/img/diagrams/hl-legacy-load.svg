@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 320" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">How a legacy HAL module is found</title>
+  <desc id="d">hw_get_module for lights looks for a file name in this order. First the property ro.hardware.lights, which gives lights dot value dot so. Then ro.hardware, for example lights.ranchu.so on the emulator. Then ro.product.board, ro.board.platform and ro.arch. If no property matched, lights.default.so. For each name, it checks the folders /odm/lib64/hw, /vendor/lib64/hw and /system/lib64/hw. The first file that exists wins. Then dlopen loads it, and dlsym of HMI finds its module record. On 32-bit devices, lib/hw replaces lib64/hw.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<text x="20" y="32" font-size="12.6" fill="#1c2230" text-anchor="start" font-weight="700">hw_get_module(&quot;lights&quot;, ...) looks for a file name in this order</text>
+<circle cx="36" cy="66" r="12" fill="#7a4fc2"/>
+<text x="36" y="69.96" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">1</text>
+<rect x="58" y="48" width="250" height="36" rx="8" fill="#f3f0fa" stroke="#7a4fc2" stroke-width="1.2"/>
+<text x="72" y="71" font-size="11.6" fill="#58378f" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="600">ro.hardware.lights</text>
+<path d="M310 66 L 350 66" fill="none" stroke="#1c2230" stroke-width="1.3" marker-end="url(#m0)"/>
+<text x="358" y="71" font-size="11.6" fill="#1c2230" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="600">lights.&lt;value&gt;.so</text>
+<circle cx="36" cy="110" r="12" fill="#2f62c8"/>
+<text x="36" y="113.96" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">2</text>
+<rect x="58" y="92" width="250" height="36" rx="8" fill="#eef3fb" stroke="#2f62c8" stroke-width="1.2"/>
+<text x="72" y="115" font-size="11.6" fill="#1f4a9e" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="600">ro.hardware</text>
+<path d="M310 110 L 350 110" fill="none" stroke="#1c2230" stroke-width="1.3" marker-end="url(#m0)"/>
+<text x="358" y="115" font-size="11.6" fill="#1c2230" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="600">lights.ranchu.so</text>
+<circle cx="36" cy="154" r="12" fill="#2f62c8"/>
+<text x="36" y="157.96" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">3</text>
+<rect x="58" y="136" width="250" height="36" rx="8" fill="#eef3fb" stroke="#2f62c8" stroke-width="1.2"/>
+<text x="72" y="159" font-size="11.6" fill="#1f4a9e" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="600">ro.product.board</text>
+<path d="M310 154 L 350 154" fill="none" stroke="#1c2230" stroke-width="1.3" marker-end="url(#m0)"/>
+<text x="358" y="159" font-size="11.6" fill="#1c2230" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="600">lights.&lt;board&gt;.so</text>
+<circle cx="36" cy="198" r="12" fill="#2f62c8"/>
+<text x="36" y="201.96" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">4</text>
+<rect x="58" y="180" width="250" height="36" rx="8" fill="#eef3fb" stroke="#2f62c8" stroke-width="1.2"/>
+<text x="72" y="203" font-size="11.6" fill="#1f4a9e" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="600">ro.board.platform</text>
+<path d="M310 198 L 350 198" fill="none" stroke="#1c2230" stroke-width="1.3" marker-end="url(#m0)"/>
+<text x="358" y="203" font-size="11.6" fill="#1c2230" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="600">lights.&lt;platform&gt;.so</text>
+<circle cx="36" cy="242" r="12" fill="#2f62c8"/>
+<text x="36" y="245.96" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">5</text>
+<rect x="58" y="224" width="250" height="36" rx="8" fill="#eef3fb" stroke="#2f62c8" stroke-width="1.2"/>
+<text x="72" y="247" font-size="11.6" fill="#1f4a9e" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="600">ro.arch</text>
+<path d="M310 242 L 350 242" fill="none" stroke="#1c2230" stroke-width="1.3" marker-end="url(#m0)"/>
+<text x="358" y="247" font-size="11.6" fill="#1c2230" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="600">lights.&lt;arch&gt;.so</text>
+<circle cx="36" cy="286" r="12" fill="#5d6b7e"/>
+<text x="36" y="289.96" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">6</text>
+<rect x="58" y="268" width="250" height="36" rx="8" fill="#eef0f3" stroke="#5d6b7e" stroke-width="1.2"/>
+<text x="72" y="291" font-size="11.6" fill="#3f4a59" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="600">no property matched</text>
+<path d="M310 286 L 350 286" fill="none" stroke="#1c2230" stroke-width="1.3" marker-end="url(#m0)"/>
+<text x="358" y="291" font-size="11.6" fill="#1c2230" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="600">lights.default.so</text>
+<rect x="560" y="48" width="300" height="252" rx="12" fill="#fff" stroke="#0f8a6a" stroke-width="1.4"/>
+<text x="578" y="74" font-size="12" fill="#0b6650" text-anchor="start" font-weight="700">For each name, check the folders</text>
+<text x="578" y="102" font-size="11.6" fill="#1c2230" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="600">/odm/lib64/hw/</text>
+<text x="578" y="124" font-size="11.6" fill="#1c2230" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="600">/vendor/lib64/hw/</text>
+<text x="578" y="146" font-size="11.6" fill="#1c2230" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="600">/system/lib64/hw/</text>
+<text x="578" y="184" font-size="11.4" fill="#1c2230" text-anchor="start">The first file that exists wins.</text>
+<text x="578" y="206" font-size="11.4" fill="#1c2230" text-anchor="start">Then dlopen() loads it, and</text>
+<text x="578" y="226" font-size="11.4" fill="#1c2230" text-anchor="start">dlsym(&quot;HMI&quot;) finds its module record.</text>
+<text x="578" y="262" font-size="10.8" fill="#4a5263" text-anchor="start">On 32-bit devices, lib/hw/ replaces lib64/hw/.</text>
+</svg>

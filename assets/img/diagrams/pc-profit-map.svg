@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 380" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">Privacy as a profit center</title>
+  <desc id="d">Activities on two axes. Notice and consent, rights, DPIA and RoPA give compliant operations. Rule 6 safeguards are in the middle. PET-based querying, PET-based AI training, SLM-based protection, agentic privacy and responsible AI give new revenue.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="110" y="24" width="740" height="300" rx="10" fill="#fff" stroke="#d9d4c7" stroke-width="1.5"/>
+<path d="M110 344 H850" fill="none" stroke="#4a5263" stroke-width="1.6" marker-end="url(#m1)"/>
+<text x="110" y="366" font-size="12" fill="#4a5263" text-anchor="start" font-weight="600">Governance</text>
+<text x="850" y="366" font-size="12" fill="#4a5263" text-anchor="end" font-weight="600">Risk mitigation</text>
+<path d="M90 324 V24" fill="none" stroke="#4a5263" stroke-width="1.6" marker-end="url(#m1)"/>
+<text x="80" y="304" font-size="11.5" fill="#4a5263" text-anchor="end" font-weight="600">Compliant</text>
+<text x="80" y="319.87" font-size="11.5" fill="#4a5263" text-anchor="end" font-weight="600">operations</text>
+<text x="80" y="36" font-size="11.5" fill="#4a5263" text-anchor="end" font-weight="600">New</text>
+<text x="80" y="51.87" font-size="11.5" fill="#4a5263" text-anchor="end" font-weight="600">revenue</text>
+<path d="M300 290 Q520 200 790 40" fill="none" stroke="#d9d4c7" stroke-width="4" stroke-dasharray="2 8"/>
+<circle cx="300" cy="290" r="8" fill="#5d6b7e"/>
+<text x="286" y="294" font-size="12" fill="#1c2230" text-anchor="end" font-weight="600">Notice and consent</text>
+<circle cx="350" cy="262" r="8" fill="#5d6b7e"/>
+<text x="336" y="266" font-size="12" fill="#1c2230" text-anchor="end" font-weight="600">Data principal rights</text>
+<circle cx="400" cy="234" r="8" fill="#5d6b7e"/>
+<text x="386" y="238" font-size="12" fill="#1c2230" text-anchor="end" font-weight="600">DPIA and RoPA</text>
+<circle cx="500" cy="190" r="8" fill="#b7791f"/>
+<text x="486" y="194" font-size="12" fill="#1c2230" text-anchor="end" font-weight="600">Rule 6 security safeguards</text>
+<circle cx="580" cy="140" r="8" fill="#0f8a6a"/>
+<text x="566" y="144" font-size="12" fill="#1c2230" text-anchor="end" font-weight="600">PET-based querying</text>
+<circle cx="640" cy="112" r="8" fill="#0f8a6a"/>
+<text x="626" y="116" font-size="12" fill="#1c2230" text-anchor="end" font-weight="600">PET-based AI training</text>
+<circle cx="700" cy="86" r="8" fill="#0f8a6a"/>
+<text x="686" y="90" font-size="12" fill="#1c2230" text-anchor="end" font-weight="600">SLM-based protection</text>
+<circle cx="750" cy="62" r="8" fill="#0f8a6a"/>
+<text x="736" y="66" font-size="12" fill="#1c2230" text-anchor="end" font-weight="600">Agentic privacy</text>
+<circle cx="790" cy="40" r="8" fill="#0f8a6a"/>
+<text x="776" y="44" font-size="12" fill="#1c2230" text-anchor="end" font-weight="600">Responsible AI</text>
+<text x="330" y="110" font-size="12" fill="#3f4a59" text-anchor="middle" font-weight="700">Protects you from penalties</text>
+<text x="650" y="250" font-size="12" fill="#0b6650" text-anchor="middle" font-weight="700">Unlocks data you would lock away</text>
+</svg>

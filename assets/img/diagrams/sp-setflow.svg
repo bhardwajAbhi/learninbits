@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 608" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">The path of a set request</title>
+  <desc id="d">A sequence diagram with the lanes caller, socket, init, SELinux, shared memory. Step 1, caller to socket, __system_property_set(name, value), connect and send name and value. Step 2, socket to init, accept4(), SO_PEERCRED, pid, uid and gid of the caller. Step 3, init to init, getpeercon(), the SELinux context of the caller. Step 4, init to init, property_info lookup, the context and type of the property. Step 5, init to SELinux, selinux_check_access(..., &quot;set&quot;), can this caller set this property. Step 6, SELinux to init, allowed, or denied, with an audit log. Step 7, init to init, CheckType(type, value), for example bool or int. Step 8, init to shared memory, update or add the value, ro. only if it does not exist yet. Step 9, init to caller, PROP_SUCCESS, or an error code.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="15" y="18" width="150" height="42" rx="10" fill="#eef0f3" stroke="#5d6b7e" stroke-width="1.4"/>
+<text x="90" y="44" font-size="11.8" fill="#3f4a59" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="700">caller</text>
+<line x1="90" y1="60" x2="90" y2="592" stroke="#d9d4c7" stroke-width="1.6" stroke-dasharray="5 5"/>
+<rect x="190" y="18" width="150" height="42" rx="10" fill="#f3f0fa" stroke="#7a4fc2" stroke-width="1.4"/>
+<text x="265" y="44" font-size="11.8" fill="#58378f" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="700">socket</text>
+<line x1="265" y1="60" x2="265" y2="592" stroke="#d9d4c7" stroke-width="1.6" stroke-dasharray="5 5"/>
+<rect x="365" y="18" width="150" height="42" rx="10" fill="#eef3fb" stroke="#2f62c8" stroke-width="1.4"/>
+<text x="440" y="44" font-size="11.8" fill="#1f4a9e" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="700">init</text>
+<line x1="440" y1="60" x2="440" y2="592" stroke="#d9d4c7" stroke-width="1.6" stroke-dasharray="5 5"/>
+<rect x="540" y="18" width="150" height="42" rx="10" fill="#fbecec" stroke="#c2552d" stroke-width="1.4"/>
+<text x="615" y="44" font-size="12.3" fill="#963f1f" text-anchor="middle" font-weight="700">SELinux</text>
+<line x1="615" y1="60" x2="615" y2="592" stroke="#d9d4c7" stroke-width="1.6" stroke-dasharray="5 5"/>
+<rect x="715" y="18" width="150" height="42" rx="10" fill="#e3f4ee" stroke="#0f8a6a" stroke-width="1.4"/>
+<text x="790" y="44" font-size="11.8" fill="#0b6650" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="700">shared memory</text>
+<line x1="790" y1="60" x2="790" y2="592" stroke="#d9d4c7" stroke-width="1.6" stroke-dasharray="5 5"/>
+<path d="M94 98 L 259 98" fill="none" stroke="#5d6b7e" stroke-width="1.7" marker-end="url(#m8)"/>
+<circle cx="108" cy="85" r="10" fill="#5d6b7e"/>
+<text x="108" y="88.96" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">1</text>
+<text x="124" y="90" font-size="12" fill="#3f4a59" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">__system_property_set(name, value)</text>
+<text x="124" y="114" font-size="11.3" fill="#4a5263" text-anchor="start">connect and send name and value</text>
+<path d="M269 154 L 434 154" fill="none" stroke="#7a4fc2" stroke-width="1.7" marker-end="url(#m5)"/>
+<circle cx="283" cy="141" r="10" fill="#7a4fc2"/>
+<text x="283" y="144.96" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">2</text>
+<text x="299" y="146" font-size="12" fill="#58378f" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">accept4(), SO_PEERCRED</text>
+<text x="299" y="170" font-size="11.3" fill="#4a5263" text-anchor="start">pid, uid and gid of the caller</text>
+<path d="M440 200 h34 v18 h-30" fill="none" stroke="#2f62c8" stroke-width="1.6"/>
+<path d="M448 218 L 442 218" fill="none" stroke="#2f62c8" stroke-width="1.6" marker-end="url(#m3)"/>
+<circle cx="496" cy="209" r="10" fill="#2f62c8"/>
+<text x="496" y="212.96" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">3</text>
+<text x="512" y="213" font-size="12" fill="#1f4a9e" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">getpeercon()</text>
+<text x="512" y="229" font-size="11.3" fill="#4a5263" text-anchor="start">the SELinux context of the caller</text>
+<path d="M440 256 h34 v18 h-30" fill="none" stroke="#2f62c8" stroke-width="1.6"/>
+<path d="M448 274 L 442 274" fill="none" stroke="#2f62c8" stroke-width="1.6" marker-end="url(#m3)"/>
+<circle cx="496" cy="265" r="10" fill="#2f62c8"/>
+<text x="496" y="268.96" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">4</text>
+<text x="512" y="269" font-size="12" fill="#1f4a9e" text-anchor="start" font-weight="700">property_info lookup</text>
+<text x="512" y="285" font-size="11.3" fill="#4a5263" text-anchor="start">the context and type of the property</text>
+<path d="M444 322 L 609 322" fill="none" stroke="#2f62c8" stroke-width="1.7" marker-end="url(#m3)"/>
+<circle cx="458" cy="309" r="10" fill="#2f62c8"/>
+<text x="458" y="312.96" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">5</text>
+<text x="474" y="314" font-size="12" fill="#1f4a9e" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">selinux_check_access(..., &quot;set&quot;)</text>
+<text x="474" y="338" font-size="11.3" fill="#4a5263" text-anchor="start">can this caller set this property</text>
+<path d="M611 378 L 446 378" fill="none" stroke="#c2552d" stroke-width="1.7" stroke-dasharray="6 4" marker-end="url(#m7)"/>
+<circle cx="458" cy="365" r="10" fill="#c2552d"/>
+<text x="458" y="368.96" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">6</text>
+<text x="474" y="370" font-size="12" fill="#963f1f" text-anchor="start" font-weight="700">allowed</text>
+<text x="474" y="394" font-size="11.3" fill="#4a5263" text-anchor="start">or denied, with an audit log</text>
+<path d="M440 424 h34 v18 h-30" fill="none" stroke="#2f62c8" stroke-width="1.6"/>
+<path d="M448 442 L 442 442" fill="none" stroke="#2f62c8" stroke-width="1.6" marker-end="url(#m3)"/>
+<circle cx="496" cy="433" r="10" fill="#2f62c8"/>
+<text x="496" y="436.96" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">7</text>
+<text x="512" y="437" font-size="12" fill="#1f4a9e" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">CheckType(type, value)</text>
+<text x="512" y="453" font-size="11.3" fill="#4a5263" text-anchor="start">for example bool or int</text>
+<path d="M444 490 L 784 490" fill="none" stroke="#2f62c8" stroke-width="1.7" marker-end="url(#m3)"/>
+<circle cx="458" cy="477" r="10" fill="#2f62c8"/>
+<text x="458" y="480.96" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">8</text>
+<text x="474" y="482" font-size="12" fill="#1f4a9e" text-anchor="start" font-weight="700">update or add the value</text>
+<text x="474" y="506" font-size="11.3" fill="#4a5263" text-anchor="start">ro. only if it does not exist yet</text>
+<path d="M436 546 L 96 546" fill="none" stroke="#2f62c8" stroke-width="1.7" stroke-dasharray="6 4" marker-end="url(#m3)"/>
+<circle cx="108" cy="533" r="10" fill="#2f62c8"/>
+<text x="108" y="536.96" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">9</text>
+<text x="124" y="538" font-size="12" fill="#1f4a9e" text-anchor="start" font-weight="700">PROP_SUCCESS</text>
+<text x="124" y="562" font-size="11.3" fill="#4a5263" text-anchor="start">or an error code</text>
+</svg>

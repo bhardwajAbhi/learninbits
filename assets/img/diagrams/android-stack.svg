@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 470" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">The five layers of the Android stack</title>
+  <desc id="d">Apps are at the top. Under them are the framework, the runtime, the native layer and the Linux kernel. Hardware is under the kernel.</desc>
+  <defs>
+    <marker id="ah" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker>
+  </defs>
+
+  <!-- side arrow -->
+  <line x1="726" y1="400" x2="726" y2="34" stroke="#7b8292" stroke-width="2" marker-end="url(#ah)" marker-start="url(#ah)"/>
+  <text x="742" y="40" font-size="11" fill="#4a5263" transform="rotate(90 742 40)">Closer to you</text>
+  <text x="742" y="290" font-size="11" fill="#4a5263" transform="rotate(90 742 290)">Closer to hardware</text>
+
+  <!-- layers -->
+  <g>
+    <rect x="20" y="20" width="686" height="64" rx="10" fill="#0f8a6a"/>
+    <text x="40" y="49" font-size="17" font-weight="700" fill="#fff">Apps</text>
+    <text x="40" y="70" font-size="12" fill="#d8f2ea">Layer 5</text>
+    <text x="300" y="57" font-size="14" fill="#fff">Phone, Camera, Settings, Launcher and your apps</text>
+  </g>
+  <g>
+    <rect x="20" y="94" width="686" height="64" rx="10" fill="#2f62c8"/>
+    <text x="40" y="123" font-size="17" font-weight="700" fill="#fff">Java API framework</text>
+    <text x="40" y="144" font-size="12" fill="#dbe5fb">Layer 4</text>
+    <text x="300" y="122" font-size="14" fill="#fff">system_server and the system services:</text>
+    <text x="300" y="142" font-size="14" fill="#fff">activities, windows, packages, notifications</text>
+  </g>
+  <g>
+    <rect x="20" y="168" width="686" height="64" rx="10" fill="#7a4fc2"/>
+    <text x="40" y="197" font-size="17" font-weight="700" fill="#fff">Android Runtime (ART)</text>
+    <text x="40" y="218" font-size="12" fill="#e9defa">Layer 3</text>
+    <text x="300" y="205" font-size="14" fill="#fff">Runs the code of apps and of the framework</text>
+  </g>
+  <g>
+    <rect x="20" y="242" width="686" height="64" rx="10" fill="#b7791f"/>
+    <text x="40" y="271" font-size="17" font-weight="700" fill="#fff">Native libraries and HAL</text>
+    <text x="40" y="292" font-size="12" fill="#fbecd3">Layer 2</text>
+    <text x="300" y="270" font-size="14" fill="#fff">C and C++ code: Bionic, SurfaceFlinger, media</text>
+    <text x="300" y="290" font-size="14" fill="#fff">and the HALs that talk to each chip</text>
+  </g>
+  <g>
+    <rect x="20" y="316" width="686" height="64" rx="10" fill="#c2552d"/>
+    <text x="40" y="345" font-size="17" font-weight="700" fill="#fff">Linux kernel</text>
+    <text x="40" y="366" font-size="12" fill="#fbe0d6">Layer 1</text>
+    <text x="300" y="344" font-size="14" fill="#fff">Drivers, processes, memory, files,</text>
+    <text x="300" y="364" font-size="14" fill="#fff">the Binder driver and SELinux</text>
+  </g>
+  <g>
+    <rect x="20" y="398" width="686" height="52" rx="10" fill="#f2efe8" stroke="#9aa0ab" stroke-width="1.5" stroke-dasharray="6 5"/>
+    <text x="40" y="429" font-size="15" font-weight="700" fill="#4a5263">Hardware</text>
+    <text x="300" y="429" font-size="14" fill="#4a5263">CPU, memory, screen, modem, camera, sensors</text>
+  </g>
+</svg>

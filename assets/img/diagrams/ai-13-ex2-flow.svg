@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 616" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">How the program of Example 2 flows</title>
+  <desc id="d">Data, for i, problem in enumerate(problems, 1), 2 app security calculations, malicious APKs and a scan queue. Chain, chain = pot_prompt | llm | parser, Explain the approach, then write Python in a fenced code block, Assign the final answer to a variable called answer, print nothing, {problem}. Reply, response, A short explanation and one fenced code block, printed first. Extract, re.search(r&quot;```python\n(.*?)```&quot;, response, re.DOTALL), code = code_match.group(1), the text between the fences. Run, exec(code, {&quot;__builtins__&quot; __builtins__}, namespace), The new variables of the code land in the dictionary namespace. Output, answer = namespace[&quot;answer&quot;], 440.0 malicious APKs and 2250.0 minutes. A loop goes back from stage 6 to stage 1, next problem.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="20" y="34" width="92" height="26" rx="13" fill="#eef0f3" stroke="#5d6b7e" stroke-width="1.2"/>
+<text x="66" y="51.32" font-size="12" fill="#3f4a59" text-anchor="middle" font-weight="700">Data</text>
+<rect x="126" y="24" width="680" height="65" rx="12" fill="#fff" stroke="#5d6b7e" stroke-width="1.6"/>
+<rect x="126" y="24" width="6" height="65" rx="3" fill="#5d6b7e"/>
+<text x="146" y="52" font-size="13.6" fill="#3f4a59" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">for i, problem in enumerate(problems, 1)</text>
+<text x="146" y="74" font-size="12.2" fill="#4a5263" text-anchor="start">2 app security calculations, malicious APKs and a scan queue</text>
+<path d="M466 91 L 466 109" fill="none" stroke="#1c2230" stroke-width="1.6" marker-end="url(#m0)"/>
+<rect x="20" y="123" width="92" height="26" rx="13" fill="#eef0f3" stroke="#5d6b7e" stroke-width="1.2"/>
+<text x="66" y="140.32" font-size="12" fill="#3f4a59" text-anchor="middle" font-weight="700">Chain</text>
+<rect x="126" y="113" width="680" height="103" rx="12" fill="#fff" stroke="#5d6b7e" stroke-width="1.6"/>
+<rect x="126" y="113" width="6" height="103" rx="3" fill="#5d6b7e"/>
+<text x="146" y="141" font-size="13.6" fill="#3f4a59" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">chain = pot_prompt | llm | parser</text>
+<text x="146" y="163" font-size="12.2" fill="#4a5263" text-anchor="start">Explain the approach, then write Python in a fenced code block</text>
+<text x="146" y="182" font-size="12.2" fill="#4a5263" text-anchor="start">Assign the final answer to a variable called answer, print nothing</text>
+<text x="146" y="201" font-size="12.2" fill="#1c2230" text-anchor="start" font-family="JetBrains Mono, monospace">{problem}</text>
+<path d="M466 218 L 466 236" fill="none" stroke="#1c2230" stroke-width="1.6" marker-end="url(#m0)"/>
+<rect x="20" y="250" width="92" height="26" rx="13" fill="#fdf4e3" stroke="#b7791f" stroke-width="1.2"/>
+<text x="66" y="267.32" font-size="12" fill="#8a5a12" text-anchor="middle" font-weight="700">Reply</text>
+<rect x="126" y="240" width="680" height="65" rx="12" fill="#fff" stroke="#b7791f" stroke-width="1.6"/>
+<rect x="126" y="240" width="6" height="65" rx="3" fill="#b7791f"/>
+<text x="146" y="268" font-size="13.6" fill="#8a5a12" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">response</text>
+<text x="146" y="290" font-size="12.2" fill="#4a5263" text-anchor="start">A short explanation and one fenced code block, printed first</text>
+<path d="M466 307 L 466 325" fill="none" stroke="#1c2230" stroke-width="1.6" marker-end="url(#m0)"/>
+<rect x="20" y="339" width="92" height="26" rx="13" fill="#f3f0fa" stroke="#7a4fc2" stroke-width="1.2"/>
+<text x="66" y="356.32" font-size="12" fill="#58378f" text-anchor="middle" font-weight="700">Extract</text>
+<rect x="126" y="329" width="680" height="65" rx="12" fill="#fff" stroke="#7a4fc2" stroke-width="1.6"/>
+<rect x="126" y="329" width="6" height="65" rx="3" fill="#7a4fc2"/>
+<text x="146" y="357" font-size="13.6" fill="#58378f" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">re.search(r&quot;```python\n(.*?)```&quot;, response, re.DOTALL)</text>
+<text x="146" y="379" font-size="12.2" fill="#1c2230" text-anchor="start" font-family="JetBrains Mono, monospace">code = code_match.group(1), the text between the fences</text>
+<path d="M466 396 L 466 414" fill="none" stroke="#1c2230" stroke-width="1.6" marker-end="url(#m0)"/>
+<rect x="20" y="428" width="92" height="26" rx="13" fill="#fbecec" stroke="#c2552d" stroke-width="1.2"/>
+<text x="66" y="445.32" font-size="12" fill="#963f1f" text-anchor="middle" font-weight="700">Run</text>
+<rect x="126" y="418" width="680" height="65" rx="12" fill="#fff" stroke="#c2552d" stroke-width="1.6"/>
+<rect x="126" y="418" width="6" height="65" rx="3" fill="#c2552d"/>
+<text x="146" y="446" font-size="13.6" fill="#963f1f" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">exec(code, {&quot;__builtins__&quot;: __builtins__}, namespace)</text>
+<text x="146" y="468" font-size="12.2" fill="#4a5263" text-anchor="start">The new variables of the code land in the dictionary namespace</text>
+<path d="M466 485 L 466 503" fill="none" stroke="#1c2230" stroke-width="1.6" marker-end="url(#m0)"/>
+<rect x="20" y="517" width="92" height="26" rx="13" fill="#e3f4ee" stroke="#0f8a6a" stroke-width="1.2"/>
+<text x="66" y="534.32" font-size="12" fill="#0b6650" text-anchor="middle" font-weight="700">Output</text>
+<rect x="126" y="507" width="680" height="65" rx="12" fill="#fff" stroke="#0f8a6a" stroke-width="1.6"/>
+<rect x="126" y="507" width="6" height="65" rx="3" fill="#0f8a6a"/>
+<text x="146" y="535" font-size="13.6" fill="#0b6650" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">answer = namespace[&quot;answer&quot;]</text>
+<text x="146" y="557" font-size="12.2" fill="#4a5263" text-anchor="start">440.0 malicious APKs and 2250.0 minutes</text>
+<path d="M806 554 h30 V 42 h-24" fill="none" stroke="#5d6b7e" stroke-width="1.8"/>
+<path d="M820 42 L 810 42" fill="none" stroke="#5d6b7e" stroke-width="1.8" marker-end="url(#m8)"/>
+<text x="852" y="290" font-size="11.5" fill="#3f4a59" text-anchor="middle" font-weight="700">next</text>
+<text x="852" y="306" font-size="11.5" fill="#3f4a59" text-anchor="middle" font-weight="700">problem</text>
+<text x="466" y="594" font-size="12.2" fill="#4a5263" text-anchor="middle" font-style="italic">No printing and no buffer. The answer comes back as a Python value.</text>
+</svg>

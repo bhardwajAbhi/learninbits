@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 468" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">How aconfigd-system prepares flag storage during boot</title>
+  <desc id="d">A timeline with three stages. In early-init, init makes the flags, maps and boot folders under /metadata/aconfig. If enable_earlier_aconfigd is on, early-platform-init prepares the platform storage and writes the early_init_done marker on success. In post-fs, platform-init checks for the marker. If it is present, it skips the work and deletes the marker. If not, it prepares the storage now, for example after a data wipe. Later in boot, start-socket listens on the aconfigd_system socket, reads the storage records and applies server and local overrides on request. A failed request goes to the log and the loop keeps running. Below, aconfigd-mainline in the configinfrastructure APEX does the same work for Mainline module flags, and in Android 17 the platform keeps its own records file.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<line x1="40" y1="92" x2="840" y2="92" stroke="#5d6b7e" stroke-width="3"/>
+<circle cx="52" cy="92" r="9" fill="#2f62c8"/>
+<text x="68" y="78" font-size="14" fill="#1f4a9e" text-anchor="start" font-weight="700">early-init</text>
+<circle cx="342" cy="92" r="9" fill="#7a4fc2"/>
+<text x="358" y="78" font-size="14" fill="#58378f" text-anchor="start" font-weight="700">post-fs</text>
+<circle cx="622" cy="92" r="9" fill="#0f8a6a"/>
+<text x="638" y="78" font-size="14" fill="#0b6650" text-anchor="start" font-weight="700">later in boot</text>
+<path d="M820 92 L 852 92" fill="none" stroke="#5d6b7e" stroke-width="3" marker-end="url(#m8)"/>
+<rect x="30" y="120" width="270" height="250" rx="12" fill="#fff" stroke="#2f62c8" stroke-width="1.7"/>
+<rect x="30" y="120" width="6" height="250" rx="3" fill="#2f62c8"/>
+<text x="50" y="148" font-size="13" fill="#1f4a9e" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">early-platform-init</text>
+<text x="50" y="172" font-size="12.3" fill="#1c2230" text-anchor="start">1. init makes the folders</text>
+<text x="50" y="193" font-size="12.3" fill="#1c2230" text-anchor="start">   flags, maps and boot under</text>
+<text x="50" y="214" font-size="12.3" fill="#1c2230" text-anchor="start">   /metadata/aconfig.</text>
+<text x="50" y="235" font-size="12.3" fill="#1c2230" text-anchor="start">2. If enable_earlier_aconfigd</text>
+<text x="50" y="256" font-size="12.3" fill="#1c2230" text-anchor="start">   is on, the daemon prepares</text>
+<text x="50" y="277" font-size="12.3" fill="#1c2230" text-anchor="start">   the platform storage.</text>
+<text x="50" y="298" font-size="12.3" fill="#1c2230" text-anchor="start">3. On success, it writes the</text>
+<text x="50" y="319" font-size="12.3" fill="#1c2230" text-anchor="start">   early_init_done marker.</text>
+<rect x="318" y="120" width="270" height="250" rx="12" fill="#fff" stroke="#7a4fc2" stroke-width="1.7"/>
+<rect x="318" y="120" width="6" height="250" rx="3" fill="#7a4fc2"/>
+<text x="338" y="148" font-size="13" fill="#58378f" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">platform-init</text>
+<path d="M453 161 L553 196 L453 231 L353 196 Z" fill="#fff" stroke="#7a4fc2" stroke-width="2"/>
+<text x="453" y="201" font-size="12.5" fill="#58378f" text-anchor="middle" font-weight="700">Marker present?</text>
+<path d="M391 222 L 391 262" fill="none" stroke="#7a4fc2" stroke-width="1.6" marker-end="url(#m5)"/>
+<text x="375" y="248" font-size="12" fill="#58378f" text-anchor="end" font-weight="800">Yes</text>
+<path d="M515 222 L 515 262" fill="none" stroke="#7a4fc2" stroke-width="1.6" marker-end="url(#m5)"/>
+<text x="531" y="248" font-size="12" fill="#58378f" text-anchor="start" font-weight="800">No</text>
+<rect x="332" y="266" width="118" height="88" rx="10" fill="#f3f0fa" stroke="#7a4fc2" stroke-width="1.2"/>
+<text x="391" y="290" font-size="12" fill="#58378f" text-anchor="middle" font-weight="600">Skip the work</text>
+<text x="391" y="308" font-size="12" fill="#58378f" text-anchor="middle" font-weight="600">and delete</text>
+<text x="391" y="326" font-size="12" fill="#58378f" text-anchor="middle" font-weight="600">the marker</text>
+<rect x="458" y="266" width="118" height="88" rx="10" fill="#f3f0fa" stroke="#7a4fc2" stroke-width="1.2"/>
+<text x="517" y="290" font-size="11.5" fill="#58378f" text-anchor="middle" font-weight="600">Prepare the</text>
+<text x="517" y="306" font-size="11.5" fill="#58378f" text-anchor="middle" font-weight="600">storage now,</text>
+<text x="517" y="322" font-size="11.5" fill="#58378f" text-anchor="middle" font-weight="600">for example after</text>
+<text x="517" y="338" font-size="11.5" fill="#58378f" text-anchor="middle" font-weight="600">a data wipe</text>
+<rect x="606" y="120" width="254" height="250" rx="12" fill="#fff" stroke="#0f8a6a" stroke-width="1.7"/>
+<rect x="606" y="120" width="6" height="250" rx="3" fill="#0f8a6a"/>
+<text x="626" y="148" font-size="13" fill="#0b6650" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">start-socket</text>
+<text x="626" y="172" font-size="12.3" fill="#1c2230" text-anchor="start">Listens on the socket</text>
+<text x="626" y="193" font-size="12.3" fill="#1c2230" text-anchor="start">aconfigd_system.</text>
+<text x="626" y="214" font-size="12.3" fill="#1c2230" text-anchor="start">Reads the storage records.</text>
+<text x="626" y="235" font-size="12.3" fill="#1c2230" text-anchor="start">Applies server and local</text>
+<text x="626" y="256" font-size="12.3" fill="#1c2230" text-anchor="start">overrides on request.</text>
+<text x="626" y="277" font-size="12.3" fill="#1c2230" text-anchor="start">A failed request goes to the</text>
+<text x="626" y="298" font-size="12.3" fill="#1c2230" text-anchor="start">log. The loop keeps</text>
+<text x="626" y="319" font-size="12.3" fill="#1c2230" text-anchor="start">running.</text>
+<rect x="30" y="392" width="830" height="56" rx="12" fill="#fbfaf6" stroke="#d9d4c7" stroke-width="1.2"/>
+<text x="50" y="416" font-size="13" fill="#3f4a59" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">aconfigd-mainline</text>
+<text x="204" y="416" font-size="12.3" fill="#4a5263" text-anchor="start">in the configinfrastructure APEX does the same work for the flags of</text>
+<text x="204" y="435" font-size="12.3" fill="#4a5263" text-anchor="start">Mainline modules. In Android 17, the platform keeps its own records file.</text>
+</svg>

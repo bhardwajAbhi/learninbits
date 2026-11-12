@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 400" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">The four points of PC DPO 360</title>
+  <desc id="d">A compass with PC DPO 360 in the center. The four points are Regulation, Technology, Planning and rollout and Hands-on.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<circle cx="440" cy="200" r="150" fill="none" stroke="#d9d4c7" stroke-width="1.5"/>
+<circle cx="440" cy="200" r="92" fill="#f2efe8" stroke="#d9d4c7" stroke-width="1.5"/>
+<line x1="440" y1="50" x2="440" y2="350" stroke="#d9d4c7" stroke-width="1.2" stroke-dasharray="4 6"/>
+<line x1="290" y1="200" x2="590" y2="200" stroke="#d9d4c7" stroke-width="1.2" stroke-dasharray="4 6"/>
+<circle cx="440" cy="200" r="62" fill="#1c2230"/>
+<text x="440" y="194" font-size="17" fill="#fff" text-anchor="middle" font-weight="700">PC DPO</text>
+<text x="440" y="216" font-size="17" fill="#fff" text-anchor="middle" font-weight="700">360</text>
+<rect x="330" y="8" width="220" height="88" rx="12" fill="#fff" stroke="#2f62c8" stroke-width="1.6"/>
+<path d="M342 8 h196 a12 12 0 0 1 12 12 v22 h-220 v-22 a12 12 0 0 1 12 -12z" fill="#2f62c8"/>
+<text x="440" y="29.86" font-size="13.5" fill="#fff" text-anchor="middle" font-weight="700">Regulation</text>
+<text x="440" y="64" font-size="11.5" fill="#4a5263" text-anchor="middle">DPDP Act 2023 and its Rules,</text>
+<text x="440" y="81.825" font-size="11.5" fill="#4a5263" text-anchor="middle">with GDPR and HIPAA to compare</text>
+<rect x="330" y="304" width="220" height="88" rx="12" fill="#fff" stroke="#b7791f" stroke-width="1.6"/>
+<path d="M342 304 h196 a12 12 0 0 1 12 12 v22 h-220 v-22 a12 12 0 0 1 12 -12z" fill="#b7791f"/>
+<text x="440" y="325.86" font-size="13.5" fill="#fff" text-anchor="middle" font-weight="700">Planning and rollout</text>
+<text x="440" y="360" font-size="11.5" fill="#4a5263" text-anchor="middle">A privacy program, phase by</text>
+<text x="440" y="377.825" font-size="11.5" fill="#4a5263" text-anchor="middle">phase, across the organization</text>
+<rect x="30" y="156" width="240" height="88" rx="12" fill="#fff" stroke="#0f8a6a" stroke-width="1.6"/>
+<path d="M42 156 h216 a12 12 0 0 1 12 12 v22 h-240 v-22 a12 12 0 0 1 12 -12z" fill="#0f8a6a"/>
+<text x="150" y="177.86" font-size="13.5" fill="#fff" text-anchor="middle" font-weight="700">Technology</text>
+<text x="150" y="212" font-size="11.5" fill="#4a5263" text-anchor="middle">Threat modeling, anonymization,</text>
+<text x="150" y="229.825" font-size="11.5" fill="#4a5263" text-anchor="middle">encryption, synthetic data, DP, AI safety</text>
+<rect x="610" y="156" width="240" height="88" rx="12" fill="#fff" stroke="#7a4fc2" stroke-width="1.6"/>
+<path d="M622 156 h216 a12 12 0 0 1 12 12 v22 h-240 v-22 a12 12 0 0 1 12 -12z" fill="#7a4fc2"/>
+<text x="730" y="177.86" font-size="13.5" fill="#fff" text-anchor="middle" font-weight="700">Hands-on</text>
+<text x="730" y="212" font-size="11.5" fill="#4a5263" text-anchor="middle">A working tool for each step,</text>
+<text x="730" y="229.825" font-size="11.5" fill="#4a5263" text-anchor="middle">so no idea stays only theory</text>
+</svg>

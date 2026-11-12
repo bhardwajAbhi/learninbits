@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 410" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">Six layers of defense for an Android app</title>
+  <desc id="d">Rings around the app show five layers. Ring 1 is the code and its secrets, ring 2 is data on the device, ring 3 is the app boundaries, ring 4 is the device and the user and ring 5 is the network and the backend. A list on the right names each layer with its topics. Code and secrets covers R8, API keys and libraries. Data covers storage, encryption and logs. Boundaries cover components, permissions, WebView and input. Device and user covers integrity checks and personal data. Network and backend covers HTTPS, Firebase, messages and transfers. A sixth item is a release checklist.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<circle cx="230" cy="210" r="190" fill="#fbecec" stroke="#c2552d" stroke-width="1.6"/>
+<circle cx="230" cy="210" r="156" fill="#fdf4e3" stroke="#b7791f" stroke-width="1.6"/>
+<circle cx="230" cy="210" r="122" fill="#f3f0fa" stroke="#7a4fc2" stroke-width="1.6"/>
+<circle cx="230" cy="210" r="88" fill="#e3f4ee" stroke="#0f8a6a" stroke-width="1.6"/>
+<circle cx="230" cy="210" r="54" fill="#eef3fb" stroke="#2f62c8" stroke-width="1.6"/>
+<circle cx="230" cy="210" r="34" fill="#1c2230"/>
+<text x="230" y="215" font-size="12.5" fill="#fff" text-anchor="middle" font-weight="700">Your app</text>
+<text x="230" y="166" font-size="12" fill="#1f4a9e" text-anchor="middle" font-weight="800">1</text>
+<text x="230" y="132" font-size="12" fill="#0b6650" text-anchor="middle" font-weight="800">2</text>
+<text x="230" y="98" font-size="12" fill="#58378f" text-anchor="middle" font-weight="800">3</text>
+<text x="230" y="64" font-size="12" fill="#8a5a12" text-anchor="middle" font-weight="800">4</text>
+<text x="230" y="30" font-size="12" fill="#963f1f" text-anchor="middle" font-weight="800">5</text>
+<rect x="470" y="30" width="390" height="50" rx="10" fill="#fff" stroke="#2f62c8" stroke-width="1.5"/>
+<rect x="470" y="30" width="6" height="50" rx="3" fill="#2f62c8"/>
+<text x="488" y="51" font-size="13" fill="#1f4a9e" text-anchor="start" font-weight="700">1  Code and secrets</text>
+<text x="488" y="69" font-size="11.6" fill="#4a5263" text-anchor="start">R8, API keys, libraries</text>
+<rect x="470" y="92" width="390" height="50" rx="10" fill="#fff" stroke="#0f8a6a" stroke-width="1.5"/>
+<rect x="470" y="92" width="6" height="50" rx="3" fill="#0f8a6a"/>
+<text x="488" y="113" font-size="13" fill="#0b6650" text-anchor="start" font-weight="700">2  Data on the device</text>
+<text x="488" y="131" font-size="11.6" fill="#4a5263" text-anchor="start">Storage, encryption, logs</text>
+<rect x="470" y="154" width="390" height="50" rx="10" fill="#fff" stroke="#7a4fc2" stroke-width="1.5"/>
+<rect x="470" y="154" width="6" height="50" rx="3" fill="#7a4fc2"/>
+<text x="488" y="175" font-size="13" fill="#58378f" text-anchor="start" font-weight="700">3  App boundaries</text>
+<text x="488" y="193" font-size="11.6" fill="#4a5263" text-anchor="start">Components, permissions, WebView, input</text>
+<rect x="470" y="216" width="390" height="50" rx="10" fill="#fff" stroke="#b7791f" stroke-width="1.5"/>
+<rect x="470" y="216" width="6" height="50" rx="3" fill="#b7791f"/>
+<text x="488" y="237" font-size="13" fill="#8a5a12" text-anchor="start" font-weight="700">4  Device and user</text>
+<text x="488" y="255" font-size="11.6" fill="#4a5263" text-anchor="start">Integrity checks, personal data</text>
+<rect x="470" y="278" width="390" height="50" rx="10" fill="#fff" stroke="#c2552d" stroke-width="1.5"/>
+<rect x="470" y="278" width="6" height="50" rx="3" fill="#c2552d"/>
+<text x="488" y="299" font-size="13" fill="#963f1f" text-anchor="start" font-weight="700">5  Network and backend</text>
+<text x="488" y="317" font-size="11.6" fill="#4a5263" text-anchor="start">HTTPS, Firebase, messages, transfers</text>
+<rect x="470" y="340" width="390" height="50" rx="10" fill="#fff" stroke="#5d6b7e" stroke-width="1.5"/>
+<rect x="470" y="340" width="6" height="50" rx="3" fill="#5d6b7e"/>
+<text x="488" y="361" font-size="13" fill="#3f4a59" text-anchor="start" font-weight="700">6  Release</text>
+<text x="488" y="379" font-size="11.6" fill="#4a5263" text-anchor="start">A checklist before each release</text>
+</svg>

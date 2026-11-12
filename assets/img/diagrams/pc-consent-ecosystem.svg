@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 410" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">Consent governance across the data ecosystem</title>
+  <desc id="d">The Data Principal gets a notice and gives consent to a consent collector. A data collector stores the data. Threat modeling and recommendations feed an augmented DPIA that the DPO reviews. Business uses are recorded in the RoPA. Uses beyond the purpose go through PETs first. A rights portal gives control back to the person.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="20" y="40" width="140" height="54" rx="10" fill="#eef3fb" stroke="#2f62c8" stroke-width="1.5"/>
+<text x="90" y="64" font-size="12.5" fill="#1f4a9e" text-anchor="middle" font-weight="700">Data Principal</text>
+<text x="90" y="81" font-size="10.5" fill="#4a5263" text-anchor="middle">the person</text>
+<rect x="210" y="40" width="140" height="54" rx="10" fill="#eef3fb" stroke="#2f62c8" stroke-width="1.5"/>
+<text x="280" y="64" font-size="12.5" fill="#1f4a9e" text-anchor="middle" font-weight="700">Consent collector</text>
+<text x="280" y="81" font-size="10.5" fill="#4a5263" text-anchor="middle">notice + consent</text>
+<rect x="400" y="40" width="140" height="54" rx="10" fill="#eef3fb" stroke="#2f62c8" stroke-width="1.5"/>
+<text x="470" y="64" font-size="12.5" fill="#1f4a9e" text-anchor="middle" font-weight="700">Data collector</text>
+<text x="470" y="81" font-size="10.5" fill="#4a5263" text-anchor="middle">stores the data</text>
+<rect x="590" y="40" width="130" height="54" rx="10" fill="#e3f4ee" stroke="#0f8a6a" stroke-width="1.5"/>
+<text x="655" y="64" font-size="12.5" fill="#0b6650" text-anchor="middle" font-weight="700">Threat modeling</text>
+<text x="655" y="81" font-size="10.5" fill="#4a5263" text-anchor="middle">+ recommendations</text>
+<rect x="590" y="140" width="130" height="54" rx="10" fill="#e3f4ee" stroke="#0f8a6a" stroke-width="1.5"/>
+<text x="655" y="172" font-size="12.5" fill="#0b6650" text-anchor="middle" font-weight="700">Augmented DPIA</text>
+<rect x="760" y="140" width="100" height="54" rx="10" fill="#eef0f3" stroke="#5d6b7e" stroke-width="1.5"/>
+<text x="810" y="172" font-size="12.5" fill="#3f4a59" text-anchor="middle" font-weight="700">DPO review</text>
+<path d="M160 67 H204" fill="none" stroke="#2f62c8" stroke-width="2" marker-end="url(#m3)"/>
+<path d="M350 67 H394" fill="none" stroke="#2f62c8" stroke-width="2" marker-end="url(#m3)"/>
+<path d="M540 67 H584" fill="none" stroke="#2f62c8" stroke-width="2" marker-end="url(#m3)"/>
+<path d="M655 94 V134" fill="none" stroke="#0f8a6a" stroke-width="2" marker-end="url(#m4)"/>
+<path d="M720 167 H754" fill="none" stroke="#5d6b7e" stroke-width="2" marker-end="url(#m8)"/>
+<rect x="430" y="250" width="200" height="70" rx="10" fill="#fdf4e3" stroke="#b7791f" stroke-width="1.5"/>
+<text x="530" y="282" font-size="12.5" fill="#8a5a12" text-anchor="middle" font-weight="700">Business use</text>
+<text x="530" y="299" font-size="10.5" fill="#4a5263" text-anchor="middle">sales, marketing, operations</text>
+<rect x="660" y="250" width="200" height="70" rx="10" fill="#f3f0fa" stroke="#7a4fc2" stroke-width="1.5"/>
+<text x="760" y="282" font-size="12.5" fill="#58378f" text-anchor="middle" font-weight="700">Beyond the purpose</text>
+<text x="760" y="299" font-size="10.5" fill="#4a5263" text-anchor="middle">research, archiving, transfer, AI</text>
+<path d="M810 194 V220 H530 V244" fill="none" stroke="#5d6b7e" stroke-width="2" marker-end="url(#m8)"/>
+<path d="M810 194 V244" fill="none" stroke="#5d6b7e" stroke-width="2" marker-end="url(#m8)"/>
+<rect x="430" y="350" width="200" height="46" rx="10" fill="#fdf4e3" stroke="#b7791f" stroke-width="1.5"/>
+<text x="530" y="378" font-size="12.5" fill="#8a5a12" text-anchor="middle" font-weight="700">Recorded in the RoPA</text>
+<rect x="660" y="350" width="200" height="46" rx="10" fill="#f3f0fa" stroke="#7a4fc2" stroke-width="1.5"/>
+<text x="760" y="378" font-size="12.5" fill="#58378f" text-anchor="middle" font-weight="700">Through PETs first</text>
+<path d="M530 320 V344" fill="none" stroke="#b7791f" stroke-width="2" marker-end="url(#m6)"/>
+<path d="M760 320 V344" fill="none" stroke="#7a4fc2" stroke-width="2" marker-end="url(#m5)"/>
+<rect x="20" y="250" width="260" height="70" rx="10" fill="#fbecec" stroke="#c2552d" stroke-width="1.5"/>
+<text x="150" y="282" font-size="12.5" fill="#963f1f" text-anchor="middle" font-weight="700">Data principal rights portal</text>
+<text x="150" y="299" font-size="10.5" fill="#4a5263" text-anchor="middle">see, change and withdraw</text>
+<path d="M150 250 V100" fill="none" stroke="#c2552d" stroke-width="2" marker-end="url(#m7)"/>
+<text x="162" y="180" font-size="11" fill="#963f1f" text-anchor="start" font-weight="600">control goes back</text>
+<text x="162" y="195" font-size="11" fill="#963f1f" text-anchor="start" font-weight="600">to the person</text>
+</svg>

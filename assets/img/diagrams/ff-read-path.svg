@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 486" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">What happens when code reads a read-write flag</title>
+  <desc id="d">A sequence with five participants. Your code calls Flags.dumpImprovements(). Flags calls FEATURE_FLAGS.dumpImprovements(). On the first call only, FeatureFlagsImpl calls load with the package name and fingerprint on the platform package reader, which maps the files in /metadata/aconfig read-only, gets package and flag data and returns the value for each index. FeatureFlagsImpl keeps the values in static fields and returns true or false. Later calls return the cached field, with no file access and no IPC.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="15" y="20" width="150" height="40" rx="10" fill="#eef3fb" stroke="#2f62c8" stroke-width="1.4"/>
+<text x="90" y="45" font-size="12.3" fill="#1f4a9e" text-anchor="middle" font-weight="700">Your code</text>
+<line x1="90" y1="60" x2="90" y2="470" stroke="#d9d4c7" stroke-width="1.6" stroke-dasharray="5 5"/>
+<rect x="185" y="20" width="150" height="40" rx="10" fill="#eef3fb" stroke="#2f62c8" stroke-width="1.4"/>
+<text x="260" y="45" font-size="12.3" fill="#1f4a9e" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="700">Flags</text>
+<line x1="260" y1="60" x2="260" y2="470" stroke="#d9d4c7" stroke-width="1.6" stroke-dasharray="5 5"/>
+<rect x="365" y="20" width="150" height="40" rx="10" fill="#e3f4ee" stroke="#0f8a6a" stroke-width="1.4"/>
+<text x="440" y="45" font-size="12.3" fill="#0b6650" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="700">FeatureFlagsImpl</text>
+<line x1="440" y1="60" x2="440" y2="470" stroke="#d9d4c7" stroke-width="1.6" stroke-dasharray="5 5"/>
+<rect x="536" y="20" width="168" height="40" rx="10" fill="#f3f0fa" stroke="#7a4fc2" stroke-width="1.4"/>
+<text x="620" y="45" font-size="12.3" fill="#58378f" text-anchor="middle" font-weight="700">Platform package reader</text>
+<line x1="620" y1="60" x2="620" y2="470" stroke="#d9d4c7" stroke-width="1.6" stroke-dasharray="5 5"/>
+<rect x="715" y="20" width="150" height="40" rx="10" fill="#fdf4e3" stroke="#b7791f" stroke-width="1.4"/>
+<text x="790" y="45" font-size="12.3" fill="#8a5a12" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="700">/metadata/aconfig</text>
+<line x1="790" y1="60" x2="790" y2="470" stroke="#d9d4c7" stroke-width="1.6" stroke-dasharray="5 5"/>
+<rect x="300" y="160" width="570" height="196" rx="12" fill="#eef0f3" stroke="#5d6b7e" stroke-width="1.2" stroke-dasharray="5 4"/>
+<text x="316" y="182" font-size="12.5" fill="#3f4a59" text-anchor="start" font-weight="700">First call only (isCached is false)</text>
+<path d="M94 94 L 254 94" fill="none" stroke="#1c2230" stroke-width="1.7" marker-end="url(#m0)"/>
+<text x="175" y="86" font-size="11.8" fill="#1c2230" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="600">Flags.dumpImprovements()</text>
+<path d="M264 134 L 434 134" fill="none" stroke="#1c2230" stroke-width="1.7" marker-end="url(#m0)"/>
+<text x="350" y="126" font-size="11.8" fill="#1c2230" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="600">FEATURE_FLAGS.dumpImprovements()</text>
+<path d="M444 214 L 614 214" fill="none" stroke="#7a4fc2" stroke-width="1.7" marker-end="url(#m5)"/>
+<text x="530" y="206" font-size="11.8" fill="#58378f" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="600">load(package, fingerprint)</text>
+<path d="M624 254 L 784 254" fill="none" stroke="#b7791f" stroke-width="1.7" marker-end="url(#m6)"/>
+<text x="705" y="246" font-size="11.8" fill="#8a5a12" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="600">map the files read-only</text>
+<path d="M786 290 L 626 290" fill="none" stroke="#b7791f" stroke-width="1.7" stroke-dasharray="6 4" marker-end="url(#m6)"/>
+<text x="705" y="282" font-size="11.8" fill="#8a5a12" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="600">package and flag data</text>
+<path d="M616 326 L 446 326" fill="none" stroke="#7a4fc2" stroke-width="1.7" stroke-dasharray="6 4" marker-end="url(#m5)"/>
+<text x="530" y="318" font-size="11.8" fill="#58378f" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="600">value for each index</text>
+<rect x="368" y="364" width="144" height="40" rx="10" fill="#fff" stroke="#0f8a6a" stroke-width="1.4"/>
+<text x="440" y="380" font-size="11.5" fill="#0b6650" text-anchor="middle" font-weight="600">Keep values in</text>
+<text x="440" y="395" font-size="11.5" fill="#0b6650" text-anchor="middle" font-weight="600">static fields</text>
+<path d="M436 428 L 264 428" fill="none" stroke="#1c2230" stroke-width="1.7" stroke-dasharray="6 4" marker-end="url(#m0)"/>
+<text x="350" y="422" font-size="11.8" fill="#1c2230" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="600">true or false</text>
+<path d="M256 452 L 94 452" fill="none" stroke="#1c2230" stroke-width="1.7" stroke-dasharray="6 4" marker-end="url(#m0)"/>
+<text x="175" y="444" font-size="11.8" fill="#1c2230" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="600">true or false</text>
+<text x="650" y="440" font-size="12.5" fill="#4a5263" text-anchor="middle" font-style="italic">Later calls return the cached field.</text>
+<text x="650" y="458" font-size="12.5" fill="#4a5263" text-anchor="middle" font-style="italic">No file access and no IPC.</text>
+</svg>

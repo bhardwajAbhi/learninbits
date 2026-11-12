@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 330" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">AI red teaming</title>
+  <desc id="d">Four stages, namely scope and plan, adversarial strategies, test and run, and report, then fix and test again. The attack simulation sets what to test (fairness, safety and privacy leakage), uses an attacker agent with multi-turn dialogs and jailbreak templates, uses judges to decide if each attack worked and produces reports.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="20" y="20" width="196" height="118" rx="12" fill="#fff" stroke="#2f62c8" stroke-width="1.6"/>
+<path d="M32 20 h172 a12 12 0 0 1 12 12 v22 h-196 v-22 a12 12 0 0 1 12 -12z" fill="#2f62c8"/>
+<text x="34" y="41.86" font-size="13.5" fill="#fff" text-anchor="start" font-weight="700">1  Scope and plan</text>
+<text x="34" y="76" font-size="11.5" fill="#4a5263" text-anchor="start">define the system</text>
+<text x="34" y="93.825" font-size="11.5" fill="#4a5263" text-anchor="start">define the threats</text>
+<text x="34" y="111.65" font-size="11.5" fill="#4a5263" text-anchor="start">set success criteria</text>
+<path d="M216 79 H232" fill="none" stroke="#1c2230" stroke-width="1.6" marker-end="url(#m0)"/>
+<rect x="234" y="20" width="196" height="118" rx="12" fill="#fff" stroke="#c2552d" stroke-width="1.6"/>
+<path d="M246 20 h172 a12 12 0 0 1 12 12 v22 h-196 v-22 a12 12 0 0 1 12 -12z" fill="#c2552d"/>
+<text x="248" y="41.86" font-size="13.5" fill="#fff" text-anchor="start" font-weight="700">2  Adversarial strategies</text>
+<text x="248" y="76" font-size="11.5" fill="#4a5263" text-anchor="start">evasion</text>
+<text x="248" y="93.825" font-size="11.5" fill="#4a5263" text-anchor="start">poisoning</text>
+<text x="248" y="111.65" font-size="11.5" fill="#4a5263" text-anchor="start">attacks, other exploits</text>
+<path d="M430 79 H446" fill="none" stroke="#1c2230" stroke-width="1.6" marker-end="url(#m0)"/>
+<rect x="448" y="20" width="196" height="118" rx="12" fill="#fff" stroke="#b7791f" stroke-width="1.6"/>
+<path d="M460 20 h172 a12 12 0 0 1 12 12 v22 h-196 v-22 a12 12 0 0 1 12 -12z" fill="#b7791f"/>
+<text x="462" y="41.86" font-size="13.5" fill="#fff" text-anchor="start" font-weight="700">3  Test and run</text>
+<text x="462" y="76" font-size="11.5" fill="#4a5263" text-anchor="start">create the tests</text>
+<text x="462" y="93.825" font-size="11.5" fill="#4a5263" text-anchor="start">simulate the attacks</text>
+<path d="M644 79 H660" fill="none" stroke="#1c2230" stroke-width="1.6" marker-end="url(#m0)"/>
+<rect x="662" y="20" width="196" height="118" rx="12" fill="#fff" stroke="#0f8a6a" stroke-width="1.6"/>
+<path d="M674 20 h172 a12 12 0 0 1 12 12 v22 h-196 v-22 a12 12 0 0 1 12 -12z" fill="#0f8a6a"/>
+<text x="676" y="41.86" font-size="13.5" fill="#fff" text-anchor="start" font-weight="700">4  Report</text>
+<text x="676" y="76" font-size="11.5" fill="#4a5263" text-anchor="start">assess the risks</text>
+<text x="676" y="93.825" font-size="11.5" fill="#4a5263" text-anchor="start">recommend fixes</text>
+<path d="M770 138 V160 H118 V144" fill="none" stroke="#5d6b7e" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#m8)"/>
+<text x="444" y="176" font-size="11" fill="#4a5263" text-anchor="middle" font-weight="600">fix, then test again</text>
+<rect x="20" y="196" width="840" height="120" rx="14" fill="#f2efe8"/>
+<text x="40" y="222" font-size="13" fill="#1c2230" text-anchor="start" font-weight="700">Inside the attack simulation</text>
+<rect x="40" y="236" width="192" height="66" rx="10" fill="#fff" stroke="#d9d4c7" stroke-width="1.5"/>
+<text x="52" y="256" font-size="12" fill="#1c2230" text-anchor="start" font-weight="700">What to test</text>
+<text x="52" y="274" font-size="11" fill="#4a5263" text-anchor="start">fairness, safety,</text>
+<text x="52" y="289.18" font-size="11" fill="#4a5263" text-anchor="start">privacy leakage</text>
+<rect x="246" y="236" width="192" height="66" rx="10" fill="#fff" stroke="#d9d4c7" stroke-width="1.5"/>
+<text x="258" y="256" font-size="12" fill="#1c2230" text-anchor="start" font-weight="700">Attacker agent</text>
+<text x="258" y="274" font-size="11" fill="#4a5263" text-anchor="start">multi-turn dialogs,</text>
+<text x="258" y="289.18" font-size="11" fill="#4a5263" text-anchor="start">jailbreak templates</text>
+<rect x="452" y="236" width="192" height="66" rx="10" fill="#fff" stroke="#d9d4c7" stroke-width="1.5"/>
+<text x="464" y="256" font-size="12" fill="#1c2230" text-anchor="start" font-weight="700">Judges</text>
+<text x="464" y="274" font-size="11" fill="#4a5263" text-anchor="start">an LLM judge, static</text>
+<text x="464" y="289.18" font-size="11" fill="#4a5263" text-anchor="start">and delta-based checks</text>
+<rect x="658" y="236" width="192" height="66" rx="10" fill="#fff" stroke="#d9d4c7" stroke-width="1.5"/>
+<text x="670" y="256" font-size="12" fill="#1c2230" text-anchor="start" font-weight="700">Reports</text>
+<text x="670" y="274" font-size="11" fill="#4a5263" text-anchor="start">charts and tables</text>
+<text x="670" y="289.18" font-size="11" fill="#4a5263" text-anchor="start">per attribute</text>
+</svg>

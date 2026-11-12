@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 578" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">How the program of Example 1 flows</title>
+  <desc id="d">Setup, llm = ChatGoogleGenerativeAI(model=&quot;gemini-3.1-flash-lite&quot;, ...), temperature=0, so that each step stays steady. Input, for i, question in enumerate(questions, 1), Three questions about the DPDP Act, each with a sentence limit. Draft, draft_chain.invoke({&quot;question&quot; question}), A short first answer. Critique, critique_chain.invoke({..., &quot;draft&quot; draft}), A review against four criteria, with improvements. Revise, revise_chain.invoke({..., &quot;critique&quot; critique}), The better answer. Output, print(...), The draft, the critique and the revised answer. A loop goes back from stage 6 to stage 2, next question.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="20" y="34" width="92" height="26" rx="13" fill="#eef0f3" stroke="#5d6b7e" stroke-width="1.2"/>
+<text x="66" y="51.32" font-size="12" fill="#3f4a59" text-anchor="middle" font-weight="700">Setup</text>
+<rect x="126" y="24" width="680" height="65" rx="12" fill="#fff" stroke="#5d6b7e" stroke-width="1.6"/>
+<rect x="126" y="24" width="6" height="65" rx="3" fill="#5d6b7e"/>
+<text x="146" y="52" font-size="13.6" fill="#3f4a59" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">llm = ChatGoogleGenerativeAI(model=&quot;gemini-3.1-flash-lite&quot;, ...)</text>
+<text x="146" y="74" font-size="12.2" fill="#4a5263" text-anchor="start">temperature=0, so that each step stays steady</text>
+<path d="M466 91 L 466 109" fill="none" stroke="#1c2230" stroke-width="1.6" marker-end="url(#m0)"/>
+<rect x="20" y="123" width="92" height="26" rx="13" fill="#eef0f3" stroke="#5d6b7e" stroke-width="1.2"/>
+<text x="66" y="140.32" font-size="12" fill="#3f4a59" text-anchor="middle" font-weight="700">Input</text>
+<rect x="126" y="113" width="680" height="65" rx="12" fill="#fff" stroke="#5d6b7e" stroke-width="1.6"/>
+<rect x="126" y="113" width="6" height="65" rx="3" fill="#5d6b7e"/>
+<text x="146" y="141" font-size="13.6" fill="#3f4a59" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">for i, question in enumerate(questions, 1)</text>
+<text x="146" y="163" font-size="12.2" fill="#4a5263" text-anchor="start">Three questions about the DPDP Act, each with a sentence limit</text>
+<path d="M466 180 L 466 198" fill="none" stroke="#1c2230" stroke-width="1.6" marker-end="url(#m0)"/>
+<rect x="20" y="212" width="92" height="26" rx="13" fill="#eef3fb" stroke="#2f62c8" stroke-width="1.2"/>
+<text x="66" y="229.32" font-size="12" fill="#1f4a9e" text-anchor="middle" font-weight="700">Draft</text>
+<rect x="126" y="202" width="680" height="65" rx="12" fill="#fff" stroke="#2f62c8" stroke-width="1.6"/>
+<rect x="126" y="202" width="6" height="65" rx="3" fill="#2f62c8"/>
+<text x="146" y="230" font-size="13.6" fill="#1f4a9e" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">draft_chain.invoke({&quot;question&quot;: question})</text>
+<text x="146" y="252" font-size="12.2" fill="#4a5263" text-anchor="start">A short first answer</text>
+<path d="M466 269 L 466 287" fill="none" stroke="#1c2230" stroke-width="1.6" marker-end="url(#m0)"/>
+<rect x="20" y="301" width="92" height="26" rx="13" fill="#f3f0fa" stroke="#7a4fc2" stroke-width="1.2"/>
+<text x="66" y="318.32" font-size="12" fill="#58378f" text-anchor="middle" font-weight="700">Critique</text>
+<rect x="126" y="291" width="680" height="65" rx="12" fill="#fff" stroke="#7a4fc2" stroke-width="1.6"/>
+<rect x="126" y="291" width="6" height="65" rx="3" fill="#7a4fc2"/>
+<text x="146" y="319" font-size="13.6" fill="#58378f" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">critique_chain.invoke({..., &quot;draft&quot;: draft})</text>
+<text x="146" y="341" font-size="12.2" fill="#4a5263" text-anchor="start">A review against four criteria, with improvements</text>
+<path d="M466 358 L 466 376" fill="none" stroke="#1c2230" stroke-width="1.6" marker-end="url(#m0)"/>
+<rect x="20" y="390" width="92" height="26" rx="13" fill="#e3f4ee" stroke="#0f8a6a" stroke-width="1.2"/>
+<text x="66" y="407.32" font-size="12" fill="#0b6650" text-anchor="middle" font-weight="700">Revise</text>
+<rect x="126" y="380" width="680" height="65" rx="12" fill="#fff" stroke="#0f8a6a" stroke-width="1.6"/>
+<rect x="126" y="380" width="6" height="65" rx="3" fill="#0f8a6a"/>
+<text x="146" y="408" font-size="13.6" fill="#0b6650" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">revise_chain.invoke({..., &quot;critique&quot;: critique})</text>
+<text x="146" y="430" font-size="12.2" fill="#4a5263" text-anchor="start">The better answer</text>
+<path d="M466 447 L 466 465" fill="none" stroke="#1c2230" stroke-width="1.6" marker-end="url(#m0)"/>
+<rect x="20" y="479" width="92" height="26" rx="13" fill="#e3f4ee" stroke="#0f8a6a" stroke-width="1.2"/>
+<text x="66" y="496.32" font-size="12" fill="#0b6650" text-anchor="middle" font-weight="700">Output</text>
+<rect x="126" y="469" width="680" height="65" rx="12" fill="#fff" stroke="#0f8a6a" stroke-width="1.6"/>
+<rect x="126" y="469" width="6" height="65" rx="3" fill="#0f8a6a"/>
+<text x="146" y="497" font-size="13.6" fill="#0b6650" text-anchor="start" font-weight="700">print(...)</text>
+<text x="146" y="519" font-size="12.2" fill="#4a5263" text-anchor="start">The draft, the critique and the revised answer</text>
+<path d="M806 516 h30 V 131 h-24" fill="none" stroke="#5d6b7e" stroke-width="1.8"/>
+<path d="M820 131 L 810 131" fill="none" stroke="#5d6b7e" stroke-width="1.8" marker-end="url(#m8)"/>
+<text x="852" y="315.5" font-size="11.5" fill="#3f4a59" text-anchor="middle" font-weight="700">next</text>
+<text x="852" y="331.5" font-size="11.5" fill="#3f4a59" text-anchor="middle" font-weight="700">question</text>
+<text x="466" y="556" font-size="12.2" fill="#4a5263" text-anchor="middle" font-style="italic">Three prompts, one model and three calls for each question.</text>
+</svg>

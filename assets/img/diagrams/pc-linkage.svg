@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 296" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">A linkage attack</title>
+  <desc id="d">A released record has no name but keeps age, gender and pincode. An attacker joins it with an electoral roll and social media on these three fields and gets the name, the house and the health result.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<text x="30" y="30" font-size="11" fill="#1f4a9e" text-anchor="start" letter-spacing="1" font-weight="700">RELEASED “ANONYMOUS” RECORD</text>
+<rect x="30" y="40" width="76" height="26" rx="4" fill="#eef3fb"/>
+<text x="68" y="58" font-size="11" fill="#1f4a9e" text-anchor="middle" font-weight="700">Age</text>
+<rect x="30" y="68" width="76" height="30" rx="4" fill="#fff" stroke="#2f62c8" stroke-width="1.4"/>
+<text x="68" y="88" font-size="11.5" fill="#1c2230" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="600">18</text>
+<rect x="110" y="40" width="76" height="26" rx="4" fill="#eef3fb"/>
+<text x="148" y="58" font-size="11" fill="#1f4a9e" text-anchor="middle" font-weight="700">Gender</text>
+<rect x="110" y="68" width="76" height="30" rx="4" fill="#fff" stroke="#2f62c8" stroke-width="1.4"/>
+<text x="148" y="88" font-size="11.5" fill="#1c2230" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="600">Female</text>
+<rect x="190" y="40" width="76" height="26" rx="4" fill="#eef3fb"/>
+<text x="228" y="58" font-size="11" fill="#1f4a9e" text-anchor="middle" font-weight="700">Pincode</text>
+<rect x="190" y="68" width="76" height="30" rx="4" fill="#fff" stroke="#2f62c8" stroke-width="1.4"/>
+<text x="228" y="88" font-size="11.5" fill="#1c2230" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="600">560072</text>
+<rect x="270" y="40" width="76" height="26" rx="4" fill="#f2efe8"/>
+<text x="308" y="58" font-size="11" fill="#4a5263" text-anchor="middle" font-weight="700">Test</text>
+<rect x="270" y="68" width="76" height="30" rx="4" fill="#fff" stroke="#d9d4c7" stroke-width="1"/>
+<text x="308" y="88" font-size="11.5" fill="#1c2230" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="600">Positive</text>
+<rect x="350" y="40" width="76" height="26" rx="4" fill="#f2efe8"/>
+<text x="388" y="58" font-size="11" fill="#4a5263" text-anchor="middle" font-weight="700">Conditions</text>
+<rect x="350" y="68" width="76" height="30" rx="4" fill="#fff" stroke="#d9d4c7" stroke-width="1"/>
+<text x="388" y="88" font-size="11.5" fill="#1c2230" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="600">D1 to D4</text>
+<text x="30" y="140" font-size="11" fill="#58378f" text-anchor="start" letter-spacing="1" font-weight="700">PUBLIC SOURCES</text>
+<rect x="30" y="150" width="190" height="92" rx="12" fill="#fff" stroke="#7a4fc2" stroke-width="1.6"/>
+<path d="M42 150 h166 a12 12 0 0 1 12 12 v22 h-190 v-22 a12 12 0 0 1 12 -12z" fill="#7a4fc2"/>
+<text x="44" y="171.86" font-size="13.5" fill="#fff" text-anchor="start" font-weight="700">Electoral roll</text>
+<text x="44" y="206" font-size="11" fill="#4a5263" text-anchor="start">name, age, gender,</text>
+<text x="44" y="223.05" font-size="11" fill="#4a5263" text-anchor="start">house number by area</text>
+<rect x="236" y="150" width="190" height="92" rx="12" fill="#fff" stroke="#7a4fc2" stroke-width="1.6"/>
+<path d="M248 150 h166 a12 12 0 0 1 12 12 v22 h-190 v-22 a12 12 0 0 1 12 -12z" fill="#7a4fc2"/>
+<text x="250" y="171.86" font-size="13.5" fill="#fff" text-anchor="start" font-weight="700">Social media</text>
+<text x="250" y="206" font-size="11" fill="#4a5263" text-anchor="start">profiles with photos,</text>
+<text x="250" y="223.05" font-size="11" fill="#4a5263" text-anchor="start">places and jobs</text>
+<rect x="480" y="80" width="130" height="120" rx="14" fill="#1c2230"/>
+<text x="545" y="128" font-size="16" fill="#fff" text-anchor="middle" font-weight="700">JOIN</text>
+<text x="545" y="150" font-size="11" fill="#ffffffcc" text-anchor="middle">on age, gender</text>
+<text x="545" y="165.18" font-size="11" fill="#ffffffcc" text-anchor="middle">and pincode</text>
+<path d="M430 82 Q460 82 460 110 H474" fill="none" stroke="#2f62c8" stroke-width="2" marker-end="url(#m3)"/>
+<path d="M428 196 Q460 196 460 170 H474" fill="none" stroke="#7a4fc2" stroke-width="2" marker-end="url(#m5)"/>
+<path d="M610 140 H650" fill="none" stroke="#c2552d" stroke-width="2" marker-end="url(#m7)"/>
+<rect x="654" y="92" width="200" height="96" rx="12" fill="#fbecec" stroke="#c2552d" stroke-width="2"/>
+<text x="754" y="122" font-size="15" fill="#963f1f" text-anchor="middle" font-weight="700">Re-identified</text>
+<text x="754" y="144" font-size="11.5" fill="#1c2230" text-anchor="middle">a name, a house and</text>
+<text x="754" y="160" font-size="11.5" fill="#1c2230" text-anchor="middle">a health result</text>
+<text x="440" y="278" font-size="12.5" fill="#1c2230" text-anchor="middle" font-weight="700">Removing the name was not enough. Three ordinary fields were a fingerprint.</text>
+</svg>

@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 306" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">A phased privacy rollout</title>
+  <desc id="d">First prove the setup on one application. Deploy, configure a sample app, integrate, add technical safeguards, sign off and go live. Then scale out. Standardize the process, train, roll out apps in phases and run support. Four phases of six months each, about two years, with two apps first, then one third of the apps in each later phase.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<text x="20" y="30" font-size="11" fill="#1f4a9e" text-anchor="start" letter-spacing="1.1" font-weight="700">PROVE IT ON ONE APPLICATION</text>
+<rect x="20" y="42" width="156" height="50" rx="10" fill="#eef3fb" stroke="#2f62c8" stroke-width="1.5"/>
+<text x="98" y="72" font-size="11.8" fill="#1f4a9e" text-anchor="middle" font-weight="700">Deploy</text>
+<path d="M176 67 H190" fill="none" stroke="#1c2230" stroke-width="1.4" marker-end="url(#m0)"/>
+<rect x="192" y="42" width="156" height="50" rx="10" fill="#eef3fb" stroke="#2f62c8" stroke-width="1.5"/>
+<text x="270" y="72" font-size="11.8" fill="#1f4a9e" text-anchor="middle" font-weight="700">Configure a sample app</text>
+<path d="M348 67 H362" fill="none" stroke="#1c2230" stroke-width="1.4" marker-end="url(#m0)"/>
+<rect x="364" y="42" width="156" height="50" rx="10" fill="#eef3fb" stroke="#2f62c8" stroke-width="1.5"/>
+<text x="442" y="72" font-size="11.8" fill="#1f4a9e" text-anchor="middle" font-weight="700">Integrate</text>
+<path d="M520 67 H534" fill="none" stroke="#1c2230" stroke-width="1.4" marker-end="url(#m0)"/>
+<rect x="536" y="42" width="156" height="50" rx="10" fill="#eef3fb" stroke="#2f62c8" stroke-width="1.5"/>
+<text x="614" y="72" font-size="11.8" fill="#1f4a9e" text-anchor="middle" font-weight="700">Technical safeguards</text>
+<path d="M692 67 H706" fill="none" stroke="#1c2230" stroke-width="1.4" marker-end="url(#m0)"/>
+<rect x="708" y="42" width="156" height="50" rx="10" fill="#eef3fb" stroke="#2f62c8" stroke-width="1.5"/>
+<text x="786" y="72" font-size="11.8" fill="#1f4a9e" text-anchor="middle" font-weight="700">Sign-off and go live</text>
+<text x="860" y="126" font-size="11" fill="#0b6650" text-anchor="end" letter-spacing="1.1" font-weight="700">THEN SCALE IT OUT</text>
+<rect x="20" y="138" width="199" height="50" rx="10" fill="#e3f4ee" stroke="#0f8a6a" stroke-width="1.5"/>
+<text x="119" y="168" font-size="11.8" fill="#0b6650" text-anchor="middle" font-weight="700">Standardize the process</text>
+<path d="M219 163 H233" fill="none" stroke="#1c2230" stroke-width="1.4" marker-end="url(#m0)"/>
+<rect x="235" y="138" width="199" height="50" rx="10" fill="#e3f4ee" stroke="#0f8a6a" stroke-width="1.5"/>
+<text x="334" y="168" font-size="11.8" fill="#0b6650" text-anchor="middle" font-weight="700">Train for the rollout</text>
+<path d="M434 163 H448" fill="none" stroke="#1c2230" stroke-width="1.4" marker-end="url(#m0)"/>
+<rect x="450" y="138" width="199" height="50" rx="10" fill="#e3f4ee" stroke="#0f8a6a" stroke-width="1.5"/>
+<text x="549" y="168" font-size="11.8" fill="#0b6650" text-anchor="middle" font-weight="700">Roll out apps in phases</text>
+<path d="M649 163 H663" fill="none" stroke="#1c2230" stroke-width="1.4" marker-end="url(#m0)"/>
+<rect x="665" y="138" width="199" height="50" rx="10" fill="#e3f4ee" stroke="#0f8a6a" stroke-width="1.5"/>
+<text x="764" y="168" font-size="11.8" fill="#0b6650" text-anchor="middle" font-weight="700">Support and operations</text>
+<path d="M790 92 V112 H110 V132" fill="none" stroke="#5d6b7e" stroke-width="1.4" stroke-dasharray="4 4" marker-end="url(#m8)"/>
+<text x="20" y="228" font-size="11" fill="#8a5a12" text-anchor="start" letter-spacing="1.1" font-weight="700">FOUR PHASES OF SIX MONTHS, ABOUT TWO YEARS</text>
+<path d="M20 240 h190 l14 26 l-14 26 h-190 l14 -26z" fill="#b7791f"/>
+<text x="125" y="262" font-size="12.5" fill="#fff" text-anchor="middle" font-weight="700">Phase 1</text>
+<text x="125" y="279" font-size="10.5" fill="#fff" text-anchor="middle">2 apps end to end, plus the process</text>
+<path d="M232 240 h190 l14 26 l-14 26 h-190 l14 -26z" fill="#c98a2a"/>
+<text x="337" y="262" font-size="12.5" fill="#fff" text-anchor="middle" font-weight="700">Phase 2</text>
+<text x="337" y="279" font-size="10.5" fill="#fff" text-anchor="middle">one third of the apps</text>
+<path d="M444 240 h190 l14 26 l-14 26 h-190 l14 -26z" fill="#d69c40"/>
+<text x="549" y="262" font-size="12.5" fill="#fff" text-anchor="middle" font-weight="700">Phase 3</text>
+<text x="549" y="279" font-size="10.5" fill="#fff" text-anchor="middle">the next third</text>
+<path d="M656 240 h190 l14 26 l-14 26 h-190 l14 -26z" fill="#e2ae57"/>
+<text x="761" y="262" font-size="12.5" fill="#fff" text-anchor="middle" font-weight="700">Phase 4</text>
+<text x="761" y="279" font-size="10.5" fill="#fff" text-anchor="middle">the final third</text>
+</svg>

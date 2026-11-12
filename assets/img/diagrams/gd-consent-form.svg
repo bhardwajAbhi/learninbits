@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 460" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">A consent form for ads and the qualities it needs</title>
+  <desc id="d">A phone shows a consent form for an example app. It lists three purposes, namely personalized ads, measurement of ads and content and storage of information on the device. It says that partners can process the data and that the choice can change at any time in Settings. It has a Consent button, an equal Do not consent button and a Manage options link. Notes name four qualities. Purposes are in plain words before the choice, refusing is as easy as accepting, each purpose and partner can be set apart and a link in Settings reopens the form.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="40" y="24" width="300" height="420" rx="30" fill="#1c2230"/>
+<rect x="54" y="50" width="272" height="370" rx="14" fill="#fff"/>
+<circle cx="190" cy="84" r="18" fill="#e3f4ee" stroke="#0f8a6a" stroke-width="1.4"/>
+<text x="190" y="90" font-size="15" fill="#0b6650" text-anchor="middle" font-weight="800">A</text>
+<text x="190" y="126" font-size="12.6" fill="#1c2230" text-anchor="middle" font-weight="700">Example App asks for your</text>
+<text x="190" y="143" font-size="12.6" fill="#1c2230" text-anchor="middle" font-weight="700">consent to use your data to</text>
+<circle cx="78" cy="168" r="7" fill="#eef3fb" stroke="#2f62c8" stroke-width="1.2"/>
+<text x="94" y="172" font-size="11.4" fill="#1c2230" text-anchor="start">Show personalized ads</text>
+<circle cx="78" cy="198" r="7" fill="#eef3fb" stroke="#2f62c8" stroke-width="1.2"/>
+<text x="94" y="202" font-size="11.4" fill="#1c2230" text-anchor="start">Measure ads and content</text>
+<circle cx="78" cy="228" r="7" fill="#eef3fb" stroke="#2f62c8" stroke-width="1.2"/>
+<text x="94" y="232" font-size="11.4" fill="#1c2230" text-anchor="start">Store information on the device</text>
+<text x="70" y="270" font-size="10" fill="#4a5263" text-anchor="start">Partners can process your data. You can</text>
+<text x="70" y="284" font-size="10" fill="#4a5263" text-anchor="start">change your choice at any time in Settings.</text>
+<rect x="70" y="304" width="240" height="34" rx="17" fill="#2f62c8"/>
+<text x="190" y="326" font-size="12.4" fill="#fff" text-anchor="middle" font-weight="700">Consent</text>
+<rect x="70" y="346" width="240" height="34" rx="17" fill="#fff" stroke="#2f62c8" stroke-width="1.4"/>
+<text x="190" y="368" font-size="12.4" fill="#1f4a9e" text-anchor="middle" font-weight="700">Do not consent</text>
+<text x="190" y="404" font-size="11.6" fill="#1f4a9e" text-anchor="middle" font-weight="700">Manage options</text>
+<rect x="440" y="152" width="420" height="52" rx="10" fill="#fff" stroke="#0f8a6a" stroke-width="1.4"/>
+<text x="456" y="174" font-size="12.6" fill="#0b6650" text-anchor="start" font-weight="700">Purposes in plain words</text>
+<text x="456" y="192" font-size="11.2" fill="#4a5263" text-anchor="start">Each purpose is listed before the choice.</text>
+<line x1="436" y1="178" x2="330" y2="178" stroke="#0f8a6a" stroke-width="1.2" stroke-dasharray="4 3"/>
+<rect x="440" y="310" width="420" height="52" rx="10" fill="#fff" stroke="#2f62c8" stroke-width="1.4"/>
+<text x="456" y="332" font-size="12.6" fill="#1f4a9e" text-anchor="start" font-weight="700">Equal choices</text>
+<text x="456" y="350" font-size="11.2" fill="#4a5263" text-anchor="start">Refusing is as easy as accepting.</text>
+<line x1="436" y1="336" x2="330" y2="336" stroke="#2f62c8" stroke-width="1.2" stroke-dasharray="4 3"/>
+<rect x="440" y="370" width="420" height="52" rx="10" fill="#fff" stroke="#7a4fc2" stroke-width="1.4"/>
+<text x="456" y="392" font-size="12.6" fill="#58378f" text-anchor="start" font-weight="700">Detailed control</text>
+<text x="456" y="410" font-size="11.2" fill="#4a5263" text-anchor="start">Each purpose and partner can be set apart.</text>
+<line x1="436" y1="396" x2="330" y2="400" stroke="#7a4fc2" stroke-width="1.2" stroke-dasharray="4 3"/>
+<rect x="440" y="248" width="420" height="52" rx="10" fill="#fff" stroke="#b7791f" stroke-width="1.4"/>
+<text x="456" y="270" font-size="12.6" fill="#8a5a12" text-anchor="start" font-weight="700">Easy withdrawal</text>
+<text x="456" y="288" font-size="11.2" fill="#4a5263" text-anchor="start">A link in Settings reopens the form.</text>
+<line x1="436" y1="274" x2="330" y2="274" stroke="#b7791f" stroke-width="1.2" stroke-dasharray="4 3"/>
+</svg>

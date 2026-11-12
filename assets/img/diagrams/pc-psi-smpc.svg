@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 330" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">Private set intersection and secure multi-party computation</title>
+  <desc id="d">On the left, two companies find their common customers. Each learns only the overlap. On the right, a bid is split into three secret shares, one for each server. No server sees the bid. Together the servers compute and reveal only the winning bid.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<text x="210" y="28" font-size="14" fill="#1c2230" text-anchor="middle" font-weight="700">Private set intersection</text>
+<circle cx="160" cy="150" r="92" fill="#eef3fb" stroke="#2f62c8" stroke-width="1.5"/>
+<circle cx="262" cy="150" r="92" fill="#e3f4ee" stroke="#0f8a6a" stroke-width="1.5"/>
+<path d="M211 74 A92 92 0 0 1 211 226 A92 92 0 0 1 211 74Z" fill="#b7791f"/>
+<text x="110" y="150" font-size="12" fill="#1f4a9e" text-anchor="middle" font-weight="700">Company A</text>
+<text x="110" y="166" font-size="11" fill="#4a5263" text-anchor="middle">customers</text>
+<text x="312" y="150" font-size="12" fill="#0b6650" text-anchor="middle" font-weight="700">Company B</text>
+<text x="312" y="166" font-size="11" fill="#4a5263" text-anchor="middle">customers</text>
+<text x="211" y="146" font-size="11.5" fill="#fff" text-anchor="middle" font-weight="700">shared</text>
+<text x="211" y="162" font-size="11.5" fill="#fff" text-anchor="middle" font-weight="700">only</text>
+<text x="40" y="272" font-size="11.5" fill="#4a5263" text-anchor="start">Each side learns only the overlap.</text>
+<text x="40" y="287.87" font-size="11.5" fill="#4a5263" text-anchor="start">Used for breached-password checks,</text>
+<text x="40" y="303.74" font-size="11.5" fill="#4a5263" text-anchor="start">contact tracing and list matching.</text>
+<line x1="440" y1="30" x2="440" y2="320" stroke="#d9d4c7" stroke-width="1.5" stroke-dasharray="4 6"/>
+<text x="665" y="28" font-size="14" fill="#1c2230" text-anchor="middle" font-weight="700">Secure multi-party computation</text>
+<rect x="480" y="120" width="90" height="60" rx="10" fill="#1c2230"/>
+<text x="525" y="146" font-size="12" fill="#fff" text-anchor="middle" font-weight="700">A bid</text>
+<text x="525" y="164" font-size="10.5" fill="#ffffffcc" text-anchor="middle">split in 3</text>
+<rect x="640" y="54" width="110" height="52" rx="10" fill="#f3f0fa" stroke="#7a4fc2" stroke-width="1.5"/>
+<text x="695" y="76" font-size="12" fill="#58378f" text-anchor="middle" font-weight="700">Server 1</text>
+<text x="695" y="93" font-size="10.5" fill="#4a5263" text-anchor="middle">one share only</text>
+<path d="M570 150 L634 80" fill="none" stroke="#7a4fc2" stroke-width="1.5" marker-end="url(#m5)"/>
+<path d="M750 80 L792 150" fill="none" stroke="#b7791f" stroke-width="1.5" marker-end="url(#m6)"/>
+<rect x="640" y="130" width="110" height="52" rx="10" fill="#f3f0fa" stroke="#7a4fc2" stroke-width="1.5"/>
+<text x="695" y="152" font-size="12" fill="#58378f" text-anchor="middle" font-weight="700">Server 2</text>
+<text x="695" y="169" font-size="10.5" fill="#4a5263" text-anchor="middle">one share only</text>
+<path d="M570 150 L634 156" fill="none" stroke="#7a4fc2" stroke-width="1.5" marker-end="url(#m5)"/>
+<path d="M750 156 L792 150" fill="none" stroke="#b7791f" stroke-width="1.5" marker-end="url(#m6)"/>
+<rect x="640" y="206" width="110" height="52" rx="10" fill="#f3f0fa" stroke="#7a4fc2" stroke-width="1.5"/>
+<text x="695" y="228" font-size="12" fill="#58378f" text-anchor="middle" font-weight="700">Server 3</text>
+<text x="695" y="245" font-size="10.5" fill="#4a5263" text-anchor="middle">one share only</text>
+<path d="M570 150 L634 232" fill="none" stroke="#7a4fc2" stroke-width="1.5" marker-end="url(#m5)"/>
+<path d="M750 232 L792 150" fill="none" stroke="#b7791f" stroke-width="1.5" marker-end="url(#m6)"/>
+<rect x="796" y="120" width="70" height="60" rx="10" fill="#fdf4e3" stroke="#b7791f" stroke-width="1.5"/>
+<text x="831" y="146" font-size="11.5" fill="#8a5a12" text-anchor="middle" font-weight="700">Winner</text>
+<text x="831" y="162" font-size="10.5" fill="#4a5263" text-anchor="middle">only</text>
+<text x="480" y="288" font-size="11.5" fill="#4a5263" text-anchor="start">No server sees a bid. Together they compute</text>
+<text x="480" y="303.87" font-size="11.5" fill="#4a5263" text-anchor="start">and reveal only the winning bid.</text>
+</svg>

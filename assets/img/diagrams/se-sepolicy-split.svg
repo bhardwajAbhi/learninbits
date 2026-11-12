@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 362" font-family="Inter, system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">The split between platform and vendor SELinux policy</title>
+  <desc id="d">On the left, the platform policy from Google. public/ holds exported types and attributes but no rules. private/ holds the allow and neverallow rules of the platform. compat/ maps old type names to new ones across platform versions. On the right, the vendor policy in vendor/, with files such as hal_keymint_default.te, hal_gatekeeper_default.te and file_contexts. Vendor policy can use the public types, but the private types are not visible to it, and compat feeds it the mappings. The build compiles both halves to CIL, merges them and checks every neverallow rule. init loads the result from /vendor/etc/selinux/precompiled_sepolicy and switches to enforcing.</desc>
+  <defs><marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c2230"/></marker><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4a5263"/></marker><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7b8292"/></marker><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#2f62c8"/></marker><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0f8a6a"/></marker><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7a4fc2"/></marker><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#b7791f"/></marker><marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#c2552d"/></marker><marker id="m8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5d6b7e"/></marker></defs>
+<rect x="20" y="34" width="470" height="230" rx="16" fill="#eef3fb" fill-opacity="0.55"/>
+<rect x="20" y="34" width="470" height="230" rx="16" fill="none" stroke="#2f62c8" stroke-width="1.2" stroke-dasharray="6 5"/>
+<rect x="36" y="21" width="240.8" height="26" rx="13" fill="#fff" stroke="#2f62c8" stroke-width="1.2"/>
+<text x="156.4" y="38.5" font-size="12.5" fill="#1f4a9e" text-anchor="middle" font-weight="700">Platform policy, from Google</text>
+<rect x="44" y="66" width="200" height="86" rx="10" fill="#fff" stroke="#2f62c8" stroke-width="1.5"/>
+<text x="60" y="92" font-size="13.5" fill="#1f4a9e" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">public/</text>
+<text x="60" y="114" font-size="11.4" fill="#4a5263" text-anchor="start">Exported types and</text>
+<text x="60" y="130" font-size="11.4" fill="#4a5263" text-anchor="start">attributes, no rules</text>
+<rect x="266" y="66" width="200" height="86" rx="10" fill="#fff" stroke="#2f62c8" stroke-width="1.5"/>
+<text x="282" y="92" font-size="13.5" fill="#1f4a9e" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">private/</text>
+<text x="282" y="114" font-size="11.4" fill="#4a5263" text-anchor="start">allow and neverallow</text>
+<text x="282" y="130" font-size="11.4" fill="#4a5263" text-anchor="start">rules of the platform</text>
+<rect x="44" y="172" width="422" height="72" rx="10" fill="#fff" stroke="#5d6b7e" stroke-width="1.5"/>
+<text x="60" y="198" font-size="13.5" fill="#3f4a59" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">compat/</text>
+<text x="60" y="222" font-size="11.4" fill="#4a5263" text-anchor="start">Maps old type names to new ones across platform versions</text>
+<rect x="560" y="34" width="300" height="230" rx="16" fill="#fdf4e3" fill-opacity="0.55"/>
+<rect x="560" y="34" width="300" height="230" rx="16" fill="none" stroke="#b7791f" stroke-width="1.2" stroke-dasharray="6 5"/>
+<rect x="717.2" y="21" width="126.8" height="26" rx="13" fill="#fff" stroke="#b7791f" stroke-width="1.2"/>
+<text x="780.6" y="38.5" font-size="12.5" fill="#8a5a12" text-anchor="middle" font-weight="700">Vendor policy</text>
+<rect x="584" y="66" width="252" height="120" rx="10" fill="#fff" stroke="#b7791f" stroke-width="1.5"/>
+<text x="600" y="92" font-size="13.5" fill="#8a5a12" text-anchor="start" font-family="JetBrains Mono, monospace" font-weight="700">vendor/</text>
+<text x="600" y="114" font-size="11.2" fill="#1c2230" text-anchor="start" font-family="JetBrains Mono, monospace">hal_keymint_default.te</text>
+<text x="600" y="132" font-size="11.2" fill="#1c2230" text-anchor="start" font-family="JetBrains Mono, monospace">hal_gatekeeper_default.te</text>
+<text x="600" y="150" font-size="11.2" fill="#1c2230" text-anchor="start" font-family="JetBrains Mono, monospace">file_contexts</text>
+<path d="M210 66 C 210 6, 690 6, 700 60" fill="none" stroke="#0f8a6a" stroke-width="1.8" marker-end="url(#m4)"/>
+<text x="450" y="18" font-size="12" fill="#0b6650" text-anchor="middle" font-weight="800">Can use</text>
+<path d="M466 128 L 580 140" fill="none" stroke="#c2552d" stroke-width="1.8" stroke-dasharray="5 4" marker-end="url(#m7)"/>
+<text x="522" y="160" font-size="12" fill="#963f1f" text-anchor="middle" font-weight="800">Not visible</text>
+<path d="M466 208 C 520 208, 540 180, 580 170" fill="none" stroke="#5d6b7e" stroke-width="1.6" marker-end="url(#m8)"/>
+<rect x="20" y="290" width="840" height="58" rx="12" fill="#f2efe8"/>
+<text x="440" y="314" font-size="12.2" fill="#1c2230" text-anchor="middle" font-weight="600">The build compiles both halves to CIL, merges them and checks every neverallow rule.</text>
+<text x="440" y="334" font-size="11.6" fill="#4a5263" text-anchor="middle">init loads the result from /vendor/etc/selinux/precompiled_sepolicy and switches to enforcing.</text>
+</svg>

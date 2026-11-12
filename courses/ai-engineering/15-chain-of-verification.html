@@ -1,0 +1,1239 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Chain of verification · AI Engineering · LearnInBits</title>
+  <meta name="description" content="Let a model check each fact in its own answer and fix the wrong ones. Two guided builds, a careful reading of their outputs and what a check needs to be trusted.">
+  <!-- og:start -->
+  <meta property="og:site_name" content="LearnInBits">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Chain of verification · AI Engineering">
+  <meta property="og:description" content="Let a model check each fact in its own answer and fix the wrong ones. Two guided builds, a careful reading of their outputs and what a check needs to be trusted.">
+  <meta property="og:url" content="https://learninbits.in/courses/ai-engineering/15-chain-of-verification.html">
+  <meta property="og:image" content="https://learninbits.in/assets/img/og/courses-ai-engineering-15-chain-of-verification.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Chain of verification · AI Engineering">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Chain of verification · AI Engineering">
+  <meta name="twitter:description" content="Let a model check each fact in its own answer and fix the wrong ones. Two guided builds, a careful reading of their outputs and what a check needs to be trusted.">
+  <meta name="twitter:image" content="https://learninbits.in/assets/img/og/courses-ai-engineering-15-chain-of-verification.png">
+  <link rel="canonical" href="https://learninbits.in/courses/ai-engineering/15-chain-of-verification.html">
+  <!-- og:end -->
+  <link rel="icon" href="../../assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,500;0,8..60,600;1,8..60,500&display=swap">
+  <link rel="stylesheet" href="../../assets/css/style.css?v=20261112">
+  <script>try{var t=localStorage.getItem("lib-theme");t=t?JSON.parse(t):(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+</head>
+<body data-root="../../" data-page="chapter" data-course="ai-engineering" data-id="15-chain-of-verification">
+
+<main id="main">
+<article>
+
+  <div class="block oneline">
+    <div class="label">In one line</div>
+    <p>Chain of verification makes a model check each fact in its own answer and fix the wrong ones.</p>
+  </div>
+
+  <section class="learn">
+    <h2>What you will learn</h2>
+    <ul>
+      <li>Why a fluent answer can still hold wrong facts</li>
+      <li>How to split a long answer into small facts that can each be checked</li>
+      <li>How four small chains work together, to write, list, check and fix</li>
+      <li>Why checking an answer with the same model is not always enough</li>
+      <li>What a check needs before you can trust its result</li>
+    </ul>
+    <p class="needs">Read <a href="08-chain-of-thought.html">chapter 8</a> and <a href="14-self-consistency.html">chapter 14</a> first. This chapter builds chains of the same kind as chapter 8. It also asks the same question as chapter 14, namely when you can trust an answer from a model.</p>
+  </section>
+
+  <h2>The idea</h2>
+  <p>In chapter 14, you asked the model the same question several times and let the answers vote. A vote works well for one short answer, such as a number or a label. Many real questions need a long answer instead, such as a summary of a law or a report on a vulnerability. A long answer has no single value to vote on. It holds ten or twenty separate facts, and any one of them can be wrong.</p>
+  <p>A model writes such an answer in one smooth flow. Each sentence follows from the one before it, so a wrong date fits in as easily as a right one. When you ask the same model to check the whole answer, it reads its own text and usually finds it convincing.</p>
+  <p><strong>Chain of verification</strong> (CoVe) breaks this flow into four steps. The model first writes an answer. Then it lists the facts in that answer, one per line. Next, it checks each fact on its own, without the rest of the answer around it. Last, it fixes every fact that failed the check. A small fact is easier to check than a whole answer, because the rest of the text cannot push the model toward a yes.</p>
+  <p>The method comes from research in 2023. The paper <a href="https://arxiv.org/abs/2309.11495">"Chain-of-Verification Reduces Hallucination in Large Language Models"</a> by Dhuliawala and others at Meta showed fewer invented facts in long answers. The paper turns each fact into a short question, such as "When did the President sign the Act?", and answers each question in a fresh call. The code of this chapter uses a simpler version, which checks each fact directly.</p>
+
+  <div class="block analogy">
+    <div class="label">Real-life analogy</div>
+    <p>A newspaper in Delhi prints a long story about a new law, say the DPDP Act. Before it goes to print, a fact-checker reads the story with a pencil. She circles every name, date and number, such as "11 August 2023" or "₹250 crore". Then she checks each circled item against the official text of the law. She does not ask whether the story sounds right, but whether each item is right. Chain of verification gives the model the job of that fact-checker.</p>
+  </div>
+
+  <h2>The idea in one picture</h2>
+  <p>The method runs four steps in a row. The output of each step is the input of the next one.</p>
+  <figure class="diagram">
+      <div class="frame"><img src="../../assets/img/diagrams/ai-15-idea.svg" alt="Four steps in a row. First, the model writes the first answer with generate_chain. Second, it lists the facts in that answer with extract_chain, for example the assent on 11 August 2023, that the Act applies outside India too and up to 250 crore rupees for weak security. Third, verify_chain checks each fact alone, with one call for each fact, and labels it VERIFIED, INCORRECT or UNCERTAIN. Fourth, revise_chain fixes the wrong facts. It runs only if a check says INCORRECT, and it keeps the facts that passed." loading="lazy"></div>
+      <figcaption>Write, list, check and fix. The check runs once for each fact.</figcaption>
+    </figure>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th></th><th>Self-consistency (chapter 14)</th><th>Chain of verification (this chapter)</th></tr></thead>
+      <tbody>
+        <tr><td>Calls to the model</td><td>One for each sample</td><td>Three, plus one for each fact</td></tr>
+        <tr><td>Best for</td><td>One short answer</td><td>A long answer with many facts</td></tr>
+        <tr><td>How it checks</td><td>Compares several answers</td><td>Checks each fact of one answer</td></tr>
+        <tr><td>Temperature</td><td>Above 0, so that the runs differ</td><td>0, so that the checks stay steady</td></tr>
+        <tr><td>Your program needs</td><td>Code that counts votes</td><td>Code that splits the facts and reads the check results</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Chain of verification needs more calls to the model. An answer with 18 facts needs 21 calls, one for each fact and three more. The two examples show when this extra work helps.</p>
+
+  <h2>What we build in this chapter</h2>
+  <p>Both programs follow the same four steps, and each step has its own prompt. The first prompt writes the answer. The second lists the facts in that answer. The third checks one fact at a time. The fourth fixes the answer. Only the model and the question change between the two programs.</p>
+
+  <div class="build-cards">
+    <div class="build-card" style="--ex:#2f62c8">
+      <span class="ex-tag"><b>1</b>Example 1</span>
+      <h3>The DPDP Act with Gemini</h3>
+      <dl>
+        <dt>Aim</dt><dd>Gemini answers a question about India's DPDP Act. Then it checks the facts in its own answer and fixes the wrong ones.</dd>
+        <dt>Problem</dt><dd>The question asks when the Act became law, who it applies to, which rights it gives and what penalties it sets.</dd>
+        <dt>Input</dt><dd>One question in plain text, with these four parts.</dd>
+        <dt>Expected output</dt><dd>The first answer, the list of facts in it, a check result for each fact and the final answer, for example<code class="expect">7. ... -&gt; <b>VERIFIED</b></code></dd>
+        <dt>Model</dt><dd><span class="model-chip">Gemini 3.1 Flash Lite</span></dd>
+      </dl>
+    </div>
+    <div class="build-card" style="--ex:#0f8a6a">
+      <span class="ex-tag"><b>2</b>Example 2</span>
+      <h3>Heartbleed with Qwen</h3>
+      <dl>
+        <dt>Aim</dt><dd>Qwen answers a question about the Heartbleed bug in OpenSSL. Then it checks the facts in its own answer and fixes the wrong ones.</dd>
+        <dt>Problem</dt><dd>The question asks for the CVE number, the date of disclosure, the affected versions, the cause of the bug and the size of a leak.</dd>
+        <dt>Input</dt><dd>One question in plain text, with these five parts.</dd>
+        <dt>Expected output</dt><dd>The same four parts as Example 1, for example<code class="expect">4. ... -&gt; <b>INCORRECT</b>: ...</code></dd>
+        <dt>Model</dt><dd><span class="model-chip">Qwen 2.5 7B, through OpenRouter</span></dd>
+      </dl>
+    </div>
+  </div>
+  <p>Both questions are full of dates, numbers and names on purpose. Such details are easy to get wrong and easy to check against an official source. They show clearly what the method catches and what it misses. DPDP stands for the Digital Personal Data Protection Act of India, from 2023. A CVE (Common Vulnerabilities and Exposures) number is the public ID of a known security flaw.</p>
+
+  <!-- ================= EXAMPLE 1 ================= -->
+  <section class="example" style="--ex:#2f62c8">
+
+    <div class="example-banner">
+      <div class="eb-tag">Example 1 · Guided build</div>
+      <h2 data-toc="Example 1, the DPDP Act">A question about the DPDP Act</h2>
+      <p>Gemini answers a question about the DPDP Act, lists the facts in its answer, checks each one and fixes the wrong ones.</p>
+      <div class="eb-row">
+        <span class="eb-chip">Gemini 3.1 Flash Lite</span>
+        <span class="eb-chip">src/14_chain_of_verification_google.py</span>
+        <a class="gh-btn" href="https://github.com/bhardwajAbhi/ai-engineering/blob/main/src/14_chain_of_verification_google.py"><svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M12 .5a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2.1c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1.1-.8.1-.8.1-.8 1.2.1 1.9 1.3 1.9 1.3 1.1 1.9 2.9 1.3 3.6 1 .1-.8.4-1.3.8-1.6-2.7-.3-5.5-1.3-5.5-6a4.7 4.7 0 0 1 1.3-3.2c-.1-.3-.6-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.7 1.7.2 2.9.1 3.2a4.7 4.7 0 0 1 1.3 3.2c0 4.6-2.8 5.6-5.5 6 .4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .5z"/></svg>View on GitHub</a>
+      </div>
+    </div>
+
+    <figure class="diagram">
+      <div class="frame"><img src="../../assets/img/diagrams/ai-15-ex1-flow.svg" alt="Setup, llm = ChatGoogleGenerativeAI(model=&quot;gemini-3.1-flash-lite&quot;, ...), temperature=0, so that the same fact gets the same check result. Draft, generate_chain.invoke({&quot;question&quot; question}), A question about the DPDP Act, its date, scope, rights and penalties. List, extract_chain.invoke({&quot;response&quot; initial_response}), One fact per line, split into a Python list. Check, verify_chain.invoke({&quot;claim&quot; claim}), Each fact alone, VERIFIED, INCORRECT or UNCERTAIN. Decide, if &quot;INCORRECT&quot; in verification_text, Otherwise keep the first answer. Fix, revise_chain.invoke({...}), The final answer, built from the first answer and the check results. A loop goes back from stage 4 to stage 4, next fact." loading="lazy"></div>
+      <figcaption>The program of Example 1, from the question to the final answer.</figcaption>
+    </figure>
+
+    <h3 class="step"><span class="sn">Step 1</span>Create the file</h3>
+    <p>In your project folder, create the file <code>src/14_chain_of_verification_google.py</code>. The docstring at the top states the method in a few sentences. Its last sentence gives the reason behind the method. Checking small facts one at a time is easier than judging a whole answer at once.</p>
+<pre class="code" data-lang="python" data-file="src/14_chain_of_verification_google.py"><code>"""
+Title: Chain of Verification Prompting (Google Generative AI)
+Chain of Verification asks the model to write an answer, pull out the
+facts it stated, check each fact on its own and then fix any fact found
+to be wrong. Checking small facts one at a time is easier than judging
+a whole answer at once.
+uv run python src/14_chain_of_verification_google.py
+"""</code></pre>
+
+    <h3 class="step"><span class="sn">Step 2</span>Import what you need</h3>
+<pre class="code" data-lang="python"><code>from dotenv import load_dotenv
+from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.output_parsers import StrOutputParser</code></pre>
+    <ul class="explain">
+      <li><code>load_dotenv</code> reads your API key from the <code>.env</code> file, as in every chapter.</li>
+      <li><code>ChatGoogleGenerativeAI</code>, <code>ChatPromptTemplate</code> and <code>StrOutputParser</code> are the model, the prompt and the parser of chapter 2.</li>
+      <li>Nothing else is needed. The whole method is four chains and some plain Python around them.</li>
+    </ul>
+
+    <h3 class="step"><span class="sn">Step 3</span>Write the prompt for the first answer</h3>
+<pre class="code" data-lang="python"><code>    # Step 1 prompt: generate the initial response
+    generate_prompt = ChatPromptTemplate.from_template("""
+        Answer this question with specific facts and details:
+        {question}
+    """)</code></pre>
+    <ul class="explain">
+      <li>"Answer this question with specific facts and details" asks for a rich answer on purpose. A vague answer has few facts to check, and a detailed answer gives the later steps something to work on.</li>
+    </ul>
+
+    <h3 class="step"><span class="sn">Step 4</span>Write the prompt that lists the facts</h3>
+<pre class="code" data-lang="python"><code>    # Step 2 prompt: extract the claims
+    extract_claims_prompt = ChatPromptTemplate.from_template("""
+        Extract all specific factual claims from this text.
+        List each claim on a separate line, numbered.
+        Focus on dates, numbers, names and verifiable facts.
+
+        TEXT:
+        {response}
+
+        FACTUAL CLAIMS:
+    """)</code></pre>
+    <ul class="explain">
+      <li>"Extract all specific factual claims" turns the answer into a list of separate facts, which the code calls claims.</li>
+      <li>"List each claim on a separate line, numbered" fixes the format, so that your Python code can split the list at each line break.</li>
+      <li>"Focus on dates, numbers, names and verifiable facts" keeps the list to facts that a check can confirm or reject. An opinion such as "one of the strongest laws" cannot be checked, so it stays out.</li>
+    </ul>
+
+    <h3 class="step"><span class="sn">Step 5</span>Write the prompt that checks one fact</h3>
+<pre class="code" data-lang="python"><code>    # Step 3 prompt: verify one claim
+    verify_prompt = ChatPromptTemplate.from_template("""
+        Verify this specific claim. Is it accurate?
+
+        CLAIM: {claim}
+
+        Think carefully. If you are not certain, say "UNCERTAIN".
+        Respond with exactly one of these:
+        - VERIFIED: if you are confident the claim is correct
+        - INCORRECT: &lt;the correct information&gt;, if you know the claim is wrong
+        - UNCERTAIN: if you are not sure
+    """)</code></pre>
+    <ul class="explain">
+      <li>The prompt holds <strong>one</strong> claim and nothing else. The first answer stays out, so the model cannot lean on the rest of its own text. This separation is the heart of the method.</li>
+      <li>"If you are not certain, say UNCERTAIN" gives the model an honest third option. Without it, a model tends to pick a side even when it does not know.</li>
+      <li>The three labels VERIFIED, INCORRECT and UNCERTAIN let your code decide what to do next. INCORRECT also asks for the correct information, so that the fix has something to work with.</li>
+    </ul>
+
+    <h3 class="step"><span class="sn">Step 6</span>Write the prompt that fixes the answer</h3>
+<pre class="code" data-lang="python"><code>    # Step 4 prompt: revise the response
+    revise_prompt = ChatPromptTemplate.from_template("""
+        Revise this response to fix any incorrect claims.
+
+        ORIGINAL RESPONSE:
+        {response}
+
+        VERIFICATION RESULTS:
+        {verification_results}
+
+        REVISED RESPONSE (fix any incorrect claims, keep verified ones):
+    """)</code></pre>
+    <ul class="explain">
+      <li>The prompt gives the model its first answer and all the check results together.</li>
+      <li>"Fix any incorrect claims, keep verified ones" asks for a careful edit, not a new answer. The parts that passed stay as they are.</li>
+    </ul>
+
+    <h3 class="step"><span class="sn">Step 7</span>Create the model and the four chains</h3>
+<pre class="code" data-lang="python"><code>def main():
+    load_dotenv()
+
+    # Initialize the model
+    # Temperature 0 keeps the checks steady and repeatable.
+    llm = ChatGoogleGenerativeAI(
+        model="gemini-3.1-flash-lite",
+        temperature=0,
+    )
+
+    # Parser to extract the text from the model response
+    parser = StrOutputParser()</code></pre>
+<pre class="code" data-lang="python"><code>    # Create the four chains
+    generate_chain = generate_prompt | llm | parser
+    extract_chain = extract_claims_prompt | llm | parser
+    verify_chain = verify_prompt | llm | parser
+    revise_chain = revise_prompt | llm | parser</code></pre>
+    <ul class="explain">
+      <li><code>temperature=0</code> makes the model pick its most likely words. In chapter 14, you wanted different answers, so you raised the temperature. Here you want steady checks, so the same fact gets the same check result each time.</li>
+      <li>The four chains share one model and one parser. Each chain is the three-part chain of chapter 2, with its own prompt.</li>
+    </ul>
+
+    <h3 class="step"><span class="sn">Step 8</span>Write the first answer and list its facts</h3>
+    <p>The function <code>chain_of_verification()</code> runs the four steps in order. Its first part writes the answer and turns the list of facts into a Python list.</p>
+<pre class="code" data-lang="python"><code>def chain_of_verification(
+    question: str,
+    generate_chain,
+    extract_chain,
+    verify_chain,
+    revise_chain,
+) -&gt; dict:
+    """Run the full Chain of Verification pipeline."""
+
+    # Step 1: Generate the initial response
+    initial_response = generate_chain.invoke({"question": question})
+    print("INITIAL RESPONSE:")
+    print(initial_response)
+    print("\n" + "-" * 40)
+
+    # Step 2: Extract the claims, one per line
+    claims_text = extract_chain.invoke({"response": initial_response})
+    claims = [c.strip() for c in claims_text.strip().split("\n") if c.strip()]
+    print("EXTRACTED CLAIMS:")
+    for claim in claims:
+        print(f"  {claim}")
+    print("\n" + "-" * 40)</code></pre>
+    <ul class="explain">
+      <li><code>generate_chain.invoke({"question": question})</code> writes the first answer.</li>
+      <li><code>extract_chain.invoke({"response": initial_response})</code> returns the facts as one block of text.</li>
+      <li><code>claims_text.strip().split("\n")</code> cuts that block at each line break, so that each line becomes one item of a list.</li>
+      <li><code>[c.strip() for c in ... if c.strip()]</code> removes spaces at both ends of each line and drops empty lines. A model often leaves a blank line in a list, and an empty claim gives the check nothing to judge.</li>
+    </ul>
+
+    <h3 class="step"><span class="sn">Step 9</span>Check each fact on its own</h3>
+<pre class="code" data-lang="python"><code>    # Step 3: Verify each claim on its own
+    verification_results = []
+    print("VERIFICATION:")
+    for claim in claims:
+        result = verify_chain.invoke({"claim": claim})
+        verification_results.append(f"{claim}\n  -&gt; {result.strip()}")
+        print(f"  {claim}")
+        print(f"    -&gt; {result.strip()}")
+    print("\n" + "-" * 40)</code></pre>
+    <ul class="explain">
+      <li>The loop sends each claim to <code>verify_chain</code> in a separate call. Each call sees one claim only.</li>
+      <li><code>verification_results</code> collects each claim together with its check result, so that the fix later sees both.</li>
+      <li>The program prints each result as it arrives, so that you can follow the checks one by one.</li>
+    </ul>
+
+    <h3 class="step"><span class="sn">Step 10</span>Decide whether to fix the answer</h3>
+<pre class="code" data-lang="python"><code>    # Step 4: Decide what to do, based on the verification results
+    verification_text = "\n".join(verification_results)
+
+    if "INCORRECT" in verification_text:
+        # At least one claim is wrong, so rewrite the response
+        final_response = revise_chain.invoke(
+            {"response": initial_response, "verification_results": verification_text}
+        )
+        print("REVISED RESPONSE:")
+        print(final_response)
+    elif "UNCERTAIN" in verification_text:
+        # Nothing is known to be wrong, but some claims could not be checked
+        final_response = initial_response
+        print("NO REVISION NEEDED - but some claims are UNCERTAIN")
+        print("The initial response is kept, with unchecked claims in it.")
+    else:
+        # Every claim was verified
+        final_response = initial_response
+        print("NO REVISION NEEDED - All claims verified")
+
+    return {
+        "initial": initial_response,
+        "claims": claims,
+        "verifications": verification_results,
+        "final": final_response,
+    }</code></pre>
+    <ul class="explain">
+      <li><code>"\n".join(verification_results)</code> joins all check results into one text.</li>
+      <li><code>if "INCORRECT" in verification_text</code> looks for the word anywhere in that text. If it finds the word, the fix chain rewrites the answer.</li>
+      <li><code>elif "UNCERTAIN" in verification_text</code> keeps the first answer, but the program warns you that some facts were not confirmed.</li>
+      <li><code>else</code> keeps the first answer, because every fact passed.</li>
+    </ul>
+    <p>The rule is short and easy to read. It also searches for a word anywhere in the text, not only in the label at the start of each result. A reply without any label, such as a question back to you, counts as nothing at all. The output below shows what this means in practice.</p>
+
+    <h3 class="step"><span class="sn">Step 11</span>Ask the question and run it</h3>
+<pre class="code" data-lang="python"><code>    # A question full of dates, numbers and names, so there is
+    # more to check and more chance of a slip
+    question = (
+        "Tell me about India's Digital Personal Data Protection (DPDP) Act, "
+        "2023: when it became law, who it applies to, the rights it gives "
+        "people, and the penalties it sets."
+    )</code></pre>
+    <ul class="explain">
+      <li>The question asks for four kinds of facts, namely dates, scope, rights and penalties. A law is a good test, because its exact text is public and anyone can check it.</li>
+    </ul>
+<pre class="code" data-lang="python"><code>if __name__ == "__main__":
+    main()</code></pre>
+<pre class="code" data-lang="bash"><code>uv run python src/14_chain_of_verification_google.py</code></pre>
+<details class="fold">
+      <summary><span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m16 18 6-6-6-6M8 6l-6 6 6 6"/></svg></span><span class="ft">Show the full output<small>142 lines</small></span></summary>
+      <div class="fold-body">
+<pre class="code" data-lang="output"><code>============================================================
+QUESTION
+============================================================
+
+Tell me about India's Digital Personal Data Protection (DPDP) Act, 2023: when it became law, who it applies to, the rights it gives people, and the penalties it sets.
+
+============================================================
+
+INITIAL RESPONSE:
+India’s **Digital Personal Data Protection (DPDP) Act, 2023** represents a significant overhaul of the country’s data privacy framework. It was enacted to provide a comprehensive legal structure for the processing of digital personal data.
+
+Here are the specific facts and details regarding the Act:
+
+### 1. When it became law
+*   **Passage:** The Act was passed by both houses of the Indian Parliament in early August 2023.
+*   **Presidential Assent:** It received the assent of the President of India on **August 11, 2023**, officially becoming law.
+*   **Implementation Status:** While the Act is law, it is being implemented in a phased manner. As of mid-2024, the government is in the process of notifying the specific rules and establishing the Data Protection Board of India, which will oversee enforcement.
+
+### 2. Who it applies to
+The Act applies to the processing of **digital personal data** within India. Its scope includes:
+*   **Personal data collected in digital form:** This includes data collected offline that is subsequently digitized.
+*   **Extraterritorial reach:** It applies to the processing of personal data outside India if such processing is in connection with any activity related to offering goods or services to individuals (Data Principals) located within India.
+*   **Data Fiduciaries:** The Act places obligations on "Data Fiduciaries"—entities (individuals, companies, or government bodies) that determine the purpose and means of processing personal data.
+
+### 3. Rights of the Data Principal (Individuals)
+The Act grants individuals (referred to as "Data Principals") several key rights:
+*   **Right to Information:** The right to obtain a summary of the personal data being processed and the identities of all other Data Fiduciaries with whom the data has been shared.
+*   **Right to Correction and Erasure:** The right to demand the correction of inaccurate data, completion of incomplete data, and the erasure of data that is no longer necessary for the purpose for which it was processed.
+*   **Right to Grievance Redressal:** The right to have a readily available grievance redressal mechanism provided by the Data Fiduciary.
+*   **Right to Nominate:** The right to nominate another individual to exercise their rights in the event of death or incapacity.
+
+### 4. Penalties
+The Act introduces a tiered penalty structure for non-compliance, which are among the highest in Indian regulatory history:
+*   **Failure to prevent data breaches:** Up to **₹250 crore** (approx. $30 million USD).
+*   **Failure to notify the Board or affected individuals of a data breach:** Up to **₹200 crore** (approx. $24 million USD).
+*   **Failure to comply with additional obligations regarding children:** Up to **₹200 crore** (approx. $24 million USD).
+*   **General breaches:** For other contraventions of the Act, penalties can reach up to **₹50 crore** (approx. $6 million USD).
+
+**Key Enforcement Mechanism:**
+The Act establishes the **Data Protection Board of India**. This independent body is tasked with investigating data breaches, hearing complaints from individuals, and imposing the financial penalties mentioned above. Unlike some international laws (like the GDPR), the DPDP Act does not specify a percentage of global turnover for penalties, opting instead for fixed maximum monetary caps.
+
+----------------------------------------
+EXTRACTED CLAIMS:
+  1. The name of the legislation is the Digital Personal Data Protection (DPDP) Act, 2023.
+  2. The Act was passed by both houses of the Indian Parliament in early August 2023.
+  3. The Act received the assent of the President of India on August 11, 2023.
+  4. As of mid-2024, the government is in the process of notifying specific rules and establishing the Data Protection Board of India.
+  5. The Act applies to the processing of digital personal data within India.
+  6. The Act applies to personal data collected offline that is subsequently digitized.
+  7. The Act has extraterritorial reach regarding the processing of personal data outside India if it relates to offering goods or services to individuals located within India.
+  8. The Act defines "Data Fiduciaries" as entities (individuals, companies, or government bodies) that determine the purpose and means of processing personal data.
+  9. The Act grants individuals the right to obtain a summary of personal data being processed and the identities of other Data Fiduciaries with whom the data is shared.
+  10. The Act grants individuals the right to demand the correction of inaccurate data, completion of incomplete data, and the erasure of data no longer necessary.
+  11. The Act grants individuals the right to a grievance redressal mechanism provided by the Data Fiduciary.
+  12. The Act grants individuals the right to nominate another person to exercise their rights in the event of death or incapacity.
+  13. The maximum penalty for failure to prevent data breaches is ₹250 crore (approx. $30 million USD).
+  14. The maximum penalty for failure to notify the Board or affected individuals of a data breach is ₹200 crore (approx. $24 million USD).
+  15. The maximum penalty for failure to comply with obligations regarding children is ₹200 crore (approx. $24 million USD).
+  16. The maximum penalty for general breaches of the Act is ₹50 crore (approx. $6 million USD).
+  17. The Data Protection Board of India is the independent body tasked with investigating breaches, hearing complaints, and imposing financial penalties.
+  18. The DPDP Act uses fixed maximum monetary caps for penalties rather than a percentage of global turnover.
+
+----------------------------------------
+VERIFICATION:
+  1. The name of the legislation is the Digital Personal Data Protection (DPDP) Act, 2023.
+    -&gt; VERIFIED: The name of the legislation is the Digital Personal Data Protection (DPDP) Act, 2023.
+  2. The Act was passed by both houses of the Indian Parliament in early August 2023.
+    -&gt; Please provide the name of the "Act" you are referring to. Without the specific title of the legislation, I cannot verify the claim.
+  3. The Act received the assent of the President of India on August 11, 2023.
+    -&gt; Please provide the name of the Act you are referring to. Without the title of the legislation, it is impossible to verify the date of presidential assent.
+  4. As of mid-2024, the government is in the process of notifying specific rules and establishing the Data Protection Board of India.
+    -&gt; VERIFIED
+  5. The Act applies to the processing of digital personal data within India.
+    -&gt; INCORRECT: The Act applies to the processing of digital personal data within India, AND to the processing of digital personal data outside India if such processing is in connection with any activity related to offering goods or services to data principals within the territory of India.
+  6. The Act applies to personal data collected offline that is subsequently digitized.
+    -&gt; Please provide the name of the specific "Act" you are referring to (e.g., GDPR, CCPA, VCDPA, etc.). Without the name of the legislation, it is impossible to verify the claim.
+
+**UNCERTAIN**
+  7. The Act has extraterritorial reach regarding the processing of personal data outside India if it relates to offering goods or services to individuals located within India.
+    -&gt; VERIFIED: The Digital Personal Data Protection Act, 2023 (DPDP Act) includes Section 3(a), which explicitly states that the Act applies to the processing of digital personal data outside the territory of India if such processing is in connection with any activity related to offering goods or services to Data Principals within the territory of India.
+  8. The Act defines "Data Fiduciaries" as entities (individuals, companies, or government bodies) that determine the purpose and means of processing personal data.
+    -&gt; VERIFIED
+  9. The Act grants individuals the right to obtain a summary of personal data being processed and the identities of other Data Fiduciaries with whom the data is shared.
+    -&gt; VERIFIED
+  10. The Act grants individuals the right to demand the correction of inaccurate data, completion of incomplete data, and the erasure of data no longer necessary.
+    -&gt; UNCERTAIN
+  11. The Act grants individuals the right to a grievance redressal mechanism provided by the Data Fiduciary.
+    -&gt; Please specify which "Act" you are referring to (e.g., the Digital Personal Data Protection Act, 2023 of India, or another specific legislation). Without the name of the Act, I cannot verify the claim.
+
+**UNCERTAIN**
+  12. The Act grants individuals the right to nominate another person to exercise their rights in the event of death or incapacity.
+    -&gt; UNCERTAIN
+  13. The maximum penalty for failure to prevent data breaches is ₹250 crore (approx. $30 million USD).
+    -&gt; INCORRECT: Under the Digital Personal Data Protection Act (DPDP Act) 2023 of India, the maximum penalty for failure to prevent a data breach (specifically failure to take reasonable security safeguards) is ₹250 crore per instance. However, the claim is incomplete because the Act specifies that the penalty is "up to ₹250 crore" for each instance of non-compliance, and there is no upper cap on the total aggregate penalty if multiple breaches or violations occur.
+  14. The maximum penalty for failure to notify the Board or affected individuals of a data breach is ₹200 crore (approx. $24 million USD).
+    -&gt; INCORRECT: The maximum penalty for failure to notify the Data Protection Board or affected individuals of a data breach under the Digital Personal Data Protection Act, 2023, is ₹250 crore (approx. $30 million USD).
+  15. The maximum penalty for failure to comply with obligations regarding children is ₹200 crore (approx. $24 million USD).
+    -&gt; INCORRECT: The maximum penalty for failure to comply with obligations regarding children under the Digital Personal Data Protection Act (DPDP Act), 2023, is ₹200 crore. However, the claim is misleading because the ₹200 crore figure is the maximum penalty for *any* failure to comply with the Act's provisions (Section 8(9)), not specifically for obligations regarding children. The specific penalty for failing to comply with obligations regarding children (Section 9) is also capped at ₹200 crore, but this is part of the general penalty structure rather than a unique maximum for that specific section.
+  16. The maximum penalty for general breaches of the Act is ₹50 crore (approx. $6 million USD).
+    -&gt; INCORRECT: The maximum penalty for general breaches of the Digital Personal Data Protection Act (DPDPA) 2023 is ₹250 crore (approx. $30 million USD).
+  17. The Data Protection Board of India is the independent body tasked with investigating breaches, hearing complaints, and imposing financial penalties.
+    -&gt; VERIFIED
+  18. The DPDP Act uses fixed maximum monetary caps for penalties rather than a percentage of global turnover.
+    -&gt; INCORRECT: The DPDP Act (Digital Personal Data Protection Act, 2023) specifies monetary caps for penalties (up to ₹250 crore per instance), but it does not use a percentage of global turnover. Therefore, the claim that it uses fixed caps *rather than* a percentage of global turnover is technically correct in its description of the Act's mechanism, but the phrasing implies a contrast with other laws (like the GDPR) that do use turnover. However, as the Act strictly relies on fixed monetary caps and does not include a turnover-based calculation, the claim is **VERIFIED**.
+
+----------------------------------------
+REVISED RESPONSE:
+### Revised Response: India’s Digital Personal Data Protection (DPDP) Act, 2023
+
+India’s **Digital Personal Data Protection (DPDP) Act, 2023** represents a significant overhaul of the country’s data privacy framework. It was enacted to provide a comprehensive legal structure for the processing of digital personal data.
+
+Here are the specific facts and details regarding the Act:
+
+### 1. When it became law
+*   **Passage:** The Act was passed by both houses of the Indian Parliament in early August 2023.
+*   **Presidential Assent:** It received the assent of the President of India on **August 11, 2023**, officially becoming law.
+*   **Implementation Status:** While the Act is law, it is being implemented in a phased manner. As of mid-2024, the government is in the process of notifying the specific rules and establishing the Data Protection Board of India.
+
+### 2. Who it applies to
+The Act applies to the processing of **digital personal data** within India. Its scope includes:
+*   **Personal data collected in digital form:** This includes data collected offline that is subsequently digitized.
+*   **Extraterritorial reach:** The Act applies to the processing of digital personal data within India, and to the processing of digital personal data outside India if such processing is in connection with any activity related to offering goods or services to Data Principals within the territory of India.
+*   **Data Fiduciaries:** The Act places obligations on "Data Fiduciaries"—entities (individuals, companies, or government bodies) that determine the purpose and means of processing personal data.
+
+### 3. Rights of the Data Principal (Individuals)
+The Act grants individuals (referred to as "Data Principals") several key rights:
+*   **Right to Information:** The right to obtain a summary of the personal data being processed and the identities of all other Data Fiduciaries with whom the data has been shared.
+*   **Right to Correction and Erasure:** The right to demand the correction of inaccurate data, completion of incomplete data, and the erasure of data that is no longer necessary for the purpose for which it was processed.
+*   **Right to Grievance Redressal:** The right to have a readily available grievance redressal mechanism provided by the Data Fiduciary.
+*   **Right to Nominate:** The right to nominate another individual to exercise their rights in the event of death or incapacity.
+
+### 4. Penalties
+The Act introduces a tiered penalty structure for non-compliance. Unlike the GDPR, the DPDP Act does not use a percentage of global turnover, opting instead for fixed maximum monetary caps:
+*   **Failure to take reasonable security safeguards to prevent data breaches:** Up to **₹250 crore**.
+*   **Failure to notify the Board or affected individuals of a data breach:** Up to **₹250 crore**.
+*   **Failure to comply with obligations regarding children:** Up to **₹200 crore**.
+*   **General breaches:** For other contraventions of the Act, penalties can reach up to **₹250 crore**.
+
+*Note: These penalties are "up to" the specified amounts per instance of non-compliance, and there is no upper cap on the total aggregate penalty if multiple breaches or violations occur.*
+
+### 5. Enforcement Mechanism
+The Act establishes the **Data Protection Board of India**. This independent body is tasked with investigating data breaches, hearing complaints from individuals, and imposing the financial penalties mentioned above.</code></pre>
+      </div>
+    </details>
+
+    <h3 class="step"><span class="sn">Read</span>Read the output in four parts</h3>
+    <p>The output is long, so read it in the same order as the program.</p>
+    <p><strong>Part 1, the first answer.</strong> The answer is well organized and mostly correct. It gives the date of the President's assent as 11 August 2023. It lists the four main rights and the reach of the Act outside India. It also gives four penalty amounts, namely ₹250 crore, ₹200 crore, ₹200 crore and ₹50 crore. It also says that "as of mid-2024" the government was still preparing the rules.</p>
+    <p><strong>Part 2, the facts.</strong> The program turned the answer into 18 numbered claims. Most of them start with "The Act". Keep that detail in mind, because it matters in Part 3.</p>
+    <p><strong>Part 3, the checks.</strong> Group the 18 results by what happened, not by number.</p>
+    <ul>
+      <li><strong>Confirmed.</strong> Claims 1, 4, 7, 8, 9 and 17 came back as VERIFIED. For claim 7, about the reach outside India, the model even names the right section of the Act.</li>
+      <li><strong>"Which Act?"</strong> For claims 2, 3, 6 and 11, the model gave no label at all. It asked which Act the claim was about. Each claim said only "The Act", and the check saw the claim alone. The separation that protects the check also removed the name of the law.</li>
+      <li><strong>Uncertain.</strong> Claims 10 and 12 came back as UNCERTAIN, although both rights are in the Act.</li>
+      <li><strong>Marked as wrong.</strong> Claims 5, 13, 14, 15, 16 and 18 came back as INCORRECT. Part 4 shows that most of these results were wrong themselves.</li>
+    </ul>
+    <p><strong>Part 4, the fix.</strong> One INCORRECT anywhere is enough to start the fix. Compare the penalties of the first answer with the final answer and with the Schedule of the Act.</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Penalty for</th><th>First answer</th><th>Final answer</th><th>The Schedule of the Act</th></tr></thead>
+        <tbody>
+          <tr><td>Weak security that leads to a data breach</td><td>Up to ₹250 crore</td><td>Up to ₹250 crore</td><td>Up to ₹250 crore</td></tr>
+          <tr><td>Failure to report a data breach</td><td>Up to ₹200 crore</td><td><strong>Up to ₹250 crore</strong></td><td>Up to ₹200 crore</td></tr>
+          <tr><td>Breach of the duties for children's data</td><td>Up to ₹200 crore</td><td>Up to ₹200 crore</td><td>Up to ₹200 crore</td></tr>
+          <tr><td>Breach of any other provision</td><td>Up to ₹50 crore</td><td><strong>Up to ₹250 crore</strong></td><td>Up to ₹50 crore</td></tr>
+          <tr><td>A new note</td><td>None</td><td>"No upper cap on the total penalty"</td><td>Not checked by any step</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>The first answer was right on all four amounts. The check called two of them wrong, and the fix copied those wrong corrections into the final answer. It also added a new note that no step checked. You can read the amounts yourself in <a href="https://dpdpa.com/theschedule.html">the Schedule of the DPDP Act</a>.</p>
+
+    <h3 class="step"><span class="sn">Learn</span>What this run teaches</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>What happened</th><th>Example</th><th>What it means</th></tr></thead>
+        <tbody>
+          <tr><td>Well-known facts passed the check</td><td>The name of the Act, its reach outside India</td><td>The check works for facts that the model knows well</td></tr>
+          <tr><td>The fact lost its subject</td><td>"Which Act?" for four claims</td><td>A fact must name its subject, or the check cannot judge it</td></tr>
+          <tr><td>The check called a correct fact wrong</td><td>₹200 crore and ₹50 crore</td><td>The check can be wrong too</td></tr>
+          <tr><td>The fix copied those mistakes</td><td>Two correct amounts became wrong</td><td>The fix trusts every check result</td></tr>
+          <tr><td>A fact was true once, but is out of date</td><td>"As of mid-2024, the rules are still being prepared"</td><td>The model checks against its memory, not against today</td></tr>
+          <tr><td>A check result argued with itself</td><td>Claim 18 starts with "INCORRECT" and ends with "VERIFIED"</td><td>The code reads one word and misses the rest</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Two of these deserve a closer look.</p>
+    <p><strong>The out-of-date fact.</strong> The first answer said that in mid-2024 the government was still preparing the rules. That was true at the time the model learned it. The DPDP Rules came out in November 2025, and the main duties of the Act apply in phases over the next 18 months. The check marked the old claim as VERIFIED, because it matched the model's memory.</p>
+    <p>A check of this kind tells you whether the fact matches what the model learned. It cannot tell you whether the fact is true today. For any fact that changes over time, the check needs a source with a date, such as the official notice.</p>
+    <p><strong>The result that argued with itself.</strong> For claim 18, the model wrote "INCORRECT" first, then explained that the claim was in fact right and ended with "VERIFIED". Your code found the word INCORRECT and counted the claim as wrong. For claims 5 and 13, the model called a correct but incomplete claim INCORRECT. The prompt asked for exactly one label, but the model did not stay within that rule.</p>
+
+    <h3 class="step"><span class="sn">Inside</span>What happens inside one run</h3>
+    <p>The check runs once for each fact. With 18 facts, one run of the program makes 21 calls to the model.</p>
+    <figure class="diagram">
+      <div class="frame"><img src="../../assets/img/diagrams/ai-15-ex1-seq.svg" alt="A sequence diagram with the lanes Your code, chain_of_verification, four chains, Gemini API. Step 1, Your code to chain_of_verification, chain_of_verification(question, ...). Step 2, chain_of_verification to four chains, generate_chain.invoke(...), write the first answer. Step 3, four chains to Gemini API, call 1. Step 4, Gemini API to chain_of_verification, first answer, a long text with many facts. Step 5, chain_of_verification to four chains, extract_chain.invoke(...), list the facts. Step 6, four chains to Gemini API, call 2. Step 7, Gemini API to chain_of_verification, 18 facts, one per line, split into the list claims. Step 8, chain_of_verification to four chains, verify_chain.invoke({&quot;claim&quot; claim}), one fact, nothing else. Step 9, four chains to Gemini API, one call for each fact. Step 10, Gemini API to chain_of_verification, check result, VERIFIED, INCORRECT or UNCERTAIN. Step 11, chain_of_verification to chain_of_verification, &quot;INCORRECT&quot; in verification_text, found, so fix the answer. Step 12, chain_of_verification to four chains, revise_chain.invoke(...), first answer plus all check results. Step 13, four chains to Gemini API, last call. Step 14, Gemini API to chain_of_verification, final answer, 21 calls in total. Step 15, chain_of_verification to Your code, result, initial, claims, verifications and final. Steps 8 to 10 repeat, Repeated for each of the 18 facts." loading="lazy"></div>
+      <figcaption>Inside one run of Example 1, step by step.</figcaption>
+    </figure>
+
+    <details class="fold">
+      <summary><span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m16 18 6-6-6-6M8 6l-6 6 6 6"/></svg></span><span class="ft">Full code of Example 1<small>src/14_chain_of_verification_google.py</small></span><a class="gh-btn" href="https://github.com/bhardwajAbhi/ai-engineering/blob/main/src/14_chain_of_verification_google.py"><svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M12 .5a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2.1c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1.1-.8.1-.8.1-.8 1.2.1 1.9 1.3 1.9 1.3 1.1 1.9 2.9 1.3 3.6 1 .1-.8.4-1.3.8-1.6-2.7-.3-5.5-1.3-5.5-6a4.7 4.7 0 0 1 1.3-3.2c-.1-.3-.6-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.7 1.7.2 2.9.1 3.2a4.7 4.7 0 0 1 1.3 3.2c0 4.6-2.8 5.6-5.5 6 .4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .5z"/></svg>GitHub</a></summary>
+      <div class="fold-body">
+<pre class="code" data-lang="python" data-file="src/14_chain_of_verification_google.py"><code>"""
+Title: Chain of Verification Prompting (Google Generative AI)
+Chain of Verification asks the model to write an answer, pull out the
+facts it stated, check each fact on its own and then fix any fact found
+to be wrong. Checking small facts one at a time is easier than judging
+a whole answer at once.
+uv run python src/14_chain_of_verification_google.py
+"""
+
+from dotenv import load_dotenv
+from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.output_parsers import StrOutputParser
+
+
+def chain_of_verification(
+    question: str,
+    generate_chain,
+    extract_chain,
+    verify_chain,
+    revise_chain,
+) -&gt; dict:
+    """Run the full Chain of Verification pipeline."""
+
+    # Step 1: Generate the initial response
+    initial_response = generate_chain.invoke({"question": question})
+    print("INITIAL RESPONSE:")
+    print(initial_response)
+    print("\n" + "-" * 40)
+
+    # Step 2: Extract the claims, one per line
+    claims_text = extract_chain.invoke({"response": initial_response})
+    claims = [c.strip() for c in claims_text.strip().split("\n") if c.strip()]
+    print("EXTRACTED CLAIMS:")
+    for claim in claims:
+        print(f"  {claim}")
+    print("\n" + "-" * 40)
+
+    # Step 3: Verify each claim on its own
+    verification_results = []
+    print("VERIFICATION:")
+    for claim in claims:
+        result = verify_chain.invoke({"claim": claim})
+        verification_results.append(f"{claim}\n  -&gt; {result.strip()}")
+        print(f"  {claim}")
+        print(f"    -&gt; {result.strip()}")
+    print("\n" + "-" * 40)
+
+    # Step 4: Decide what to do, based on the verification results
+    verification_text = "\n".join(verification_results)
+
+    if "INCORRECT" in verification_text:
+        # At least one claim is wrong, so rewrite the response
+        final_response = revise_chain.invoke(
+            {"response": initial_response, "verification_results": verification_text}
+        )
+        print("REVISED RESPONSE:")
+        print(final_response)
+    elif "UNCERTAIN" in verification_text:
+        # Nothing is known to be wrong, but some claims could not be checked
+        final_response = initial_response
+        print("NO REVISION NEEDED - but some claims are UNCERTAIN")
+        print("The initial response is kept, with unchecked claims in it.")
+    else:
+        # Every claim was verified
+        final_response = initial_response
+        print("NO REVISION NEEDED - All claims verified")
+
+    return {
+        "initial": initial_response,
+        "claims": claims,
+        "verifications": verification_results,
+        "final": final_response,
+    }
+
+
+def main():
+    load_dotenv()
+
+    # Initialize the model
+    # Temperature 0 keeps the checks steady and repeatable.
+    llm = ChatGoogleGenerativeAI(
+        model="gemini-3.1-flash-lite",
+        temperature=0,
+    )
+
+    # Parser to extract the text from the model response
+    parser = StrOutputParser()
+
+    # Step 1 prompt: generate the initial response
+    generate_prompt = ChatPromptTemplate.from_template("""
+        Answer this question with specific facts and details:
+        {question}
+    """)
+
+    # Step 2 prompt: extract the claims
+    extract_claims_prompt = ChatPromptTemplate.from_template("""
+        Extract all specific factual claims from this text.
+        List each claim on a separate line, numbered.
+        Focus on dates, numbers, names and verifiable facts.
+
+        TEXT:
+        {response}
+
+        FACTUAL CLAIMS:
+    """)
+
+    # Step 3 prompt: verify one claim
+    verify_prompt = ChatPromptTemplate.from_template("""
+        Verify this specific claim. Is it accurate?
+
+        CLAIM: {claim}
+
+        Think carefully. If you are not certain, say "UNCERTAIN".
+        Respond with exactly one of these:
+        - VERIFIED: if you are confident the claim is correct
+        - INCORRECT: &lt;the correct information&gt;, if you know the claim is wrong
+        - UNCERTAIN: if you are not sure
+    """)
+
+    # Step 4 prompt: revise the response
+    revise_prompt = ChatPromptTemplate.from_template("""
+        Revise this response to fix any incorrect claims.
+
+        ORIGINAL RESPONSE:
+        {response}
+
+        VERIFICATION RESULTS:
+        {verification_results}
+
+        REVISED RESPONSE (fix any incorrect claims, keep verified ones):
+    """)
+
+    # Create the four chains
+    generate_chain = generate_prompt | llm | parser
+    extract_chain = extract_claims_prompt | llm | parser
+    verify_chain = verify_prompt | llm | parser
+    revise_chain = revise_prompt | llm | parser
+
+    # A question full of dates, numbers and names, so there is
+    # more to check and more chance of a slip
+    question = (
+        "Tell me about India's Digital Personal Data Protection (DPDP) Act, "
+        "2023: when it became law, who it applies to, the rights it gives "
+        "people, and the penalties it sets."
+    )
+
+    print("=" * 60)
+    print("QUESTION")
+    print("=" * 60)
+    print(f"\n{question}\n")
+    print("=" * 60 + "\n")
+
+    chain_of_verification(
+        question, generate_chain, extract_chain, verify_chain, revise_chain
+    )
+
+
+if __name__ == "__main__":
+    main()
+</code></pre>
+      </div>
+    </details>
+  </section>
+
+  <!-- ================= EXAMPLE 2 ================= -->
+  <section class="example" style="--ex:#0f8a6a">
+
+    <div class="example-banner">
+      <div class="eb-tag">Example 2 · Guided build</div>
+      <h2 data-toc="Example 2, Heartbleed">A question about Heartbleed</h2>
+      <p>Qwen answers a question about the Heartbleed bug, lists the facts in its answer, checks each one and fixes the wrong ones.</p>
+      <div class="eb-row">
+        <span class="eb-chip">Qwen 2.5 7B, through OpenRouter</span>
+        <span class="eb-chip">src/14_chain_of_verification_openrouter.py</span>
+        <a class="gh-btn" href="https://github.com/bhardwajAbhi/ai-engineering/blob/main/src/14_chain_of_verification_openrouter.py"><svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M12 .5a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2.1c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1.1-.8.1-.8.1-.8 1.2.1 1.9 1.3 1.9 1.3 1.1 1.9 2.9 1.3 3.6 1 .1-.8.4-1.3.8-1.6-2.7-.3-5.5-1.3-5.5-6a4.7 4.7 0 0 1 1.3-3.2c-.1-.3-.6-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.7 1.7.2 2.9.1 3.2a4.7 4.7 0 0 1 1.3 3.2c0 4.6-2.8 5.6-5.5 6 .4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .5z"/></svg>View on GitHub</a>
+      </div>
+    </div>
+
+    <figure class="diagram">
+      <div class="frame"><img src="../../assets/img/diagrams/ai-15-ex2-flow.svg" alt="Setup, llm = ChatOpenRouter(model=&quot;qwen/qwen-2.5-7b-instruct&quot;, ...), temperature=0, so that the same fact gets the same check result. Draft, generate_chain.invoke({&quot;question&quot; question}), A question about Heartbleed, its CVE, date, versions, cause and leak size. List, extract_chain.invoke({&quot;response&quot; initial_response}), One fact per line, split into a Python list. Check, verify_chain.invoke({&quot;claim&quot; claim}), Each fact alone, VERIFIED, INCORRECT or UNCERTAIN. Decide, if &quot;INCORRECT&quot; in verification_text, Otherwise keep the first answer. Fix, revise_chain.invoke({...}), The final answer, built from the first answer and the check results. A loop goes back from stage 4 to stage 4, next fact." loading="lazy"></div>
+      <figcaption>The program of Example 2, from the question to the final answer.</figcaption>
+    </figure>
+
+    <p>A <span class="same">Same</span> mark tells you that a part has the same job as in Example 1. A <span class="new">New</span> mark tells you what is different.</p>
+
+    <h3 class="step"><span class="sn">Steps 1 and 2</span>File and imports</h3>
+<pre class="code" data-lang="python" data-file="src/14_chain_of_verification_openrouter.py"><code>from dotenv import load_dotenv
+from langchain_openrouter import ChatOpenRouter
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.output_parsers import StrOutputParser</code></pre>
+    <ul class="explain">
+      <li><span class="new">New</span><code>ChatOpenRouter</code> instead of <code>ChatGoogleGenerativeAI</code>.</li>
+      <li><span class="same">Same</span><code>load_dotenv</code>, the prompt template and the parser.</li>
+    </ul>
+
+    <h3 class="step"><span class="sn">Steps 3 to 10</span>Prompts, chains and the function</h3>
+<pre class="code" data-lang="python"><code>    # Initialize the model
+    # Temperature 0 keeps the checks steady and repeatable.
+    llm = ChatOpenRouter(
+        model="qwen/qwen-2.5-7b-instruct",
+        temperature=0,
+    )</code></pre>
+    <ul class="explain">
+      <li><span class="same">Same</span>The four prompts, <code>temperature=0</code>, the four chains and the function <code>chain_of_verification()</code>, line for line.</li>
+      <li><span class="new">New</span>The model is Qwen 2.5 7B, a much smaller model than Gemini.</li>
+    </ul>
+
+    <h3 class="step"><span class="sn">Step 11</span>Ask the question and run it</h3>
+<pre class="code" data-lang="python"><code>    # A question full of dates, numbers and names, so there is
+    # more to check and more chance of a slip
+    question = (
+        "Tell me about the Heartbleed vulnerability in OpenSSL: its CVE "
+        "number, when it was disclosed, which versions were affected, how "
+        "the bug worked and how much data it could leak."
+    )</code></pre>
+    <ul class="explain">
+      <li><span class="new">New</span>The question asks about Heartbleed, a bug in OpenSSL from 2014. OpenSSL is the library that protects a large share of the encrypted traffic on the internet. Its facts are fixed and well documented, so every claim has a clear right or wrong answer.</li>
+    </ul>
+<pre class="code" data-lang="bash"><code>uv run python src/14_chain_of_verification_openrouter.py</code></pre>
+<details class="fold">
+      <summary><span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m16 18 6-6-6-6M8 6l-6 6 6 6"/></svg></span><span class="ft">Show the full output<small>127 lines</small></span></summary>
+      <div class="fold-body">
+<pre class="code" data-lang="output"><code>============================================================
+QUESTION
+============================================================
+
+Tell me about the Heartbleed vulnerability in OpenSSL: its CVE number, when it was disclosed, which versions were affected, how the bug worked and how much data it could leak.
+
+============================================================
+
+INITIAL RESPONSE:
+The Heartbleed vulnerability is a critical security flaw in the OpenSSL cryptographic software library, which is widely used to secure internet communications. Here are the specific details you requested:
+
+### CVE Number and Disclosure Date
+- **CVE Number:** The Heartbleed bug was assigned the CVE identifier [CVE-2014-0160](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2014-0160).
+- **Disclosure Date:** The vulnerability was publicly disclosed on April 7, 2014.
+
+### Affected Versions
+- **Versions Affected:** The Heartbleed bug affected all versions of OpenSSL prior to version 1.0.1g, specifically versions 1.0.1 through 1.0.1f were vulnerable. Version 1.0.1g and later are not affected by this issue.
+
+### How the Bug Worked
+The Heartbleed bug exploited a flaw in the implementation of the TLS heartbeat extension in OpenSSL. This extension allows one end of a TLS connection to send a "heartbeat" message to the other end to check if the connection is still alive. The flaw occurred because OpenSSL did not properly validate the length of the data sent in the heartbeat response. An attacker could send a specially crafted heartbeat request that would cause the server to return more data than it should have, potentially including sensitive information such as private keys, usernames, passwords, and other confidential data.
+
+### Data Leak Potential
+- **Amount of Data Leaked:** The amount of data that could be leaked varied depending on the implementation and configuration of the affected server. In the worst-case scenario, an attacker could potentially leak up to 64 kilobytes of memory at a time from the server's memory. This could include:
+  - Private encryption keys (which could allow the attacker to decrypt or forge encrypted communications)
+  - Usernames and passwords
+  - Sensitive application data
+  - Internal network addresses and configurations
+
+### Impact
+The Heartbleed bug was considered one of the most serious security vulnerabilities ever discovered due to its widespread impact and the potential for catastrophic data breaches. It affected a large number of websites and services, leading to significant security concerns and the need for widespread patching and remediation efforts.
+
+### Mitigation
+To mitigate the risk posed by Heartbleed, organizations needed to:
+- Update their OpenSSL installations to version 1.0.1g or later.
+- Regenerate and redistribute SSL/TLS certificates.
+- Perform a thorough review of their systems to identify and address any potential exposure of sensitive data.
+
+In summary, the Heartbleed vulnerability was a critical flaw in OpenSSL that allowed attackers to potentially steal sensitive data from servers using the affected versions of OpenSSL.
+
+----------------------------------------
+EXTRACTED CLAIMS:
+  1. The Heartbleed vulnerability is a critical security flaw in the OpenSSL cryptographic software library.
+  2. The Heartbleed bug was assigned the CVE identifier [CVE-2014-0160].
+  3. The vulnerability was publicly disclosed on April 7, 2014.
+  4. The Heartbleed bug affected all versions of OpenSSL prior to version 1.0.1g.
+  5. Versions 1.0.1 through 1.0.1f were specifically vulnerable to the Heartbleed bug.
+  6. An attacker could send a specially crafted heartbeat request that would cause the server to return more data than it should have.
+  7. In the worst-case scenario, an attacker could potentially leak up to 64 kilobytes of memory at a time from the server's memory.
+  8. The amount of data that could be leaked varied depending on the implementation and configuration of the affected server.
+  9. The Heartbleed bug allowed for the potential theft of private encryption keys, usernames and passwords, sensitive application data, and internal network addresses and configurations.
+  10. The Heartbleed bug was considered one of the most serious security vulnerabilities ever discovered due to its widespread impact and potential for catastrophic data breaches.
+  11. Organizations needed to update their OpenSSL installations to version 1.0.1g or later to mitigate the risk posed by Heartbleed.
+  12. Organizations needed to regenerate and redistribute SSL/TLS certificates to mitigate the risk posed by Heartbleed.
+  13. Organizations needed to perform a thorough review of their systems to identify and address any potential exposure of sensitive data.
+
+----------------------------------------
+VERIFICATION:
+  1. The Heartbleed vulnerability is a critical security flaw in the OpenSSL cryptographic software library.
+    -&gt; VERIFIED: The Heartbleed vulnerability is indeed a critical security flaw in the OpenSSL cryptographic software library. It was discovered in 2014 and affected versions of OpenSSL that were using the TLS heartbeat extension improperly, allowing an attacker to potentially extract sensitive information from the server's memory.
+  2. The Heartbleed bug was assigned the CVE identifier [CVE-2014-0160].
+    -&gt; VERIFIED: The Heartbleed bug was assigned the CVE identifier [CVE-2014-0160].
+  3. The vulnerability was publicly disclosed on April 7, 2014.
+    -&gt; UNCERTAIN
+  4. The Heartbleed bug affected all versions of OpenSSL prior to version 1.0.1g.
+    -&gt; INCORRECT: The Heartbleed bug affected all versions of OpenSSL prior to version 1.0.1f, not 1.0.1g.
+  5. Versions 1.0.1 through 1.0.1f were specifically vulnerable to the Heartbleed bug.
+    -&gt; UNCERTAIN
+  6. An attacker could send a specially crafted heartbeat request that would cause the server to return more data than it should have.
+    -&gt; VERIFIED: The claim is correct. In a heartbeat protocol, if not properly implemented, an attacker could send a specially crafted heartbeat request that causes the server to return more data than intended, potentially leading to information leakage or other security vulnerabilities.
+  7. In the worst-case scenario, an attacker could potentially leak up to 64 kilobytes of memory at a time from the server's memory.
+    -&gt; UNCERTAIN
+  8. The amount of data that could be leaked varied depending on the implementation and configuration of the affected server.
+    -&gt; VERIFIED: The amount of data that could be leaked indeed varied depending on the implementation and configuration of the affected server. Factors such as the type of data stored, access controls, encryption methods, and security protocols in place can all influence the extent of potential data leakage.
+  9. The Heartbleed bug allowed for the potential theft of private encryption keys, usernames and passwords, sensitive application data, and internal network addresses and configurations.
+    -&gt; VERIFIED: The Heartbleed bug, which affected the OpenSSL cryptographic software library, indeed allowed for the potential theft of private encryption keys, usernames and passwords, sensitive application data, and internal network addresses and configurations.
+  10. The Heartbleed bug was considered one of the most serious security vulnerabilities ever discovered due to its widespread impact and potential for catastrophic data breaches.
+    -&gt; VERIFIED: The Heartbleed bug, discovered in 2014, was indeed considered one of the most serious security vulnerabilities ever discovered. It affected implementations of the Transport Layer Security (TLS) protocol, specifically the TLS 1.2 implementation in the OpenSSL library. The vulnerability allowed attackers to potentially extract sensitive information from server memory, including private keys, usernames, and passwords, leading to significant security risks and data breaches.
+  11. Organizations needed to update their OpenSSL installations to version 1.0.1g or later to mitigate the risk posed by Heartbleed.
+    -&gt; VERIFIED: The claim is accurate. Organizations needed to update their OpenSSL installations to version 1.0.1g or later to mitigate the risk posed by the Heartbleed bug, which was present in versions 1.0.1 through 1.0.1f.
+  12. Organizations needed to regenerate and redistribute SSL/TLS certificates to mitigate the risk posed by Heartbleed.
+    -&gt; VERIFIED: Organizations needed to regenerate and redistribute SSL/TLS certificates to mitigate the risk posed by Heartbleed. The Heartbleed bug, discovered in 2014, affected systems using OpenSSL and could allow an attacker to steal sensitive information such as private keys used for SSL/TLS encryption. Regenerating and redistributing certificates was a critical step in addressing this vulnerability.
+  13. Organizations needed to perform a thorough review of their systems to identify and address any potential exposure of sensitive data.
+    -&gt; VERIFIED: Organizations often need to perform a thorough review of their systems to identify and address any potential exposure of sensitive data to ensure compliance with regulations and protect against data breaches.
+
+----------------------------------------
+REVISED RESPONSE:
+The Heartbleed vulnerability is a critical security flaw in the OpenSSL cryptographic software library, which is widely used to secure internet communications. Here are the specific details you requested:
+
+### CVE Number and Disclosure Date
+- **CVE Number:** The Heartbleed bug was assigned the CVE identifier [CVE-2014-0160](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2014-0160).
+- **Disclosure Date:** The vulnerability was publicly disclosed on April 7, 2014.
+
+### Affected Versions
+- **Versions Affected:** The Heartbleed bug affected all versions of OpenSSL prior to version 1.0.1g, specifically versions 1.0.1 through 1.0.1f were vulnerable. Version 1.0.1g and later are not affected by this issue.
+
+### How the Bug Worked
+The Heartbleed bug exploited a flaw in the implementation of the TLS heartbeat extension in OpenSSL. This extension allows one end of a TLS connection to send a "heartbeat" message to the other end to check if the connection is still alive. The flaw occurred because OpenSSL did not properly validate the length of the data sent in the heartbeat response. An attacker could send a specially crafted heartbeat request that would cause the server to return more data than it should have, potentially including sensitive information such as private keys, usernames, passwords, and other confidential data.
+
+### Data Leak Potential
+- **Amount of Data Leaked:** The amount of data that could be leaked varied depending on the implementation and configuration of the affected server. In the worst-case scenario, an attacker could potentially leak up to 64 kilobytes of memory at a time from the server's memory. This could include:
+  - Private encryption keys (which could allow the attacker to decrypt or forge encrypted communications)
+  - Usernames and passwords
+  - Sensitive application data
+  - Internal network addresses and configurations
+
+### Impact
+The Heartbleed bug was considered one of the most serious security vulnerabilities ever discovered due to its widespread impact and the potential for catastrophic data breaches. It affected a large number of websites and services, leading to significant security concerns and the need for widespread patching and remediation efforts.
+
+### Mitigation
+To mitigate the risk posed by Heartbleed, organizations needed to:
+- Update their OpenSSL installations to version 1.0.1g or later.
+- Regenerate and redistribute SSL/TLS certificates.
+- Perform a thorough review of their systems to identify and address any potential exposure of sensitive data.
+
+In summary, the Heartbleed vulnerability was a critical flaw in OpenSSL that allowed attackers to potentially steal sensitive data from servers using the affected versions of OpenSSL.
+
+### Verification Results Summary
+1. **Critical Security Flaw:** VERIFIED
+2. **CVE Identifier:** VERIFIED
+3. **Disclosure Date:** UNCERTAIN (Corrected: April 7, 2014)
+4. **Affected Versions:** INCORRECT (Corrected: All versions prior to 1.0.1g, specifically 1.0.1 through 1.0.1f)
+5. **Heartbeat Request:** VERIFIED
+6. **Worst-Case Scenario:** UNCERTAIN (Corrected: Up to 64 kilobytes of memory at a time)
+7. **Data Leakage Variability:** VERIFIED
+8. **Sensitive Data Theft:** VERIFIED
+9. **Serious Vulnerability:** VERIFIED
+10. **Mitigation Steps:** VERIFIED</code></pre>
+      </div>
+    </details>
+
+    <h3 class="step"><span class="sn">Read</span>Read the output in four parts</h3>
+    <p><strong>Part 1, the first answer.</strong> The answer is clear and mostly correct. It gives the right CVE number CVE-2014-0160 and the right date of disclosure, 7 April 2014. It explains the heartbeat extension and the missing length check, and it states the right size, up to 64 KB of memory at a time.</p>
+    <p>One sentence is wrong. It says that "all versions of OpenSSL prior to version 1.0.1g" were affected. In fact, only versions 1.0.1 to 1.0.1f contained the bug. The older branches 1.0.0 and 0.9.8 never contained it.</p>
+    <p><strong>Part 2, the facts.</strong> The program produced 13 claims. This time, every claim names Heartbleed or OpenSSL, so no claim lost its subject.</p>
+    <p><strong>Part 3, the checks.</strong></p>
+    <ul>
+      <li><strong>Confirmed correctly.</strong> The CVE number, the type of flaw and the advice to update to 1.0.1g or later came back as VERIFIED.</li>
+      <li><strong>Too careful.</strong> The date, the correct range of versions in claim 5 and the size of 64 KB came back as UNCERTAIN, although all three are correct. A small model often doubts facts that it does know.</li>
+      <li><strong>Caught, but with a wrong correction.</strong> Claim 4 is the one wrong fact of the first answer, and the check did mark it INCORRECT. Its correction was wrong too. It said "prior to 1.0.1f, not 1.0.1g".</li>
+      <li><strong>Agreement with an invented reason.</strong> Claim 8 says that the size of the leak "varied depending on the implementation and configuration". The check agreed and gave a reason about "access controls" and "encryption methods". The real reason is simpler. Each heartbeat returns whatever happens to sit in memory next to the request.</li>
+    </ul>
+    <p><strong>Part 4, the fix.</strong> The fix ran, because claim 4 came back as INCORRECT. The final answer is the first answer, word for word, including the wrong sentence about the versions. At the end, the model added a "Verification Results Summary". It writes "Corrected" next to the date and the size, which needed no correction. It also writes "Corrected" next to the versions, but it repeats the same wrong claim.</p>
+
+    <h3 class="step"><span class="sn">Learn</span>What this run teaches</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>What happened</th><th>Example</th><th>What it means</th></tr></thead>
+        <tbody>
+          <tr><td>Stable, famous facts passed</td><td>The CVE number, the fix in 1.0.1g</td><td>The check works for facts that the model knows well</td></tr>
+          <tr><td>The one real error was found</td><td>Claim 4 marked INCORRECT</td><td>Checking one fact at a time can find an error</td></tr>
+          <tr><td>The correction was wrong</td><td>"Prior to 1.0.1f"</td><td>Finding an error is not the same as knowing the right answer</td></tr>
+          <tr><td>The check doubted correct facts</td><td>The date and the 64 KB limit</td><td>A small model is often unsure of what it knows</td></tr>
+          <tr><td>The fix changed nothing</td><td>The wrong sentence stayed</td><td>Always compare the final answer with the first one</td></tr>
+          <tr><td>The model reported a fix that did not happen</td><td>"Corrected" in the summary</td><td>A claim of a fix is not proof of a fix</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 class="step"><span class="sn">Inside</span>What happens inside one run</h3>
+    <p>The calls are the same as in Example 1. With 13 facts, one run makes 16 calls to the model.</p>
+    <figure class="diagram">
+      <div class="frame"><img src="../../assets/img/diagrams/ai-15-ex2-seq.svg" alt="A sequence diagram with the lanes Your code, chain_of_verification, four chains, OpenRouter API. Step 1, Your code to chain_of_verification, chain_of_verification(question, ...). Step 2, chain_of_verification to four chains, generate_chain.invoke(...), write the first answer. Step 3, four chains to OpenRouter API, call 1. Step 4, OpenRouter API to chain_of_verification, first answer, a long text with many facts. Step 5, chain_of_verification to four chains, extract_chain.invoke(...), list the facts. Step 6, four chains to OpenRouter API, call 2. Step 7, OpenRouter API to chain_of_verification, 13 facts, one per line, split into the list claims. Step 8, chain_of_verification to four chains, verify_chain.invoke({&quot;claim&quot; claim}), one fact, nothing else. Step 9, four chains to OpenRouter API, one call for each fact. Step 10, OpenRouter API to chain_of_verification, check result, VERIFIED, INCORRECT or UNCERTAIN. Step 11, chain_of_verification to chain_of_verification, &quot;INCORRECT&quot; in verification_text, found, so fix the answer. Step 12, chain_of_verification to four chains, revise_chain.invoke(...), first answer plus all check results. Step 13, four chains to OpenRouter API, last call. Step 14, OpenRouter API to chain_of_verification, final answer, 16 calls in total. Step 15, chain_of_verification to Your code, result, initial, claims, verifications and final. Steps 8 to 10 repeat, Repeated for each of the 13 facts." loading="lazy"></div>
+      <figcaption>Inside one run of Example 2, step by step.</figcaption>
+    </figure>
+
+    <details class="fold">
+      <summary><span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m16 18 6-6-6-6M8 6l-6 6 6 6"/></svg></span><span class="ft">Full code of Example 2<small>src/14_chain_of_verification_openrouter.py</small></span><a class="gh-btn" href="https://github.com/bhardwajAbhi/ai-engineering/blob/main/src/14_chain_of_verification_openrouter.py"><svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M12 .5a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2.1c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1.1-.8.1-.8.1-.8 1.2.1 1.9 1.3 1.9 1.3 1.1 1.9 2.9 1.3 3.6 1 .1-.8.4-1.3.8-1.6-2.7-.3-5.5-1.3-5.5-6a4.7 4.7 0 0 1 1.3-3.2c-.1-.3-.6-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.7 1.7.2 2.9.1 3.2a4.7 4.7 0 0 1 1.3 3.2c0 4.6-2.8 5.6-5.5 6 .4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .5z"/></svg>GitHub</a></summary>
+      <div class="fold-body">
+<pre class="code" data-lang="python" data-file="src/14_chain_of_verification_openrouter.py"><code>"""
+Title: Chain of Verification Prompting (OpenRouter)
+Chain of Verification asks the model to write an answer, pull out the
+facts it stated, check each fact on its own and then fix any fact found
+to be wrong. Checking small facts one at a time is easier than judging
+a whole answer at once.
+uv run python src/14_chain_of_verification_openrouter.py
+"""
+
+from dotenv import load_dotenv
+from langchain_openrouter import ChatOpenRouter
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.output_parsers import StrOutputParser
+
+
+def chain_of_verification(
+    question: str,
+    generate_chain,
+    extract_chain,
+    verify_chain,
+    revise_chain,
+) -&gt; dict:
+    """Run the full Chain of Verification pipeline."""
+
+    # Step 1: Generate the initial response
+    initial_response = generate_chain.invoke({"question": question})
+    print("INITIAL RESPONSE:")
+    print(initial_response)
+    print("\n" + "-" * 40)
+
+    # Step 2: Extract the claims, one per line
+    claims_text = extract_chain.invoke({"response": initial_response})
+    claims = [c.strip() for c in claims_text.strip().split("\n") if c.strip()]
+    print("EXTRACTED CLAIMS:")
+    for claim in claims:
+        print(f"  {claim}")
+    print("\n" + "-" * 40)
+
+    # Step 3: Verify each claim on its own
+    verification_results = []
+    print("VERIFICATION:")
+    for claim in claims:
+        result = verify_chain.invoke({"claim": claim})
+        verification_results.append(f"{claim}\n  -&gt; {result.strip()}")
+        print(f"  {claim}")
+        print(f"    -&gt; {result.strip()}")
+    print("\n" + "-" * 40)
+
+    # Step 4: Decide what to do, based on the verification results
+    verification_text = "\n".join(verification_results)
+
+    if "INCORRECT" in verification_text:
+        # At least one claim is wrong, so rewrite the response
+        final_response = revise_chain.invoke(
+            {"response": initial_response, "verification_results": verification_text}
+        )
+        print("REVISED RESPONSE:")
+        print(final_response)
+    elif "UNCERTAIN" in verification_text:
+        # Nothing is known to be wrong, but some claims could not be checked
+        final_response = initial_response
+        print("NO REVISION NEEDED - but some claims are UNCERTAIN")
+        print("The initial response is kept, with unchecked claims in it.")
+    else:
+        # Every claim was verified
+        final_response = initial_response
+        print("NO REVISION NEEDED - All claims verified")
+
+    return {
+        "initial": initial_response,
+        "claims": claims,
+        "verifications": verification_results,
+        "final": final_response,
+    }
+
+
+def main():
+    load_dotenv()
+
+    # Initialize the model
+    # Temperature 0 keeps the checks steady and repeatable.
+    llm = ChatOpenRouter(
+        model="qwen/qwen-2.5-7b-instruct",
+        temperature=0,
+    )
+
+    # Parser to extract the text from the model response
+    parser = StrOutputParser()
+
+    # Step 1 prompt: generate the initial response
+    generate_prompt = ChatPromptTemplate.from_template("""
+        Answer this question with specific facts and details:
+        {question}
+    """)
+
+    # Step 2 prompt: extract the claims
+    extract_claims_prompt = ChatPromptTemplate.from_template("""
+        Extract all specific factual claims from this text.
+        List each claim on a separate line, numbered.
+        Focus on dates, numbers, names and verifiable facts.
+
+        TEXT:
+        {response}
+
+        FACTUAL CLAIMS:
+    """)
+
+    # Step 3 prompt: verify one claim
+    verify_prompt = ChatPromptTemplate.from_template("""
+        Verify this specific claim. Is it accurate?
+
+        CLAIM: {claim}
+
+        Think carefully. If you are not certain, say "UNCERTAIN".
+        Respond with exactly one of these:
+        - VERIFIED: if you are confident the claim is correct
+        - INCORRECT: &lt;the correct information&gt;, if you know the claim is wrong
+        - UNCERTAIN: if you are not sure
+    """)
+
+    # Step 4 prompt: revise the response
+    revise_prompt = ChatPromptTemplate.from_template("""
+        Revise this response to fix any incorrect claims.
+
+        ORIGINAL RESPONSE:
+        {response}
+
+        VERIFICATION RESULTS:
+        {verification_results}
+
+        REVISED RESPONSE (fix any incorrect claims, keep verified ones):
+    """)
+
+    # Create the four chains
+    generate_chain = generate_prompt | llm | parser
+    extract_chain = extract_claims_prompt | llm | parser
+    verify_chain = verify_prompt | llm | parser
+    revise_chain = revise_prompt | llm | parser
+
+    # A question full of dates, numbers and names, so there is
+    # more to check and more chance of a slip
+    question = (
+        "Tell me about the Heartbleed vulnerability in OpenSSL: its CVE "
+        "number, when it was disclosed, which versions were affected, how "
+        "the bug worked and how much data it could leak."
+    )
+
+    print("=" * 60)
+    print("QUESTION")
+    print("=" * 60)
+    print(f"\n{question}\n")
+    print("=" * 60 + "\n")
+
+    chain_of_verification(
+        question, generate_chain, extract_chain, verify_chain, revise_chain
+    )
+
+
+if __name__ == "__main__":
+    main()
+</code></pre>
+      </div>
+    </details>
+  </section>
+
+  <h2>What the two runs teach together</h2>
+  <p>Put both runs side by side, and one pattern appears. In Example 1, the method made a mostly correct answer worse. In Example 2, it found the one real error but did not fix it. Neither run ended with a better answer than the first one. This is not a bug in your code, and it does not make the method useless. It shows the condition that the method depends on.</p>
+  <p>The check did several things well. Stable, well-known facts passed, such as a CVE number or the name of a law. Checking one fact at a time found an error that a reading of the whole answer can miss. The list of facts also made every claim visible. Even when the check fails, a person can now see exactly what the answer says and check it quickly.</p>
+  <p>What the check needs is a source that knows more than the writer. Here, the checker was the same model, with the same memory that wrote the answer. When that memory holds a wrong fact, the check confirms it. When the memory is unsure, the check can turn a right fact into a wrong one. A fact that changes over time also needs a source with a date. You can trust a check that names a source, such as the text of the Act, far more than a check from memory.</p>
+  <p>The paper behind the method points the same way. It asks each verification question in a fresh call, so that the first answer cannot steer the check. It also reports that the method reduces invented facts but does not remove them. Later chapters of this course give the check a real source. Retrieval in <a href="index.html#ch-34-basic-rag">chapter 34</a> gives the model documents to check against. Tools in <a href="index.html#ch-40-tools">chapter 40</a> let it look up a fact instead of recalling it.</p>
+
+  <h2>Two examples, side by side</h2>
+  <div class="table-wrap">
+    <table class="compare" style="--e1:#2f62c8;--e2:#0f8a6a">
+      <thead><tr><th></th><th class="e1">Example 1</th><th class="e2">Example 2</th></tr></thead>
+      <tbody>
+        <tr><td>Domain</td><td>Data protection, the DPDP Act</td><td>App security, Heartbleed</td></tr>
+        <tr><td>Model</td><td>Gemini 3.1 Flash Lite</td><td>Qwen 2.5 7B, through OpenRouter</td></tr>
+        <tr><td>Facts in the first answer</td><td>18</td><td>13</td></tr>
+        <tr><td>Calls to the model</td><td>21</td><td>16</td></tr>
+        <tr><td>Errors in the first answer</td><td>None in the amounts, one out-of-date fact</td><td>One wrong range of versions</td></tr>
+        <tr><td>What the check did</td><td>Called two correct amounts wrong</td><td>Found the error, gave a wrong correction</td></tr>
+        <tr><td>Final answer</td><td>Worse than the first answer</td><td>The same as the first answer</td></tr>
+        <tr><td>Same</td><td colspan="2">The four prompts, <code>temperature=0</code> and the rule that decides whether to fix</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>When it works and when it does not</h2>
+  <ul>
+    <li><strong>It works</strong> when the checker knows more than the writer, or has a source. Examples are a stronger model as the checker, a check against search results or a check against the official text.</li>
+    <li><strong>It helps</strong> even without a source, when a long answer mixes well-known facts with a few rare ones. The well-known facts pass, and the list shows the rest for a person to check.</li>
+    <li><strong>It does not help</strong> when the writer and the checker share the same gaps in knowledge. Both runs of this chapter showed this.</li>
+    <li><strong>It costs more.</strong> Suppose one call costs ₹0.40. An answer with 18 facts then costs about ₹8.40, compared with ₹0.40 for the first answer alone. For 1 lakh questions a month, that is ₹8.4 lakh instead of ₹40,000.</li>
+    <li><strong>It cannot know today's facts.</strong> A check against memory confirms what was true in the training data, not what is true now.</li>
+    <li><strong>It can lose context.</strong> A fact without its subject gets no real check result.</li>
+  </ul>
+  <p><a href="16-self-reflection.html">Chapter 16</a> takes the next step. The model drafts an answer, criticizes the whole draft and writes a better version.</p>
+  <p>To compare this pattern with the other prompting patterns, open the <a href="prompting-patterns.html">prompting patterns quick reference</a>.</p>
+
+  <div class="block security">
+    <div class="label">Security lens</div>
+    <p>In security work, a wrong fact is a risk, not only a mistake. The first answer of Example 2 said that all versions before 1.0.1g contained Heartbleed. A team that believes this can waste effort on old servers that never contained the bug. The correction of the check, "prior to 1.0.1f", is worse. It suggests that version 1.0.1f was safe, so a team can leave a vulnerable server unpatched.</p>
+    <ul>
+      <li><strong>Never take versions, CVE details or fixes from the memory of a model.</strong> Check them in the <a href="https://nvd.nist.gov/vuln/detail/CVE-2014-0160">National Vulnerability Database (NVD)</a> or in the advisory of the vendor.</li>
+      <li><strong>Read "verified" as "consistent with the memory of the model".</strong> It is not a guarantee, and it carries no date.</li>
+      <li><strong>Keep the facts and their check results in the report.</strong> A reviewer can then see which facts were checked and how, instead of trusting a polished final text.</li>
+      <li><strong>The same holds for law.</strong> Penalty amounts and deadlines come from the official text of the Act and the Rules. A summary from a model is only a starting point.</li>
+    </ul>
+  </div>
+
+  <h2>Check yourself</h2>
+  <div class="quiz">
+    <details>
+      <summary><span class="qq">Why does the check prompt hold one fact and not the whole answer?</span></summary>
+      <div class="ans"><p>So that the rest of the answer cannot push the model toward a yes. Each fact is judged alone, which makes a wrong fact easier to notice.</p></div>
+    </details>
+    <details>
+      <summary><span class="qq">In Example 1, the check asked "Which Act?" for four facts. What caused this, and what is the fix?</span></summary>
+      <div class="ans"><p>The facts said only "The Act", without the name of the law. The check saw each fact alone and could not tell which Act it meant. The fix is to ask for facts that each name their subject.</p></div>
+    </details>
+    <details>
+      <summary><span class="qq">The check marked "As of mid-2024, the rules are still being prepared" as VERIFIED. Why is that not enough?</span></summary>
+      <div class="ans"><p>The check compares the fact with the memory of the model, which stops at its training data. The DPDP Rules came out in November 2025, so the fact is out of date. A fact that changes over time needs a source with a date.</p></div>
+    </details>
+  </div>
+
+  <section class="yourturn">
+    <span class="yt-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>Your turn</span>
+    <h2 data-toc="Your turn">Make the checks more honest</h2>
+    <p>Two of the weak points in Example 1 come from the code, not from the method. Fix both. First, change the prompt that lists the facts, so that every fact names its subject. Second, read only the label at the start of each check result, and count every reply without a clear label as UNCERTAIN.</p>
+
+    <div class="hint">
+      <b>Hint. Change one prompt and one test</b>
+      <ul class="explain" style="--ex:var(--accent)">
+        <li>Add one line to the prompt that lists the facts, for example "Each claim must name its subject, so that it makes sense on its own."</li>
+        <li>Take the first word of each check result. Treat any reply that does not start with VERIFIED, INCORRECT or UNCERTAIN as UNCERTAIN.</li>
+      </ul>
+    </div>
+
+<details class="fold">
+      <summary><span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m16 18 6-6-6-6M8 6l-6 6 6 6"/></svg></span><span class="ft">Show one solution<small>a new prompt and a new decision rule</small></span></summary>
+      <div class="fold-body">
+<pre class="code" data-lang="python"><code>    extract_claims_prompt = ChatPromptTemplate.from_template("""
+        Extract all specific factual claims from this text.
+        List each claim on a separate line, numbered.
+        Focus on dates, numbers, names and verifiable facts.
+        Each claim must name its subject, for example the Act or the
+        vulnerability, so that it makes sense on its own.
+
+        TEXT:
+        {response}
+
+        FACTUAL CLAIMS:
+    """)</code></pre>
+<pre class="code" data-lang="python"><code>def read_label(result: str) -&gt; str:
+    """Return VERIFIED, INCORRECT or UNCERTAIN from the start of a check result."""
+    words = result.strip().replace("*", "").split()
+    first = words[0].rstrip(":.,").upper() if words else ""
+    if first in ("VERIFIED", "INCORRECT", "UNCERTAIN"):
+        return first
+    # Any other reply, such as a question back, counts as UNCERTAIN
+    return "UNCERTAIN"
+
+
+# Inside chain_of_verification(), replace Step 4 with this
+labels = [read_label(r.split("-&gt;", 1)[1]) for r in verification_results]
+
+if "INCORRECT" in labels:
+    final_response = revise_chain.invoke(
+        {"response": initial_response, "verification_results": verification_text}
+    )
+elif "UNCERTAIN" in labels:
+    final_response = initial_response
+    print(f"{labels.count('UNCERTAIN')} claims could not be checked.")
+else:
+    final_response = initial_response</code></pre>
+        <p>With this change, the four "Which Act?" replies count as UNCERTAIN instead of nothing, and the program tells you how many facts the check left open. The new prompt also gives the check the name of the law in every fact. The fix still runs whenever a check says INCORRECT, so the wrong corrections of Example 1 can still happen. That part needs a better source, not better code.</p>
+      </div>
+    </details>
+  </section>
+
+  <h2>Key terms at a glance</h2>
+  <div class="table-wrap">
+    <table class="kw">
+      <thead><tr><th>Term</th><th>Meaning</th></tr></thead>
+      <tbody>
+        <tr><td>Chain of verification (CoVe)</td><td>A prompting method that writes an answer, checks its facts one by one and fixes the wrong ones.</td></tr>
+        <tr><td>Claim</td><td>One fact from an answer, small enough to check on its own.</td></tr>
+        <tr><td>Check result</td><td>The outcome of one check, here VERIFIED, INCORRECT or UNCERTAIN.</td></tr>
+        <tr><td>Self-contained claim</td><td>A claim that names its subject, so that it makes sense without the answer around it.</td></tr>
+        <tr><td>Hallucination</td><td>A fact that a model states with confidence, but that is not true.</td></tr>
+        <tr><td>Out-of-date fact</td><td>A fact that was true in the training data, but is no longer true.</td></tr>
+        <tr><td>Verification question</td><td>In the original paper, a short question that checks one fact, answered in a fresh call.</td></tr>
+        <tr><td>CVE</td><td>Common Vulnerabilities and Exposures, the public ID of a known security flaw.</td></tr>
+        <tr><td>NVD</td><td>National Vulnerability Database, the public US database of CVE details.</td></tr>
+        <tr><td>DPDP Act</td><td>The Digital Personal Data Protection Act of India, from 2023.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+</article>
+</main>
+
+<script src="../../assets/js/site.js?v=20261112"></script>
+</body>
+</html>
